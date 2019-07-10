@@ -16,13 +16,28 @@ function mod:config_callback()
 	local config = mod._config
 
 	for unit, self in pairs(mod.units) do
-		mod.custom_layout[unit](self, unit)
+		self.HealthPrediction.myBar:SetWidth(self.HealthPrediction.myBar:GetParent():GetWidth())
+		self.HealthPrediction.otherBar:SetWidth(self.HealthPrediction.otherBar:GetParent():GetWidth())
+
+		local func = unit
+		if (string.find(func, "boss")) then func = "boss" end
+		if (string.find(func, "arena")) then func = "arena" end
+		mod.custom_layout[func](self, unit)
 	end
 end
 --===============================================
 -- Core functionality
 -- place core functionality here
 --===============================================
+local function castbar_kickable(self)
+	if (self.notInterruptible) then
+		self.Icon:SetDesaturated(1)
+		self:SetStatusBarColor(0.7, 0.7, 0.7, 1)
+	else
+		self.Icon:SetDesaturated(false)
+		self:SetStatusBarColor(.1, .4, .7, 1)
+	end
+end
 
 mod.additional_elements = {
 	castbar = function(self, unit, align)
@@ -34,7 +49,7 @@ mod.additional_elements = {
 		self.Castbar:SetFrameLevel(3)
 		self.Castbar:SetStatusBarTexture(bdUI.media.flat)
 		self.Castbar:SetStatusBarColor(.1, .4, .7, 1)
-		self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -4)
+		self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
 		self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
 		
 		self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
@@ -71,6 +86,13 @@ mod.additional_elements = {
 			self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
 			self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
 		end
+
+		self.Castbar.PostChannelStart = castbar_kickable
+		self.Castbar.PostChannelUpdate = castbar_kickable
+		self.Castbar.PostCastStart = castbar_kickable
+		self.Castbar.PostCastDelayed = castbar_kickable
+		self.Castbar.PostCastNotInterruptible = castbar_kickable
+		self.Castbar.PostCastInterruptible = castbar_kickable
 
 		bdUI:set_backdrop(self.Castbar)
 	end,
@@ -191,14 +213,39 @@ local function layout(self, unit)
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
 	self.Health:SetAllPoints(self)
-	self.Health.frequentUpdates = true
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
-	self.Health.colorClass = true
-	self.Health.colorReaction = true
-	self.Health.colorSmooth = true
-	self.Health.Smooth = true
+	self.Health.PreUpdate = function(self, unit)
+		self.colorSmooth = true
+		if (UnitIsPlayer(unit) or (UnitPlayerControlled(unit) and not UnitIsPlayer(unit))) then
+			self.colorReaction = false
+			local _, class = UnitClass(unit)
+			local cc = oUF.colors.class[class]
+			local r, g, b = unpack(cc)
+			self.smoothGradient = {
+				.7, 0, 0,
+				r, g, b,
+				r, g, b,
+			}
+		elseif(UnitReaction(unit, 'player')) then
+			self.colorReaction = true
+			local _, class = UnitClass(unit)
+			local cc = oUF.colors.reaction[UnitReaction(unit, 'player')]
+			local r, g, b = unpack(cc)
+			self.smoothGradient = {
+				.7, 0, 0,
+				r, g, b,
+				r, g, b,
+			}
+		end
+	end
 	bdUI:set_backdrop(self.Health)
+
+	-- Range
+	self.Range = {
+		insideAlpha = config.inrangealpha,
+		outsideAlpha = config.outofrangealpha,
+	}
 
 	-- Name & Text
 	self.Name = self.Health:CreateFontString(nil, "OVERLAY")
@@ -216,6 +263,86 @@ local function layout(self, unit)
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.RaidTargetIndicator:SetPoint('CENTER', self, 0, 0)
+
+	-- Heal predections
+    local myHeals = CreateFrame('StatusBar', nil, self.Health)
+    myHeals:SetPoint('TOP')
+    myHeals:SetPoint('BOTTOM')
+    myHeals:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
+	myHeals:SetStatusBarTexture(bdUI.media.flat)
+	myHeals:SetStatusBarColor(0.6,1,0.6,.2)
+    local otherHeals = CreateFrame('StatusBar', nil, self.Health)
+    otherHeals:SetPoint('TOP')
+    otherHeals:SetPoint('BOTTOM')
+    otherHeals:SetPoint('LEFT', myHeals:GetStatusBarTexture(), 'RIGHT')
+
+	-- Damage Absorbs
+    local absorbBar = CreateFrame('StatusBar', nil, self.Health)
+    absorbBar:SetAllPoints()
+	absorbBar:SetStatusBarTexture(bdUI.media.flat)
+	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
+	local overAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+    overAbsorbBar:SetAllPoints()
+	overAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
+	overAbsorbBar:SetStatusBarColor(.1, .1, .2, .6)
+
+	-- Healing Absorbs
+    local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+    healAbsorbBar:SetAllPoints()
+    healAbsorbBar:SetReverseFill(true)
+	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
+	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+    overHealAbsorbBar:SetAllPoints()
+    overHealAbsorbBar:SetReverseFill(true)
+	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
+	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+
+	-- Register and callback
+    self.HealthPrediction = {
+        myBar = myHeals,
+        otherBar = otherHeals,
+
+        absorbBar = absorbBar,
+		overAbsorb = overAbsorbBar,
+
+        healAbsorbBar = healAbsorbBar,
+        overHealAbsorb = overHealAbsorbBar,
+
+        maxOverflow = 1,
+        frequentUpdates = true,
+    }
+	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
+		local absorb = UnitGetTotalAbsorbs(unit) or 0
+		local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
+		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
+
+		local overA = 0
+		local overH = 0
+
+		-- 2nd dmg absorb shield
+		if (absorb > maxHealth) then
+			overA = absorb - maxHealth
+			self.overAbsorb:Show()
+		else
+			self.overAbsorb:Hide()
+		end
+		-- 2nd heal absorb shield
+		if (healAbsorb > maxHealth) then
+			overH = healAbsorb - maxHealth
+			self.overHealAbsorb:Show()
+		else
+			self.overHealAbsorb:Hide()
+		end
+
+		self.overHealAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
+		self.overHealAbsorb:SetValue(overH)
+		self.overAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
+		self.overAbsorb:SetValue(overA)
+
+		self.absorbBar:SetValue(absorb)
+
+	end
 
 	-- Tags
 	oUF.Tags.Events['curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
@@ -249,7 +376,10 @@ local function layout(self, unit)
 	self:Tag(self.Status, '[status]')
 
 	-- frame specific layouts
-	mod.custom_layout[unit](self, unit)
+	local func = unit
+	if (string.find(func, "boss")) then func = "boss" end
+	if (string.find(func, "arena")) then func = "arena" end
+	mod.custom_layout[func](self, unit)
 end
 
 function mod:create_unitframes()
@@ -265,22 +395,37 @@ function mod:create_unitframes()
 
 	-- target
 	local target = oUF:Spawn("target")
-	target:SetPoint("LEFT", UIParent, "CENTER", (config.playertargetwidth/2+2), -220)
+	target:SetPoint("LEFT", bdParent, "CENTER", (config.playertargetwidth/2+2), -220)
 	bdMove:set_moveable(target)
 
 	-- targetoftarget
 	local targettarget = oUF:Spawn("targettarget")
-	targettarget:SetPoint("LEFT", UIParent, "CENTER", (config.playertargetwidth/2+2), -220-config.playertargetheight-config.castbarheight-20)
+	targettarget:SetPoint("LEFT", bdParent, "CENTER", (config.playertargetwidth/2+2), -220-config.playertargetheight-config.castbarheight-20)
 	bdMove:set_moveable(targettarget)
 
 	-- pet
 	local pet = oUF:Spawn("pet")
-	pet:SetPoint("LEFT", UIParent, "CENTER", -(config.playertargetwidth/2+2), -220-config.playertargetheight-config.castbarheight-20)
-	pet:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", 0, -config.castbarheight-2)
+	pet:SetPoint("LEFT", bdParent, "CENTER", -(config.playertargetwidth/2+2), -220-config.playertargetheight-config.castbarheight-20)
+	pet:SetPoint("TOPLEFT", bdParent, "BOTTOMLEFT", 0, -config.castbarheight-2)
 	bdMove:set_moveable(pet)
 
 	-- focus
 	local focus = oUF:Spawn("focus")
-	focus:SetPoint("TOP", UIParent, "TOP", 0, -30)
+	focus:SetPoint("TOP", bdParent, "TOP", 0, -30)
 	bdMove:set_moveable(focus)
+
+	-- boss
+	local lastboss = nil
+	for i = 1, 5 do
+		local boss = oUF:Spawn("boss"..i, nil)
+		if (not lastboss) then
+			boss:SetPoint("LEFT", UIParent, "LEFT", 20, 80)
+		else
+			boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -50)
+		end
+		boss:SetSize(config.bosswidth, config.bossheight)
+		bdMove:set_moveable(boss)
+		lastboss = boss
+	end
+
 end
