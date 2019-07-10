@@ -16,7 +16,7 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 	- [x] Target
 	- [x] ToT
 	- [x] Pet
-	- [x] Focus
+	- [ ] Focus
 	- [ ] Boss
 	- [ ] Arena
 - [ ] Add Actionbars
@@ -45,9 +45,9 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 	- [ ] GMOTD
 	- [ ] Interrupt alert
 	- [ ] Raid Marker Frame
-- [ ] Add Tooltips
-	- [ ] Primary tooltips
-	- [ ] Namehover
+- [x] Add Tooltips
+	- [x] Primary tooltips
+	- [x] Namehover
 - [ ] \(Low Priority) Add setup tutorial
 - [x] Localization Support
 - [ ] \(Low Priority) Localization for all languages

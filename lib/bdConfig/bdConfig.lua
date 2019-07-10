@@ -124,6 +124,7 @@ function bdConfig:register(name, saved_variable_string, lock_toggle, settings)
 			config.window:Hide()
 		else
 			config.window:Show()
+			config.default:select()
 		end
 	end
 
@@ -722,6 +723,7 @@ function bdConfig:create_module(config, name)
 	module.name = name
 	module.tabs = {}
 	config.modules[name] = module
+	config.default = config.default or module
 
 	-- create tab container
 	local tabContainer = CreateFrame("frame", nil, config.window.right)
@@ -748,6 +750,7 @@ function bdConfig:create_module(config, name)
 			end
 		end
 
+		config.default = module
 		module.active = true
 		module.link.active = true
 		module.link:OnLeave()

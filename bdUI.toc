@@ -86,6 +86,7 @@ modules\nameplates\elements\resources.lua
 modules\tooltips\init.lua
 modules\tooltips\functions.lua
 modules\tooltips\core.lua
+modules\tooltips\elements\tooltipcolor.lua
 modules\tooltips\elements\namehover.lua
 
 # Grid
