@@ -60,10 +60,10 @@ function bdMove:set_moveable(frame, rename, left, top, right, bottom)
 	mover.text:Hide()
 
 	-- Sizing
-	hooksecurefunc(frame,"SetSize",function() 
+	hooksecurefunc(frame, "SetSize", function() 
 		local height = frame:GetHeight()
 		local width = frame:GetWidth()
-		mover:SetSize(width+2+border, height+2+border)
+		mover:SetSize(width+2+bdUI.border, height+2+bdUI.border)
 	end)
 
 	-- Attach the frame to the mover

@@ -13,16 +13,20 @@ local bdUI, c, l = unpack(select(2, ...))
 bdUI.modules = {}
 --================================================
 function bdUI:register_module(name, config)
+	if (name == "Name") then return {} end
+	if (bdUI[name]) then
+		bdUI:debug('"', name, '"', "already exists as a module. Use unique names for new modules")
+		return
+	end
 	bdUI[name] = bdUI[name] or CreateFrame("frame", name, bdParent)
 
-	local module = {}
-	module.name = name
-	module.config = config
-	module.config_callback = callback or noop	
-
+	local module = bdUI[name]
+	module._name = name
+	module._config = config
+	module._config_callback = callback or "config_callback"
 	table.insert(bdUI.modules, module)
 
-	return bdUI[name]
+	return module
 end
 
 -- Load specific modules
@@ -31,27 +35,44 @@ function bdUI:get_module(name)
 end
 
 function bdUI:load_module(name)
-	for k, module in pairs(bdUI.modules) do
-		if (module.name == name) then
-			if (not module.initialize) then
-				bdUI:debug(module.name, "does not have an initialize() function and can't be loaded")
-				return
-			end
 
-			module:initialize()
-			module:config_callback()
-			
-			return
-		end
+	local module = bdUI[name]
+
+	if (not module.initialize) then
+		bdUI:debug(module._name, "does not have an initialize() function and can't be loaded")
+		return
 	end
+
+	if (module:initialize(module._config) ~= false) then
+		-- config & initalize callback
+		if (type(module._config_callback) == "string") then
+			module[module._config_callback](module._config)
+		elseif (module._config_callback) then
+			module:_config_callback(module._config)
+		end
+		return module
+	end
+	
 end
 
 -- Load all modules
 function bdUI:load_modules()
 	for k, module in pairs(bdUI.modules) do
-		bdUI[module.name].config = bdUI.config_instance:register_module(module.name, module.config)
 
-		bdUI:load_module(module.name)
+		-- if (not type(module._config_callback) == "function" and type(module._config_callback) == "string" and module[module._config_callback]) then
+		-- 	module[module._config_callback] = module[module._config_callback]
+		-- else
+		-- 	module._config_callback = noop
+		-- end
+
+		if (type(module._config_callback) == "string") then
+			module._config_callback = module[module._config_callback]
+			-- print(module._config_callback)
+		end
+
+		module._config = bdUI.config_instance:register_module(module._name, module._config, module._config_callback)
+
+		bdUI:load_module(module._name)
 	end
 end
 

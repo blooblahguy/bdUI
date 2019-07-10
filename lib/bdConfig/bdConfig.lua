@@ -1071,7 +1071,7 @@ function bdConfig:create_button(parent)
 end
 
 -- dirty create shadow (no external textures)
-local function bdConfig:create_shadow(frame, size)
+function bdConfig:create_shadow(frame, size)
 	if (frame.shadow) then return end
 
 	local media = bdConfig.defaults.media

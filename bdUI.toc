@@ -1,5 +1,5 @@
 ## Interface: 80200
-## Title: bdUI
+## Title: |cffA02C2Fbd|rUI
 ## Author: Blooblahguy
 ## SavedVariables: BDUI_SAVE
 ## SavedVariablesPerCharacter: BDUI_CHARACTER
@@ -12,9 +12,10 @@ lib\LibBase64-1.0\LibBase64-1.0.lua
 lib\CallbackHandler-1.0\CallbackHandler-1.0.lua
 lib\LibSpellRange-1.0\LibSpellRange-1.0.lua
 lib\AceHook-3.0\AceHook-3.0.lua
+lib\AceComm-3.0\ChatThrottleLib.lua
 lib\AceComm-3.0\AceComm-3.0.lua
 lib\AceLocale-3.0\AceLocale-3.0.lua
-lib\ASerializermm-3.0\AceSerializer-3.0.lua
+lib\AceSerializer-3.0\AceSerializer-3.0.lua
 lib\AceTimer-3.0\AceTimer-3.0.lua
 lib\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
 lib\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
@@ -26,6 +27,7 @@ lib\bdConfig\bdConfig.lua
 # Core
 core\init.lua
 core\locale.lua
+core\commands.lua
 core\compatibility.lua
 core\core.lua
 core\media.lua

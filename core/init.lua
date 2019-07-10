@@ -1,14 +1,15 @@
 local addonName, ns = ...
 
-local engine = {}
+local engine = ns
 engine[1] = CreateFrame("Frame", nil, UIParent) -- core ui
 engine[2] = {} -- config
-engine[3] = {} -- profile
+engine[3] = {} -- locale
 bdUI = engine[1]
 bdUI.oUF = ns.oUF
 bdUI.name = addonName
+bdUI.colorString = '|cffA02C2Fbd|r'
 
-function bdUI:unpack()
+function ns:unpack()
 	return self[1], self[2], self[3]
 end
 
@@ -49,7 +50,6 @@ bdUI:calculate_scale()
 bdParent = CreateFrame("frame", "bdUIParent", UIParent)
 bdParent:SetPoint("TOPLEFT", UIParent)
 bdParent:SetPoint("BOTTOMRIGHT", UIParent)
-bdParent:SetScale(bdUI.scale)
 
 bdUI.hidden = CreateFrame("frame", nil, nil)
 bdUI.hidden:Hide()
@@ -61,17 +61,22 @@ bdUI.hidden.Show = function() return end
 -- Fonts
 --===================================================================
 bdUI.font_large = CreateFont("BDUI_LARGE")
-bdUI.font_large:SetFont(bdUI.media.font, 15)
+bdUI.font_large:SetFont(bdUI.media.font, 16, "OUTLINE")
 bdUI.font_large:SetShadowColor(0, 0, 0)
 bdUI.font_large:SetShadowOffset(0, 0)
 
 bdUI.font_medium = CreateFont("BDUI_MEDIUM")
-bdUI.font_medium:SetFont(bdUI.media.font, 13)
+bdUI.font_medium:SetFont(bdUI.media.font, 14, "OUTLINE")
+bdUI.font_medium:SetShadowColor(0, 0, 0)
+bdUI.font_medium:SetShadowOffset(0, 0)
+
+bdUI.font_medium = CreateFont("BDUI_SMALL")
+bdUI.font_medium:SetFont(bdUI.media.font, 12, "OUTLINE")
 bdUI.font_medium:SetShadowColor(0, 0, 0)
 bdUI.font_medium:SetShadowOffset(0, 0)
 
 bdUI.font_small = CreateFont("BDUI_MONO")
-bdUI.font_small:SetFont(bdUI.media.font, 11)
+bdUI.font_small:SetFont(bdUI.media.font, 11, "OUTLINE")
 bdUI.font_small:SetShadowColor(0, 0, 0)
 bdUI.font_small:SetShadowOffset(0, 0)
 

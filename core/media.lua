@@ -18,17 +18,17 @@ local bdUI, c, l = unpack(select(2, ...))
 		local border = bdUI.border
 
 		frame.background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
-		frame.background:SetTexture(bdCore.media.flat)
+		frame.background:SetTexture(bdUI.media.flat)
 		frame.background:SetPoint("TOPLEFT", frame, "TOPLEFT", -padding, padding)
 		frame.background:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", padding, -padding)
-		frame.background:SetVertexColor(unpack(bdCore.media.backdrop))
+		frame.background:SetVertexColor(unpack(bdUI.media.backdrop))
 		frame.background.protected = true
 		
 		frame.border = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
-		frame.border:SetTexture(bdCore.media.flat)
+		frame.border:SetTexture(bdUI.media.flat)
 		frame.border:SetPoint("TOPLEFT", frame, "TOPLEFT", -(padding + border), (padding + border))
 		frame.border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", (padding + border), -(padding + border))
-		frame.border:SetVertexColor(unpack(bdCore.media.border))
+		frame.border:SetVertexColor(unpack(bdUI.media.border))
 		frame.border.protected = true -- so this texture doesn't get stripped
 	end
 

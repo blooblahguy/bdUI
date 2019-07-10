@@ -18,7 +18,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- Register with bdConfig
 		bdUI.config_instance = bdConfig:register("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
 
-		bdUI:debug("Loaded. Enjoy.")
+		bdUI:debug(l['LOAD_MSG'])
 		bdUI:do_action("loaded")
 	end
 end)

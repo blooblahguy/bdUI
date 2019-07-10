@@ -62,7 +62,7 @@ bdUI.eventer = CreateFrame("frame", nil, bdParent)
 -- Developer Functions
 --==============================================
 	function bdUI:debug(...)
-		print(bdUI.colorString.."UI: "..tostring(...))
+		print(bdUI.colorString.."UI: "..tostring(table.concat({...}, " ")))
 	end
 
 	-- no operation function
@@ -86,3 +86,44 @@ bdUI.eventer = CreateFrame("frame", nil, bdParent)
 			end
 		end
 	end
+
+	-- slash commands
+	function bdUI:set_slash_command(name, func, ...)
+		SlashCmdList[name] = func
+		for i = 1, select('#', ...) do
+			_G['SLASH_'..name..i] = '/'..select(i, ...)
+		end
+	end
+
+	-- reload
+	bdUI:set_slash_command('ReloadUI', ReloadUI, 'rl', 'reset')
+	-- readycheck
+	bdUI:set_slash_command('DoReadyCheck', DoReadyCheck, 'rc', 'ready')
+	-- lock/unlock
+	bdUI:set_slash_command('ToggleLock', bdMove.toggle_lock, 'bdlock')
+	bdUI:set_slash_command('ResetPositions', function()
+		BDUI_SAVE = nil
+		bdMove:reset_positions()
+	end, 'bdreset')
+	-- framename
+	bdUI:set_slash_command('Frame', function()
+		print(GetMouseFocus():GetName())
+	end, 'frame')
+	-- texture
+	bdUI:set_slash_command('Texture', function()
+		local type, id, book = GetCursorInfo();
+		print((type=="item") and GetItemIcon(id) or (type=="spell") and GetSpellTexture(id,book) or (type=="macro") and select(2,GetMacroInfo(id)))
+	end, 'texture')
+	-- itemid
+	bdUI:set_slash_command('ItemID', function()
+		local infoType, info1, info2 = GetCursorInfo(); 
+		if infoType == "item" then 
+			print( info1 );
+		end
+	end, 'item')
+	-- tt functionality, thanks phanx for simple script
+	bdUI:set_slash_command('TellTarget', function()
+		if UnitIsPlayer("target") and (UnitIsUnit("player", "target") or UnitCanCooperate("player", "target")) then
+			SendChatMessage(message, "WHISPER", nil, GetUnitName("target", true))
+		end
+	end, 'tt', 'wt')
