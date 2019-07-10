@@ -74,7 +74,9 @@ config:add("hideclasshall", {
 
 local mod = bdUI:register_module("Minimap", config)
 
-
+--=============================================
+-- Initialize function
+--=============================================
 function mod:initialize(config)
 	if (not config.enabled) then return false end
 

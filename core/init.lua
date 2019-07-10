@@ -20,7 +20,7 @@ bdUI.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
 	arial = "fonts\\ARIALN.ttf",
 	smooth = "Interface\\Addons\\"..addonName.."\\media\\smooth.tga",
-	font = "Interface\\Addons\\"..addonName.."\\media\\Ubuntu.ttf",
+	font = "Interface\\Addons\\"..addonName.."\\media\\Myriad.ttf",
 	myriad = "Interface\\Addons\\"..addonName.."\\media\\Myriad.ttf",
 	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.blp",
 	arrowup = "Interface\\Addons\\"..addonName.."\\media\\arrowup.blp",
@@ -61,17 +61,17 @@ bdUI.hidden.Show = function() return end
 -- Fonts
 --===================================================================
 bdUI.font_large = CreateFont("BDUI_LARGE")
-bdUI.font_large:SetFont(bdUI.media.font, 16, "OUTLINE")
+bdUI.font_large:SetFont(bdUI.media.font, 15, "OUTLINE")
 bdUI.font_large:SetShadowColor(0, 0, 0)
 bdUI.font_large:SetShadowOffset(0, 0)
 
 bdUI.font_medium = CreateFont("BDUI_MEDIUM")
-bdUI.font_medium:SetFont(bdUI.media.font, 14, "OUTLINE")
+bdUI.font_medium:SetFont(bdUI.media.font, 13, "OUTLINE")
 bdUI.font_medium:SetShadowColor(0, 0, 0)
 bdUI.font_medium:SetShadowOffset(0, 0)
 
 bdUI.font_medium = CreateFont("BDUI_SMALL")
-bdUI.font_medium:SetFont(bdUI.media.font, 12, "OUTLINE")
+bdUI.font_medium:SetFont(bdUI.media.font, 11, "OUTLINE")
 bdUI.font_medium:SetShadowColor(0, 0, 0)
 bdUI.font_medium:SetShadowOffset(0, 0)
 

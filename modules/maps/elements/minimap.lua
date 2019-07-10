@@ -144,17 +144,6 @@ function mod:create_minimap()
 		DropDownList1:SetPoint('TOPLEFT', Minimap.background, 'TOPRIGHT', 2, 0)
 	end
 
-	local mailupdate = CreateFrame("frame")
-	mailupdate:RegisterEvent("MAIL_CLOSED")
-	mailupdate:RegisterEvent("MAIL_INBOX_UPDATE")
-	mailupdate:SetScript("OnEvent",function(self, event)
-		if (event == "MAIL_CLOSED") then
-			CheckInbox();
-		else
-			InboxFrame_Update()
-			OpenMail_Update()
-		end
-	end)
 	MiniMapMailIcon:SetTexture(nil)
 	MiniMapMailFrame.mail = MiniMapMailFrame:CreateFontString(nil,"OVERLAY")
 	MiniMapMailFrame.mail:SetFontObject("BDUI_MEDIUM")

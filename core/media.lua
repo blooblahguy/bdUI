@@ -44,6 +44,75 @@ local bdUI, c, l = unpack(select(2, ...))
 		end
 	end
 
+	function bdUI:ColorGradient(perc, ...)
+		if perc >= 1 then
+			local r, g, b = select(select('#', ...) - 2, ...)
+			return r, g, b
+		elseif perc <= 0 then
+			local r, g, b = ...
+			return r, g, b
+		end
+		
+		local num = select('#', ...) / 3
+
+		local segment, relperc = math.modf(perc*(num-1))
+		local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
+
+		return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
+	end
+
+	RGBToHex = RGBToHex or function(r, g, b)
+		r = r <= 255 and r >= 0 and r or 0
+		g = g <= 255 and g >= 0 and g or 0
+		b = b <= 255 and b >= 0 and b or 0
+		return string.format("%02x%02x%02x", r, g, b)
+	end
+
+	RGBPercToHex = RGBPercToHex or function(r, g, b)
+		r = r <= 1 and r >= 0 and r or 0
+		g = g <= 1 and g >= 0 and g or 0
+		b = b <= 1 and b >= 0 and b or 0
+		return string.format("%02x%02x%02x", r*255, g*255, b*255)
+	end
+
+	GetQuadrant = GetQuadrant or function(frame)
+		local x,y = frame:GetCenter()
+		local hhalf = (x > UIParent:GetWidth()/2) and "RIGHT" or "LEFT"
+		local vhalf = (y > UIParent:GetHeight()/2) and "TOP" or "BOTTOM"
+		return vhalf..hhalf, vhalf, hhalf
+	end
+
+	-- lua doesn't have a good function for round
+	function bdUI:round(num, idp)
+		local mult = 10^(idp or 0)
+		return floor(num * mult + 0.5) / mult
+	end
+
+	-- math clamp
+	function math.clamp( _in, low, high )
+		return math.min( math.max( _in, low ), high )
+	end
+
+	function math.restrict(_in, low, high)
+		if (_in < low) then _in = low end
+		if (_in > high) then _in = high end
+		return _in
+	end
+
+	function bdUI:numberize(v)
+		if v <= 9999 then return v end
+		if v >= 1000000000 then
+			local value = string.format("%.1fb", v/1000000000)
+			return value
+		elseif v >= 1000000 then
+			local value = string.format("%.1fm", v/1000000)
+			return value
+		elseif v >= 10000 then
+			local value = string.format("%.1fk", v/1000)
+			return value
+		end
+	end
+
 --========================================================
 -- Frames / Faders
 --========================================================

@@ -152,7 +152,7 @@ function mod:create_button_frame()
 
 	
 	local function move_buttons()
-		if (InCombatLockdown()) then return end
+		-- if (InCombatLockdown()) then return end
 		
 		local c = {Minimap.buttonFrame:GetChildren()}
 		local d = {Minimap:GetChildren()}
@@ -188,9 +188,9 @@ function mod:create_button_frame()
 		total = total + elapsed
 		if (total > .5) then
 			total = 0
-			if (not InCombatLockdown()) then
+			-- if (not InCombatLockdown()) then
 				move_buttons()
-			end
+			-- end
 		end
 	end)
 end
