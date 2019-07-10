@@ -1,0 +1,139 @@
+## Interface: 80200
+## Title: bdUI
+## Author: Blooblahguy
+## SavedVariables: BDUI_SAVE
+## SavedVariablesPerCharacter: BDUI_CHARACTER
+## X-oUF: bdUF
+
+# Libraries
+lib\LibStub\LibStub.lua
+lib\UTF8\UTF8.lua
+lib\LibBase64-1.0\LibBase64-1.0.lua
+lib\CallbackHandler-1.0\CallbackHandler-1.0.lua
+lib\LibSpellRange-1.0\LibSpellRange-1.0.lua
+lib\AceHook-3.0\AceHook-3.0.lua
+lib\AceComm-3.0\AceComm-3.0.lua
+lib\AceLocale-3.0\AceLocale-3.0.lua
+lib\ASerializermm-3.0\AceSerializer-3.0.lua
+lib\AceTimer-3.0\AceTimer-3.0.lua
+lib\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
+lib\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+lib\oUF\oUF.xml
+lib\LibSimpleSticky\LibSimpleSticky.lua
+lib\bdMove\bdMove.lua
+lib\bdConfig\bdConfig.lua
+
+# Core
+core\init.lua
+core\locale.lua
+core\compatibility.lua
+core\core.lua
+core\media.lua
+core\defaults.lua
+core\modules.lua
+core\setup.lua
+core\load.lua
+
+# Actionbars
+modules\actionbars\init.lua
+modules\actionbars\functions.lua
+modules\actionbars\core.lua
+modules\actionbars\elements\bars.lua
+modules\actionbars\elements\range.lua
+modules\actionbars\elements\hoverbind.lua
+modules\actionbars\elements\hotkeys.lua
+
+# Databars
+modules\databars\init.lua
+modules\databars\functions.lua
+modules\databars\core.lua
+modules\databars\elements\xp.lua
+modules\databars\elements\azerite.lua
+modules\databars\elements\reputation.lua
+modules\databars\elements\honor.lua
+modules\databars\elements\altpower.lua
+
+# Bags
+modules\bags\init.lua
+modules\bags\functions.lua
+modules\bags\core.lua
+modules\bags\elements\bag.lua
+modules\bags\elements\bank.lua
+modules\bags\elements\loot.lua
+
+# Maps
+modules\maps\init.lua
+modules\maps\functions.lua
+modules\maps\core.lua
+modules\maps\elements\minimap.lua
+modules\maps\elements\buttonframe.lua
+modules\maps\elements\worldmap.lua
+
+# Nameplates
+modules\nameplates\init.lua
+modules\nameplates\functions.lua
+modules\nameplates\core.lua
+modules\nameplates\elements\auras.lua
+modules\nameplates\elements\friendly.lua
+modules\nameplates\elements\npc.lua
+modules\nameplates\elements\personal.lua
+modules\nameplates\elements\enemy.lua
+modules\nameplates\elements\resources.lua
+
+# Tooltips
+modules\tooltips\init.lua
+modules\tooltips\functions.lua
+modules\tooltips\core.lua
+modules\tooltips\elements\namehover.lua
+
+# Grid
+modules\grid\init.lua
+modules\grid\functions.lua
+modules\grid\core.lua
+
+# Chat
+modules\chat\init.lua
+modules\chat\functions.lua
+modules\chat\core.lua
+modules\chat\elements\bubbles.lua
+
+# Auras
+modules\auras\init.lua
+modules\auras\functions.lua
+modules\auras\core.lua
+modules\auras\elements\watcher.lua
+
+# Unitframes
+modules\unitframes\init.lua
+modules\unitframes\functions.lua
+modules\unitframes\core.lua
+modules\unitframes\elements\player.lua
+modules\unitframes\elements\target.lua
+modules\unitframes\elements\targettarget.lua
+modules\unitframes\elements\focus.lua
+modules\unitframes\elements\pet.lua
+modules\unitframes\elements\boss.lua
+modules\unitframes\elements\arena.lua
+
+# MISC
+modules\misc\init.lua
+modules\misc\functions.lua
+modules\misc\core.lua
+modules\misc\elements\autovendor.lua
+modules\misc\elements\gmotd.lua
+modules\misc\elements\doubleclickbo.lua
+modules\misc\elements\developer.lua
+modules\misc\elements\errorblock.lua
+modules\misc\elements\interrupt.lua
+modules\misc\elements\qol.lua
+modules\misc\elements\raidmarker.lua
+
+# Skins
+modules\skin\init.lua
+modules\skin\functions.lua
+modules\skin\core.lua
+modules\skin\elements\durability.lua
+modules\skin\elements\pvpcapture.lua
+modules\skin\elements\gm.lua
+modules\skin\elements\vehicle.lua
+modules\skin\elements\viewports.lua
