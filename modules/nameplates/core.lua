@@ -67,6 +67,14 @@ function mod:config_callback()
 		else
 			self.Curhp:Show()
 		end
+
+		if (config.markposition == "LEFT") then
+			self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
+		elseif (config.markposition == "RIGHT") then
+			self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", config.raidmarkersize/2, 0)
+		else
+			self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
+		end
 	end
 
 	mod.font:SetFont(bdUI.media.font, config.enemynamesize, "OUTLINE")
@@ -83,7 +91,7 @@ function mod:config_callback()
 		, ['nameplateShowAll'] = 1
 		, ['nameplateMinAlpha'] = 1
 		, ['nameplateMaxAlpha'] = 1
-		, ['nameplateMotionSpeed'] = 0.1
+		, ['nameplateMotionSpeed'] = 0
 		, ['nameplateOccludedAlphaMult'] = 1
 		, ['nameplateMaxAlphaDistance'] = 1
 		, ['nameplateMaxDistance'] = config.nameplatedistance+6 -- for some reason there is a 6yd diff
@@ -105,6 +113,9 @@ function mod:config_callback()
 	end
 end
 
+mod.eventer = CreateFrame("frame", nil)
+mod.eventer:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
+mod.eventer:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
 
 --==============================================
 -- Show Kickable Casts
@@ -123,27 +134,6 @@ end
 --==============================================
 -- Target Visuals
 --==============================================
-local function fixate_update(self, event, unit)
-	if (self.disableFixate) then self.Fixate:Hide() return end
-
-	local target = unit.."target"
-
-	if (config.fixateMobs[UnitName(unit)]) then
-		self.Fixate:Show()
-		self.Fixate.text:SetText(UnitName(target))
-	else
-		if (UnitExists(target) and UnitIsPlayer(target)) then
-			if (config.fixatealert == "Always" or config.fixatealert == "All") then
-				self.Fixate:Show()
-				self.Fixate.text:SetText(UnitName(target))
-			elseif (config.fixatealert == "Personal" and UnitIsUnit(target, "player")) then
-				self.Fixate:Show()
-				self.Fixate.text:SetText(UnitName(target))
-			end
-		end
-	end
-
-end
 local function find_target(self, event, unit)
 	unit = unit or self.unit
 	if (UnitIsUnit(unit, "target")) then
@@ -219,7 +209,8 @@ local function nameplate_callback(self, event, unit)
 	find_target(self, event, unit)
 
 	-- update backdrop positioning
-	mod:config_callback()
+	bdUI:set_backdrop(self.Health)
+	bdUI:set_backdrop(self.Castbar)
 
 	--==========================================
 	-- Style by unit type
@@ -325,39 +316,31 @@ local function nameplate_create(self, unit)
 	--==========================================
 	self.RaidTargetIndicator = self:CreateTexture(nil, "OVERLAY", nil, 7)
 	self.RaidTargetIndicator:SetSize(config.raidmarkersize, config.raidmarkersize)
-	if (config.markposition == "LEFT") then
-		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
-	elseif (config.markposition == "RIGHT") then
-		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", config.raidmarkersize/2, 0)
-	else
-		self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
-	end
 
 	--==========================================
 	-- FIXATES / TARGETS
 	--==========================================
-	self.Fixate = CreateFrame("frame",nil,self)
-	self.Fixate:SetPoint("LEFT", self.Health, "RIGHT", 4, -1)
-	self.Fixate:SetSize(self.Health:GetSize())
-	self.Fixate.text = self.Fixate:CreateFontString(nil, "OVERLAY", "BDN_FONT_SMALL")
-	local icon = select(3, GetSpellInfo(210099))
-	self.Fixate.text.SetText_Old = self.Fixate.text.SetText
-	self.Fixate.text.SetText = function(self, unit)
-		local color = bdCore:RGBToHex(bdNameplates:autoUnitColor(unit))
-		if (unit and UnitIsUnit(unit,"player")) then
-			self:SetAlpha(1)
-			self:SetText_Old("|T"..icon..":16:16:0:0:60:60:4:56:4:56|t ".."|cff"..color..unit.."|r")
-		else
-			self:SetAlpha(0.8)
-			self:SetText_Old("|cff"..color..unit.."|r")
+	self.FixateAlert = self:CreateFontString(nil, "OVERLAY", "BDN_FONT_SMALL")
+	self.FixateAlert:SetPoint("LEFT", self.Health, "RIGHT", 4, -1)
+	self.FixateAlert:SetSize(self.Health:GetSize())
+	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
+		self:Hide()
+
+		if (not UnitExists(target)) then return end
+
+		if (config.fixateMobs[UnitName(unit)]) then
+			self:Show()
+			self:SetText(UnitName(target))
+		elseif (isTargeting) then
+			if (config.fixatealert == "Always" or config.fixatealert == "All") then
+				self:Show()
+				self:SetText(UnitName(target))
+			elseif (config.fixatealert == "Personal" and isTargetingPlayer) then
+				self:Show()
+				self:SetText(UnitName(target))
+			end
 		end
 	end
-	self.Fixate.text:SetAllPoints(self.Fixate)
-	self.Fixate.text:SetJustifyH("LEFT")
-	self.Fixate.text:SetTextColor(1,1,1)
-	self.Fixate:Hide()
-	self:RegisterEvent("UNIT_TARGET", fixate_update, true)
-
 
 	--==========================================
 	-- AURAS
@@ -387,7 +370,7 @@ local function nameplate_create(self, unit)
 	end
 	
 	self.Auras.PostCreateIcon = function(self, button)
-		bdCore:setBackdrop(button)
+		bdUI:set_backdrop(button)
 
 		local cdtext = button.cd:GetRegions()
 		cdtext:SetFontObject("BDN_FONT_SMALL") 
@@ -413,7 +396,7 @@ local function nameplate_create(self, unit)
 		elseif (config.highlightEnrage and debuffType == "") then -- enrage alert
 			button.border:SetVertexColor(unpack(config.enrageColor))
 		else -- neither
-			button.border:SetVertexColor(unpack(bdCore.media.border))
+			button.border:SetVertexColor(unpack(bdUI.media.border))
 		end
 	end
 
