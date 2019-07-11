@@ -38,18 +38,19 @@ bdUI.media = {
 --===================================================================
 -- Scale & Alt-UIParent 
 --===================================================================
+bdParent = CreateFrame("frame", "bdUIParent", UIParent)
+bdParent:SetPoint("TOPLEFT", UIParent)
+bdParent:SetPoint("BOTTOMRIGHT", UIParent)
+
 function bdUI:calculate_scale()
 	bdUI.screenheight = select(2, GetPhysicalScreenSize())
 	bdUI.scale = 768 / bdUI.screenheight
 	bdUI.ui_scale = GetCVar("uiScale") or 1
 	bdUI.pixel = bdUI.scale / bdUI.ui_scale
 	bdUI.border = bdUI.pixel * 2
+	bdParent:SetScale(bdUI.scale)
 end
 bdUI:calculate_scale()
-
-bdParent = CreateFrame("frame", "bdUIParent", UIParent)
-bdParent:SetPoint("TOPLEFT", UIParent)
-bdParent:SetPoint("BOTTOMRIGHT", UIParent)
 
 bdUI.hidden = CreateFrame("frame", nil, nil)
 bdUI.hidden:Hide()

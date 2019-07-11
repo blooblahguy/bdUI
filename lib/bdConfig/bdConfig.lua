@@ -36,7 +36,7 @@ bdConfig.defaults = {
 	header = 30,
 	padding = 10,
 
-	['media'] = {
+	media = {
 		flat = "Interface\\Buttons\\WHITE8x8",
 		arrow = "Interface\\Buttons\\Arrow-Down-Down.PNG",
 		font = "fonts\\ARIALN.ttf",
@@ -313,7 +313,7 @@ function bdConfig:list_element(module, option, info)
 	title:SetPoint("TOPLEFT", container, "TOPLEFT", 0, 0)
 	title:SetText(info.label)
 
-	local button = CreateButton(container)
+	local button = bdConfig:create_button(container)
 	button:SetText("Add/Remove")
 
 	local insertbox = CreateFrame("EditBox", nil, container)
@@ -354,7 +354,7 @@ function bdConfig:list_element(module, option, info)
 	list:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT")
 	bdConfig:create_backdrop(list)
 
-	local content = CreateScrollFrame(list)
+	local content = bdConfig:create_scrollframe(list)
 
 	list.text = content:CreateFontString(nil, "OVERLAY", "bdConfig_font")
 	list.text:SetPoint("TOPLEFT", content, "TOPLEFT", 5, 0)
@@ -444,7 +444,7 @@ end
 function bdConfig:button_element(module, option, info)
 	local container =  bdConfig:contain_element(module, info)
 
-	local create = CreateButton(container)
+	local create = bdConfig:create_button(container)
 	create:SetPoint("TOPLEFT", container, "TOPLEFT")
 	create:SetText(info.value)
 
@@ -478,7 +478,7 @@ function bdConfig:textbox_element(module, option, info)
 	create.label:SetText(info.description)
 	create.label:SetPoint("BOTTOMLEFT", create, "TOPLEFT", 0, 4)
 
-	create.button = CreateButton(create)
+	create.button = bdConfig:create_button(create)
 	create.button:SetPoint("LEFT", create, "RIGHT", 4, 0)
 	create.button:SetText(info.button)
 	create.button.OnClick = function()
@@ -591,7 +591,7 @@ function bdConfig:color_element(module, option, info)
 
 	local picker = CreateFrame("button", nil, container)
 	picker:SetSize(20, 20)
-	picker:SetBackdrop({bgFile = bdCore.media.flat, edgeFile = bdCore.media.flat, edgeSize = 2, insets = {top = 2, right = 2, bottom = 2, left = 2}})
+	picker:SetBackdrop({bgFile = bdConfig.defaults.media.flat, edgeFile = bdConfig.defaults.media.flat, edgeSize = 2, insets = {top = 2, right = 2, bottom = 2, left = 2}})
 	picker:SetBackdropColor(unpack(module.save[option]))
 	picker:SetBackdropBorderColor(0,0,0,1)
 	picker:SetPoint("LEFT", container, "LEFT", 0, 0)
@@ -1151,9 +1151,14 @@ function bdConfig:create_scrollframe(parent, width, height)
 	scrollbar:SetScript("OnValueChanged", function (self, value) 
 		self:GetParent():SetVerticalScroll(value) 
 	end)
-	scrollParent:SetScript("OnMouseWheel", function(self, delta)
+
+	-- scroller
+	local function scroll(self, delta)
 		scrollbar:SetValue(scrollbar:GetValue() - (delta*20))
-	end)
+	end
+	scrollbar:SetScript("OnMouseWheel", scroll)
+	scrollParent:SetScript("OnMouseWheel", scroll)
+	content:SetScript("OnMouseWheel", scroll)
 
 	-- store
 	parent.scrollParent = scrollParent

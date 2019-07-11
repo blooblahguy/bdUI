@@ -149,9 +149,9 @@ function mod:create_tooltips()
 	---------------------------------------------
 	--	Modify default position
 	---------------------------------------------
-	local tooltipanchor = CreateFrame("frame","bdTooltip",UIParent)
+	local tooltipanchor = CreateFrame("frame","bdTooltip",bdParent)
 	tooltipanchor:SetSize(150, 100)
-	tooltipanchor:SetPoint("LEFT", UIParent, "CENTER", 450, -200)
+	tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 450, -200)
 	bdMove:set_moveable(tooltipanchor)
 
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
@@ -173,21 +173,6 @@ function mod:create_tooltips()
 		'DropDownList1MenuBackdrop',
 		'DropDownList2MenuBackdrop',
 	}
-
-	
-	-- 	local frame = _G[tooltips[i]]
-	-- 	-- mod:skin(frame)
-
-	-- 	if (not frame.hooked) then
-	-- 		frame:SetScript("OnShow", function()
-	-- 		-- frame:SetScript("OnShow", function()
-	-- 			-- mod:strip(frame)
-	-- 		end)
-
-	-- 		frame.hooked = true
-	-- 	end
-	-- end
-
 
 	--=================================
 	-- Override blizzard defaults so

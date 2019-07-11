@@ -12,24 +12,56 @@ local bdUI, c, l = unpack(select(2, ...))
 		frame.background = true
 	end
 
-	function bdUI:set_backdrop(frame, resize, padding)
-		if (frame.background) then return end
-		padding = padding or 0
-		local border = bdUI.border
+	function bdUI:get_border(frame)
+		local screenheight = select(2, GetPhysicalScreenSize())
+		local scale = 768 / screenheight
+		local frame_scale = frame:GetEffectiveScale()
+		local pixel = scale / frame_scale
+		local border = pixel * 2
 
-		frame.background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
-		frame.background:SetTexture(bdUI.media.flat)
-		frame.background:SetPoint("TOPLEFT", frame, "TOPLEFT", -padding, padding)
-		frame.background:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", padding, -padding)
-		frame.background:SetVertexColor(unpack(bdUI.media.backdrop))
-		frame.background.protected = true
+		return border
+	end
+
+	function bdUI:set_backdrop(frame, resize)
+		local border = bdUI:get_border(frame)
+		if (not frame.background) then
+			frame.background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
+			frame.background:SetTexture(bdUI.media.flat)
+			frame.background:SetAllPoints()
+			frame.background:SetVertexColor(unpack(bdUI.media.backdrop))
+			frame.background.protected = true
+
+			frame.border = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
+			frame.border:SetTexture(bdUI.media.flat)
+			frame.border:SetVertexColor(unpack(bdUI.media.border))
+			frame.border.protected = true -- so this texture doesn't get stripped
+		end
 		
-		frame.border = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
-		frame.border:SetTexture(bdUI.media.flat)
-		frame.border:SetPoint("TOPLEFT", frame, "TOPLEFT", -(padding + border), (padding + border))
-		frame.border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", (padding + border), -(padding + border))
-		frame.border:SetVertexColor(unpack(bdUI.media.border))
-		frame.border.protected = true -- so this texture doesn't get stripped
+		frame.border:SetPoint("TOPLEFT", frame, "TOPLEFT", -border, border)
+		frame.border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", border, -border)
+		
+	end
+
+	function bdUI:create_shadow(frame, offset)
+		if f._shadow then return end
+		
+		local shadow = CreateFrame("Frame", nil, frame)
+		shadow:SetFrameLevel(1)
+		shadow:SetFrameStrata(frame:GetFrameStrata())
+		shadow:SetPoint("TOPLEFT", -offset, offset)
+		shadow:SetPoint("BOTTOMLEFT", -offset, -offset)
+		shadow:SetPoint("TOPRIGHT", offset, offset)
+		shadow:SetPoint("BOTTOMRIGHT", offset, -offset)
+		shadow:SetAlpha(0.7)
+		
+		shadow:SetBackdrop( { 
+			edgeFile = bdUI.media.shadow, edgeSize = offset,
+			insets = {left = offset, right = offset, top = offset, bottom = offset},
+		})
+		
+		shadow:SetBackdropColor(0, 0, 0, 0)
+		shadow:SetBackdropBorderColor(0, 0, 0, 0.8)
+		frame._shadow = shadow
 	end
 
 	function bdUI:set_highlight(frame, icon)

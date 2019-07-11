@@ -20,6 +20,8 @@ lib\AceTimer-3.0\AceTimer-3.0.lua
 lib\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
 lib\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
 lib\oUF\oUF.xml
+lib\oUF_Plugins\oUF_Fixate.lua
+lib\oUF_Plugins\oUF_ThreatLite.lua
 lib\LibSimpleSticky\LibSimpleSticky.lua
 lib\bdMove\bdMove.lua
 lib\bdConfig\bdConfig.lua
@@ -27,6 +29,7 @@ lib\bdConfig\bdConfig.lua
 # Core
 core\init.lua
 core\locale.lua
+core\memoize.lua
 core\commands.lua
 core\compatibility.lua
 core\core.lua
