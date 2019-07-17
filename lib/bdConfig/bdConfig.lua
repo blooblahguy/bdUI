@@ -14,15 +14,10 @@
 ]]
 
 local addonName, ns = ...
-ns.bdConfig = {}
 local mod = ns.bdConfig
-mod.callback = LibStub("CallbackHandler-1.0"):New(mod, "Register", "Unregister", "UnregisterAll")
 
 -- Developer functions
 local xpcall = xpcall
-function mod:noop() return end
-function mod:debug(...) print("|cffA02C2FbdConfig|r:", ...) end
-function mod:round(num, idp) local mult = 10^(idp or 0) return floor(num * mult + 0.5) / mult end
 local function errorhandler(err)
 	return geterrorhandler()(err)
 end
@@ -64,8 +59,9 @@ function mod:register(name, lock_toggle)
 		--========================================
 		-- Recursively build config
 		--========================================
-		function module:build(config, name)
+		function module:build(config, name, parent)
 			instance.save[name] = instance.save[name] or {}
+			parent.children = parent.children or {}
 			local sv = instance.save[name]
 
 			-- loop through options
@@ -74,23 +70,22 @@ function mod:register(name, lock_toggle)
 				mod:ensure_value(sv, option, info.value)
 
 				-- frame build here
-				info.parent = info.parent or module
+				info.parent = parent
 				info.name = option
 				info.save = sv
 
 				-- container group
 				if (mod.container[info.type]) then
-					module.tree
+					parent = mod.container(info, save, parent)
+				elseif (mod.elements[info.type])
+					parent = mod.container(info, save, parent)
+				else
+					mod:debug("No module found for", info.type)
 				end
 
-					-- recursive call
-					if (info.args) then
-						module:build(info.args, name)
-					end
-
-				-- end layout
-				if (mod["end_"..info.type]) then
-					mod["end_"..info.type](bdConfig, info)
+				-- recursive call
+				if (info.args) then
+					module:build(info.args, name, parent)
 				end
 			end
 
@@ -102,7 +97,7 @@ function mod:register(name, lock_toggle)
 		end
 
 		-- call recursive build function
-		module:build(config, name)
+		module:build(config, name, module)
 
 		-- return configuration reference
 		return instance.save[name]
@@ -121,13 +116,12 @@ end
 -- ELEMENTS & CONTAINERS
 --=================================================================
 local mod.containers = {}
-function mod:register_container(name, create)
-	local container = create
+function mod:register_container(options, create)
 	mod.containers[name] = create
 end
 
 local mod.elements = {}
-function mod:register_element(name, create)
+function mod:register_element(options, create)
 	mod.elements[name]['start'] = create
 end
 
