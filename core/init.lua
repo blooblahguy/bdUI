@@ -7,6 +7,7 @@ engine[3] = {} -- locale
 bdUI = engine[1]
 bdUI.oUF = ns.oUF
 bdUI.name = addonName
+bdUI.bdConfig = ns.bdConfig
 bdUI.colorString = '|cffA02C2Fbd|r'
 
 function ns:unpack()
@@ -29,7 +30,7 @@ bdUI.media = {
 	fonts = {},
 	backgrounds = {},
 	border = {.06, .08, .09, 1},
-	backdrop = {.11, .15, .18, 1},
+	backdrop = {.11, .15, .18, 0.8},
 	red = {['r'] = .62, ['g'] = .17, ['b'] = .18, ['a'] = 1},
 	blue = {['r'] = .2, ['b'] = .4, ['g'] = 0.8, ['a'] = 1},
 	green = {['r'] = .1, ['b'] = .7, ['g'] = 0.3, ['a'] = 1},

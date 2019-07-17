@@ -58,16 +58,9 @@ end
 -- Load all modules
 function bdUI:load_modules()
 	for k, module in pairs(bdUI.modules) do
-
-		-- if (not type(module._config_callback) == "function" and type(module._config_callback) == "string" and module[module._config_callback]) then
-		-- 	module[module._config_callback] = module[module._config_callback]
-		-- else
-		-- 	module._config_callback = noop
-		-- end
-
+	
 		if (type(module._config_callback) == "string") then
 			module._config_callback = module[module._config_callback]
-			-- print(module._config_callback)
 		end
 
 		module._config = bdUI.config_instance:register_module(module._name, module._config, module._config_callback)

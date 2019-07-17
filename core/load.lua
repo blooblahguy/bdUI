@@ -5,7 +5,7 @@ loader:RegisterEvent("ADDON_LOADED")
 loader:SetScript("OnEvent", function(self, event, addon)
 	if (addon == bdUI.name) then
 		loader:UnregisterEvent("ADDON_LOADED")
-		bdUI:do_action("preload")
+		bdUI:do_action("pre_loaded")
 
 		-- initiate SVs
 		BDUI_SAVE = BDUI_SAVE or {}
@@ -16,9 +16,10 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		bdMove.spacing = bdUI.border
 
 		-- Register with bdConfig
-		bdUI.config_instance = bdConfig:register("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
+		bdUI.config_instance = bdUI.bdConfig:register("bdUI", bdMove.toggle_lock)
 
 		bdUI:debug(l['LOAD_MSG'])
 		bdUI:do_action("loaded")
+		bdUI:do_action("post_loaded")
 	end
 end)

@@ -5,12 +5,13 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 ## TODO
 - [x] Add Config
 	- [ ] Profiles
+	- [ ] Spec Profile Switching
 - [x] Add Moving
 	- [ ] Resizing
-- [ ] Add Map
+- [ ] Add Maps
 	- [x] Minimap
 	- [ ] World map improvements
-- [ ] Add Unitframes
+- [x] Add Unitframes
 	- [x] Heal & Absorb Predictions
 	- [x] Player
 	- [x] Target
@@ -20,7 +21,7 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 	- [ ] Boss
 	- [ ] Arena
 - [ ] Add Actionbars
-- [ ] Add Nameplates
+- [x] Add Nameplates
 - [ ] Add Auras
 - [ ] Add Bags
 - [ ] Add Grid
@@ -48,6 +49,6 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 - [x] Add Tooltips
 	- [x] Primary tooltips
 	- [x] Namehover
-- [ ] \(Low Priority) Add setup tutorial
 - [x] Localization Support
 - [ ] \(Low Priority) Localization for all languages
+- [ ] \(Low Priority) Add setup tutorial

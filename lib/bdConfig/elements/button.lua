@@ -1,0 +1,3 @@
+local addonName, ns = ...
+local mod = ns.bdConfig
+
