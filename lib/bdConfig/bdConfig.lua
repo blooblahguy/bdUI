@@ -16,27 +16,18 @@
 local addonName, ns = ...
 local mod = ns.bdConfig
 
--- Developer functions
-local xpcall = xpcall
-local function errorhandler(err)
-	return geterrorhandler()(err)
-end
-local function safecall(func, ...)
-	if func then
-		return xpcall(func, errorhandler, ...)
-	end
-end
-
 --=================================================================
 -- REGISTER ADDON
 --=================================================================
-function mod:register(name, lock_toggle)
+function mod:register(name, saved_variables_string, lock_toggle)
 	local instance = {}
-	instance._sv = GetAddOnMetadata(addonName, 'SavedVariables')
+
 	instance._ns = name
 	instance._modules = {}
 	instance._window = mod:create_windows(name, lock_toggle)
-	instance.save = mod:initialize_saved_variables(instance._sv)
+	instance.save = mod:initialize_saved_variables(saved_variables_string)
+
+
 
 	-- show config window toggle
 	function instance:toggle()
@@ -54,50 +45,51 @@ function mod:register(name, lock_toggle)
 	function instance:register_module(name, config, callback)
 		local module = mod:create_module(instance, name)
 		module._config = config
-		module.tree = {}
+		module._containers = {}
 
 		--========================================
 		-- Recursively build config
 		--========================================
 		function module:build(config, name, parent)
 			instance.save[name] = instance.save[name] or {}
-			parent.children = parent.children or {}
 			local sv = instance.save[name]
 
 			-- loop through options
 			for option, info in pairs(config) do
-				-- initiate sv default
-				mod:ensure_value(sv, option, info.value)
+				mod:ensure_value(sv, info.key, info.value) -- initiate sv default
+				local group = parent
 
 				-- frame build here
-				info.parent = parent
-				info.name = option
 				info.save = sv
+				info.module = name
+				info.callback = callback or noop
+				local group = parent
 
 				-- container group
-				if (mod.container[info.type]) then
-					parent = mod.container(info, save, parent)
-				elseif (mod.elements[info.type])
-					parent = mod.container(info, save, parent)
+				if (mod.containers[info.type]) then
+					group = group:add(mod.containers[info.type](info, group))
+				elseif (mod.elements[info.type]) then
+					group:add(mod.elements[info.type](info, group))
 				else
-					mod:debug("No module found for", info.type)
+					mod:debug("No module found for", info.type, "for", info.key)
 				end
 
 				-- recursive call
 				if (info.args) then
-					module:build(info.args, name, parent)
+					module:build(info.args, name, group)
 				end
+
+				parent.last_frame = group
 			end
-
-		end
-
-		-- Build Module Layout
-		function module:layout()
-
 		end
 
 		-- call recursive build function
-		module:build(config, name, module)
+		local group = mod.containers["group"]({}, module, true)
+		-- group:SetBackdrop({bgFile = mod.media.flat})
+		-- group:SetBackdropColor(0, 1, 0, 0.08)
+		group.scroller = module
+		module:build(config, name, group)
+		group:update()
 
 		-- return configuration reference
 		return instance.save[name]
@@ -115,19 +107,87 @@ end
 --=================================================================
 -- ELEMENTS & CONTAINERS
 --=================================================================
-local mod.containers = {}
-function mod:register_container(options, create)
-	mod.containers[name] = create
+mod.containers = {}
+function mod:register_container(name, create)
+	if (mod.containers[name]) then return end
+	mod.containers[name] = function(config, parent, ...)
+		local frame = create(config, parent, ...)
+		frame._type = name
+		frame._layout = "group"
+		parent.last_frame = frame
+		return frame
+	end
 end
 
-local mod.elements = {}
-function mod:register_element(options, create)
-	mod.elements[name]['start'] = create
+mod.elements = {}
+function mod:register_element(name, create)
+	if (mod.elements[name]) then return end
+	mod.elements[name] = function(config, parent, ...)
+		local frame = create(config, parent, ...)
+		frame._type = name
+		frame._layout = "element"
+		parent.last_frame = frame
+		return frame
+	end
 end
 
 --=================================================================
 -- LAYOUT FRAMES
 --=================================================================
-function mod:create_container(options)
 
+function mod:create_container(options, parent, height)
+	local padding = mod.dimensions.padding
+	height = height or 30
+	local sizes = {
+		half = 0.5,
+		third = 0.33,
+		twothird = 0.66,
+		full = 1
+	}
+
+	-- track row width
+	size = sizes[options.size or "full"]
+	parent._row = parent._row or 0
+	parent._row = parent._row + size
+
+	local container = CreateFrame("frame", nil, parent)
+	container:SetSize((parent:GetWidth() * size) - (padding * 1.5), height)
+	-- TESTING : shows a background around each container for debugging
+	-- container:SetBackdrop({bgFile = mod.media.flat})
+	-- container:SetBackdropColor(.1, .8, .2, 0.1)
+
+	if (parent._row > 1 or not parent._lastel) then
+		-- new or first row
+		parent._row = size
+		container._isrow = true
+
+		if (not parent._rowel and parent.last_frame) then
+			-- first, but next to group or element
+			container:SetPoint("TOPLEFT", parent.last_frame, "BOTTOMLEFT", 0, -padding)
+			parent._rowel = container
+		elseif (not parent._rowel) then
+			-- first element
+			container:SetPoint("TOPLEFT", parent, "TOPLEFT", padding, -padding)
+			parent._rowel = container
+		else
+			-- new row
+			container:SetPoint("TOPLEFT", parent._rowel, "BOTTOMLEFT", 0, -padding)
+			parent._rowel = container
+		end
+	else
+		-- same row
+		local height = container:GetHeight()
+		local lastheight = parent._lastel:GetHeight()
+		local idealheight = math.max(height, lastheight)
+		container:SetHeight(idealheight)
+		parent._lastel:SetHeight(idealheight)
+		-- print(height, lastheight)
+		-- if (height < lastheight) then
+		-- end
+		container:SetPoint("LEFT", parent._lastel, "RIGHT", padding, 0)
+	end
+
+	parent._lastel = container
+
+	return container
 end

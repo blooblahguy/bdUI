@@ -2,15 +2,21 @@ local addonName, ns = ...
 local mod = ns.bdConfig
 
 --=================================================
+-- Config Builder Helper
+--=================================================
+function mod:parse_config()
+	
+end
+
+--=================================================
 -- Initialize SavedVariables
 --=================================================
 function mod:initialize_saved_variables(saved_variable)
-	local sv = _G[saved_variable]
 	local player = UnitName("player")
 
 	-- Default configuration
-	if (not sv) then
-		sv = {
+	if (not _G[saved_variable]) then
+		_G[saved_variable] = {
 			users = {
 				[player] = {
 					profile = "default"
@@ -22,6 +28,13 @@ function mod:initialize_saved_variables(saved_variable)
 		}
 	end
 
+	if (not _G[saved_variable].users[player]) then
+		_G[saved_variable].users[player] = {
+			profile = "default"
+		}
+	end
+	
+	local sv = _G[saved_variable]
 	local profile = sv.users[player].profile
 	sv.profiles[profile] = sv.profiles[profile] or {}
 
@@ -31,6 +44,7 @@ end
 -- makes sure a value is set in the given save index
 function mod:ensure_value(sv, option, value)
 	if (sv[option] == nil) then
+		print("ensure", option, value)
 		value = value and value or {}
 		sv[option] = value
 	end

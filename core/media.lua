@@ -39,7 +39,6 @@ local bdUI, c, l = unpack(select(2, ...))
 		
 		frame.border:SetPoint("TOPLEFT", frame, "TOPLEFT", -border, border)
 		frame.border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", border, -border)
-		
 	end
 
 	function bdUI:create_shadow(frame, offset)

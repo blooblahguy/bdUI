@@ -92,12 +92,12 @@ core\load.lua
 # modules\bags\elements\loot.lua
 
 # Maps
-# modules\maps\init.lua
-# modules\maps\functions.lua
-# modules\maps\core.lua
-# modules\maps\elements\minimap.lua
-# modules\maps\elements\buttonframe.lua
-# modules\maps\elements\worldmap.lua
+modules\maps\init.lua
+modules\maps\functions.lua
+modules\maps\core.lua
+modules\maps\elements\minimap.lua
+modules\maps\elements\buttonframe.lua
+modules\maps\elements\worldmap.lua
 
 # Nameplates
 # modules\nameplates\init.lua
@@ -129,16 +129,16 @@ modules\tooltips\elements\namehover.lua
 # modules\chat\elements\bubbles.lua
 
 # Unitframes
-# modules\unitframes\init.lua
-# modules\unitframes\functions.lua
-# modules\unitframes\core.lua
-# modules\unitframes\elements\player.lua
-# modules\unitframes\elements\target.lua
-# modules\unitframes\elements\targettarget.lua
-# modules\unitframes\elements\focus.lua
-# modules\unitframes\elements\pet.lua
-# modules\unitframes\elements\boss.lua
-# modules\unitframes\elements\arena.lua
+modules\unitframes\init.lua
+modules\unitframes\functions.lua
+modules\unitframes\core.lua
+modules\unitframes\elements\player.lua
+modules\unitframes\elements\target.lua
+modules\unitframes\elements\targettarget.lua
+modules\unitframes\elements\focus.lua
+modules\unitframes\elements\pet.lua
+modules\unitframes\elements\boss.lua
+modules\unitframes\elements\arena.lua
 
 # Skins
 # modules\skin\init.lua

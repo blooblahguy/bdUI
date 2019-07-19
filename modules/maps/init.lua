@@ -4,73 +4,90 @@
 local bdUI, c, l = unpack(select(2, ...))
 
 -- Config Table
-local config = bdConfig:helper_config()
-config:add("enabled", {
-	type = "checkbox",
-	value = true,
-	label = "Enable",
-})
-config:add("size", {
-	type = "slider",
-	value = 320,
-	step = 5,
-	min = 50,
-	max = 600,
-	label = "Size",
-	tooltip = "Width and Height of Minimap",
-})
-
-config:add("shape", {
-	type = "dropdown",
-	value = "Rectangle",
-	options = {"Rectangle","Square"},
-	label = "Minimap Shape",
-})
-config:add("buttonpos", {
-	type = "dropdown",
-	value = "Bottom",
-	options = {"Disable","Top","Right","Bottom","Left"},
-	label = "Minimap Buttons position",
-})
-
-config:add("buttonsize", {
-	type = "slider",
-	value = 28,
-	step = 2,
-	min = 10,
-	max = 60,
-	label = "Button Size",
-	tooltip = "Size of button frame buttons",
-})
-
-config:add("mouseoverbuttonframe", {
-	type = "checkbox",
-	value = false,
-	label = "Hide Minimap Button frame until mouseover"
-})
-config:add("showconfig", {
-	type = "checkbox",
-	value = true,
-	label = "Show bdConfig button",
-})
-
-config:add("xptracker", {
-	type ="checkbox",
-	value = true,
-	label = "Enable XP/Rep tracker",
-})
-
-config:add("showtime", {
-	type = "checkbox",
-	value = true,
-	label = "Show Time",
-})
-
-config:add("hideclasshall", {
-	type = "checkbox",
-	value = false,
-	label = "Hide Class Hall Button",
-})
+local config = {
+	{
+		key = "enabled",
+		type = "toggle",
+		value = true,
+		label = "Enable Minimap"
+	},
+	{
+		key = "minimap_tab",
+		type = "tab",
+		value = "Minimap",
+		args = {
+			{
+				key = "test",
+				label = "Minimap Size",
+				type = "toggle",
+				value = true,
+			},
+			{
+				key = "size",
+				label = "Minimap Size",
+				type = "range",
+				min = 50,
+				max = 600,
+				step = 5,
+				value = 320
+			},
+			{
+				key = "shape",
+				type = "select",
+				value = "Rectangle",
+				options = {"Rectangle", "Square"},
+				label = "Minimap Shape"
+			}
+		}
+	},
+	{
+		key = "buttonframe_tab",
+		type = "tab",
+		value = "Button Frame",
+		args = {
+			{
+				key = "buttonpos",
+				type = "select",
+				value = "Bottom",
+				options = {"Disabled", "Top", "Right", "Bottom", "Left"},
+				label = "Button Frame Position"
+			},
+			{
+				key = "buttonsize",
+				type = "range",
+				value = 28,
+				min = 10,
+				max = 60,
+				step = 2,
+				label = "Size of buttons"
+			},
+			{
+				key = "mouseoverbuttonframe",
+				type = "toggle",
+				value = false,
+				label = "Hide button frame until mouseover"
+			},
+			{
+				key = "showconfig",
+				type = "toggle",
+				value = true,
+				label = "Show bdConfig button"
+			},
+			{
+				key = "showtime",
+				type = "toggle",
+				value = true,
+				label = "Show Time"
+			},
+			{
+				key = "hideclasshall",
+				type = "toggle",
+				value = false,
+				label = "Hide Class Hall Button"
+			},
+		}
+	},
+}
 
 local mod = bdUI:register_module("Minimap", config)
 

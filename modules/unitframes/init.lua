@@ -4,226 +4,260 @@
 local bdUI, c, l = unpack(select(2, ...))
 
 -- Config Table
-local config = bdConfig:helper_config()
-config:add("enabled", {
-	type = "checkbox",
-	value = true,
-	label = "Enable",
-})
-config:add("enablecastbars", {
-	type = "checkbox",
-	value = true,
-	label = "Enable Castbars",
-}) 
-
-config:add("showtargetbuffs", {
-	type = "checkbox",
-	value = true,
-	label = "Show Target's Buffs",
-})
-config:add("inrangealpha", {
-	type = "slider",
-	min = 0.1,
-	max = 1,
-	step = 0.1,
-	value = 1,
-	label = "In Range Alpha",
-}) 
-
-config:add("outofrangealpha", {
-	type = "slider",
-	min = 0.1,
-	max = 0.5,
-	step = 0.1,
-	value = 1,
-	label = "Out of Range Alpha",
-}) 
-
---=========================================
--- PLAYER & TARGET
---=========================================
-	config:add("tab", {
-		type = "tab",
-		value = "Player & Target"
-	})
-	config:add("textlocation", {
-		type = "dropdown",
-		value = "Outside",
-		options = {"Outside","Inside","Top/Bottom"},
-		label = "Text Location",
-	}) 
-	config:add("bufftrackerstyle", {
-		type = "dropdown",
-		value = "Aurabars",
-		options = {"Aurabars","Icons","None"},
-		label = "Buff Display Style",
-	}) 
-	config:add("playertargetwidth", {
-		type = "slider",
-		value = 280,
-		label = "Width",
-		step = 2,
-		min = 100,
-		max = 300,
-	}) 
-	config:add("playertargetheight", {
-		type = "slider",
-		value = 32,
-		label = "Height",
-		step = 2,
-		min = 4,
-		max = 60,
-	}) 
-	config:add("playertargetpowerheight", {
-		type = "slider",
-		value = 3,
-		label = "Power height",
-		step = 1,
-		min = 2,
-		max = 10,
-	})
-
-	config:add("castbarheight", {
-		type = "slider",
-		value = 14,
-		label = "Castbar height",
-		step = 1,
-		min = 6,
-		max = 30,
-	}) 
-	config:add("castbaricon", {
-		type = "slider",
-		value = 28,
-		label = "Castbar Icon Size",
-		step = 1,
-		min = 6,
-		max = 50,
-	}) 
---=========================================
--- Focus
---=========================================
-	config:add("tab", {
-		type = "tab",
-		value = "Focus"
-	})
-	config:add("focuswidth", {
-		type = "slider",
-		value = 240,
-		label = "Width",
-		step = 2,
-		min = 50,
-		max = 300,
-	}) 
-	config:add("focusheight", {
-		type = "slider",
-		value = 20,
-		label = "Height",
-		step = 2,
-		min = 4,
-		max = 40,
-	}) 
-	config:add("focuscastwidth", {
-		type = "slider",
-		value = 240,
-		label = "Castbar Width",
-		step = 2,
-		min = 50,
-		max = 300,
-	}) 
-	config:add("focuscastheight", {
-		type = "slider",
-		value = 20,
-		label = "Castar Height",
-		step = 2,
-		min = 4,
-		max = 40,
-	}) 
-	config:add("focuscasticon", {
-		type = "slider",
-		value = 30,
-		label = "Castbar Icon Height",
-		step = 2,
-		min = 4,
-		max = 60,
-	}) 
-	config:add("focuspower ", {
-		type = "slider",
-		value = 2,
-		label = "Power height",
-		step = 1,
-		min = 2,
-		max = 10,
-	}) 
-
---=========================================
--- ToT
---=========================================
-	config:add("tab", {
-		type = "tab",
-		value = "Target's Target & Pet"
-	})
-
-	config:add("targetoftargetwidth", {
-		type = "slider",
-		value = 120,
-		label = "Width",
-		step = 2,
-		min = 60,
-		max = 220,
-	})
-	config:add("targetoftargetheight", {
-		type = "slider",
-		value = 16,
-		label = "Height",
-		step = 2,
-		min = 6,
-		max = 30,
-	})
-
---=========================================
--- Boss
---=========================================
-	config:add("tab", {
-		type = "tab",
-		value = "Boss"
-	})
-	config:add("bossenable", {
-		type = "checkbox",
+local config = {
+	{
+		key = "enabled",
+		type = "toggle",
+		label = "Enable Unitframes",
 		value = true,
-		label = "Enable Boss Frames",
-	})
-	config:add("bosswidth", {
-		type = "slider",
-		value = 200,
-		label = "Width",
-		step = 5,
-		min = 60,
-		max = 420,
-	})
-	config:add("bossdebuffsize", {
-		type = "slider",
-		value = 30,
-		label = "Aura Size",
-		step = 2,
-		min = 10,
-		max = 100,
-	})
-	config:add("bossheight", {
-		type = "slider",
-		value = 40,
-		label = "Height",
-		step = 5,
-		min = 5,
-		max = 200,
-	})
-	config:add("bosspower ", {
-		type = "slider",
-		value = 10,
-		label = "Power height",
-		step = 1,
-		min = 2,
-		max = 20,
-	}) 
+	},
+	--=========================================
+	-- General / Global settings
+	--=========================================
+	{
+		key = "general_tab",
+		type = "tab",
+		label = "General",
+		args = {
+			{
+				key = "enablecastbars",
+				value = true,
+				type = "toggle",
+				label = "Enable Castbars"
+			},
+			{
+				key = "showtargetbuffs",
+				value = true,
+				type = "toggle",
+				label = "Show Target's Buffs"
+			},
+			{
+				key = "inrangealpha",
+				value = 1,
+				min = 0.1,
+				max = 1,
+				step = 0.1,
+				type = "range",
+				label = "In Range Frame Alpha"
+			},
+			{
+				key = "outofrangealpha",
+				value = 0.6,
+				min = 0.1,
+				max = 1,
+				step = 0.1,
+				type = "range",
+				label = "Out of Range Frame Alpha"
+			},
+		}
+	},
+	--=========================================
+	-- PLAYER & TARGET
+	--=========================================
+	{
+		key = "playertarget_tab",
+		type = "tab",
+		label = "Player & Target",
+		args = {
+			{
+				key = "textlocation",
+				value = "Outside",
+				type = "select",
+				options = {"Outside", "Inside", "Top/Bottom"},
+				label = "Text Location"
+			},
+			{
+				key = "playertargetwidth",
+				value = 220,
+				min = 100,
+				max = 300,
+				step = 2,
+				type = "range",
+				label = "Width"
+			},
+			{
+				key = "playertargetheight",
+				value = 32,
+				min = 4,
+				max = 60,
+				step = 2,
+				type = "range",
+				label = "Height"
+			},
+			{
+				key = "playertargetpowerheight",
+				value = 3,
+				min = 1,
+				max = 10,
+				step = 1,
+				type = "range",
+				label = "Power Height"
+			},
+			{
+				key = "castbarheight",
+				value = 14,
+				step = 1,
+				min = 6,
+				max = 30,
+				type = "range",
+				label = "Castbar height"
+			},
+			{
+				key = "castbaricon",
+				value = 28,
+				step = 1,
+				min = 6,
+				max = 50,
+				type = "range",
+				label = "Castbar Icon Size"
+			},
+		}
+	},
+	--=========================================
+	-- FOCUS
+	--=========================================
+	{
+		key = "focustab",
+		type = "tab",
+		label = "Focus",
+		args = {
+			{
+				key = "focuswidth",
+				type = "range",
+				label = "Width",
+				value = 240,
+				min = 50,
+				max = 300,
+				step = 2,
+			},
+			{
+				key = "focusheight",
+				type = "range",
+				label = "Height",
+				value = 20,
+				min = 4,
+				max = 40,
+				step = 2,
+			},
+			{
+				key = "focuscastwidth",
+				type = "range",
+				label = "Castbar Width",
+				value = 240,
+				min = 50,
+				max = 300,
+				step = 2,
+			},
+			{
+				key = "focuscastheight",
+				type = "range",
+				label = "Castbar Height",
+				value = 20,
+				min = 4,
+				max = 40,
+				step = 2,
+			},
+			{
+				key = "focuscasticon",
+				type = "range",
+				label = "Castbar Icon Height",
+				value = 30,
+				min = 4,
+				max = 60,
+				step = 2,
+			},
+			{
+				key = "focuspower",
+				type = "range",
+				label = "Power Height",
+				value = 20,
+				min = 1,
+				max = 10,
+				step = 1,
+			},
+		}
+	},
+	--=========================================
+	-- ToT & Pet
+	--=========================================
+	{
+		key = "totpettab",
+		type = "tab",
+		label = "Target's Target & Pet",
+		args = {
+			{
+				key = "targetoftargetwidth",
+				type = "range",
+				label = "Width",
+				value = 120,
+				min = 60,
+				max = 220,
+				step = 2,
+			},
+			{
+				key = "targetoftargetheight",
+				type = "range",
+				label = "Height",
+				value = 16,
+				min = 6,
+				max = 30,
+				step = 2,
+			},
+		}
+	},
+	--=========================================
+	-- BOSS
+	--=========================================
+	{
+		key = "bosstab",
+		type = "tab",
+		label = "Boss",
+		args = {
+			{
+				key = "bossenable",
+				value = true,
+				type = "toggle",
+				label = "Enable Boss Frames"
+			},
+			{
+				key = "bossdebuffsize",
+				type = "range",
+				label = "Aura Size",
+				value = 30,
+				min = 10,
+				max = 100,
+				step = 2,
+			},
+			{
+				key = "bosswidth",
+				type = "range",
+				label = "Width",
+				value = 200,
+				min = 60,
+				max = 420,
+				step = 5,
+			},
+			{
+				key = "bossheight",
+				type = "range",
+				label = "Height",
+				value = 40,
+				min = 5,
+				max = 200,
+				step = 5,
+			},
+			{
+				key = "bosspower",
+				type = "range",
+				label = "Power Height",
+				value = 6,
+				min = 1,
+				max = 10,
+				step = 1,
+			},
+		}
+	}
+}
 
 local mod = bdUI:register_module("Unitframes", config)
 

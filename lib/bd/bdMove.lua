@@ -20,8 +20,8 @@ bdMove.media = {
 }
 
 -- set savedvariable
-function bdMove:set_save(sv_string)
-	bdMove.save = _G[sv_string]
+function bdMove:set_save(sv)
+	bdMove.save = sv
 	bdMove.save.positions = bdMove.save.positions or {}
 end
 
