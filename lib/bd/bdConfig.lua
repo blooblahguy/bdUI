@@ -319,7 +319,7 @@ function bdConfig:list_element(module, option, info)
 	local insertbox = CreateFrame("EditBox", nil, container)
 	insertbox:SetFontObject("bdConfig_font")
 	insertbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -6)
-	insertbox:SetSize(container:GetWidth() - 66, 24)
+	insertbox:SetSize(container:GetWidth() - 66, 30)
 	insertbox:SetTextInsets(6, 2, 2, 2)
 	insertbox:SetMaxLetters(200)
 	insertbox:SetHistoryLines(1000)
@@ -363,7 +363,6 @@ function bdConfig:list_element(module, option, info)
 	list.text:SetJustifyH("LEFT")
 	list.text:SetJustifyV("TOP")
 	list.text:SetText("test")
-	
 
 	-- show all config entries in this list
 	function list:populate()

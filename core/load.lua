@@ -8,6 +8,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		bdUI:do_action("pre_loaded")
 
 		-- Register with bdConfig
+		bdUI.bdConfig.media.font = bdUI.media.font
 		bdUI.config_instance = bdUI.bdConfig:register("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
 
 		-- set save for bdMove, so that we're not vulnerable to UI errors resetting positioning

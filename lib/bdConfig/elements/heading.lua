@@ -23,7 +23,7 @@ local methods = {
 -- Spawn Element
 --========================================
 local function create(options, parent)
-	options.size = "full"
+	options.size = options.size or "full"
 
 	local container = mod:create_container(options, parent)
 	container:SetHeight(20)

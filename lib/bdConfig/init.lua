@@ -37,13 +37,6 @@ mod.arrow:SetTexture(mod.media.arrow)
 mod.arrow:SetTexCoord(0.9, 0.9, 0.9, 0.6)
 mod.arrow:SetVertexColor(1, 1, 1, 0.5)
 
--- main font object
-mod.font = CreateFont("bdConfig_font")
-mod.font:SetFont(mod.media.font, mod.media.fontSize)
-mod.font:SetShadowColor(0, 0, 0)
-mod.font:SetShadowOffset(1, -1)
-mod.foundBetterFont = false
-
 --===========================================
 -- MEDIA FUNCTIONS
 --===========================================
@@ -61,7 +54,7 @@ end
 -- Create 2px background frame
 function mod:create_backdrop(frame, alpha)
 	local border = mod:get_border(frame)
-	alpha = alpha or 0.97
+	alpha = alpha or 0.99
 	if (frame.bd_background) then return end
 
 	local r, g, b, a = unpack(mod.media.background)
@@ -80,8 +73,8 @@ end
 function mod:create_scrollframe(parent)
 	local padding = mod.dimensions.padding
 
-	width = width or parent:GetWidth()
-	height = height or parent:GetHeight()
+	local width = parent:GetWidth()
+	local height = parent:GetHeight()
 
 	-- scrollframe
 	local scrollParent = CreateFrame("ScrollFrame", nil, parent) 

@@ -444,13 +444,13 @@ local function nameplate_create(self, unit)
 			-- attribute who this cast is targeting
 			if (UnitExists(destName)) then
 				self.Castbar.AttributeText:SetText(UnitName(destName))
-				self.Castbar.AttributeText:SetTextColor(bdNameplates:autoUnitColor(destName))
+				self.Castbar.AttributeText:SetTextColor(mod:autoUnitColor(destName))
 			end
 		elseif (event == "SPELL_INTERRUPT" and config.showcastinterrupt) then
 			-- attribute who interrupted this cast
 			if (UnitExists(sourceName)) then
 				self.Castbar.AttributeText:SetText(UnitName(sourceName))
-				self.Castbar.AttributeText:SetTextColor(bdNameplates:autoUnitColor(sourceName))
+				self.Castbar.AttributeText:SetTextColor(mod:autoUnitColor(sourceName))
 			end
 		end
 	end

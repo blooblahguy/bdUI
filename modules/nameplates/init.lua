@@ -109,18 +109,12 @@ local config = {
 				label = "Friendly Name Opacity",
 			},
 			{
-				key = "showCenterDot",
-				type = "toggle",
-				value = false,
-				label = "Show center dot, useful for tracking character",
-			},
-			{
 				key = "highlightPurge",
 				type = "toggle",
 				value = false,
 				label = "Highlight units who have purgeable auras",
 			},
-						{
+			{
 				key = "highlightEnrage",
 				type = "toggle",
 				value = false,
@@ -404,7 +398,7 @@ local config = {
 		}
 	},
 	-------------
-	-- Your Debuffs
+	-- Auras
 	-------------
 	{
 		key = "tab",
@@ -418,13 +412,6 @@ local config = {
 				label = "Automatically track debuffs cast by you."
 			},
 			{
-				key = "selfwhitelist",
-				type = "list",
-				value = {},
-				label = "Enemy Debuffs (cast by you)",
-				tooltip="Use to show a specified aura cast by you."
-			},
-			{
 				key = "raidbefuffs",
 				type = "range",
 				value = 50,
@@ -434,29 +421,31 @@ local config = {
 				label = "Raid Debuff Size",
 			},
 			{
-				key = "whitelist",
-				type = "list",
-				value = defaultwhitelist,
-				label = "Friendly/Enemy Auras (cast by anyone)",
-				tooltip="Use to show a specified aura cast by anyone."
-			},
-			{
 				key = "disableauras",
 				type = "toggle",
 				value = false,
 				label = "Don't show any auras."
 			},
 			{
-				key = "text",
-				type = "text",
-				value = "Certain abilities are tracked by default, i.e. stuns / silences. You can stop these from showing up using the blacklist. "
+				key = "selfwhitelist",
+				type = "list",
+				value = {},
+				label = "Debuffs Cast By You",
+				tooltip="Use to show a specified aura cast by you."
+			},
+			{
+				key = "whitelist",
+				type = "list",
+				value = defaultwhitelist,
+				label = "Auras Cast by Anyone",
+				tooltip="Use to show a specified aura cast by anyone."
 			},
 			{
 				key = "blacklist",
 				type = "list",
 				value = {},
 				label = "Aura Blacklist",
-				tooltip="Useful if you want to blacklist any auras that Blizzard tracks by default."
+				tooltip="Useful if you want to blacklist any auras that Blizzard tracks by default.",
 			},
 		}
 	},

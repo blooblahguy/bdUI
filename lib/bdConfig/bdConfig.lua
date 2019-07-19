@@ -75,7 +75,7 @@ function mod:register(name, saved_variables_string, lock_toggle)
 					end
 
 					-- recursive call
-					if (info.args) then
+					if (info.args and info.type ~= "repeater") then
 						module:build(info.args, name, group)
 					end
 
@@ -113,8 +113,8 @@ end
 mod.containers = {}
 function mod:register_container(name, create)
 	if (mod.containers[name]) then return end
-	mod.containers[name] = function(config, parent, ...)
-		local frame = create(config, parent, ...)
+	mod.containers[name] = function(options, parent, ...)
+		local frame = create(options, parent, ...)
 		frame._type = name
 		frame._layout = "group"
 		parent.last_frame = frame
@@ -125,8 +125,8 @@ end
 mod.elements = {}
 function mod:register_element(name, create)
 	if (mod.elements[name]) then return end
-	mod.elements[name] = function(config, parent, ...)
-		local frame = create(config, parent, ...)
+	mod.elements[name] = function(options, parent, ...)
+		local frame = create(options, parent, ...)
 		frame._type = name
 		frame._layout = "element"
 		parent.last_frame = frame

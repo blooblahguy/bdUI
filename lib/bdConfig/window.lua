@@ -9,6 +9,13 @@ function mod:create_windows(name, lock_toggle)
 	local media = mod.media
 	local border = mod:get_border(UIParent)
 
+	-- main font object
+	mod.font = CreateFont("bdConfig_font")
+	mod.font:SetFont(mod.media.font, mod.media.fontSize)
+	mod.font:SetShadowColor(0, 0, 0)
+	mod.font:SetShadowOffset(1, -1)
+	mod.foundBetterFont = false
+
 	-- Parent
 	local window = CreateFrame("Frame", "bdConfig Lib", UIParent)
 	window:SetPoint("RIGHT", UIParent, "RIGHT", -20, 0)
@@ -78,7 +85,6 @@ function mod:create_windows(name, lock_toggle)
 	window.right:SetPoint("TOPRIGHT", window, "TOPRIGHT", 0, -dimensions.header - border)
 	window.right:SetSize(dimensions.right_column - border, dimensions.height)
 	mod:create_backdrop(window.right)
-	-- window.right.bd_background:SetVertexColor(unpack(media.border))
 
 	return window
 end

@@ -10,6 +10,7 @@
 	<Script file="elements\group.lua"/>
 	<Script file="elements\heading.lua"/>
 	<Script file="elements\input.lua"/>
+	<Script file="elements\list.lua"/>
 	<Script file="elements\multiselect.lua"/>
 	<Script file="elements\range.lua"/>
 	<Script file="elements\repeater.lua"/>
