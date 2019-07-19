@@ -44,7 +44,6 @@ end
 -- makes sure a value is set in the given save index
 function mod:ensure_value(sv, option, value)
 	if (sv[option] == nil) then
-		print("ensure", option, value)
 		value = value and value or {}
 		sv[option] = value
 	end

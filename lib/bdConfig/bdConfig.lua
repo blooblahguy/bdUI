@@ -57,29 +57,32 @@ function mod:register(name, saved_variables_string, lock_toggle)
 			-- loop through options
 			for option, info in pairs(config) do
 				mod:ensure_value(sv, info.key, info.value) -- initiate sv default
-				local group = parent
 
-				-- frame build here
-				info.save = sv
-				info.module = name
-				info.callback = callback or noop
-				local group = parent
+				if (mod.containers[info.type] or mod.elements[info.type]) then -- only if we've created this module
+					local group = parent
 
-				-- container group
-				if (mod.containers[info.type]) then
-					group = group:add(mod.containers[info.type](info, group))
-				elseif (mod.elements[info.type]) then
-					group:add(mod.elements[info.type](info, group))
+					-- frame build here
+					info.save = sv
+					info.module = name
+					info.callback = callback or noop
+					local group = parent
+
+					-- container group
+					if (mod.containers[info.type]) then
+						group = group:add(mod.containers[info.type](info, group))
+					elseif (mod.elements[info.type]) then
+						group:add(mod.elements[info.type](info, group))
+					end
+
+					-- recursive call
+					if (info.args) then
+						module:build(info.args, name, group)
+					end
+
+					parent.last_frame = group
 				else
 					mod:debug("No module found for", info.type, "for", info.key)
 				end
-
-				-- recursive call
-				if (info.args) then
-					module:build(info.args, name, group)
-				end
-
-				parent.last_frame = group
 			end
 		end
 

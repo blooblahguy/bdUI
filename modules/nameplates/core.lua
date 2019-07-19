@@ -113,10 +113,6 @@ function mod:config_callback()
 	end
 end
 
-mod.eventer = CreateFrame("frame", nil)
-mod.eventer:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
-mod.eventer:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
-
 --==============================================
 -- Show Kickable Casts
 --==============================================
@@ -478,6 +474,10 @@ end
 function mod:initialize()
 	config = mod._config
 	if (not config.enabled) then return end
+
+	mod.eventer = CreateFrame("frame", nil)
+	mod.eventer:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
+	mod.eventer:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
 	oUF:SetActiveStyle("bdNameplates")

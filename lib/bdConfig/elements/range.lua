@@ -79,8 +79,8 @@ local function create(options, parent)
 	slider.save = options.save
 	slider.key = options.key
 	Mixin(slider, methods)
-	slider:SetScript("OnValueChanged", slider.onchange)
 	slider:set(options.save, options.key)
+	slider:SetScript("OnValueChanged", slider.onchange)
 
 	return container
 end

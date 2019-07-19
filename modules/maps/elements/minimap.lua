@@ -100,12 +100,7 @@ function mod:create_minimap()
 		end
 	end)
 
-	Minimap:RegisterEvent("PLAYER_ENTERING_WORLD")
-	Minimap:HookScript("OnEvent", function(self, event)
-		if (event == "PLAYER_ENTERING_WORLD") then
-			bdMove:set_moveable(UIErrorsFrame)	
-		end
-	end)
+	bdMove:set_moveable(UIErrorsFrame)	
 	bdMove:set_moveable(Minimap.background)
 
 	local frames = {

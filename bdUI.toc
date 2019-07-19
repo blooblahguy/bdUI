@@ -45,51 +45,51 @@ core\setup.lua
 core\load.lua
 
 # Auras
-# modules\auras\init.lua
-# modules\auras\functions.lua
-# modules\auras\core.lua
-# modules\auras\elements\watcher.lua
-# modules\auras\elements\auras.lua
+modules\auras\init.lua
+modules\auras\functions.lua
+modules\auras\core.lua
+modules\auras\elements\watcher.lua
+modules\auras\elements\auras.lua
 
 # General
-# modules\misc\init.lua
-# modules\misc\functions.lua
-# modules\misc\core.lua
-# modules\misc\elements\autovendor.lua
-# modules\misc\elements\gmotd.lua
-# modules\misc\elements\doubleclickbo.lua
-# modules\misc\elements\developer.lua
-# modules\misc\elements\errorblock.lua
-# modules\misc\elements\interrupt.lua
-# modules\misc\elements\qol.lua
-# modules\misc\elements\raidmarker.lua
+modules\misc\init.lua
+modules\misc\functions.lua
+modules\misc\core.lua
+modules\misc\elements\autovendor.lua
+modules\misc\elements\gmotd.lua
+modules\misc\elements\doubleclickbo.lua
+modules\misc\elements\developer.lua
+modules\misc\elements\errorblock.lua
+modules\misc\elements\interrupt.lua
+modules\misc\elements\qol.lua
+modules\misc\elements\raidmarker.lua
 
 # Actionbars
-# modules\actionbars\init.lua
-# modules\actionbars\functions.lua
-# modules\actionbars\core.lua
-# modules\actionbars\elements\bars.lua
-# modules\actionbars\elements\range.lua
-# modules\actionbars\elements\hoverbind.lua
-# modules\actionbars\elements\hotkeys.lua
+modules\actionbars\init.lua
+modules\actionbars\functions.lua
+modules\actionbars\core.lua
+modules\actionbars\elements\bars.lua
+modules\actionbars\elements\range.lua
+modules\actionbars\elements\hoverbind.lua
+modules\actionbars\elements\hotkeys.lua
 
 # Databars
-# modules\databars\init.lua
-# modules\databars\functions.lua
-# modules\databars\core.lua
-# modules\databars\elements\xp.lua
-# modules\databars\elements\azerite.lua
-# modules\databars\elements\reputation.lua
-# modules\databars\elements\honor.lua
-# modules\databars\elements\altpower.lua
+modules\databars\init.lua
+modules\databars\functions.lua
+modules\databars\core.lua
+modules\databars\elements\xp.lua
+modules\databars\elements\azerite.lua
+modules\databars\elements\reputation.lua
+modules\databars\elements\honor.lua
+modules\databars\elements\altpower.lua
 
 # Bags
-# modules\bags\init.lua
-# modules\bags\functions.lua
-# modules\bags\core.lua
-# modules\bags\elements\bag.lua
-# modules\bags\elements\bank.lua
-# modules\bags\elements\loot.lua
+modules\bags\init.lua
+modules\bags\functions.lua
+modules\bags\core.lua
+modules\bags\elements\bag.lua
+modules\bags\elements\bank.lua
+modules\bags\elements\loot.lua
 
 # Maps
 modules\maps\init.lua
@@ -100,15 +100,15 @@ modules\maps\elements\buttonframe.lua
 modules\maps\elements\worldmap.lua
 
 # Nameplates
-# modules\nameplates\init.lua
-# modules\nameplates\functions.lua
-# modules\nameplates\core.lua
-# modules\nameplates\elements\auras.lua
-# modules\nameplates\elements\friendly.lua
-# modules\nameplates\elements\npc.lua
-# modules\nameplates\elements\personal.lua
-# modules\nameplates\elements\enemy.lua
-# modules\nameplates\elements\resources.lua
+modules\nameplates\init.lua
+modules\nameplates\functions.lua
+modules\nameplates\core.lua
+modules\nameplates\elements\auras.lua
+modules\nameplates\elements\friendly.lua
+modules\nameplates\elements\npc.lua
+modules\nameplates\elements\personal.lua
+modules\nameplates\elements\enemy.lua
+modules\nameplates\elements\resources.lua
 
 # Tooltips
 modules\tooltips\init.lua
@@ -118,15 +118,15 @@ modules\tooltips\elements\tooltipcolor.lua
 modules\tooltips\elements\namehover.lua
 
 # Grid
-# modules\grid\init.lua
-# modules\grid\functions.lua
-# modules\grid\core.lua
+modules\grid\init.lua
+modules\grid\functions.lua
+modules\grid\core.lua
 
 # Chat
-# modules\chat\init.lua
-# modules\chat\functions.lua
-# modules\chat\core.lua
-# modules\chat\elements\bubbles.lua
+modules\chat\init.lua
+modules\chat\functions.lua
+modules\chat\core.lua
+modules\chat\elements\bubbles.lua
 
 # Unitframes
 modules\unitframes\init.lua
@@ -141,11 +141,11 @@ modules\unitframes\elements\boss.lua
 modules\unitframes\elements\arena.lua
 
 # Skins
-# modules\skin\init.lua
-# modules\skin\functions.lua
-# modules\skin\core.lua
-# modules\skin\elements\durability.lua
-# modules\skin\elements\pvpcapture.lua
-# modules\skin\elements\gm.lua
-# modules\skin\elements\vehicle.lua
-# modules\skin\elements\viewports.lua
+modules\skin\init.lua
+modules\skin\functions.lua
+modules\skin\core.lua
+modules\skin\elements\durability.lua
+modules\skin\elements\pvpcapture.lua
+modules\skin\elements\gm.lua
+modules\skin\elements\vehicle.lua
+modules\skin\elements\viewports.lua
