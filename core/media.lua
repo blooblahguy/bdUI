@@ -3,6 +3,25 @@ local bdUI, c, l = unpack(select(2, ...))
 --================================================
 -- Media Functions
 --================================================
+	function bdUI:strip_textures(object, strip_text)
+		for i = 1, object:GetNumRegions() do
+			local region = select(i, object:GetRegions())
+
+			if (not region.protected) then
+				if region:GetObjectType() == "Texture" then
+					region:SetTexture(nil)
+					region:Hide()
+					region:SetAlpha(0)
+					region.Show = noop
+				elseif (strip_text) then
+					region:Hide()
+					region:SetAlpha(0)
+					region.Show = noop
+				end
+			end
+		end	
+	end
+
 	function bdUI:set_backdrop_basic(frame)
 		if (frame.background) then return end
 
