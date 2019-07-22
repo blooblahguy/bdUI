@@ -1,4 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
+local fpmod = mod
 local mod = bdUI:get_module("Bags")
 local config
 
@@ -23,13 +24,31 @@ function mod:create_bags()
 	SetSortBagsRightToLeft(false)
 	SetInsertItemsLeftToRight(false)
 
-	-- mod:create_moneyframe()
+	-- Creation Functions
+	mod:setup(mod.bags)
+	mod:create_moneyframe()
 	mod:bag_slots()
 	mod:bag_search()
+
+	-- Disable Aurora Bags
+	local aurora = select(1, IsAddOnLoaded("Aurora"))
+	if (aurora) then
+		local F, C = unpack(Aurora or FreeUI)
+		C.defaults['bags'] = false
+	end
 end
 
 -- place bag slots in bag container
 function mod:bag_slots()
+	mod.bagslots = {
+		CharacterBag0Slot,
+		CharacterBag1Slot,
+		CharacterBag2Slot,
+		CharacterBag3Slot
+	}
+
+	BackpackTokenFrameToken1:ClearAllPoints()
+	BackpackTokenFrameToken1:SetPoint("BOTTOMLEFT", mod.bags, "BOTTOMLEFT", 0, 8)
 	for i = 1, 3 do
 		_G["BackpackTokenFrameToken"..i]:SetFrameStrata("TOOLTIP")
 		_G["BackpackTokenFrameToken"..i]:SetFrameLevel(5)
@@ -78,33 +97,36 @@ function mod:bag_slots()
 end
 
 -- search boxes
+local function position_search(self, id)
+	BagItemSearchBox:ClearAllPoints()
+	BagItemSearchBox:SetPoint("LEFT", ContainerFrame1MoneyFrame, "RIGHT", 8, 0)
+	BagItemSearchBox.ClearAllPoints = noop
+	BagItemSearchBox.SetPoint = noop
+	BagItemSearchBox:SetWidth(200)
+	BagItemAutoSortButton:Hide();
+	
+	mod:SkinEditBox(BagItemSearchBox)
+end
 function mod:bag_search()
-	hooksecurefunc("ContainerFrame_Update", function(frame, id)
-		BagItemSearchBox:ClearAllPoints()
-		BagItemSearchBox:SetPoint("LEFT", ContainerFrame1MoneyFrame, "RIGHT", 8, 0)
-		BagItemSearchBox.ClearAllPoints = noop
-		BagItemSearchBox.SetPoint = noop
-		BagItemSearchBox:SetWidth(200)
-		BagItemAutoSortButton:Hide();
-		
-		mod:SkinEditBox(BagItemSearchBox)
-	end)
+	hooksecurefunc("ContainerFrame_Update", position_search)
+	position_search()
 end
 	
 function mod:create_moneyframe()
+
 	ContainerFrame1MoneyFrame:SetScript("OnEnter", function(self) 
 		ShowUIPanel(GameTooltip)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -147, 10)
 		
 		local total = 0;
-		for name, stored in pairs(core_config.goldtrack) do
+		for name, stored in pairs(bdUI.persistent.goldtrack) do
 			local money, cc = unpack(stored)
 			total = total + money
 		end
 		total = ContainerFrame1MoneyFrame:returnMoney(total)
 		GameTooltip:AddDoubleLine("Total Gold",total,1,1,1, 1,1,1)
 		GameTooltip:AddLine(" ")
-		for name, stored in pairs(core_config.goldtrack) do
+		for name, stored in pairs(bdUI.persistent.goldtrack) do
 			local money, cc = unpack(stored)
 			local moneystring = ContainerFrame1MoneyFrame:returnMoney(money)
 			GameTooltip:AddDoubleLine("|c"..cc..name.."|r ",moneystring,1,1,1, 1,1,1)
@@ -118,13 +140,13 @@ function mod:create_moneyframe()
 
 	function ContainerFrame1MoneyFrame:returnMoney(money)
 		local gold = floor(abs(money / 10000))
-		local silver = floor(abs(mod(money / 100, 100)))
-		local copper = floor(abs(mod(money, 100)))
+		local silver = floor(abs(fpmod(money / 100, 100)))
+		local copper = floor(abs(fpmod(money, 100)))
 		
 
 		local moneyString = "";
 		if (gold > 0) then
-			moneyString = comma_value(gold).."|cffF0D440g|r";
+			moneyString = mod:comma_value(gold).."|cffF0D440g|r";
 		end
 		if (silver > 0) then
 			moneyString = moneyString.." "..silver.."|cffC0C0C0s|r"
@@ -143,16 +165,11 @@ function mod:create_moneyframe()
 		local color = RAID_CLASS_COLORS[classFileName]
 		moneyString = ContainerFrame1MoneyFrame:returnMoney(money)
 		
-		core_config.goldtrack = core_config.goldtrack or {}
-		core_config.goldtrack[name] = {money, color.colorStr}
+		bdUI.persistent.goldtrack = bdUI.persistent.goldtrack or {}
+		bdUI.persistent.goldtrack[name] = {money, color.colorStr}
 	end
 
-	ContainerFrame1MoneyFrame:SetFrameLevel(10)
-	ContainerFrame1MoneyFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-	ContainerFrame1MoneyFrame:RegisterEvent("PLAYER_MONEY")
-	ContainerFrame1MoneyFrame:HookScript("OnEvent", function() 
-		ContainerFrame1MoneyFrame:Update()
-	end)
+	
 
 	local money = {"Gold","Silver","Copper"}
 	for k, v in pairs(money) do
@@ -160,6 +177,15 @@ function mod:create_moneyframe()
 		_G["ContainerFrame1MoneyFrame"..v.."Button"]:EnableMouse(false)
 		_G["ContainerFrame1MoneyFrame"..v.."Button"]:SetFrameLevel(8)
 	end
+
+	ContainerFrame1MoneyFrame:ClearAllPoints()
+	ContainerFrame1MoneyFrame:Show()
+	ContainerFrame1MoneyFrame:SetPoint("TOPLEFT", mod.bags, "TOPLEFT", 11, -8)
+	ContainerFrame1MoneyFrame:SetParent(mod.bags)
+	ContainerFrame1MoneyFrame:SetFrameLevel(10)
+	ContainerFrame1MoneyFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	ContainerFrame1MoneyFrame:RegisterEvent("PLAYER_MONEY")
+	ContainerFrame1MoneyFrame:HookScript("OnEvent", ContainerFrame1MoneyFrame.Update)
 end
 
 function mod:bag_generation(...)

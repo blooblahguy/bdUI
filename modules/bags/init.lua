@@ -8,7 +8,12 @@ local config = {
 	{
 		key = "enabled",
 		type = "toggle",
+		label = "Enable Bags",
 		value = true,
+	},
+	{
+		key = "clear",
+		type = "clear"	
 	},
 	{
 		key = "buttonsize",

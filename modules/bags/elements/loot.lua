@@ -9,7 +9,9 @@ function mod:create_loot()
 end
 
 function mod:skin_loot()
+
 	if (not config.skinloot) then return end
+	
 	_G["LootFrameCloseButton"]:Hide()
 	_G["LootFramePortraitOverlay"]:SetAlpha(0)
 
@@ -58,8 +60,6 @@ function mod:skin_loot()
 		end
 	end
 
-	-- local i, t = 1, "Interface\\LootFrame\\UI-LootPanel"
-
 	local regions = {LootFrame:GetRegions()}
 	local child = select(1, LootFrame:GetChildren())
 	local more_regions = {child:GetRegions()}
@@ -78,32 +78,10 @@ function mod:skin_loot()
 
 end
 
-
-
+-- Extend the size of the loot frame to show all items
 local p, r, x, y = "TOP", "BOTTOM", 0, -4
 local buttonHeight = LootButton1:GetHeight() + abs(y)
 local baseHeight = LootFrame:GetHeight() - (buttonHeight * LOOTFRAME_NUMBUTTONS)
-
-
-local t = {}
-local function CalculateNumMobsLooted()
-	wipe(t)
-
-	for i = 1, GetNumLootItems() do
-		for n = 1, select("#", GetLootSourceInfo(i)), 2 do
-			local GUID, num = select(n, GetLootSourceInfo(i))
-			t[GUID] = true
-		end
-	end
-
-	local n = 0
-	for k, v in pairs(t) do
-		n = n + 1
-	end
-
-	return n
-end
-
 local old_LootFrame_Show = LootFrame_Show
 local shared = LootFrame:CreateTexture(nil, "OVERLAY")
 local sharedf = LootFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")

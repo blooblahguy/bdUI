@@ -2,8 +2,9 @@
 -- FUNCTIONS
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("name")
+local mod = bdUI:get_module("Bags")
 local config
+local bordersize = 2
 
 --===============================================
 -- Core functionality
@@ -24,18 +25,18 @@ end
 -- CONFIG CALLBACK
 --===============================================
 function mod:callback()
-
+	if (mod.bags:IsShown()) then
+		mod:bag_generation()
+	end
+	if (mod.bank:IsShown()) then
+		if (mod.onreagents) then
+			mod:quickreagent(true)
+		else		
+			mod:bank_generation()
+		end
+	end
 end
 
-
-
-mod.bagslots = {
-	CharacterBag0Slot,
-	CharacterBag1Slot,
-	CharacterBag2Slot,
-	CharacterBag3Slot
-}
-mod.bank = {}
 
 -- Set Up Frames
 mod.bags = CreateFrame("frame","bdBags", UIParent)
@@ -46,20 +47,6 @@ mod.bank:SetPoint("LEFT", UIParent, "LEFT", 20, 40)
 function mod:resetTracker()
 	bdUI.config.persistent.goldtrack = {}
 end
-
-function mod:redraw()
-	if (mod.bags:IsShown()) then
-		mod:bag_generation()
-	end
-	if (mod.bank:IsShown()) then
-		if (mod.onreagents) then
-			mod:quickreagent(true)
-		else		
-			mod:bankGenerate()
-		end
-	end
-end
-bdUI:hookEvent("bd_reconfig", function() mod:redraw() end)
 
 function mod:setup(frame)
 	frame:SetWidth(config.buttonsize*config.buttonsperrow+20)
@@ -138,11 +125,11 @@ function mod:setup(frame)
 		self.text:SetTextColor(.4,.4,.4)
 	end)
 end
-mod:setup(mod.bags)
-mod:setup(mod.bank)
+
+
 
 -- rare/epic border
-function mod:IconBorder(border)
+function mod:icon_border(border)
 	local parent = border:GetParent()
 	local count = _G[parent:GetName().."Count"]
 	local cooldown = _G[parent:GetName().."Cooldown"]
@@ -153,19 +140,14 @@ function mod:IconBorder(border)
 	local battlepay = parent.BattlepayItemTexture;
 	local r, g, b = border:GetVertexColor()
 	r, g, b = bdUI:round(r, 1), bdUI:round(g, 1), bdUI:round(b, 1)
+
+	local bordersize = bdUI:get_border(border)
 	
 	-- set everything to the bottom of the frame
 	border:SetTexture(bdUI.media.flat)
 	border:ClearAllPoints()
-	border:SetPoint("BOTTOMLEFT",parent,"BOTTOMLEFT", bordersize, bordersize)
-	border:SetPoint("TOPRIGHT",parent,"BOTTOMRIGHt", -bordersize, bordersize+3)
-	if (not border.top) then
-		border.top = parent:CreateTexture(nil)
-		border.top:SetTexture(bdUI.media.flat)
-		border.top:SetVertexColor(unpack(bdUI.media.backdrop))
-		border.top:SetPoint("BOTTOMLEFT",parent, "BOTTOMLEFT", 2, 5)
-		border.top:SetPoint("TOPRIGHT",parent, "BOTTOMRIGHT", -2, 6)
-	end
+	border:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", bordersize, bordersize)
+	border:SetPoint("TOPRIGHT", parent, "BOTTOMRIGHT", -bordersize, bordersize*3)
 	
 	-- flash/glow/newitem are a pain
 	mod:killShowable(flash)
@@ -174,7 +156,7 @@ function mod:IconBorder(border)
 	mod:killShowable(battlepay)
 	parent.hover:SetTexture(bdUI.media.flat)
 	parent.hover:SetVertexColor(1, 1, 1, .1)
-	
+
 	-- quest
 	if (quest) then
 		quest:SetTexture(bdUI.media.flat)
@@ -190,11 +172,9 @@ function mod:IconBorder(border)
 	local color = r..g..b
 	if (color == "111" or color == "0.70.70.7" or color == "000") then
 		border:Hide()
-		border.top:Hide()
 		count:SetPoint("BOTTOMRIGHT",parent,"BOTTOMRIGHT",-1, 1)
 	else
 		border:Show()
-		border.top:Show()
 		count:SetPoint("BOTTOMRIGHT",parent,"BOTTOMRIGHT",-1, 5)
 	end
 end
@@ -219,21 +199,18 @@ function mod:SkinEditBox(frame)
 end
 
 function mod:skin(frame)
-	local aurora = select(1,IsAddOnLoaded("Aurora"))
-	if (aurora) then
-		local F, C = unpack(Aurora or FreeUI)
-		C.defaults['bags'] = false
-	end
 	if (frame.skinned) then return end
 
-	-- bdUI:StripTextures(frame, true)
-
-	-- frame.text = frame:CreateFontString(nil, overlay)
-	-- frame.text:SetFont(bdUI.media.font, 12, "THINOUTLINE")
-	-- frame.text:SetAllPoints(frame)
-
+	local border = bdUI:get_border(frame)
 	frame:SetFrameStrata("HIGH")
 	frame:SetFrameLevel(6)
+	frame:SetNormalTexture("")
+	frame:SetPushedTexture("")
+	frame:SetAlpha(1)
+	frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
+	frame:SetBackdropColor(unpack(bdUI.media.backdrop))
+	frame:SetBackdropBorderColor(unpack(bdUI.media.border))
+	bdUI:set_highlight(frame)
 
 	local normal = _G[frame:GetName().."NormalTexture"]
 	local count = _G[frame:GetName().."Count"]
@@ -241,30 +218,15 @@ function mod:skin(frame)
 	local icon = _G[frame:GetName().."IconTexture"]
 	local flash = frame.flash
 	normal:SetAllPoints(frame)
-	-- if (flash) then
-	-- 	flash:SetAllPoints(parent)
-	-- end
-	frame:SetAlpha(1)
 	
-	frame:SetNormalTexture("")
-	frame:SetPushedTexture("")
+	
+	
 	count:SetFont(bdUI.media.font,13,"THINOUTLINE")
 	count:SetJustifyH("RIGHT")
 	count:SetAlpha(.9)
+
+
 	
-	-- button textures
-	local hover = frame:CreateTexture()
-	hover:SetTexture(bdUI.media.flat)
-	hover:SetVertexColor(1, 1, 1, .1)
-	hover:SetPoint("TOPLEFT",frame,"TOPLEFT",2,-2)
-	hover:SetPoint("BOTTOMRIGHT",frame,"BOTTOMRIGHT",-2,2)
-	frame.hover = hover
-	frame:SetHighlightTexture(hover)
-	frame.SetHighlightTexture = function() return end
-	
-	frame:set_backdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 2})
-	frame:set_backdropColor(unpack(bdUI.media.backdrop))
-	frame:set_backdropBorderColor(unpack(bdUI.media.border))
 	
 	icon:SetAllPoints(frame)
 	icon:SetPoint("TOPLEFT", frame, 2, -2)
@@ -278,19 +240,9 @@ function mod:skin(frame)
 	cooldown:SetParent(frame)
 	cooldown:SetAllPoints(frame)
 	
-	hooksecurefunc(frame.IconBorder,"SetVertexColor", function() mod:IconBorder(frame.IconBorder) end)
-	mod:IconBorder(frame.IconBorder)
+	hooksecurefunc(frame.IconBorder, "SetVertexColor", function() mod:icon_border(frame.IconBorder) end)
+	mod:icon_border(frame.IconBorder)
 	frame.skinned = true
-end
-
-function mod:killShowable(frame)
-	if (not frame) then return end
-	frame:Hide()
-	frame.Show = function() return end
-	frame.Hide = function() return end
-	frame.SetAlpha = function() return end
-	frame.SetTextColor = function() return end
-	frame.SetVertexColor = function() return end
 end
 
 -- Calls when each bag is opened
@@ -310,7 +262,7 @@ function mod:Draw(frame,size,id)
 	if (id == 4) then
 		mod:bag_generation(frame,size,id)
 	elseif (id == 5) then
-		mod:bankGenerate(frame,size,id)
+		mod:bank_generation(frame,size,id)
 	end
 	
 	-- hide everything that shouldn't be there
@@ -357,18 +309,18 @@ function mod:Draw(frame,size,id)
 	
 	BankFrameCloseButton:Hide()
 	BankFrameMoneyFrame:Hide()
-	bdUI:StripTextures(BankFrameMoneyFrameInset)
-	bdUI:StripTextures(BankFrameMoneyFrameBorder)
-	bdUI:StripTextures(BankFrameMoneyFrame)
-	bdUI:StripTextures(BankFrame)
-	bdUI:StripTextures(BankSlotsFrame,true)
+	bdUI:strip_textures(BankFrameMoneyFrameInset)
+	bdUI:strip_textures(BankFrameMoneyFrameBorder)
+	bdUI:strip_textures(BankFrameMoneyFrame)
+	bdUI:strip_textures(BankFrame)
+	bdUI:strip_textures(BankSlotsFrame,true)
 	BankSlotsFrame:SetFrameStrata("HIGH")
 	BankSlotsFrame:SetFrameLevel(3)
 	BankSlotsFrame:SetParent(mod.bank)
 	ReagentBankFrame:SetFrameStrata("HIGH")
 	ReagentBankFrame:SetFrameLevel(3)
 	ReagentBankFrame:SetParent(mod.bank)
-	bdUI:StripTextures(ReagentBankFrame)
+	bdUI:strip_textures(ReagentBankFrame)
 	ReagentBankFrame:DisableDrawLayer("BACKGROUND")
 	ReagentBankFrame:DisableDrawLayer("ARTWORK")
 	BankPortraitTexture:Hide()

@@ -86,10 +86,13 @@ local bdUI, c, l = unpack(select(2, ...))
 		if frame.SetHighlightTexture and not frame.highlighter then
 			icon = icon or frame
 			local highlight = frame:CreateTexture(nil, "HIGHLIGHT")
+			local border = bdUI:get_border(frame)
 			highlight:SetTexture(1, 1, 1, 0.1)
-			highlight:SetAllPoints(icon)
+			highlight:SetPoint("TOPLEFT", icon, border, -border)
+			highlight:SetPoint("BOTTOMRIGHT", icon, -border, border)
 
 			frame.highlighter = highlight
+			frame.hover = highlight
 			frame:SetHighlightTexture(highlight)
 		end
 	end
@@ -161,6 +164,51 @@ local bdUI, c, l = unpack(select(2, ...))
 			local value = string.format("%.1fk", v/1000)
 			return value
 		end
+	end
+
+	-- Skin Button
+	function bdUI:skin_button(f,small,color)
+		local colors = bdUI.media.backdrop
+		local hovercolors = {0,0.55,.85,1}
+		if (color == "red") then
+			colors = {.6,.1,.1,0.6}
+			hovercolors = {.6,.1,.1,1}
+		elseif (color == "blue") then
+			colors = {0,0.55,.85,0.6}
+			hovercolors = {0,0.55,.85,1}
+		elseif (color == "dark") then
+			colors = bdUI.media.backdrop
+			hovercolors = {.1,.1,.1,1}
+		end
+		f:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 2, insets = {left=2,top=2,right=2,bottom=2}})
+		f:SetBackdropColor(unpack(colors)) 
+		f:SetBackdropBorderColor(unpack(bdUI.media.border))
+		f:SetNormalFontObject("BDUI_SMALL")
+		f:SetHighlightFontObject("BDUI_SMALL")
+		f:SetPushedTextOffset(0,-1)
+		f:SetScale(1)
+		
+		f:SetWidth(f:GetTextWidth()+22)
+		
+		--if (f:GetWidth() < 24) then
+		if (small and f:GetWidth() <= 24 ) then
+			f:SetWidth(20)
+		end
+		
+		if (small) then
+			f:SetHeight(18)
+		else
+			f:SetHeight(28)
+		end
+		
+		f:HookScript("OnEnter", function(f) 
+			f:SetBackdropColor(unpack(hovercolors)) 
+		end)
+		f:HookScript("OnLeave", function(f) 
+			f:SetBackdropColor(unpack(colors)) 
+		end)
+		
+		return true
 	end
 
 --========================================================
