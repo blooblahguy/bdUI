@@ -27,8 +27,6 @@ function mod:register(name, saved_variables_string, lock_toggle)
 	instance._window = mod:create_windows(name, lock_toggle)
 	instance.save = mod:initialize_saved_variables(saved_variables_string)
 
-
-
 	-- show config window toggle
 	function instance:toggle()
 		if (self._window:IsShown()) then
@@ -88,8 +86,6 @@ function mod:register(name, saved_variables_string, lock_toggle)
 
 		-- call recursive build function
 		local group = mod.containers["group"]({}, module, true)
-		-- group:SetBackdrop({bgFile = mod.media.flat})
-		-- group:SetBackdropColor(0, 1, 0, 0.08)
 		group.scroller = module
 		module:build(config, name, group)
 		group:update()
@@ -99,9 +95,9 @@ function mod:register(name, saved_variables_string, lock_toggle)
 	end
 
 	-- debug - show configuration window
-	bdUI:add_action("post_loaded", function()
-		instance:toggle()
-	end)
+	-- bdUI:add_action("post_loaded", function()
+	-- 	instance:toggle()
+	-- end)
 
 	-- returns instance to be called
 	return instance

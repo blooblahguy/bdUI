@@ -76,28 +76,12 @@ local bdUI, c, l = unpack(select(2, ...))
 			frame.b:SetVertexColor(unpack(bdUI.media.border))
 			frame.b:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", -border, 0)
 			frame.b:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", border, 0)
+
+			frame.t:SetHeight(border)
+			frame.b:SetHeight(border)
+			frame.l:SetWidth(border)
+			frame.r:SetWidth(border)
 		end
-
-		frame.t:SetHeight(border)
-		frame.b:SetHeight(border)
-		frame.l:SetWidth(border)
-		frame.r:SetWidth(border)
-		-- local border = bdUI:get_border(frame)
-		-- if (not frame.background) then
-		-- 	frame.background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
-		-- 	frame.background:SetTexture(bdUI.media.flat)
-		-- 	frame.background:SetAllPoints()
-		-- 	frame.background:SetVertexColor(unpack(bdUI.media.backdrop))
-		-- 	frame.background.protected = true
-
-		-- 	frame.border = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
-		-- 	frame.border:SetTexture(bdUI.media.flat)
-		-- 	frame.border:SetVertexColor(unpack(bdUI.media.border))
-		-- 	frame.border.protected = true -- so this texture doesn't get stripped
-		-- end
-		
-		-- frame.border:SetPoint("TOPLEFT", frame, "TOPLEFT", -border, border)
-		-- frame.border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", border, -border)
 	end
 
 	function bdUI:create_shadow(frame, offset)
