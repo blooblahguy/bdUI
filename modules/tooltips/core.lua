@@ -12,6 +12,8 @@ local config = {}
 local function setUnit(self)
 	if (self:IsForbidden()) then return end -- don't mess with forbidden frames, which sometimes randomly happens
 
+	local border = bdUI:get_border(self)
+
 	local name, unit = self:GetUnit()
 	if not unit then
 		unit = GetMouseFocus() and GetMouseFocus():GetAttribute("unit")
@@ -101,8 +103,8 @@ local function setUnit(self)
 	GameTooltipStatusBar:SetMinMaxValues(0, max)
 	GameTooltipStatusBar:SetValue(hp)
 	GameTooltipStatusBar:ClearAllPoints()
-	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT")
-	GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 6)
+	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", border, 0)
+	GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", -border, 6)
 
 	-- Set Fonts
 	for i = 1, 20 do

@@ -54,19 +54,48 @@ end
 -- Create 2px background frame
 function mod:create_backdrop(frame, alpha)
 	local border = mod:get_border(frame)
-	alpha = alpha or 0.99
-	if (frame.bd_background) then return end
-
+	alpha = alpha or 0.98
 	local r, g, b, a = unpack(mod.media.background)
 
-	frame.bd_background = CreateFrame("frame", nil, frame)
-	frame.bd_background:SetFrameStrata("BACKGROUND")
-	frame.bd_background:SetFrameLevel(0)
-	frame.bd_background:SetBackdrop({bgFile = mod.media.flat, edgeFile = mod.media.flat, edgeSize = border})
-	frame.bd_background:SetBackdropColor(r, g, b, alpha)
-	frame.bd_background:SetBackdropBorderColor(unpack(mod.media.border))
-	frame.bd_background:SetPoint("TOPLEFT", frame, "TOPLEFT", -border, border)
-	frame.bd_background:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", border, -border)
+	local bgcolor = {0, 0, 0, 0.08}
+	local bordercolor = {0.05, 0.05, 0.05, 1}
+
+	if (not frame.background) then
+		frame.bd_background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
+		frame.bd_background:SetTexture(bdUI.media.flat)
+		frame.bd_background:SetAllPoints()
+		frame.bd_background:SetVertexColor(r, g, b, alpha)
+		frame.bd_background.protected = true
+
+		frame.t = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
+		frame.t:SetTexture(bdUI.media.flat)
+		frame.t:SetVertexColor(unpack(bordercolor))
+		frame.t:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", -border, 0)
+		frame.t:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", border, 0)
+
+		frame.l = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
+		frame.l:SetTexture(bdUI.media.flat)
+		frame.l:SetVertexColor(unpack(bordercolor))
+		frame.l:SetPoint("TOPRIGHT", frame, "TOPLEFT", 0, border)
+		frame.l:SetPoint("BOTTOMRIGHT", frame, "BOTTOMLEFT", 0, -border)
+
+		frame.r = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
+		frame.r:SetTexture(bdUI.media.flat)
+		frame.r:SetVertexColor(unpack(bordercolor))
+		frame.r:SetPoint("TOPLEFT", frame, "TOPRIGHT", 0, border)
+		frame.r:SetPoint("BOTTOMLEFT", frame, "BOTTOMRIGHT", 0, -border)
+
+		frame.b = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
+		frame.b:SetTexture(bdUI.media.flat)
+		frame.b:SetVertexColor(unpack(bordercolor))
+		frame.b:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", -border, 0)
+		frame.b:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", border, 0)
+	end
+
+	frame.t:SetHeight(border)
+	frame.b:SetHeight(border)
+	frame.l:SetWidth(border)
+	frame.r:SetWidth(border)
 end
 
 -- scrollframe

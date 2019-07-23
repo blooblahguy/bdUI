@@ -7,7 +7,7 @@ local mod = ns.bdConfig
 local function create(options, parent)
 	options.size = "full"
 	local container = mod:create_container(options, parent)
-	container:SetHeight(1)
+	container:SetHeight(1)	
 
 	return container
 end

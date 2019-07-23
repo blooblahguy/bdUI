@@ -69,8 +69,14 @@ function mod:create_windows(name, lock_toggle)
 		lock_toggle()
 		if (self:GetText() == "Lock") then
 			self:SetText("Unlock")
+			window.left:Show()
+			window.right:Show()
+			window:SetWidth(dimensions.left_column + dimensions.right_column)
 		else
 			self:SetText("Lock")
+			window.left:Hide()
+			window.right:Hide()
+			window:SetWidth(350)
 		end
 	end
 

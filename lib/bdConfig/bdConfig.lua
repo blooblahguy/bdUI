@@ -184,9 +184,6 @@ function mod:create_container(options, parent, height)
 		local idealheight = math.max(height, lastheight)
 		container:SetHeight(idealheight)
 		parent._lastel:SetHeight(idealheight)
-		-- print(height, lastheight)
-		-- if (height < lastheight) then
-		-- end
 		container:SetPoint("LEFT", parent._lastel, "RIGHT", padding, 0)
 	end
 

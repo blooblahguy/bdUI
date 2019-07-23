@@ -208,7 +208,8 @@ function mod:skin(frame)
 	frame:SetPushedTexture("")
 	frame:SetAlpha(1)
 	frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
-	frame:SetBackdropColor(unpack(bdUI.media.backdrop))
+	local r, g, b, a = unpack(bdUI.media.backdrop)
+	frame:SetBackdropColor(r, g, b, 0.8)
 	frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 	bdUI:set_highlight(frame)
 
@@ -219,14 +220,9 @@ function mod:skin(frame)
 	local flash = frame.flash
 	normal:SetAllPoints(frame)
 	
-	
-	
 	count:SetFont(bdUI.media.font,13,"THINOUTLINE")
 	count:SetJustifyH("RIGHT")
-	count:SetAlpha(.9)
-
-
-	
+	count:SetAlpha(.9)	
 	
 	icon:SetAllPoints(frame)
 	icon:SetPoint("TOPLEFT", frame, 2, -2)

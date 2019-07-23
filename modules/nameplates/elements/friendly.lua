@@ -4,6 +4,9 @@ local mod = bdUI:get_module("Nameplates")
 function mod:friendly_style(self, event, unit)
 	local config = mod._config
 	
+	self.Name:SetTextColor(unpack(self.smartColors))
+	self.Name:SetAlpha(config.friendnamealpha)
+
 	if (self.currentStyle and self.currentStyle == "friendly") then return end
 	self.currentStyle = "friendly"
 

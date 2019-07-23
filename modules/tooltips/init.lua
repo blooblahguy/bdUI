@@ -60,7 +60,6 @@ local config = {
 }
 
 local mod = bdUI:register_module("Tooltips", config)
-_G['tooltipsconfig'] = config
 
 function mod:initialize(config)
 	_G['tooltipconfig'] = config

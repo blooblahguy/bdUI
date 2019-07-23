@@ -17,12 +17,6 @@ local config = {
 		value = "Minimap",
 		args = {
 			{
-				key = "test",
-				label = "Minimap Size",
-				type = "toggle",
-				value = true,
-			},
-			{
 				key = "size",
 				label = "Minimap Size",
 				type = "range",
