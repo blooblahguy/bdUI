@@ -24,7 +24,6 @@ function mod:personal_style(self, event, unit)
 	end
 
 	self.disableFixate = true
-	mod:set_border(self)
 
 	-- powerbar
 	self.Power:Show()

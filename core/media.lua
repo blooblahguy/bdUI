@@ -46,7 +46,7 @@ local bdUI, c, l = unpack(select(2, ...))
 		alpha = alpha or 0.9
 		local r, g, b, a = unpack(bdUI.media.backdrop)
 
-		if (not frame.background) then
+		if (not frame.bd_background) then
 			frame.bd_background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
 			frame.bd_background:SetTexture(bdUI.media.flat)
 			frame.bd_background:SetAllPoints()
@@ -77,11 +77,20 @@ local bdUI, c, l = unpack(select(2, ...))
 			frame.b:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", -border, 0)
 			frame.b:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", border, 0)
 
-			frame.t:SetHeight(border)
-			frame.b:SetHeight(border)
-			frame.l:SetWidth(border)
-			frame.r:SetWidth(border)
+			frame.border = frame:CreateTexture(nil, "BACKGROUND")
+			frame.border:Hide()
+			frame.border.SetVertexColor = function(self, r, g, b, a)
+				frame.t:SetVertexColor(r, g, b, a)
+				frame.b:SetVertexColor(r, g, b, a)
+				frame.l:SetVertexColor(r, g, b, a)
+				frame.r:SetVertexColor(r, g, b, a)
+			end
 		end
+
+		frame.t:SetHeight(border)
+		frame.b:SetHeight(border)
+		frame.l:SetWidth(border)
+		frame.r:SetWidth(border)
 	end
 
 	function bdUI:create_shadow(frame, offset)

@@ -61,13 +61,6 @@ function mod:config_callback()
 			self.Auras:Show()
 		end
 
-		-- hp text
-		if (config.hptext == "None" or (config.showhptexttargetonly and not self.isTarget)) then
-			self.Curhp:Hide()
-		else
-			self.Curhp:Show()
-		end
-
 		if (config.markposition == "LEFT") then
 			self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
 		elseif (config.markposition == "RIGHT") then
@@ -78,8 +71,8 @@ function mod:config_callback()
 	end
 
 	mod.font:SetFont(bdUI.media.font, config.enemynamesize, "OUTLINE")
-	mod.font_small:SetFont(bdUI.media.font, config.height * 0.82, "OUTLINE")
-	mod.font_castbar:SetFont(bdUI.media.font, config.castbarheight * 0.82, "OUTLINE")
+	mod.font_small:SetFont(bdUI.media.font, config.height * 0.78, "OUTLINE")
+	mod.font_castbar:SetFont(bdUI.media.font, config.castbarheight * 0.78, "OUTLINE")
 	mod.font_friendly:SetFont(bdUI.media.font, config.friendlynamesize, "OUTLINE")
 
 	if (InCombatLockdown()) then return end
@@ -91,7 +84,7 @@ function mod:config_callback()
 		, ['nameplateShowAll'] = 1
 		, ['nameplateMinAlpha'] = 1
 		, ['nameplateMaxAlpha'] = 1
-		, ['nameplateMotionSpeed'] = 0
+		, ['nameplateMotionSpeed'] = 0.5
 		, ['nameplateOccludedAlphaMult'] = 1
 		, ['nameplateMaxAlphaDistance'] = 1
 		, ['nameplateMaxDistance'] = config.nameplatedistance+6 -- for some reason there is a 6yd diff
@@ -144,7 +137,12 @@ local function find_target(self, event, unit)
 		self.Health._shadow:Hide()
 	end
 
-	bdUI:set_backdrop(self.Health)
+	-- hp text
+	if (config.hptext == "None" or (config.showhptexttargetonly and not self.isTarget)) then
+		self.Curhp:Hide()
+	else
+		self.Curhp:Show()
+	end
 end
 
 --==============================================
@@ -203,10 +201,6 @@ local function nameplate_callback(self, event, unit)
 
 	-- select correct target
 	find_target(self, event, unit)
-
-	-- update backdrop positioning
-	bdUI:set_backdrop(self.Health)
-	bdUI:set_backdrop(self.Castbar)
 
 	--==========================================
 	-- Style by unit type
@@ -468,6 +462,12 @@ local function nameplate_create(self, unit)
 	self.Castbar.PostCastNotInterruptible = kickable_cast
 	self.Castbar.PostCastInterruptible = kickable_cast
 	self.Castbar.PostCastStart = kickable_cast
+
+	-- Pixel Perfect
+	self:SetScript("OnSizeChanged", function(self, elapsed)
+		bdUI:set_backdrop(self.Health)
+		bdUI:set_backdrop(self.Castbar)
+	end)
 end
 
 

@@ -195,13 +195,13 @@ local config = {
 				key = "showcasttarget",
 				type = "toggle",
 				value = false,
-				label = "Show Health Text on target only",
+				label = "Show castbar target (experimental)",
 			},
 			{
 				key = "showcastinterrupt",
 				type = "toggle",
 				value = true,
-				label = "Show castbar target (experimental)",
+				label = "Show who interrupted casts",
 			},
 			{
 				key = "showhptexttargetonly",
