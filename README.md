@@ -20,10 +20,10 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 	- [ ] Focus
 	- [ ] Boss
 	- [ ] Arena
-- [ ] Add Actionbars
+- [x] Add Actionbars
 - [x] Add Nameplates
 - [ ] Add Auras
-- [ ] Add Bags
+- [x] Add Bags
 - [ ] Add Grid
 - [ ] Add Databars
 	- [ ] Alternative Power
