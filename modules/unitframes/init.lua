@@ -77,7 +77,7 @@ local config = {
 			},
 			{
 				key = "playertargetheight",
-				value = 32,
+				value = 24,
 				min = 4,
 				max = 60,
 				step = 2,

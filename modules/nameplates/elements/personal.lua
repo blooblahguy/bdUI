@@ -10,10 +10,13 @@ function mod:personal_style(self, event, unit)
 	ClassNameplateManaBarFrame:Hide()
 	ClassNameplateManaBarFrame.Show = noop
 
+	-- name
+	self.Name:Hide()
+
 	-- castbar
 	self:EnableElement("Castbar")
-	self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -2)
-	self.Castbar:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", 0, -config.castbarheight)
+	-- self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -2)
+	-- self.Castbar:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", 0, -config.castbarheight)
 
 	-- healthbar
 	self.Health:Show()
@@ -24,12 +27,6 @@ function mod:personal_style(self, event, unit)
 	end
 
 	self.disableFixate = true
-
-	-- powerbar
-	self.Power:Show()
-
-	-- name
-	self.Name:Hide()
 
 	-- auras
 	self.Auras:Show()

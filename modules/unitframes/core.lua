@@ -129,14 +129,14 @@ mod.additional_elements = {
 		-- Power
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetStatusBarTexture(bdUI.media.flat)
+		self.Power:SetFrameLevel(20)
 		self.Power:ClearAllPoints()
-		self.Power:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, bdUI.border)
-		self.Power:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border)
+		self.Power:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", 0, 0)
+		self.Power:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, 0)
 		self.Power:SetHeight(config.playertargetpowerheight)
 		self.Power.frequentUpdates = true
 		self.Power.colorPower = true
 		self.Power.Smooth = true
-		bdUI:set_backdrop(self.Power)
 	end,
 
 	buffs = function(self, unit)
@@ -144,8 +144,8 @@ mod.additional_elements = {
 
 		-- Auras
 		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs:SetPoint("BOTTOMLEFT", self.Power, "TOPLEFT", 0, 4)
-		self.Buffs:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 0, 4)
+		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
+		self.Buffs:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
 		self.Buffs:SetSize(config.playertargetwidth, 60)
 		self.Buffs.size = 18
 		self.Buffs.initialAnchor  = "BOTTOMLEFT"
@@ -165,8 +165,8 @@ mod.additional_elements = {
 
 		-- Auras
 		self.Debuffs = CreateFrame("Frame", nil, self)
-		self.Debuffs:SetPoint("BOTTOMLEFT", self.Power, "TOPLEFT", 0, 4)
-		self.Debuffs:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 0, 4)
+		self.Debuffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
+		self.Debuffs:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
 		self.Debuffs:SetSize(config.playertargetwidth, 60)
 		self.Debuffs.size = 18
 		self.Debuffs.initialAnchor  = "BOTTOMRIGHT"
@@ -186,8 +186,8 @@ mod.additional_elements = {
 
 		-- Auras
 		self.Auras = CreateFrame("Frame", nil, self)
-		self.Auras:SetPoint("BOTTOMLEFT", self.Power, "TOPLEFT", 0, 4)
-		self.Auras:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 0, 4)
+		self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
+		self.Auras:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
 		self.Auras:SetSize(config.playertargetwidth, 60)
 		self.Auras.size = 18
 		self.Auras.initialAnchor  = "BOTTOMLEFT"

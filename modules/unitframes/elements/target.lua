@@ -17,7 +17,7 @@ mod.custom_layout["target"] = function(self, unit)
 	-- end
 
 	self.Buffs:ClearAllPoints()
-	self.Buffs:SetPoint("BOTTOMLEFT", self.Power, "TOPRIGHT", 6, 4)
+	self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 7, 2)
 	self.Buffs:SetSize(80, 60)
 	self.Buffs.size = 12
 	

@@ -57,7 +57,7 @@ local config = {
 			{
 				key = "scale",
 				type = "range",
-				value = 1,
+				value = 0.7,
 				step = 0.1,
 				min = 0,
 				max = 1,

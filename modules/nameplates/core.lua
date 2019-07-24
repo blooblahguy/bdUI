@@ -227,7 +227,6 @@ local function nameplate_create(self, unit)
 	self:SetPoint("TOPLEFT", 0, -math.floor(config.targetingTopPadding))
 	self:SetPoint("TOPRIGHT", 0, -math.floor(config.targetingTopPadding))
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", find_target, true)
-	mod:nameplate_size()
 
 	--==========================================
 	-- HEALTHBAR
@@ -468,6 +467,8 @@ local function nameplate_create(self, unit)
 		bdUI:set_backdrop(self.Health)
 		bdUI:set_backdrop(self.Castbar)
 	end)
+
+	mod:config_callback()
 end
 
 

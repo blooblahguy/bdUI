@@ -128,9 +128,9 @@ hooksecurefunc("LootFrame_UpdateButton", function(index)
 		_G["LootButton"..index.."NameFrame"]:SetAlpha(0) -- hide sucky drops :D
 	end
 	if isQuestItem then
-		frame.background:SetVertexColor(1.0, 0.82, 0)
+		frame.border:SetVertexColor(1.0, 0.82, 0)
 	else
-		frame.background:SetVertexColor(unpack(bdUI.media.backdrop))
+		frame.border:SetVertexColor(unpack(bdUI.media.backdrop))
 	end	
 end)
 

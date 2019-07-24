@@ -40,10 +40,12 @@ function mod:create_button_frame()
 	local ignoreFrames = {}
 	local hideTextures = {}
 	local manualTarget = {}
+	local hideButtons = {}
 	local frames = {}
 	local numChildren = 0
 
 	MiniMapTracking:SetParent(Minimap)
+	GarrisonLandingPageMinimapButton:SetParent(Minimap)
 	manualTarget['MiniMapTracking'] = true
 	manualTarget['MiniMapMailFrame'] = true
 	manualTarget['COHCMinimapButton'] = true
@@ -58,20 +60,35 @@ function mod:create_button_frame()
 
 	hideTextures['Interface\\Minimap\\MiniMap-TrackingBorder'] = true
 	hideTextures['Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight'] = true
-	hideTextures['Interface\\Minimap\\UI-Minimap-Background'] = true
+	hideTextures['Interface\\Minimap\\UI-Minimap-Background'] = true 
 
 	--===================================
 	-- Position buttons
 	--===================================
 	local function size_move()
 		local last = nil
-		
+
+		hideButtons = {}
+
+		if (not config.showconfig) then
+			hideButtons['bdButtonFrame'] = true
+		end
+		if (config.hideclasshall) then
+			hideButtons['GarrisonLandingPageMinimapButton'] = true
+		end
+
 		for k, f in pairs(frames) do
 			f:SetWidth(config.buttonsize)
 			f:SetHeight(config.buttonsize)
 			f:ClearAllPoints()
 
-			f:ClearAllPoints()
+			if (hideButtons[f:GetName()]) then
+				f:Hide()
+				f:SetAlpha(0)
+			else
+				f:Show()
+				f:SetAlpha(1)
+			end
 			if (config.buttonpos == "Top" or config.buttonpos == "Bottom") then
 				if (last) then
 					f:SetPoint("LEFT", last, "RIGHT", bdUI.border*3, 0)		

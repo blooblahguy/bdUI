@@ -84,14 +84,6 @@ bdUI.eventer = CreateFrame("frame", nil, bdParent)
 		end
 	end
 
-	-- slash commands
-	function bdUI:set_slash_command(name, func, ...)
-		SlashCmdList[name] = func
-		for i = 1, select('#', ...) do
-			_G['SLASH_'..name..i] = '/'..select(i, ...)
-		end
-	end
-
 	-- reload
 	bdUI:set_slash_command('ReloadUI', ReloadUI, 'rl', 'reset')
 	-- readycheck

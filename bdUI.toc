@@ -45,6 +45,7 @@ core\setup.lua
 core\load.lua
 
 # Auras
+modules\auras\template.xml
 modules\auras\init.lua
 modules\auras\functions.lua
 modules\auras\core.lua
