@@ -84,6 +84,9 @@ function mod:create_minimap()
 		local action = delta > 0 and MinimapZoomIn:Click()
 		local action = delta < 0 and MinimapZoomOut:Click()
 	end)
+	
+	ObjectiveTrackerFrame:ClearAllPoints()
+	ObjectiveTrackerFrame:SetPoint("TOP", Minimap.background, "BOTTOM", 0, -100)
 
 	Minimap:SetScript('OnMouseUp', function (self, button)
 		if button == 'RightButton' then

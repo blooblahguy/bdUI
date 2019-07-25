@@ -25,6 +25,7 @@ function mod:config_callback()
 		mod.custom_layout[func](self, unit)
 	end
 end
+
 --===============================================
 -- Core functionality
 -- place core functionality here
@@ -129,14 +130,14 @@ mod.additional_elements = {
 		-- Power
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetStatusBarTexture(bdUI.media.flat)
-		self.Power:SetFrameLevel(20)
 		self.Power:ClearAllPoints()
-		self.Power:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", 0, 0)
-		self.Power:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, 0)
+		self.Power:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, 0)
+		self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, 0)
 		self.Power:SetHeight(config.playertargetpowerheight)
 		self.Power.frequentUpdates = true
 		self.Power.colorPower = true
 		self.Power.Smooth = true
+		bdUI:set_backdrop(self.Power)
 	end,
 
 	buffs = function(self, unit)
@@ -144,8 +145,8 @@ mod.additional_elements = {
 
 		-- Auras
 		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
-		self.Buffs:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
+		self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
+		self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
 		self.Buffs:SetSize(config.playertargetwidth, 60)
 		self.Buffs.size = 18
 		self.Buffs.initialAnchor  = "BOTTOMLEFT"
@@ -165,8 +166,8 @@ mod.additional_elements = {
 
 		-- Auras
 		self.Debuffs = CreateFrame("Frame", nil, self)
-		self.Debuffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
-		self.Debuffs:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
+		self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
+		self.Debuffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
 		self.Debuffs:SetSize(config.playertargetwidth, 60)
 		self.Debuffs.size = 18
 		self.Debuffs.initialAnchor  = "BOTTOMRIGHT"
@@ -177,7 +178,6 @@ mod.additional_elements = {
 		self.Debuffs.PostCreateIcon = function(Debuffs, button)
 			bdUI:set_backdrop_basic(button)
 			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-			-- button:SetAlpha(0.8)
 		end
 	end,
 
@@ -312,6 +312,7 @@ local function layout(self, unit)
         maxOverflow = 1,
         frequentUpdates = true,
     }
+	
 	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
 		local absorb = UnitGetTotalAbsorbs(unit) or 0
 		local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
@@ -327,6 +328,7 @@ local function layout(self, unit)
 		else
 			self.overAbsorb:Hide()
 		end
+		
 		-- 2nd heal absorb shield
 		if (healAbsorb > maxHealth) then
 			overH = healAbsorb - maxHealth
