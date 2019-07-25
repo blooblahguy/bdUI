@@ -75,6 +75,9 @@ local function UpdateAura(self, index, filter)
 				color = DebuffTypeColor[debuffType]
 			end
 			local r, g, b = unpack(color)
+			r = r or 1
+			g = g or 1
+			b = b or 1
 			self.border:SetVertexColor(r * 0.6, g * 0.6, b * 0.6)
 		end
 

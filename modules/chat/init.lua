@@ -13,14 +13,14 @@ local config = {
 	},
 	{
 		key = "skinchatbubbles",
-		type = "dropdown",
+		type = "select",
 		value = "Skin",
 		options={"Default*","Skinned","Removed"},
 		label = "Chat Bubbles Skin",
 	},
 	{
 		key = "bgalpha",
-		type = "slider",
+		type = "range",
 		value = 1,
 		step = 0.1,
 		min = 0,
@@ -29,13 +29,13 @@ local config = {
 	},
 	{
 		key = "chatHide",
-		type = "checkbox",
+		type = "toggle",
 		value = false,
 		label = "Hide communities chat until focus, for streamers."
 	},
 	{
 		key = "hideincombat",
-		type = "checkbox",
+		type = "toggle",
 		value = false,
 		label = "Hide all chat frames in boss combat."
 	},

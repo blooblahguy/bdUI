@@ -132,7 +132,7 @@ local config = {
 	{
 		key = "tab",
 		type = "tab",
-		label = "Aura Display",.
+		label = "Aura Display",
 		args = {
 			{
 				key = "buffSize",

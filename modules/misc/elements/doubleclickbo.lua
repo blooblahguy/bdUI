@@ -49,5 +49,5 @@ function mod:create_dcbo(event, addon)
 			end)
 		end
 
-	end)
+	end
 end

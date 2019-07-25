@@ -131,8 +131,8 @@ mod.additional_elements = {
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetStatusBarTexture(bdUI.media.flat)
 		self.Power:ClearAllPoints()
-		self.Power:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, 0)
-		self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, 0)
+		self.Power:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
+		self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, -bdUI.border)
 		self.Power:SetHeight(config.playertargetpowerheight)
 		self.Power.frequentUpdates = true
 		self.Power.colorPower = true

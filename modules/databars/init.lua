@@ -12,4 +12,4 @@ local config = {
 	}
 }
 
-local mod = bdUI:register_module("Name", config)
+local mod = bdUI:register_module("Databars", config)
