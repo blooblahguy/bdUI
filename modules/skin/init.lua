@@ -9,7 +9,8 @@ local config = {
 		key = "enabled",
 		type = "toggle",
 		value = true,
+		label = "Skinning Enabled"
 	}
 }
 
-local mod = bdUI:register_module("Name", config)
+local mod = bdUI:register_module("Skinning", config)

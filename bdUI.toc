@@ -143,6 +143,10 @@ modules\unitframes\elements\arena.lua
 modules\skin\init.lua
 modules\skin\functions.lua
 modules\skin\core.lua
+modules\skin\elements\fonts.lua
+modules\skin\elements\bigwigs.lua
+modules\skin\elements\blizzard.lua
+modules\skin\elements\weakaruas.lua
 modules\skin\elements\durability.lua
 modules\skin\elements\pvpcapture.lua
 modules\skin\elements\gm.lua
