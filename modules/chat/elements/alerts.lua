@@ -7,6 +7,32 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 local gsub = string.gsub
 local playername = UnitName("player",false)
+local pcolors = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+pcolors = RGBPercToHex(pcolors.r, pcolors.g, pcolors.b)
+local pstring = "@|cff"..pcolors..playername.."|r"
+
+-- Search text and find alerts
+local function filter_alerts(text)
+	-- mod:alert_message(text)
+	-- if (not text) then return end
+
+	--Alert players with @playername callouts
+	local callout = text:lower():find("@"..playername:lower()) or text:lower():find(pstring:lower())
+	if (callout) then mod:alert_message(text) end
+	
+	local everyonecallout = text:lower():find("@everyone") or text:lower():find("@here")
+	if (everyonecallout) then
+		if (text:find("GUILD")) then
+			C_ChatInfo.SendAddonMessage("bdChat", text, "GUILD")
+		elseif (text:find("RAID")) then
+			C_ChatInfo.SendAddonMessage("bdChat", text, "RAID")
+		elseif (text:find("OFFICER")) then
+			C_ChatInfo.SendAddonMessage("bdChat", text, "OFFICER")
+		elseif (text:find("PARTY")) then
+			C_ChatInfo.SendAddonMessage("bdChat", text, "PARTY")
+		end
+	end
+end
 
 function mod:alert_message(message)
 	mod.alert.text:SetText(message);
@@ -45,25 +71,6 @@ function mod:create_alerts()
 		end
 	end);
 
-	bdUI:add_action("chat_message", mod.filter_alerts)
+	bdUI:add_action("chat_message", filter_alerts)
 end
 
--- Search text and find alerts
-function mod:filter_alerts(text)
-	-- Alert players with @playername callouts
-	local callout = text:lower():find("@"..playername:lower()) or text:lower():find(pstring:lower())
-	if (callout) then mod:alert_message(text) end
-	
-	local everyonecallout = text:lower():find("@everyone") or text:lower():find("@here")
-	if (everyonecallout) then
-		if (text:find("GUILD")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "GUILD")
-		elseif (text:find("RAID")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "RAID")
-		elseif (text:find("OFFICER")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "OFFICER")
-		elseif (text:find("PARTY")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "PARTY")
-		end
-	end
-end

@@ -18,13 +18,16 @@ function mod:initialize()
 	-- alerts
 	mod:create_alerts()
 	-- bubbles
-	mod:create_bubbles()
+	mod:create_chat_bubbles()
 	-- telltarget command
 	mod:telltarget()
 	-- community mask
 	mod:create_community()
 	-- emojis
 	mod:create_emojis()
+
+	-- finally
+	mod:skin_chats()
 end
 
 --=============================================
@@ -135,7 +138,12 @@ end
 -- CONFIG CALLBACK
 --=========================================================
 function mod:config_callback()
+	if (not ChatFrame1.bd_backdrop) then
+		bdUI:set_backdrop(ChatFrame1)
+	end
 	ChatFrame1.bd_background:SetAlpha(config.bgalpha)
+	ChatFrame1.bd_background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
+	ChatFrame1.bd_background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
 	ChatFrame1.border:SetAlpha(config.bgalpha)
 end
 
@@ -163,12 +171,12 @@ function mod:skin_chats()
 	ChatFontNormal:SetShadowOffset(1,1)
 	ChatFontNormal:SetShadowColor(0,0,0)
 
-	bdUI:set_backdrop(ChatFrame1, false, 10)
+	bdUI:set_backdrop(ChatFrame1)
 
 	-- skin all the default chat channels
 	for i = 1, NUM_CHAT_WINDOWS do
 		local chatframe = _G["ChatFrame"..i]
-		skin_single_chat(chatframe)
+		mod:skin_single_chat(chatframe)
 		if (i ~= 2) then
 			chatframe.DefaultAddMessage = chatframe.AddMessage
 			chatframe.AddMessage = mod.filter_message
@@ -180,7 +188,7 @@ function mod:skin_chats()
 		for devb, name in next, CHAT_FRAMES do
 			local frame = _G[name]
 			if (frame.isTemporary) then
-				skin_single_chat(frame)
+				mod:skin_single_chat(frame)
 			end
 		end
 	end)
@@ -302,7 +310,7 @@ function mod:skin_single_chat(frame)
 	
 	--editbox
 	editbox:SetAltArrowKeyMode(false)
-	bdUI:setBackdrop(editbox)
+	bdUI:set_backdrop(editbox)
 	_G[editbox:GetName().."Left"]:Hide()
 	_G[editbox:GetName().."Mid"]:Hide()
 	_G[editbox:GetName().."Right"]:Hide()

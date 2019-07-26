@@ -21,6 +21,7 @@ local lib_glow = bdButtonGlow
 -- DISPEL / GLOWING
 --===========================================
 mod.dispel_glow = function(self, event, unit)
+	local config = mod._config
 	if (unit ~= self.unit) then return end
 
 	local foundGlow = false
@@ -40,7 +41,7 @@ mod.dispel_glow = function(self, event, unit)
 					noMoreDebuffs = true
 				end
 
-				if (config.specialalerts[debuff] or bdCore:isGlow(debuff)) then
+				if (config.specialalerts[debuff]) then -- or bdUI:isGlow(debuff)) then
 					foundGlow = true
 					noMoreBuffs = true
 					noMoreDebuffs = true
@@ -55,7 +56,7 @@ mod.dispel_glow = function(self, event, unit)
 				noMoreBuffs = true
 			end
 
-			if (config.specialalerts[buff] or bdCore:isGlow(buff)) then
+			if (config.specialalerts[buff]) then --or bdUI:isGlow(buff)) then
 				foundGlow = true
 				noMoreBuffs = true
 			end

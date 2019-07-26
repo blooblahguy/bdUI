@@ -117,6 +117,8 @@ modules\tooltips\elements\namehover.lua
 modules\grid\init.lua
 modules\grid\functions.lua
 modules\grid\core.lua
+modules\grid\elements\alias.lua
+modules\grid\elements\dispel_glow.lua
 
 # Chat
 modules\chat\init.lua
@@ -146,7 +148,7 @@ modules\skin\core.lua
 modules\skin\elements\fonts.lua
 modules\skin\elements\bigwigs.lua
 modules\skin\elements\blizzard.lua
-modules\skin\elements\weakaruas.lua
+modules\skin\elements\weakauras.lua
 modules\skin\elements\durability.lua
 modules\skin\elements\pvpcapture.lua
 modules\skin\elements\gm.lua

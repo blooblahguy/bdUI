@@ -196,5 +196,5 @@ function mod:create_qol()
 				LootSlot(i)
 			end
 		end
-	end
-end)
+	end)
+end
