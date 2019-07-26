@@ -3,15 +3,15 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 
 
 ## TODO
-- [x] Add Config
+- [x] Config
 	- [ ] Profiles
 	- [ ] Spec Profile Switching
-- [x] Add Moving
+- [x] Moving
 	- [ ] Resizing
-- [ ] Add Maps
+- [ ] Maps
 	- [x] Minimap
 	- [ ] World map improvements
-- [x] Add Unitframes
+- [x] Unitframes
 	- [x] Heal & Absorb Predictions
 	- [x] Player
 	- [x] Target
@@ -20,35 +20,34 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 	- [ ] Focus
 	- [ ] Boss
 	- [ ] Arena
-- [x] Add Actionbars
-- [x] Add Nameplates
-- [ ] Add Auras
-- [x] Add Bags
-- [x] Add Grid
-- [ ] Add Databars
+- [x] Actionbars
+- [x] Nameplates
+- [x] Buffs & Debuffs
+- [ ] Auras
+- [x] Bags
+- [x] Grid
+- [ ] Databars
 	- [ ] Alternative Power
 	- [ ] Azerite
 	- [ ] Honor
 	- [ ] XP
 	- [ ] Reputation
-- [ ] Add Skinning
+- [ ] Skinning
 	- [ ] Durability
 	- [ ] GM
 	- [ ] PVP Capture
 	- [ ] PVP Vehicle
 	- [ ] Viewports
 	- [ ] Auto-ace skinning
-	- [ ] \(Low Priority)Blizzard skinning
-- [x] Add Quality of life addons
+	- [ ] \(Low Priority) Blizzard skinning
+- [x] Quality of Life
 	- [x] Autovendor
 	- [x] Double Click Buyout
 	- [x] Errorblock
 	- [x] GMOTD
 	- [x] Interrupt alert
 	- [ ] Raid Marker Frame
-- [x] Add Tooltips
-	- [x] Primary tooltips
-	- [x] Namehover
+- [x] Tooltips
 - [x] Localization Support
 - [ ] \(Low Priority) Localization for all languages
-- [ ] \(Low Priority) Add setup tutorial
+- [ ] \(Low Priority) setup tutorial

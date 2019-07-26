@@ -12,7 +12,7 @@ bufffont:SetShadowColor(0, 0, 0)
 bufffont:SetShadowOffset(1, -1)
 
 local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTemplate")
-bdDebuffs:SetPoint('TOP', UIParent, "CENTER", 0, 0)
+bdDebuffs:SetPoint('TOP', UIParent, "CENTER", 0, -200)
 local debufffont = CreateFont("BD_DEBUFFS_FONT")
 debufffont:SetShadowColor(0, 0, 0)
 debufffont:SetShadowOffset(1, -1)
@@ -275,6 +275,8 @@ end
 --===============================================
 function mod:initialize()
 	config = mod._config
+	
+	
 
 	setHeaderAttributes(bdBuffs,"bdBuffsTemplate",true)
 	setHeaderAttributes(bdDebuffs,"bdDebuffsTemplate",false)
