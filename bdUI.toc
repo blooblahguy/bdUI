@@ -26,10 +26,13 @@ lib\oUF\oUF.xml
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
 lib\oUF_Plugins\oUF_Fader.lua
+lib\oUF_Plugins\oUF_AuraBars.lua
+lib\oUF_Plugins\oUF_PVPSpecIcons.lua
+lib\oUF_Plugins\oUF_Trinkets.lua
 
 # Custom
 lib\memoize.lua
-lib\bd\bdMove.lua
+lib\bdMove\bdMove.lua
 lib\bdConfig\bdConfig.xml
 
 # Initialize
@@ -56,19 +59,6 @@ modules\auras\functions.lua
 modules\auras\core.lua
 modules\auras\elements\watcher.lua
 modules\auras\elements\auras.lua
-
-# General
-modules\misc\init.lua
-modules\misc\functions.lua
-modules\misc\core.lua
-modules\misc\elements\autovendor.lua
-modules\misc\elements\gmotd.lua
-modules\misc\elements\doubleclickbo.lua
-modules\misc\elements\developer.lua
-modules\misc\elements\errorblock.lua
-modules\misc\elements\interrupt.lua
-modules\misc\elements\qol.lua
-modules\misc\elements\raidmarker.lua
 
 # Actionbars
 modules\actionbars\init.lua
@@ -158,3 +148,16 @@ modules\skin\elements\pvpcapture.lua
 modules\skin\elements\gm.lua
 modules\skin\elements\vehicle.lua
 modules\skin\elements\viewports.lua
+
+# Misc
+modules\misc\init.lua
+modules\misc\functions.lua
+modules\misc\core.lua
+modules\misc\elements\autovendor.lua
+modules\misc\elements\gmotd.lua
+modules\misc\elements\doubleclickbo.lua
+modules\misc\elements\developer.lua
+modules\misc\elements\errorblock.lua
+modules\misc\elements\interrupt.lua
+modules\misc\elements\qol.lua
+modules\misc\elements\raidmarker.lua
