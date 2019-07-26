@@ -24,7 +24,7 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 - [x] Add Nameplates
 - [ ] Add Auras
 - [x] Add Bags
-- [ ] Add Grid
+- [x] Add Grid
 - [ ] Add Databars
 	- [ ] Alternative Power
 	- [ ] Azerite
@@ -39,12 +39,12 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 	- [ ] Viewports
 	- [ ] Auto-ace skinning
 	- [ ] \(Low Priority)Blizzard skinning
-- [ ] Add Quality of life addons
-	- [ ] Autovendor
-	- [ ] Double Click Buyout
-	- [ ] Errorblock
-	- [ ] GMOTD
-	- [ ] Interrupt alert
+- [x] Add Quality of life addons
+	- [x] Autovendor
+	- [x] Double Click Buyout
+	- [x] Errorblock
+	- [x] GMOTD
+	- [x] Interrupt alert
 	- [ ] Raid Marker Frame
 - [x] Add Tooltips
 	- [x] Primary tooltips
