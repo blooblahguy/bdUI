@@ -25,16 +25,21 @@ lib\ace\LibSimpleSticky.lua
 lib\oUF\oUF.xml
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
+lib\oUF_Plugins\oUF_Fader.lua
 
 # Custom
+lib\memoize.lua
 lib\bd\bdMove.lua
-#lib\bd\bdConfig.lua
 lib\bdConfig\bdConfig.xml
 
-# Core
+# Initialize
 core\init.lua
-core\locale.lua
-core\memoize.lua
+
+# Locales
+core\locales\enUS.lua
+core\locales\deDE.lua
+
+# Core
 core\commands.lua
 core\compatibility.lua
 core\core.lua

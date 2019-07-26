@@ -29,7 +29,7 @@ local config = {
 			{
 				key = "powerdisplay",
 				type = "select",
-				value = "None",
+				value = "Healers",
 				options = {"None","Healers","All"},
 				label = "Power Bar Display",
 				tooltip = "Show mana/energy/rage bars on frames.",
@@ -100,7 +100,7 @@ local config = {
 			{
 				key = "roleicon",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Show role icon for tanks and healers",
 				tooltip = "Will only show icon for tanks/healers (only in groups)",
 			},
@@ -203,7 +203,7 @@ local config = {
 			{
 				key = "group_growth",
 				type = "select",
-				value = "Left",
+				value = "Downwards",
 				options = {"Left","Right","Upwards","Downwards"},
 				label = "Group stack direction",
 				tooltip = "Group stacking direction for when a new group is added.",
@@ -226,12 +226,12 @@ local config = {
 		}
 	},
 	--=============================================
-	-- Special Spells
+	-- Spell Highlights
 	--=============================================
 	{
 		key = "tab",
 		type = "tab",
-		label = "Special Spells",
+		label = "Spell Highlights",
 		args = {
 			{
 				key = "text",
@@ -270,14 +270,24 @@ local config = {
 				step = 1,
 				label = "Truncate names to: ",
 				tooltip = "Longer names will be trucated to this size",
-				callback = function() bdCore.Grid:callback() end
 			},
 			{
-				key = "text",
-				type = "text",
-				value = "You can add or remove a nickname to a player by right clicking their name and clicking 'Add player alias'",
+				key = "aliases",
+				type = "repeater",
+				label = "Player Aliases",
+				args = {
+					{
+						key = "player_name",
+						type = "input",
+						label = "Player Name",
+					},
+					{
+						key = "player_alias",
+						type = "input",
+						label = "Player Alias"
+					}
+				}
 			},
-
 		}
 	},
 

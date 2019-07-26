@@ -1,3 +1,5 @@
+local bdUI, c, l = unpack(select(2, ...))
+local mod = bdUI:get_module("Grid")
 
 local dispelClass = {
 	["PRIEST"] = { ["Disease"] = true, ["Magic"] = true, }, --Purify
@@ -13,11 +15,12 @@ local dispelColors = {
 	['Disease'] = {.76, .46, .12, 1},
 	['Curse'] = {.80, .33, .95, 1},
 }
+local lib_glow = bdButtonGlow
 
 --===========================================
 -- DISPEL / GLOWING
 --===========================================
-local function dispelAndGlow(self, event, unit)
+mod.dispel_glow = function(self, event, unit)
 	if (unit ~= self.unit) then return end
 
 	local foundGlow = false

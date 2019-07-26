@@ -108,7 +108,6 @@ local function create(options, parent)
 	button.parent = repeater
 	button.OnClick = repeater.add_row
 
-
 	repeater:populate()
 
 	return repeater
@@ -119,8 +118,6 @@ local function create(options, parent)
 
 	-- local button = bdConfig:create_button(container)
 	-- button:SetText("Add")
-
-
 
 	-- local insertbox = CreateFrame("EditBox", nil, container)
 	-- insertbox:SetFontObject("bdConfig_font")

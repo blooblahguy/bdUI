@@ -86,13 +86,51 @@ local function layout(self, unit)
 			return "ghost"
 		end
 	end
+	
+	
+	-- shortname
+	self.Short = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Short:SetFont(bdUI.media.font, 13)
+	self.Short:SetShadowOffset(1,-1)
+	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
+	self.Short:SetJustifyH("RIGHT")
+	
+	oUF.Tags.Events["self.Short"] = "UNIT_NAME_UPDATE"
+	oUF.Tags.Methods["self.Short"] = function(unit)
+		local name = UnitName(unit)
+		if (not name) then return end
+		if (bdUI.persistent.GridAliases[name]) then
+			name = bdUI.persistent.GridAliases[name];
+		end
+		return string.utf8sub(name, 1, config.namewidth)
+	end
+
+	-- group number
+	self.Group = self.Health:CreateFontString(nil)
+	self.Group:SetFont(bdUI.media.font, 12, "OUTLINE")
+	self.Group:SetPoint('TOPRIGHT', self, "TOPRIGHT", -2, -2)
+	oUF.Tags.Events["self.Group"] = "UNIT_NAME_UPDATE"
+	oUF.Tags.Methods["self.Group"] = function(unit)
+		local name, server = UnitName(unit)
+		if(server and server ~= '') then
+			name = string.format('%s-%s', name, server)
+		end
+		
+		for i = 1, GetNumGroupMembers() do
+			local raidName, _, group = GetRaidRosterInfo(i)
+			if( raidName == name ) then
+				return "[" .. group .. "]"
+			end
+		end
+	end
+	self:Tag(self.Group, '[self.Group]')
 	self:Tag(self.Status, '[status]')
+	self:Tag(self.Short, '[self.Short]')
 	
 
 	--===============================================
 	-- Healing & Damage Absorbs
 	--===============================================
-	
 	-- Heal predections
     local myHeals = CreateFrame('StatusBar', nil, self.Health)
     myHeals:SetPoint('TOP')
@@ -213,48 +251,9 @@ local function layout(self, unit)
 	self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT",0, config.powerheight)
 	self.Power:SetAlpha(0.8)
 	self.Power.colorPower = true
-	self.Power.border = self.Health:CreateTexture(nil)
-	self.Power.border:SetPoint("TOPRIGHT", self.Power, "TOPRIGHT", 0, 2)
+	self.Power.border = self.Health:CreateTexture(nil, "OVERLAY")
 	self.Power.border:SetPoint("BOTTOMLEFT", self.Power, "TOPLEFT", 0, 0)
-	
-	-- shortname
-	self.Short = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Short:SetFont(bdUI.media.font, 13)
-	self.Short:SetShadowOffset(1,-1)
-	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
-	self.Short:SetJustifyH("RIGHT")
-	
-	oUF.Tags.Events["self.Short"] = "UNIT_NAME_UPDATE"
-	oUF.Tags.Methods["self.Short"] = function(unit)
-		local name = UnitName(unit)
-		if (not name) then return end
-		if (bdUI.persistent.GridAliases[name]) then
-			name = bdUI.persistent.GridAliases[name];
-		end
-		return string.utf8sub(name, 1, config.namewidth)
-	end
-
-	self:Tag(self.Short, '[self.Short]')
-	self:Tag(self.Status, '[status]')
-
-	self.Group = self.Health:CreateFontString(nil)
-	self.Group:SetFont(bdUI.media.font, 12, "OUTLINE")
-	self.Group:SetPoint('TOPRIGHT', self, "TOPRIGHT", -2, -2)
-	oUF.Tags.Events["self.Group"] = "UNIT_NAME_UPDATE"
-	oUF.Tags.Methods["self.Group"] = function(unit)
-		local name, server = UnitName(unit)
-		if(server and server ~= '') then
-			name = string.format('%s-%s', name, server)
-		end
-
-		for i=1, GetNumGroupMembers() do
-			local raidName, _, group = GetRaidRosterInfo(i)
-			if( raidName == name ) then
-				return "[" .. group .. "]"
-			end
-		end
-	end
-	self:Tag(self.Group, '[self.Group]')	
+	self.Power.border:SetPoint("TOPRIGHT", self.Power, "TOPRIGHT", 0, 2)
 	
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)
@@ -316,21 +315,6 @@ local function layout(self, unit)
 	self.ThreatLite:SetBackdropBorderColor(1, 0, 0,1)
 	self.ThreatLite:SetBackdropColor(0,0,0,0)
 	self.ThreatLite:Hide()
-	-- self.SimpleThreat.Callback = function(self)
-	-- 	local status = UnitThreatSituation("player")
-	-- 	if (status and status >= 2) then
-	-- 		self.SimpleThreat:Show()
-	-- 	else
-	-- 		self.SimpleThreat:Hide()
-	-- 	end
-	-- end
-	-- self:RegisterEvent("UNIT_HEALTH", self.SimpleThreat.Callback)
-	-- self:RegisterEvent("PLAYER_ALIVE", self.SimpleThreat.Callback, true)
-	-- self:RegisterEvent("PLAYER_UNGHOST", self.SimpleThreat.Callback, true)
-	-- self:RegisterEvent("PLAYER_TARGET_CHANGED", self.SimpleThreat.Callback, true)
-	-- self:RegisterEvent("PLAYER_REGEN_ENABLED", self.SimpleThreat.Callback, true)
-	-- self:RegisterEvent("PLAYER_REGEN_DISABLED", self.SimpleThreat.Callback, true)
-	-- self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", self.SimpleThreat.Callback)
 	
 	-- Buffs
 	self.Buffs = CreateFrame("Frame", nil, self.Health)
@@ -387,7 +371,7 @@ local function layout(self, unit)
 	self.Dispel:Hide()
 	
 	-- look / color / show dispels and glows
-	-- self:RegisterEvent("UNIT_AURA", dispelAndGlow);
+	self:RegisterEvent("UNIT_AURA", mod.dispel_glow);
 	
 	-- Debuffs
 	self.Debuffs = CreateFrame("Frame", nil, self.Health)
@@ -586,6 +570,7 @@ function mod:initialize()
 
 	mod:create_container()
 	mod:disable_blizzard()
+	mod:create_alias()
 end
 
 --======================================================
@@ -649,15 +634,6 @@ function mod:config_callback()
 		elseif (config.powerdisplay == "All") then
 			self.Power:Show()
 		end
-
-
-		-- if (config.hideabsorbs) then
-		-- 	self.TotalAbsorb:Hide()
-		-- 	self.HealAbsorb:Hide()
-		-- else
-		-- 	self.TotalAbsorb:Show()
-		-- 	self.HealAbsorb:Show()
-		-- end
 		
 		if (config.showGroupNumbers and IsInRaid()) then
 			self.Group:Show()

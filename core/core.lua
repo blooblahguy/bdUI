@@ -1,27 +1,41 @@
 local bdUI, c, l = unpack(select(2, ...))
 --==============================================
--- Event & Action System
+-- Event, Filter, & Action System
 bdUI.actions = bdUI.actions or {}
 bdUI.events = bdUI.events or {}
 bdUI.eventer = CreateFrame("frame", nil, bdParent)
 --================================================
+	-- trigger an action and pass parameters
 	function bdUI:do_action(action, ...)
 		if (bdUI.actions[action]) then
-			for k, v in pairs(bdUI.actions[action]) do
-				v(...)
+			for priority, events in pairs(bdUI.actions[action]) do
+				for k, callback in pairs(events) do
+					return callback(...)
+				end
 			end
 		end
 	end
 
-	function bdUI:add_action(action, callback)
+	-- hook a callback on an action, optionally returning a value for filtering
+	function bdUI:add_action(action, callback, priority)
+		priority = priority or 10
 		local action = {strsplit(",", action)} or {action}
 
 		for k, e in pairs(action) do
 			e = strtrim(e)
-			if (not bdUI.actions[e]) then
-				bdUI.actions[e] = {}
+
+			bdUI.actions[e] = bdUI.actions[e] or {}
+			bdUI.actions[e][priority] = bdUI.actions[e][priority] or {}
+			table.insert(bdUI.actions[e][priority], callback)
+		end
+	end
+	
+	-- unhook a given action callback
+	function bdUI:remove_action(action, callback, priority)
+		for k, fn in pairs(bdUI.actions[action][priority]) do
+			if (fn == callback) then 
+				bdUI.actions[action][priority][k] = nil
 			end
-			table.insert(bdUI.actions[e], callback)
 		end
 	end
 
