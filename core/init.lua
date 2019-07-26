@@ -9,6 +9,8 @@ bdUI.oUF = ns.oUF
 bdUI.name = addonName
 bdUI.bdConfig = ns.bdConfig
 bdUI.colorString = '|cffA02C2Fbd|r'
+bdUI.Base64 = LibStub("LibBase64-1.0")
+bdUI.SharedMedia = LibStub("LibSharedMedia-3.0")
 
 function ns:unpack()
 	return self[1], self[2], self[3]

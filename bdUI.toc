@@ -132,7 +132,10 @@ modules\grid\core.lua
 modules\chat\init.lua
 modules\chat\functions.lua
 modules\chat\core.lua
+modules\chat\elements\alerts.lua
 modules\chat\elements\bubbles.lua
+modules\chat\elements\community.lua
+modules\chat\elements\emojis.lua
 
 # Unitframes
 modules\unitframes\init.lua
