@@ -105,11 +105,11 @@ mod.additional_elements = {
 	resting = function(self, unit)
 		if (self.RestingIndicator) then return end
 
-		local size = math.restrict(self:GetHeight() * 0.75, 8, 14)
+		local size = math.restrict(self:GetHeight() * 0.75, 8, self:GetHeight())
 
 		-- Resting indicator
 		self.RestingIndicator = self.Health:CreateTexture(nil, "OVERLAY")
-		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 2)
+		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
 		self.RestingIndicator:SetSize(size, size)
 		self.RestingIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
 		self.RestingIndicator:SetTexCoord(0, 0.5, 0, 0.421875)
@@ -118,11 +118,11 @@ mod.additional_elements = {
 	combat = function(self, unit)
 		if (self.CombatIndicator) then return end
 
-		local size = math.restrict(self:GetHeight() * 0.75, 8, 14)
+		local size = math.restrict(self:GetHeight() * 0.75, 8, self:GetHeight())
 
 		-- Resting indicator
 		self.CombatIndicator = self.Health:CreateTexture(nil, "OVERLAY")
-		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 2)
+		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
 		self.CombatIndicator:SetSize(size, size)
 		self.CombatIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
 		self.CombatIndicator:SetTexCoord(.5, 1, 0, .49)

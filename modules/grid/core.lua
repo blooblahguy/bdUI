@@ -90,8 +90,7 @@ local function layout(self, unit)
 	
 	-- shortname
 	self.Short = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Short:SetFont(bdUI.media.font, 13)
-	self.Short:SetShadowOffset(1,-1)
+	self.Short:SetFont(bdUI.media.font, 12, "OUTLINE")
 	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
 	self.Short:SetJustifyH("RIGHT")
 	

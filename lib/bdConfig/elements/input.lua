@@ -35,10 +35,11 @@ local function create(options, parent)
 	label:SetText(options.label)
 	label:SetPoint("TOPLEFT", container, "TOPLEFT", 0, 0)
 
+	dump(options)
 	local input = CreateFrame("EditBox", nil, container)
 	input:SetSize(200,24)
 	input:SetFontObject("bdConfig_font")
-	input:SetText(info.value)
+	input:SetText(options.value or "")
 	input:SetTextInsets(6, 2, 2, 2)
 	input:SetMaxLetters(200)
 	input:SetHistoryLines(1000)
@@ -51,7 +52,7 @@ local function create(options, parent)
 	Mixin(input, methods)
 	input:set(options.value)
 
-	bdConfig:set_backdrop(input)
+	mod:set_backdrop(input)
 
 	return container
 end

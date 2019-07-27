@@ -39,6 +39,7 @@ local methods = {
 		local index = #self.save[self.key]
 
 		for k, arg in pairs(self.args) do
+			arg.save = self.save
 			table.insert(row, arg)
 		end
 
@@ -54,9 +55,8 @@ local methods = {
 		for k, entry in pairs(self.save[self.key]) do
 			local row = self:get_frame()
 
-			print(entry)
-
 			for i, arg in pairs(entry) do
+				dump(arg)
 				if (not row[arg.key]) then
 					row[arg.key] = mod.elements[arg.type](arg, row)
 				end

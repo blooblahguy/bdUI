@@ -264,7 +264,7 @@ local config = {
 			{
 				key = "namewidth",
 				type = "range",
-				value = 4,
+				value = 5,
 				min = 0,
 				max = 12,
 				step = 1,
