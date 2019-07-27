@@ -127,6 +127,7 @@ function mod:create_petbar()
 
 	local buttonList = mod:GetButtonList("PetActionButton", NUM_PET_ACTION_SLOTS)
 	local petbar = mod:CreateBar(buttonList, cfg)
+	petbar:EnableMouse(false)
 end
 
 --===============================================================
@@ -142,6 +143,7 @@ function mod:create_stancebar()
 
 	local buttonList = mod:GetButtonList("StanceButton", NUM_STANCE_SLOTS)
 	local stancebar = mod:CreateBar(buttonList, cfg)
+	stancebar:EnableMouse(false)
 end
 
 --===============================================================

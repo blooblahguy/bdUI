@@ -8,3 +8,6 @@ local mod = bdUI:get_module("Skinning")
 -- Core functionality
 -- place core functionality here
 --===============================================
+function mod:initialize()
+	-- mod:create_fonts()
+end

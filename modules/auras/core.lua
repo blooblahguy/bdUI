@@ -5,14 +5,14 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Buffs & Debuffs")
 local config
 
-local bdBuffs = CreateFrame("frame", "Buffs", UIParent, "SecureAuraHeaderTemplate")
-bdBuffs:SetPoint('TOPRIGHT', UIParent, "TOPRIGHT", -10, -10)
+local bdBuffs = CreateFrame("frame", "Buffs", bdParent, "SecureAuraHeaderTemplate")
+bdBuffs:SetPoint('TOPRIGHT', bdParent, "TOPRIGHT", -10, -10)
 local bufffont = CreateFont("BD_BUFFS_FONT")
 bufffont:SetShadowColor(0, 0, 0)
 bufffont:SetShadowOffset(1, -1)
 
-local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTemplate")
-bdDebuffs:SetPoint('TOP', UIParent, "CENTER", 0, -200)
+local bdDebuffs = CreateFrame("frame", "Debuffs", bdParent, "SecureAuraHeaderTemplate")
+bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -140)
 local debufffont = CreateFont("BD_DEBUFFS_FONT")
 debufffont:SetShadowColor(0, 0, 0)
 debufffont:SetShadowOffset(1, -1)
@@ -55,6 +55,13 @@ end
 --===============================================
 -- Update Borders
 --===============================================
+local debuff_colors = {
+	Curse = {1, 0, 0.6},
+	Disease = {0, 0.4, 0.6},
+	Magic = {1, 0.6, 0.2},
+	Poison = {0, 0.6, 0},
+	None = {0.6, 0.1, 0.2}
+}
 local function UpdateAura(self, index, filter)
 	local unit = self:GetParent():GetAttribute('unit')
 	local filter = self:GetParent():GetAttribute('filter')
@@ -70,15 +77,15 @@ local function UpdateAura(self, index, filter)
 		self.expiration = expiration - GetTime()
 
 		if (filter == "HARMFUL") then
-			local color = bdUI.media.red
-			if debuffType and DebuffTypeColor[debuffType] then
-				color = DebuffTypeColor[debuffType]
+			local color = debuff_colors['None']
+
+			if debuffType and debuff_colors[debuffType] then
+				color = debuff_colors[debuffType]
 			end
+
 			local r, g, b = unpack(color)
-			r = r or 1
-			g = g or 1
-			b = b or 1
-			self.border:SetVertexColor(r * 0.6, g * 0.6, b * 0.6)
+
+			self.border:SetVertexColor(r, g, b)
 		end
 
 	end

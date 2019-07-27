@@ -51,7 +51,6 @@ function bdUI:calculate_scale()
 	bdUI.ui_scale = GetCVar("uiScale") or 1
 	bdUI.pixel = bdUI.scale / bdUI.ui_scale
 	bdUI.border = bdUI.pixel * 2
-	bdParent:SetScale(bdUI.scale)
 end
 bdUI:calculate_scale()
 

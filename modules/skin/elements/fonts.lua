@@ -26,7 +26,9 @@ UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT = 12
 CHAT_FONT_HEIGHTS = {12, 13, 14, 15, 16, 17, 18, 19, 20}
 
 local function changeFonts()
-	if (not c.persistent.bdAddons.changefonts) then return end
+	-- if (not c.persistent.bdAddons.changefonts) then return end
+
+	print("change fonts")
 
 	local font = bdUI.media.font--bdUI:getMedia("font", c.persistent.bdAddons.font )
 

@@ -207,8 +207,8 @@ end
 -- Skinning
 --=======================================
 function mod:SkinButton(button)
-	if button.skinned then return end
 	bdUI:set_backdrop(button)
+	if button.skinned then return end
 	
 	if (not button.SetNormalTexture) then return end
 
@@ -320,6 +320,7 @@ local function StyleFlyout(self)
 	local size = parent and parent.width or c.bar1_size
 	local alpha = parent and parent.alpha or 1
 	local spacing = parent and parent.spacing or 2
+	spacing = bdUI.pixel * spacing
 
 	for i = 1, NUM_ACTIONBAR_BUTTONS do
 		local button = _G["SpellFlyoutButton"..i]

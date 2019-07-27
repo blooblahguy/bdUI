@@ -109,6 +109,7 @@ local function layout(self, unit)
 	self.Group = self.Health:CreateFontString(nil)
 	self.Group:SetFont(bdUI.media.font, 12, "OUTLINE")
 	self.Group:SetPoint('TOPRIGHT', self, "TOPRIGHT", -2, -2)
+	self.Group:Hide()
 	oUF.Tags.Events["self.Group"] = "UNIT_NAME_UPDATE"
 	oUF.Tags.Methods["self.Group"] = function(unit)
 		local name, server = UnitName(unit)
@@ -142,16 +143,6 @@ local function layout(self, unit)
     otherHeals:SetPoint('TOP')
     otherHeals:SetPoint('BOTTOM')
     otherHeals:SetPoint('LEFT', myHeals:GetStatusBarTexture(), 'RIGHT')
-	local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    healAbsorbBar:SetAllPoints()
-    healAbsorbBar:SetReverseFill(true)
-	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
-	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
-	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overHealAbsorbBar:SetAllPoints()
-    overHealAbsorbBar:SetReverseFill(true)
-	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
-	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 
 	-- Damage Absorbs
     local absorbBar = CreateFrame('StatusBar', nil, self.Health)
@@ -162,6 +153,18 @@ local function layout(self, unit)
     overAbsorbBar:SetAllPoints()
 	overAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overAbsorbBar:SetStatusBarColor(.1, .1, .2, .6)
+
+	-- Healing Absorbs
+    local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+    healAbsorbBar:SetAllPoints()
+    healAbsorbBar:SetReverseFill(true)
+	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
+	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+    overHealAbsorbBar:SetAllPoints()
+    overHealAbsorbBar:SetReverseFill(true)
+	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
+	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 
 	-- Register and callback
     self.HealthPrediction = {
@@ -179,24 +182,6 @@ local function layout(self, unit)
     }
 	
 	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
-		if (config.hideabsorbs) then
-			myHeals:Hide()
-			otherHeals:Hide()
-			absorbBar:Hide()
-			overAbsorbBar:Hide()
-			healAbsorbBar:Hide()
-			overHealAbsorbBar:Hide()
-
-			return
-		else
-			myHeals:Show()
-			otherHeals:Show()
-			absorbBar:Show()
-			overAbsorbBar:Show()
-			healAbsorbBar:Show()
-			overHealAbsorbBar:Show()
-		end
-
 		local absorb = UnitGetTotalAbsorbs(unit) or 0
 		local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
 		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
@@ -226,9 +211,10 @@ local function layout(self, unit)
 		self.overAbsorb:SetValue(overA)
 
 		self.absorbBar:SetValue(absorb)
+
 	end
 
-	-- Resurrect
+	-- Resurrect 
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
 	self.ResurrectIndicator:SetSize(16, 16)
     self.ResurrectIndicator:SetPoint('TOPRIGHT', self)
@@ -418,6 +404,7 @@ end
 -- Build positioning and attributes
 --============================================================
 function mod:get_attributes()
+	local config = mod._config
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 	config.spacing = 2
 	
@@ -483,7 +470,8 @@ function mod:get_attributes()
 			num_groups = (difficultySize[difficulty] / 5)
 		end
 	end
-	
+
+
 	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 end
 
@@ -545,7 +533,7 @@ function mod:initialize()
 			"unitsPerColumn", 5,
 			"columnSpacing", 2,
 			"xOffset", xOffset,
-			"maxColumns", config.num_groups,
+			"maxColumns", num_groups,
 			"groupingOrder", group_sort,
 			"sortMethod", sort_method,
 			"columnAnchorPoint", new_group_anchor,
@@ -648,9 +636,9 @@ end
 -- Raid container, match layout of groups
 --===============================================
 function mod:create_container()
-	mod.raidpartyholder = CreateFrame('frame', "bdGrid", UIParent)
+	mod.raidpartyholder = CreateFrame('frame', "bdGrid", bdParent)
 	mod.raidpartyholder:SetSize(config['width']+2, config['height']*5+8)
-	mod.raidpartyholder:SetPoint("TOPLEFT", UIParent, "CENTER", -250,200)
+	mod.raidpartyholder:SetPoint("TOP", bdParent, "CENTER", 0, -240)
 	bdMove:set_moveable(mod.raidpartyholder)
 end
 

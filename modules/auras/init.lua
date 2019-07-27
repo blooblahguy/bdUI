@@ -117,7 +117,7 @@ local config = {
 				min = 1,
 				max = 10,
 				step = 1,
-				value = 3,
+				value = 5,
 				label = "Debuff Per Row",
 			},
 			{

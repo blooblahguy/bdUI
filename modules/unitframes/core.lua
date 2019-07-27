@@ -52,6 +52,10 @@ mod.additional_elements = {
 		self.Castbar:SetStatusBarColor(.1, .4, .7, 1)
 		self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
 		self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
+		if (self.Power) then
+			self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -bdUI.border)
+			self.Castbar:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
+		end
 		
 		self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
 		self.Castbar.Text:SetFont(bdUI.media.font, font_size, "OUTLINE")
@@ -390,25 +394,27 @@ function mod:create_unitframes()
 	oUF:RegisterStyle("bdUnitFrames", layout)
 	oUF:SetActiveStyle("bdUnitFrames")
 
+	local xoff = 170
+	local yoff = 200
+
 	-- player
 	local player = oUF:Spawn("player")
-	player:SetPoint("RIGHT", bdParent, "CENTER", -(config.playertargetwidth/2+2), -220)
+	player:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff)
 	bdMove:set_moveable(player)
 
 	-- target
 	local target = oUF:Spawn("target")
-	target:SetPoint("LEFT", bdParent, "CENTER", (config.playertargetwidth/2+2), -220)
+	target:SetPoint("LEFT", bdParent, "CENTER", xoff, -yoff)
 	bdMove:set_moveable(target)
 
 	-- targetoftarget
 	local targettarget = oUF:Spawn("targettarget")
-	targettarget:SetPoint("LEFT", bdParent, "CENTER", (config.playertargetwidth/2+2), -220-config.playertargetheight-config.castbarheight-20)
+	targettarget:SetPoint("LEFT", bdParent, "CENTER", xoff, -yoff-config.playertargetheight-config.castbarheight-20)
 	bdMove:set_moveable(targettarget)
 
 	-- pet
 	local pet = oUF:Spawn("pet")
-	pet:SetPoint("LEFT", bdParent, "CENTER", -(config.playertargetwidth/2+2), -220-config.playertargetheight-config.castbarheight-20)
-	pet:SetPoint("TOPLEFT", bdParent, "BOTTOMLEFT", 0, -config.castbarheight-2)
+	pet:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff-config.playertargetheight-config.castbarheight-20)
 	bdMove:set_moveable(pet)
 
 	-- focus
@@ -421,7 +427,7 @@ function mod:create_unitframes()
 	for i = 1, 5 do
 		local boss = oUF:Spawn("boss"..i, nil)
 		if (not lastboss) then
-			boss:SetPoint("LEFT", UIParent, "LEFT", 20, 80)
+			boss:SetPoint("LEFT", bdParent, "LEFT", 20, yoff)
 		else
 			boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -50)
 		end

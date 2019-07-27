@@ -4,10 +4,10 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout["player"] = function(self, unit)
 	local config = mod._config
 
+	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
 	mod.additional_elements.resting(self, unit)
 	mod.additional_elements.combat(self, unit)
-	mod.additional_elements.power(self, unit)
 	mod.additional_elements.buffs(self, unit)
 
 	self.Buffs.CustomFilter = function(element, unit, button, name, rank, texture, count, debuffType, duration, expiration)

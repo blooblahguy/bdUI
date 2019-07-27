@@ -22,7 +22,7 @@ mod.font_castbar = CreateFont("BDN_FONT_CASTBAR")
 -- place core functionality here
 --===============================================
 function mod:nameplate_size()
-	if (InCombatLockdown()) then return end
+	-- if (InCombatLockdown()) then return end
 
 	C_NamePlate.SetNamePlateFriendlySize(config.width, 0.1)
 	C_NamePlate.SetNamePlateEnemySize(config.width, (config.height + config.targetingTopPadding + config.targetingBottomPadding))
@@ -428,14 +428,14 @@ local function nameplate_create(self, unit)
 	function self.Castbar:CastbarAttribute() 
 		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo();
 
-		if (event == 'SPELL_CAST_START' and config.showcasttarget) then
+		if (event == 'SPELL_CAST_START') then
 			if (self.unit ~= mod.guid_plates[sourceGUID]) then return end
 
 			destName = mod.guid_plates[sourceGUID].."target"
 
 			self.Castbar.AttributeText:SetText("")
 			-- attribute who this cast is targeting
-			if (UnitExists(destName)) then
+			if (UnitExists(destName) and config.showcasttarget) then
 				self.Castbar.AttributeText:SetText(UnitName(destName))
 				self.Castbar.AttributeText:SetTextColor(mod:autoUnitColor(destName))
 			end
@@ -476,9 +476,8 @@ function mod:initialize()
 	config = mod._config
 	if (not config.enabled) then return end
 
-	mod.eventer = CreateFrame("frame", nil)
-	mod.eventer:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
-	mod.eventer:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
+	mod:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
+	mod:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
 	oUF:SetActiveStyle("bdNameplates")

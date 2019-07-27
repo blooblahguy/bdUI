@@ -4,8 +4,8 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout["target"] = function(self, unit)
 	local config = mod._config
 	
-	mod.additional_elements.castbar(self, unit, "right")
 	mod.additional_elements.power(self, unit)
+	mod.additional_elements.castbar(self, unit, "right")
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 
