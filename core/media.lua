@@ -41,6 +41,15 @@ local bdUI, c, l = unpack(select(2, ...))
 		return border
 	end
 
+	local function border_gen(parent)
+		local frame = parent:CreateTexture(nil, "BACKGROUND", nil, -8)
+		frame:SetTexture(bdUI.media.flat)
+		frame:SetVertexColor(unpack(bdUI.media.border))
+		frame.protected = true
+
+		return frame
+	end
+
 	function bdUI:set_backdrop(frame, alpha)
 		local border = bdUI:get_border(frame)
 		alpha = alpha or 0.9
@@ -53,27 +62,19 @@ local bdUI, c, l = unpack(select(2, ...))
 			frame.bd_background:SetVertexColor(r, g, b, alpha)
 			frame.bd_background.protected = true
 
-			frame.t = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
-			frame.t:SetTexture(bdUI.media.flat)
-			frame.t:SetVertexColor(unpack(bdUI.media.border))
+			frame.t = border_gen(frame)
 			frame.t:SetPoint("BOTTOMLEFT", frame.bd_background, "TOPLEFT", -border, 0)
 			frame.t:SetPoint("BOTTOMRIGHT", frame.bd_background, "TOPRIGHT", border, 0)
 
-			frame.l = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
-			frame.l:SetTexture(bdUI.media.flat)
-			frame.l:SetVertexColor(unpack(bdUI.media.border))
+			frame.l = border_gen(frame)
 			frame.l:SetPoint("TOPRIGHT", frame.bd_background, "TOPLEFT", 0, border)
 			frame.l:SetPoint("BOTTOMRIGHT", frame.bd_background, "BOTTOMLEFT", 0, -border)
 
-			frame.r = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
-			frame.r:SetTexture(bdUI.media.flat)
-			frame.r:SetVertexColor(unpack(bdUI.media.border))
+			frame.r = border_gen(frame)
 			frame.r:SetPoint("TOPLEFT", frame.bd_background, "TOPRIGHT", 0, border)
 			frame.r:SetPoint("BOTTOMLEFT", frame.bd_background, "BOTTOMRIGHT", 0, -border)
 
-			frame.b = frame:CreateTexture(nil, "BACKGROUND", nil, -8)
-			frame.b:SetTexture(bdUI.media.flat)
-			frame.b:SetVertexColor(unpack(bdUI.media.border))
+			frame.b = border_gen(frame)
 			frame.b:SetPoint("TOPLEFT", frame.bd_background, "BOTTOMLEFT", -border, 0)
 			frame.b:SetPoint("TOPRIGHT", frame.bd_background, "BOTTOMRIGHT", border, 0)
 

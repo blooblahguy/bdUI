@@ -12,9 +12,7 @@ local mod = bdUI:get_module("Tooltips")
 -- Skinning default tooltips
 -----------------------------------
 function mod:skin(tooltip)
-	if (not tooltip.background) then
-		bdUI:set_backdrop(tooltip)
-	end
+	bdUI:set_backdrop(tooltip)
 	
 	mod:strip(tooltip)
 	tooltip:SetScale(1)
@@ -23,12 +21,8 @@ end
 function mod:strip(frame)
 	local regions = {frame:GetRegions()}
 
-	-- frame:DisableDrawLayer("BACKGROUND")
-	frame:DisableDrawLayer("BORDER")
-
 	for k, v in pairs(regions) do
 		if (not v.protected) then
-			-- print(v:GetObjectType())
 			if v:GetObjectType() == "Texture" then
 				v:SetTexture(nil)
 				v:SetAlpha(0)

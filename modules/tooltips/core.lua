@@ -103,8 +103,8 @@ local function setUnit(self)
 	GameTooltipStatusBar:SetMinMaxValues(0, max)
 	GameTooltipStatusBar:SetValue(hp)
 	GameTooltipStatusBar:ClearAllPoints()
-	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", border, 0)
-	GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", -border, 6)
+	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 0)
+	GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 6)
 
 	-- Set Fonts
 	for i = 1, 20 do
@@ -126,23 +126,23 @@ local function setUnit(self)
 	-- this sucks at updating while you are hovering
 	GameTooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 	GameTooltipStatusBar:RegisterEvent("UNIT_HEALTH")
-	-- GameTooltipStatusBar:SetScript("OnEvent", function(self)
-	-- 	if (not self.unit) then return end
+	GameTooltipStatusBar:SetScript("OnEvent", function(self)
+		if (not self.unit) then return end
 
-	-- 	local hp, max = UnitHealth(self.unit), UnitHealthMax(self.unit)
-	-- 	self:SetMinMaxValues(0, max)
-	-- 	self:SetValue(hp)
-	-- 	self:SetStatusBarColor( mod:getReactionColor(self.unit))
+		local hp, max = UnitHealth(self.unit), UnitHealthMax(self.unit)
+		self:SetMinMaxValues(0, max)
+		self:SetValue(hp)
+		self:SetStatusBarColor( mod:getReactionColor(self.unit))
 
-	-- 	local perc = 0
-	-- 	if (hp > 0 and max > 0) then
-	-- 		perc = math.floor((hp / max) * 100)
-	-- 	end
-	-- 	if (not max) then
-	-- 		perc = ''
-	-- 	end
-	-- 	-- self.text:SetText(perc)
-	-- end)
+		-- local perc = 0
+		-- if (hp > 0 and max > 0) then
+		-- 	perc = math.floor((hp / max) * 100)
+		-- end
+		-- if (not max) then
+		-- 	perc = ''
+		-- end
+		-- self.text:SetText(perc)
+	end)
 end
 
 function mod:create_tooltips()
@@ -180,30 +180,15 @@ function mod:create_tooltips()
 	-- Override blizzard defaults so
 	-- we don't fight them on everything
 	--=================================
-	TOOLTIP_DEFAULT_COLOR = CreateColor(unpack(bdUI.media.border))
-	TOOLTIP_DEFAULT_BACKGROUND_COLOR = CreateColor(unpack(bdUI.media.backdrop))
-	TOOLTIP_AZERITE_BACKGROUND_COLOR = TOOLTIP_DEFAULT_BACKGROUND_COLOR
-
-	GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT = {
-		bgFile = bdUI.media.flat,
-		edgeFile = bdUI.media.flat,
-		edgeSize = 2,
-	
-		backdropBorderColor = TOOLTIP_DEFAULT_COLOR,
-		backdropColor = TOOLTIP_DEFAULT_BACKGROUND_COLOR,
-		padding = { left = 2, right = 2, top = 2, bottom = 2 }
-	};
-
-	GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = Mixin({}, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
-	GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM = Mixin({}, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
-	GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM.overlayAtlasTop = "AzeriteTooltip-Topper"
-	GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM.overlayAtlasTopScale = .75
-	GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM.overlayAtlasBottom = "AzeriteTooltip-Bottom"
+	hooksecurefunc("GameTooltip_SetBackdropStyle", function(self, style)
+		self:SetBackdropBorderColor(0, 0, 0, 0)
+		self:SetBackdropColor(0, 0, 0, 0)
+	end)
 
 	for i = 1, #tooltips do
 		local frame = _G[tooltips[i]]
 		frame.SetPadding = frame.SetPadding or noop
-		GameTooltip_SetBackdropStyle(frame, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
+		-- GameTooltip_SetBackdropStyle(frame, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
 	end
 
 	-- delete lines in the "hide" table
