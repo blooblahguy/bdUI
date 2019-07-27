@@ -71,20 +71,20 @@ function mod:create_chat_bubbles()
 					end
 				end
 			elseif (config.skinchatbubbles == "Removed") then
-				frame.text:SetFont(bdCore.media.font, 13, "OUTLINE")
-				frame:SetBackdrop({bgFile = bdCore.media.flat})
+				frame.text:SetFont(bdUI.media.font, 13, "OUTLINE")
+				frame:SetBackdrop({bgFile = bdUI.media.flat})
 				frame:SetBackdropColor(0,0,0,0)
 				frame:SetBackdropBorderColor(0,0,0,0)
 			elseif (config.skinchatbubbles == "Skinned" or config.skinchatbubbles) then
-				frame.text:SetFont(bdCore.media.font, 13, "OUTLINE")
+				frame.text:SetFont(bdUI.media.font, 13, "OUTLINE")
 				frame:SetBackdrop({
-					bgFile = bdCore.media.flat,
-					edgeFile = bdCore.media.flat,
+					bgFile = bdUI.media.flat,
+					edgeFile = bdUI.media.flat,
 					edgeSize = border,
 					insets = {left = border, right = border, top = border, bottom = border}
 				})
-				frame:SetBackdropColor(unpack(bdCore.media.backdrop))
-				frame:SetBackdropBorderColor(unpack(bdCore.media.border))
+				frame:SetBackdropColor(unpack(bdUI.media.backdrop))
+				frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 			end
 		end)
 		

@@ -161,6 +161,7 @@ mod.additional_elements = {
 		self.Buffs.PostCreateIcon = function(buffs, button)
 			bdUI:set_backdrop_basic(button)
 			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+			button.cd:GetRegions():SetAlpha(0)
 			button:SetAlpha(0.8)
 		end
 	end,
@@ -181,6 +182,7 @@ mod.additional_elements = {
 		self.Debuffs['growth-x'] = "LEFT"
 		self.Debuffs.PostCreateIcon = function(Debuffs, button)
 			bdUI:set_backdrop_basic(button)
+			button.cd:GetRegions():SetAlpha(0)
 			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 		end
 	end,
@@ -202,6 +204,7 @@ mod.additional_elements = {
 		self.Auras.PostCreateIcon = function(Debuffs, button)
 			bdUI:set_backdrop_basic(button)
 			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+			button.cd:GetRegions():SetAlpha(0)
 			-- button:SetAlpha(0.8)
 		end
 	end
@@ -394,8 +397,8 @@ function mod:create_unitframes()
 	oUF:RegisterStyle("bdUnitFrames", layout)
 	oUF:SetActiveStyle("bdUnitFrames")
 
-	local xoff = 170
-	local yoff = 200
+	local xoff = 164
+	local yoff = 218
 
 	-- player
 	local player = oUF:Spawn("player")

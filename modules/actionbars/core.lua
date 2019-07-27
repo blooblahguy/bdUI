@@ -65,7 +65,8 @@ local function HideKeybinds(frame)
 	for i, button in pairs(frame.buttonList) do
 		local hotkey = _G[button:GetName().."HotKey"]
 		if (hotkey) then
-			if (hide) then
+			local text = hotkey:GetText()
+			if (hide or not text or not text:match("[%a%d]")) then
 				hotkey:Hide()
 			else
 				hotkey:Show()

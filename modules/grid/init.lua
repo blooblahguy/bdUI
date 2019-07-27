@@ -47,7 +47,7 @@ local config = {
 			{
 				key = "width",
 				type = "range",
-				value = 60,
+				value = 62,
 				min = 20,
 				max = 100,
 				step = 2,

@@ -14,9 +14,21 @@ local size_sm = 20
 
 --==================================================================================
 -- since most of the bars share identical conf, let's just use a function to save space and time
-local function addBarConf(title, key, rows, mouseover)
-	rows = rows or 1
-	mouseover = mouseover or false
+local function addBarConf(title, key, options)
+	local defaults = {
+		mouseover = false,
+		rows = 1,
+		buttons = 12,
+		size = size_md,
+		spacing = 0,
+		scale = 1,
+		alpha = 1,
+		hotkeys = false,
+	}
+	options = options or {}
+	for k, v in pairs(options) do
+		defaults[k] = v
+	end
 
 	return { 
 		key = "tab",
@@ -26,13 +38,13 @@ local function addBarConf(title, key, rows, mouseover)
 			{
 				key = key.."_mouseover",
 				type = "toggle",
-				value = mouseover,
+				value = defaults.mouseover,
 				label = "Hide Until Mouseover",
 			},
 			{
 				key = key.."_hidehotkeys",
 				type = "toggle",
-				value = false,
+				value = defaults.hotkeys,
 				label = "Hide Bar Hotkeys until Mouseover"
 			},
 			{
@@ -41,7 +53,7 @@ local function addBarConf(title, key, rows, mouseover)
 				min = 4,
 				max = 100,
 				step = 2,
-				value = size_md,
+				value = defaults.size,
 				label = "Button Size"
 			},
 			{
@@ -50,7 +62,7 @@ local function addBarConf(title, key, rows, mouseover)
 				min = 0,
 				max = 20,
 				step = 1,
-				value = 0,
+				value = defaults.spacing,
 				label = "Button Spacing"
 			},
 			{
@@ -59,7 +71,7 @@ local function addBarConf(title, key, rows, mouseover)
 				min = 0,
 				max = 1,
 				step = 0.1,
-				value = 1,
+				value = defaults.scale,
 				label = "Bar Scale"
 			},
 			{
@@ -68,7 +80,7 @@ local function addBarConf(title, key, rows, mouseover)
 				min = 0,
 				max = 1,
 				step = 0.1,
-				value = 1,
+				value = defaults.alpha,
 				label = "Bar Alpha"
 			},
 			{
@@ -77,7 +89,7 @@ local function addBarConf(title, key, rows, mouseover)
 				min = 1,
 				max = 12,
 				step = 1,
-				value = 12,
+				value = defaults.buttons,
 				label = "Number of Buttons"
 			},
 			{
@@ -86,7 +98,7 @@ local function addBarConf(title, key, rows, mouseover)
 				min = 1,
 				max = 12,
 				step = 1,
-				value = rows,
+				value = defaults.rows,
 				label = "Number of Rows"
 			},
 		}
@@ -234,12 +246,18 @@ local config = {
 --=========================================
 -- Bar 4
 --=========================================
-	addBarConf("Bar 4", "bar4", 12, true),
+	addBarConf("Bar 4", "bar4", {
+		buttons = 10,
+		hotkeys = false
+	}),
 
 --=========================================
 -- Bar 5
 --=========================================
-	addBarConf("Bar 5", "bar5", 12, true),
+	addBarConf("Bar 5", "bar5", {
+		rows = 12, 
+		mouseover = true 
+	}),
 
 --=========================================
 -- Stance & Pet

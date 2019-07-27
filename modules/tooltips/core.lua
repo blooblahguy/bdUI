@@ -115,34 +115,34 @@ local function setUnit(self)
 
 	
 	-- add text to the healthbar on tooltips
-	GameTooltipStatusBar.text = GameTooltipStatusBar:CreateFontString(nil)
-	GameTooltipStatusBar.text:SetFont(bdUI.media.font, 11, "THINOUTLINE")
-	GameTooltipStatusBar.text:SetAllPoints()
-	GameTooltipStatusBar.text:SetJustifyH("CENTER")
-	GameTooltipStatusBar.text:SetJustifyV("MIDDLE")
+	-- GameTooltipStatusBar.text = GameTooltipStatusBar:CreateFontString(nil)
+	-- GameTooltipStatusBar.text:SetFont(bdUI.media.font, 11, "THINOUTLINE")
+	-- GameTooltipStatusBar.text:SetAllPoints()
+	-- GameTooltipStatusBar.text:SetJustifyH("CENTER")
+	-- GameTooltipStatusBar.text:SetJustifyV("MIDDLE")
 	GameTooltipStatusBar:SetStatusBarTexture(bdUI.media.smooth)
 	bdUI:set_backdrop(GameTooltipStatusBar)
 
 	-- this sucks at updating while you are hovering
 	GameTooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 	GameTooltipStatusBar:RegisterEvent("UNIT_HEALTH")
-	GameTooltipStatusBar:SetScript("OnEvent", function(self)
-		if (not self.unit) then return end
+	-- GameTooltipStatusBar:SetScript("OnEvent", function(self)
+	-- 	if (not self.unit) then return end
 
-		local hp, max = UnitHealth(self.unit), UnitHealthMax(self.unit)
-		self:SetMinMaxValues(0, max)
-		self:SetValue(hp)
-		self:SetStatusBarColor( mod:getReactionColor(self.unit))
+	-- 	local hp, max = UnitHealth(self.unit), UnitHealthMax(self.unit)
+	-- 	self:SetMinMaxValues(0, max)
+	-- 	self:SetValue(hp)
+	-- 	self:SetStatusBarColor( mod:getReactionColor(self.unit))
 
-		local perc = 0
-		if (hp > 0 and max > 0) then
-			perc = math.floor((hp / max) * 100)
-		end
-		if (not max) then
-			perc = ''
-		end
-		self.text:SetText(perc)
-	end)
+	-- 	local perc = 0
+	-- 	if (hp > 0 and max > 0) then
+	-- 		perc = math.floor((hp / max) * 100)
+	-- 	end
+	-- 	if (not max) then
+	-- 		perc = ''
+	-- 	end
+	-- 	-- self.text:SetText(perc)
+	-- end)
 end
 
 function mod:create_tooltips()
@@ -153,13 +153,13 @@ function mod:create_tooltips()
 	---------------------------------------------
 	local tooltipanchor = CreateFrame("frame","bdTooltip",bdParent)
 	tooltipanchor:SetSize(150, 100)
-	tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 450, -200)
+	tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 450, 0)
 	bdMove:set_moveable(tooltipanchor)
 
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
 		self:SetOwner(parent, "ANCHOR_NONE")
 		self:ClearAllPoints()
-		self:SetPoint("TOPLEFT", tooltipanchor)
+		self:SetPoint("LEFT", tooltipanchor)
 
 		mod:skin(self)
 	end)

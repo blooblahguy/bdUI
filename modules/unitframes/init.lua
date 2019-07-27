@@ -77,7 +77,7 @@ local config = {
 			},
 			{
 				key = "playertargetheight",
-				value = 24,
+				value = 26,
 				min = 4,
 				max = 60,
 				step = 2,
@@ -86,7 +86,7 @@ local config = {
 			},
 			{
 				key = "playertargetpowerheight",
-				value = 3,
+				value = 2,
 				min = 1,
 				max = 10,
 				step = 1,
