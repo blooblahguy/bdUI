@@ -93,7 +93,7 @@ function mod:create_actionbar4()
 	cfg.frameName = "bdActionbars_4"
 	cfg.cfg = "bar4"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"TOP", bdParent, "CENTER", 0, -198}
+	cfg.frameSpawn = {"TOP", bdParent, "CENTER", 0, -203}
 
 	local buttonList = mod:GetButtonList("MultiBarRightButton", NUM_ACTIONBAR_BUTTONS)
 	local bar4 = mod:CreateBar(buttonList, cfg)

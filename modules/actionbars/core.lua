@@ -145,8 +145,8 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	end
 
 	-- sizing
-	local frameWidth = 10 + frame.cols * frame.width + (frame.cols-1) * frame.spacing
-	local frameHeight = 10 + frame.rows * frame.height + (frame.rows-1) * frame.spacing
+	local frameWidth = frame.cols * frame.width + (frame.cols-1) * frame.spacing
+	local frameHeight = frame.rows * frame.height + (frame.rows-1) * frame.spacing
 	frame:SetSize(frameWidth, frameHeight)
 	frame:SetAlpha(frame.alpha)
 
@@ -190,7 +190,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 			button:Show()
 			button:SetAttribute("showgrid", showgrid)
 			if (i == 1) then
-				button:SetPoint("TOPLEFT", frame, "TOPLEFT", 5, -5)
+				button:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
 				lastRow = button
 			elseif (index > frame.cols) then
 				button:SetPoint("TOPLEFT", lastRow, "BOTTOMLEFT", 0, -frame.spacing)

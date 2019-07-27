@@ -29,10 +29,10 @@ end
 function bdMove:set_moveable(frame, rename, left, top, right, bottom)
 	if (not bdMove.save) then print("bdMove needs SavedVariable to save positions") return end
 	if rename == nil then rename = frame:GetName() end
-	left = left or 0
-	top = top or 0
-	right = right or left or 0
-	bottom = bottom or top or 0
+	left = left or 2
+	top = top or 2
+	right = right or left or 2
+	bottom = bottom or top or 2
 
 	-- get dimensions
 	local height = frame:GetHeight()
