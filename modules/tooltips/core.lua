@@ -9,6 +9,18 @@ local config = {}
 -- Core functionality
 -- place core functionality here
 --===============================================
+local function on_show(self)
+	mod:skin(self)
+
+	-- Set Fonts
+	local regions = {self:GetRegions()}
+	for k, reg in pairs(regions) do
+		if (reg and reg.GetText and reg:GetText()) then
+			reg:SetFont(bdUI.media.font, 14)
+		end		
+	end
+
+end
 local function setUnit(self)
 	if (self:IsForbidden()) then return end -- don't mess with forbidden frames, which sometimes randomly happens
 
@@ -105,21 +117,15 @@ local function setUnit(self)
 	GameTooltipStatusBar:ClearAllPoints()
 	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 0)
 	GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 6)
-
-	-- Set Fonts
-	for i = 1, 20 do
-		local line = _G['GameTooltipTextLeft'..i]
-		if not line then break end
-		line:SetFont(bdUI.media.font, 14)
-	end
-
 	
 	-- add text to the healthbar on tooltips
-	-- GameTooltipStatusBar.text = GameTooltipStatusBar:CreateFontString(nil)
-	-- GameTooltipStatusBar.text:SetFont(bdUI.media.font, 11, "THINOUTLINE")
-	-- GameTooltipStatusBar.text:SetAllPoints()
-	-- GameTooltipStatusBar.text:SetJustifyH("CENTER")
-	-- GameTooltipStatusBar.text:SetJustifyV("MIDDLE")
+	if (not GameTooltipStatusBar.text) then
+		GameTooltipStatusBar.text = GameTooltipStatusBar:CreateFontString(nil)
+		GameTooltipStatusBar.text:SetFont(bdUI.media.font, 11, "THINOUTLINE")
+		GameTooltipStatusBar.text:SetAllPoints()
+		GameTooltipStatusBar.text:SetJustifyH("CENTER")
+		GameTooltipStatusBar.text:SetJustifyV("MIDDLE")
+	end
 	GameTooltipStatusBar:SetStatusBarTexture(bdUI.media.smooth)
 	bdUI:set_backdrop(GameTooltipStatusBar)
 
@@ -134,14 +140,14 @@ local function setUnit(self)
 		self:SetValue(hp)
 		self:SetStatusBarColor( mod:getReactionColor(self.unit))
 
-		-- local perc = 0
-		-- if (hp > 0 and max > 0) then
-		-- 	perc = math.floor((hp / max) * 100)
-		-- end
-		-- if (not max) then
-		-- 	perc = ''
-		-- end
-		-- self.text:SetText(perc)
+		local perc = 0
+		if (hp > 0 and max > 0) then
+			perc = math.floor((hp / max) * 100)
+		end
+		if (not max) then
+			perc = ''
+		end
+		self.text:SetText(perc)
 	end)
 end
 
@@ -160,8 +166,6 @@ function mod:create_tooltips()
 		self:SetOwner(parent, "ANCHOR_NONE")
 		self:ClearAllPoints()
 		self:SetPoint("LEFT", tooltipanchor)
-
-		mod:skin(self)
 	end)
 
 	-- for skinning all the tooltips in the UI
@@ -204,6 +208,7 @@ function mod:create_tooltips()
 	---------------------------------------------------------------------
 	-- hook main styling functions
 	---------------------------------------------------------------------
+	GameTooltip:HookScript('OnShow', on_show)
 	GameTooltip:HookScript('OnTooltipSetUnit', setUnit)
 	function GameTooltip_UnitColor(unitToken) return mod:getReactionColor(unitToken) end
 end
