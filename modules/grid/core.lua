@@ -38,7 +38,7 @@ local function layout(self, unit)
 			UnitFrame_OnEnter(self)
 		end
 	end)
-	
+
 	--===============================================
 	-- Health
 	--===============================================
@@ -252,20 +252,25 @@ local function layout(self, unit)
 	self.GroupRoleIndicator.Override = function(self,event)
 		local role = UnitGroupRolesAssigned(self.unit)
 		self.GroupRoleIndicator:Hide()
+		-- print(role)
 		if (config.roleicon) then
 			if (role and (role == "HEALER" or role == "TANK")) then
 				self.GroupRoleIndicator:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
 				self.GroupRoleIndicator:Show()
 			end
 		end
-		
+
+		self.Short:ClearAllPoints()
 		self.Power:Hide()
+		self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, 0)
 		if (config.powerdisplay == "None") then
 			self.Power:Hide()
 		elseif (config.powerdisplay == "Healers" and role == "HEALER") then
 			self.Power:Show()
+			self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
 		elseif (config.powerdisplay == "All") then
 			self.Power:Show()
+			self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
 		end
 	end
 
@@ -285,7 +290,7 @@ local function layout(self, unit)
 	
 	-- Readycheck
 	self.ReadyCheckIndicator = self.Health:CreateTexture(nil, 'OVERLAY', nil, 7)
-	self.ReadyCheckIndicator:SetPoint('BOTTOM', self, 'BOTTOM', 0, 2)
+	self.ReadyCheckIndicator:SetPoint('CENTER', self, 'CENTER', 0, 2)
 	
 	-- ResurrectIcon
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -397,6 +402,7 @@ local function layout(self, unit)
 	end
 	
 	table.insert(mod.frames, self)
+	mod:config_callback()
 end
 
 --============================================================
@@ -405,7 +411,6 @@ end
 function mod:get_attributes()
 	local config = mod._config
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
-	config.spacing = 2
 	
 	-- sorting options
 	if (config.group_sort == "Group") then
@@ -432,7 +437,7 @@ function mod:get_attributes()
 		yOffset = config.spacing
 	elseif (config.group_growth == "Downwards") then
 		new_group_anchor = "TOP"
-		xOffset = config.spacing
+		yOffset = -config.spacing
 	elseif (config.group_growth == "Left") then
 		new_group_anchor = "RIGHT"
 		xOffset = -config.spacing
@@ -470,6 +475,8 @@ function mod:get_attributes()
 		end
 	end
 
+	xOffset = bdUI.pixel * (xOffset or 2)
+	yOffset = bdUI.pixel * (yOffset or 2)
 
 	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 end
@@ -487,10 +494,11 @@ function mod:update_header()
 	end
 
 	mod:resize_container()
-	
+
 	-- growth/spacing
 	mod.frameHeader:SetAttribute("columnAnchorPoint", new_group_anchor)
 	mod.frameHeader:SetAttribute("point", new_player_anchor)
+	mod.frameHeader:SetAttribute("columnSpacing", -yOffset)
 	mod.frameHeader:SetAttribute("yOffset", yOffset)
 	mod.frameHeader:SetAttribute("xOffset", xOffset)
 
@@ -530,8 +538,9 @@ function mod:initialize()
 			"showRaid", true,
 			"initial-scale", 1,
 			"unitsPerColumn", 5,
-			"columnSpacing", 2,
+			"columnSpacing", yOffset,
 			"xOffset", xOffset,
+			"yOffset", yOffset,
 			"maxColumns", num_groups,
 			"groupingOrder", group_sort,
 			"sortMethod", sort_method,
@@ -539,7 +548,6 @@ function mod:initialize()
 			"initial-width", config.width,
 			"initial-height", config.height,
 			"point", new_player_anchor,
-			"yOffset", yOffset,
 			"groupBy", group_by
 		);
 
@@ -575,6 +583,7 @@ function mod:config_callback()
 		self.Dispel:SetSize(60, 50)
 		
 		self.Short:SetWidth(config.width)
+		self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
 
 		self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
 		self.Buffs:SetFrameLevel(27)
@@ -586,16 +595,8 @@ function mod:config_callback()
 
 		self.Buffs.size = config.buffSize
 		self.Debuffs.size = config.debuffSize
-		
-		if (config.powerdisplay == "None") then
-			self.Power:Hide()
-		elseif (config.powerdisplay == "Healers" and role == "HEALER") then
-			self.Power:Show()
-		elseif (config.powerdisplay == "All") then
-			self.Power:Show()
-		end
 
-		self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT",0, config.powerheight)
+		self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
 
 		if (config.showGroupNumbers and IsInRaid()) then
 			self.Group:Show()
@@ -611,16 +612,7 @@ function mod:config_callback()
 		if (not config.roleicon) then
 			self.GroupRoleIndicator:Hide()
 		end
-		
-		local role = UnitGroupRolesAssigned(self.unit)
-		self.Power:Hide()
-		if (config.powerdisplay == "None") then
-			self.Power:Hide()
-		elseif (config.powerdisplay == "Healers" and role == "HEALER") then
-			self.Power:Show()
-		elseif (config.powerdisplay == "All") then
-			self.Power:Show()
-		end
+
 		
 		if (config.showGroupNumbers and IsInRaid()) then
 			self.Group:Show()
@@ -635,9 +627,9 @@ end
 -- Raid container, match layout of groups
 --===============================================
 function mod:create_container()
-	mod.raidpartyholder = CreateFrame('frame', "bdGrid", bdParent)
-	mod.raidpartyholder:SetSize(config['width']+2, config['height']*5+8)
-	mod.raidpartyholder:SetPoint("TOP", bdParent, "CENTER", 0, -240)
+	mod.raidpartyholder = CreateFrame('frame', "bdGrid", UIParent)
+	mod.raidpartyholder:SetSize(config['width'], config['height']*5)
+	mod.raidpartyholder:SetPoint("TOP", bdParent, "CENTER", 0, -200)
 	bdMove:set_moveable(mod.raidpartyholder)
 end
 

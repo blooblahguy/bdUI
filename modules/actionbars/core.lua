@@ -135,7 +135,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	frame.hidehotkeys = c[cfg.cfg.."_hidehotkeys"] or false
 	
 	frame.num = #buttonList
-	frame.cols = math.min(frame.limit, math.floor(frame.num / frame.rows))
+	frame.cols = math.floor(math.min(frame.limit, frame.num) / frame.rows)
 
 	-- register visibility driver, on init and on callback
 	if cfg.frameVisibility then
@@ -204,6 +204,41 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	end
 end
 
+local function update_cooldown(self)
+	if (not self.action) then return end
+	local start, duration, enable = GetActionCooldown(self.action)
+
+	-- print(start, duration, enable)
+
+	local color = {1, 1, 1}
+	if (start > 0 and enable and duration > 2) then
+		local remaining = start + duration - GetTime()
+		if (remaining < 3) then
+			color = {0.8, 0.1, 0.1}
+		elseif (remaining < 60) then
+			color = {0.9, 0.9, 0.1}
+		end
+		-- print(remaining)
+		self.cooldowntext:SetTextColor(unpack(color))
+		self.icon:bdSetDesaturated(true)
+	else
+		self.cooldowntext:SetTextColor(0.9, 0.9, 0.1)
+		self.icon:bdSetDesaturated(false)
+	end
+end
+
+local function hook_cooldown(self)
+	self.cooldown:SetScript("OnShow", function() update_cooldown(self) end)
+	self.total = 0
+	self:SetScript("OnUpdate", function(self, elapsed)
+		self.total = self.total + elapsed
+		if (self.total > 0.25) then
+			self.total = 0
+			update_cooldown(self)
+		end
+	end)
+end
+
 --=======================================
 -- Skinning
 --=======================================
@@ -235,6 +270,8 @@ function mod:SkinButton(button)
 	flash:SetTexture("")
 	icon:SetTexCoord(.1, .9, .1, .9)
 	icon:SetDrawLayer("ARTWORK")
+	icon.bdSetDesaturated = icon.SetDesaturated
+	icon.SetDesaturated = noop
 
 	-- Text Overrides
 	hotkey:SetFontObject(v.font)
@@ -262,13 +299,16 @@ function mod:SkinButton(button)
 	macro:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,1)
 
 	-- Fix cooldown Spiral Positioning
-	cooldown:GetRegions():SetFontObject(v.font)
-	cooldown:GetRegions():SetJustifyH("Center")
-	cooldown:GetRegions():ClearAllPoints()
-	cooldown:GetRegions():SetAllPoints(cooldown)
+	button.cooldowntext = cooldown:GetRegions()
+	button.cooldowntext:SetFont(bdUI.media.font, 16, "OUTLINE")
+	button.cooldowntext:SetJustifyH("Center")
+	button.cooldowntext:ClearAllPoints()
+	button.cooldowntext:SetAllPoints(cooldown)
 	cooldown:SetParent(button)
 	cooldown:ClearAllPoints()
 	cooldown:SetAllPoints(button)
+	button.icon = icon
+	hook_cooldown(button)
 
 	-- Button Overwrite Textures
 	button.hover = button:CreateTexture()

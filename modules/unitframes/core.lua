@@ -398,7 +398,7 @@ function mod:create_unitframes()
 	oUF:SetActiveStyle("bdUnitFrames")
 
 	local xoff = 164
-	local yoff = 218
+	local yoff = 178
 
 	-- player
 	local player = oUF:Spawn("player")
@@ -412,12 +412,12 @@ function mod:create_unitframes()
 
 	-- targetoftarget
 	local targettarget = oUF:Spawn("targettarget")
-	targettarget:SetPoint("LEFT", bdParent, "CENTER", xoff, -yoff-config.playertargetheight-config.castbarheight-20)
+	targettarget:SetPoint("TOPRIGHT", target, "BOTTOMRIGHT", 0, -config.castbarheight-20)
 	bdMove:set_moveable(targettarget)
 
 	-- pet
 	local pet = oUF:Spawn("pet")
-	pet:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff-config.playertargetheight-config.castbarheight-20)
+	pet:SetPoint("TOPLEFT", player, "BOTTOMLEFT", 0, -config.castbarheight-20)
 	bdMove:set_moveable(pet)
 
 	-- focus
@@ -430,7 +430,7 @@ function mod:create_unitframes()
 	for i = 1, 5 do
 		local boss = oUF:Spawn("boss"..i, nil)
 		if (not lastboss) then
-			boss:SetPoint("LEFT", bdParent, "LEFT", 20, yoff)
+			boss:SetPoint("LEFT", bdParent, "LEFT", 40, yoff)
 		else
 			boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -50)
 		end

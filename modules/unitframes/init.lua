@@ -68,7 +68,7 @@ local config = {
 			},
 			{
 				key = "playertargetwidth",
-				value = 220,
+				value = 180,
 				min = 100,
 				max = 300,
 				step = 2,

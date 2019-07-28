@@ -45,6 +45,15 @@ local config = {
 				tooltip = "The height of mana/energy/rage",
 			},
 			{
+				key = "spacing",
+				type = "range",
+				value = 2,
+				min = 0,
+				max = 8,
+				step = 1,
+				label = "Frame Spacing",
+			},
+			{
 				key = "width",
 				type = "range",
 				value = 62,

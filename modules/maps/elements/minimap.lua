@@ -66,7 +66,7 @@ function mod:create_minimap()
 
 	Minimap.background = CreateFrame("frame", "bdMinimap", Minimap)
 	local inset = ((config.size * .25) / 2)
-	Minimap.background:SetPoint("TOPLEFT", UIParent, "TOPLEFT", inset, -inset)
+	Minimap.background:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -inset, -inset)
 	Minimap.background:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
 	Minimap.background:SetBackdropColor(0,0,0,0)
 	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
@@ -84,7 +84,7 @@ function mod:create_minimap()
 		local action = delta > 0 and MinimapZoomIn:Click()
 		local action = delta < 0 and MinimapZoomOut:Click()
 	end)
-	
+
 	ObjectiveTrackerFrame:ClearAllPoints()
 	ObjectiveTrackerFrame:SetPoint("TOP", Minimap.background, "BOTTOM", 0, -100)
 
@@ -264,3 +264,32 @@ function mod:difficulty()
 		end
 	end)
 end
+
+local xOff = 0
+local yOff = -10
+local ignore_point
+
+local function move_objective_tracker()
+	local tracker = ObjectiveTrackerFrame
+	tracker:ClearAllPoints()
+	ignore_point = true
+	tracker:SetPoint("TOP", Minimap, "BOTTOM", 0, yOff)
+	-- tracker:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", 0, yOff)
+	ignore_point = false
+end
+
+local f = CreateFrame("Frame")
+f:SetScript("OnEvent",function(self, event, addon)
+	if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
+		move_objective_tracker()
+		hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
+			if (not ignore_point) then
+				move_objective_tracker()
+			end
+		end)
+		self:UnregisterEvent("ADDON_LOADED")
+	else
+		self:RegisterEvent("ADDON_LOADED")
+	end
+end)
+f:RegisterEvent("PLAYER_LOGIN")

@@ -32,7 +32,7 @@ local config = {
 				min = 16,
 				max = 60,
 				step = 2,
-				value = 34,
+				value = 40,
 				label = "Buff Size",
 			},
 			{
@@ -41,7 +41,7 @@ local config = {
 				min = 0,
 				max = 10,
 				step = 2,
-				value = 0,
+				value = 4,
 				label = "Buff Spacing",
 			},
 			{
@@ -50,7 +50,7 @@ local config = {
 				min = 1,
 				max = 20,
 				step = 1,
-				value = 20,
+				value = 11,
 				label = "Buff Per Row",
 			},
 			{

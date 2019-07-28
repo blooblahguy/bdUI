@@ -137,16 +137,18 @@ local function filter_emojis(msg)
 		word = strtrim(word)
 		local pattern = gsub(word, '([%(%)%.%%%+%-%*%?%[%^%$])', '%%%1')
 		local emoji = mod.emojis[pattern]
+		-- mod:alert_message(mod:rawText(pattern))
 		if emoji and strmatch(msg, '[%s%p]-'..pattern..'[%s%p]*') then
-			emoji = "|T"..emoji.."16|t"
+			emoji = "|T"..emoji..":12|t"
 			local base64 = bdUI.Base64:Encode(word)
 			msg = gsub(msg, '([%s%p]-)'..pattern..'([%s%p]*)', (base64 and ('%1|Helvmoji:%%'..base64..'|h|cFFffffff|r|h') or '%1')..emoji..'%2');
 		end
 	end
 
+
 	return msg
 end
 
 function mod:create_emojis()
-	bdUI:add_action("chat_message", filter_emojis)
+	bdUI:add_filter("chat_message", filter_emojis)
 end

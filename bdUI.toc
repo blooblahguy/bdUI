@@ -29,6 +29,7 @@ lib\oUF_Plugins\oUF_Fader.lua
 lib\oUF_Plugins\oUF_AuraBars.lua
 lib\oUF_Plugins\oUF_PVPSpecIcons.lua
 lib\oUF_Plugins\oUF_Trinkets.lua
+lib\oUF_Plugins\oUF_Smooth.lua
 
 # Custom
 lib\memoize.lua
@@ -47,18 +48,10 @@ core\commands.lua
 core\compatibility.lua
 core\core.lua
 core\media.lua
-core\defaults.lua
 core\modules.lua
+core\defaults.lua
 core\setup.lua
 core\load.lua
-
-# Auras
-modules\auras\template.xml
-modules\auras\init.lua
-modules\auras\functions.lua
-modules\auras\core.lua
-modules\auras\elements\watcher.lua
-modules\auras\elements\auras.lua
 
 # Actionbars
 modules\actionbars\init.lua
@@ -68,6 +61,23 @@ modules\actionbars\elements\bars.lua
 modules\actionbars\elements\range.lua
 modules\actionbars\elements\hoverbind.lua
 modules\actionbars\elements\hotkeys.lua
+
+# Bags
+modules\bags\init.lua
+modules\bags\functions.lua
+modules\bags\core.lua
+modules\bags\elements\bag.lua
+modules\bags\elements\bank.lua
+modules\bags\elements\loot.lua
+
+# Chat
+modules\chat\init.lua
+modules\chat\functions.lua
+modules\chat\core.lua
+modules\chat\elements\alerts.lua
+modules\chat\elements\bubbles.lua
+modules\chat\elements\community.lua
+modules\chat\elements\emojis.lua
 
 # Databars
 modules\databars\init.lua
@@ -79,13 +89,12 @@ modules\databars\elements\reputation.lua
 modules\databars\elements\honor.lua
 modules\databars\elements\altpower.lua
 
-# Bags
-modules\bags\init.lua
-modules\bags\functions.lua
-modules\bags\core.lua
-modules\bags\elements\bag.lua
-modules\bags\elements\bank.lua
-modules\bags\elements\loot.lua
+# Grid
+modules\grid\init.lua
+modules\grid\functions.lua
+modules\grid\core.lua
+modules\grid\elements\alias.lua
+modules\grid\elements\dispel_glow.lua
 
 # Maps
 modules\maps\init.lua
@@ -94,6 +103,14 @@ modules\maps\core.lua
 modules\maps\elements\minimap.lua
 modules\maps\elements\buttonframe.lua
 modules\maps\elements\worldmap.lua
+
+# Auras
+modules\auras\template.xml
+modules\auras\init.lua
+modules\auras\functions.lua
+modules\auras\core.lua
+modules\auras\elements\watcher.lua
+modules\auras\elements\auras.lua
 
 # Nameplates
 modules\nameplates\init.lua
@@ -112,22 +129,6 @@ modules\tooltips\functions.lua
 modules\tooltips\core.lua
 modules\tooltips\elements\tooltipcolor.lua
 modules\tooltips\elements\namehover.lua
-
-# Grid
-modules\grid\init.lua
-modules\grid\functions.lua
-modules\grid\core.lua
-modules\grid\elements\alias.lua
-modules\grid\elements\dispel_glow.lua
-
-# Chat
-modules\chat\init.lua
-modules\chat\functions.lua
-modules\chat\core.lua
-modules\chat\elements\alerts.lua
-modules\chat\elements\bubbles.lua
-modules\chat\elements\community.lua
-modules\chat\elements\emojis.lua
 
 # Unitframes
 modules\unitframes\init.lua

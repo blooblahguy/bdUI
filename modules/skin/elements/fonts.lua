@@ -28,8 +28,6 @@ CHAT_FONT_HEIGHTS = {12, 13, 14, 15, 16, 17, 18, 19, 20}
 local function changeFonts()
 	-- if (not c.persistent.bdAddons.changefonts) then return end
 
-	print("change fonts")
-
 	local font = bdUI.media.font--bdUI:getMedia("font", c.persistent.bdAddons.font )
 
 	local NORMAL = font
@@ -37,7 +35,7 @@ local function changeFonts()
 	local NUMBER = font
 	local MONOCHROME = "THIN"
 
-	local fontScale = c.persistent.bdAddons.fontScale;
+	local fontScale = 1--c.persistent.bdAddons.fontScale;
 	
 	UNIT_NAME_FONT = NORMAL
 	DAMAGE_TEXT_FONT = COMBAT

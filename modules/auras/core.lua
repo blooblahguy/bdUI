@@ -5,13 +5,13 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Buffs & Debuffs")
 local config
 
-local bdBuffs = CreateFrame("frame", "Buffs", bdParent, "SecureAuraHeaderTemplate")
-bdBuffs:SetPoint('TOPRIGHT', bdParent, "TOPRIGHT", -10, -10)
+local bdBuffs = CreateFrame("frame", "Buffs", UIParent, "SecureAuraHeaderTemplate")
+bdBuffs:SetPoint('TOPRIGHT', Minimap, "TOPLEFT", -10, -40)
 local bufffont = CreateFont("BD_BUFFS_FONT")
 bufffont:SetShadowColor(0, 0, 0)
 bufffont:SetShadowOffset(1, -1)
 
-local bdDebuffs = CreateFrame("frame", "Debuffs", bdParent, "SecureAuraHeaderTemplate")
+local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTemplate")
 bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -140)
 local debufffont = CreateFont("BD_DEBUFFS_FONT")
 debufffont:SetShadowColor(0, 0, 0)

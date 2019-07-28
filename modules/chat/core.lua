@@ -349,8 +349,10 @@ mod.filter_message = function(self, text, ...)
 	text = text:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cffffffff|Hurl:%1|h[%1]|h|r')
 
 	-- filter with plugins
-	local filter = bdUI:do_action("chat_message", text)
-	text = filter or text
+	text = bdUI:do_filter("chat_message", text)
+	
+	-- pass to plugins
+	bdUI:do_action("chat_message", text)
 	
 	return self.DefaultAddMessage(self, text, ...)
 end

@@ -76,7 +76,7 @@ local config = {
 			{
 				key = "hideclasshall",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Hide Class Hall Button"
 			},
 		}

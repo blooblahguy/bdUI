@@ -117,7 +117,7 @@ local bdUI, c, l = unpack(select(2, ...))
 	end
 
 	function bdUI:set_highlight(frame, icon)
-		if frame.SetHighlightTexture and not frame.highlighter then
+		if frame.SetHighlightTexture and not (frame.highlighter or frame.hover) then
 			icon = icon or frame
 			local highlight = frame:CreateTexture(nil, "HIGHLIGHT")
 			local border = bdUI:get_border(frame)

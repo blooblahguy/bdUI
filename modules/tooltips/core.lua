@@ -115,7 +115,7 @@ local function setUnit(self)
 	GameTooltipStatusBar:SetMinMaxValues(0, max)
 	GameTooltipStatusBar:SetValue(hp)
 	GameTooltipStatusBar:ClearAllPoints()
-	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 0)
+	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, bdUI.border)
 	GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 6)
 	
 	-- add text to the healthbar on tooltips
@@ -191,7 +191,8 @@ function mod:create_tooltips()
 
 	for i = 1, #tooltips do
 		local frame = _G[tooltips[i]]
-		frame.SetPadding = frame.SetPadding or noop
+		-- frame.SetPadding = frame.SetPadding or noop
+		frame:HookScript("OnShow", on_show)
 		-- GameTooltip_SetBackdropStyle(frame, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
 	end
 
@@ -210,5 +211,11 @@ function mod:create_tooltips()
 	---------------------------------------------------------------------
 	GameTooltip:HookScript('OnShow', on_show)
 	GameTooltip:HookScript('OnTooltipSetUnit', setUnit)
+	mod:RegisterEvent("PLAYER_LOGIN")
+	mod:SetScript("OnEvent", function()
+		if (LibDBIconTooltip) then
+			LibDBIconTooltip:SetScript('OnShow', on_show)
+		end
+	end)
 	function GameTooltip_UnitColor(unitToken) return mod:getReactionColor(unitToken) end
 end

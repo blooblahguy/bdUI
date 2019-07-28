@@ -5,7 +5,8 @@ function mod:create_xp()
 	local config = mod._config
 
 	local bar = mod:create_databar("bdXP")
-
+	bar:SetPoint("TOP", bdParent, "TOP", 0, -10)
+	bar:SetSize(300, 16)
 	bar:RegisterEvent("PLAYER_XP_UPDATE")
 	bar:RegisterEvent("PLAYER_LEVEL_UP")
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -17,10 +18,10 @@ function mod:create_xp()
 		local name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
 
 		-- make sure it's enabled
-		if (not config.xptracker or UnitLevel("player") == MAX_PLAYER_LEVEL or IsXPUserDisabled == true) then 
-			self:Hide()
-			return
-		end
+		-- if (not config.xptracker or UnitLevel("player") == MAX_PLAYER_LEVEL or IsXPUserDisabled == true) then 
+		-- 	self:Hide()
+		-- 	return
+		-- end
 
 		self:Show()
 		self:SetMinMaxValues(0, mxp)

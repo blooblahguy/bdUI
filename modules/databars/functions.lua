@@ -9,7 +9,7 @@ local mod = bdUI:get_module("Databars")
 -- place custom functionality here
 --===============================================
 function mod:create_databar(name)
-	local bar = CreateFrame("StatusBar", name, bdParent)
+	local bar = CreateFrame("StatusBar", name, UIParent)
 	bar:SetFrameStrata("LOW")
 	bar:SetFrameLevel(6)
 	bar:SetStatusBarTexture(bdUI.media.flat)
@@ -24,8 +24,11 @@ function mod:create_databar(name)
 	bar.layer:SetStatusBarColor(.2, .4, 0.8, 1)
 	bar.layer:SetAlpha(0.4)
 	bar.layer:Hide()
+
+	bar.top = CreateFrame('StatusBar', nil, bar)
+	bar.top:SetAllPoints(bar)
 			
-	bar.text = bar:CreateFontString("XP Text")
+	bar.text = bar.top:CreateFontString(nil, "OVERLAY")
 	bar.text:SetAllPoints()
 	bar.text:SetJustifyH("CENTER")
 	bar.text:SetJustifyV("CENTER")
@@ -34,4 +37,6 @@ function mod:create_databar(name)
 
 	bar:SetScript("OnEnter", function() bar.text:Show() end)
 	bar:SetScript("OnLeave", function() bar.text:Hide() end)
+
+	return bar
 end

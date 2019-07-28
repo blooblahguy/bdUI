@@ -63,7 +63,7 @@ function mod:create_actionbar2()
 	cfg.frameName = "bdActionbars_2"
 	-- cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod][@target,exists,nodead] show; hide"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"RIGHT", mod.bars['bar1'], "LEFT", -defaultPadding, 0}
+	cfg.frameSpawn = {"BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -defaultPadding, defaultPadding}
 
 	local buttonList = mod:GetButtonList("MultiBarBottomLeftButton", NUM_ACTIONBAR_BUTTONS)
 	local bar2 = mod:CreateBar(buttonList, cfg)
@@ -78,7 +78,7 @@ function mod:create_actionbar3()
 	cfg.frameName = "bdActionbars_3"
 	cfg.cfg = "bar3"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"LEFT", mod.bars['bar1'], "RIGHT", defaultPadding, 0}
+	cfg.frameSpawn = {"BOTTOM", mod.bars['bar2'], "TOP", 0, 0}
 
 	local buttonList = mod:GetButtonList("MultiBarBottomRightButton", NUM_ACTIONBAR_BUTTONS)
 	local bar3 = mod:CreateBar(buttonList, cfg)
@@ -93,7 +93,7 @@ function mod:create_actionbar4()
 	cfg.frameName = "bdActionbars_4"
 	cfg.cfg = "bar4"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"TOP", bdParent, "CENTER", 0, -203}
+	cfg.frameSpawn = {"TOP", bdParent, "CENTER", 0, -163}
 
 	local buttonList = mod:GetButtonList("MultiBarRightButton", NUM_ACTIONBAR_BUTTONS)
 	local bar4 = mod:CreateBar(buttonList, cfg)
@@ -150,6 +150,7 @@ end
 -- MicroMenu
 --===============================================================
 function mod:create_micromenu()
+	if (not c.showMicro) then return end
 	cfg = {}
 	cfg.cfg = "microbar"
 	cfg.frameName = "bdActionbars_MicroMenuBar"
@@ -186,7 +187,7 @@ function mod:create_bagbar()
 	cfg.cfg = "bagbar"
 	cfg.frameName = "bdActionbars_BagBar"
 	-- cfg.frameVisibility = "[petbattle] hide; show"
-	cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['microbar'], "TOPRIGHT", 0, defaultPadding }
+	cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['microbar'] or bdParent, "TOPRIGHT", 0, defaultPadding }
 	function cfg:callback(frame)
 		if (c.showBags) then
 			_G['bdActionbars_BagBar']:Show()
@@ -264,7 +265,7 @@ function mod:create_extra()
 	cfg.blizzardBar = ExtraActionBarFrame
 	cfg.frameName = "bdActionbars_ExtraBar"
 	cfg.frameVisibility = "[extrabar] show; hide"
-	cfg.frameSpawn = { "LEFT", UIParent, "LEFT", defaultPadding }
+	cfg.frameSpawn = { "LEFT", UIParent, "LEFT", 300, 0 }
 
 	local buttonList = mod:GetButtonList("ExtraActionButton", NUM_ACTIONBAR_BUTTONS)
 	table.insert(buttonList, ZoneAbilityFrame)

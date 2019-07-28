@@ -8,7 +8,7 @@ local bdUI, c, l = unpack(select(2, ...))
 ]]
 --==================================================================================
 -- Initialize configuration
-local size_md = 30
+local size_md = 34
 local size_lg = 50
 local size_sm = 20
 
@@ -151,7 +151,7 @@ local config = {
 			{
 				key = "showMicro",
 				type = "toggle",
-				value = true,
+				value = false,
 				label = "Show Micro Menu",
 			},
 			{
@@ -231,24 +231,32 @@ local config = {
 --=========================================
 -- Main Bar
 --=========================================
-	addBarConf("Main Bar", "bar1"),
+	addBarConf("Main Bar", "bar1", {
+		mouseover = true
+	}),
 
 --=========================================
 -- Bar 2
 --=========================================
-	addBarConf("Bar 2", "bar2"),
+	addBarConf("Bar 2", "bar2", {
+		mouseover = true
+	}),
 
 --=========================================
 -- Bar 3
 --=========================================
-	addBarConf("Bar 3", "bar3"),
+	addBarConf("Bar 3", "bar3", {
+		mouseover = true
+	}),
 
 --=========================================
 -- Bar 4
 --=========================================
 	addBarConf("Bar 4", "bar4", {
 		buttons = 10,
-		hotkeys = false
+		hotkeys = false,
+		rows = 1,
+		size = 30
 	}),
 
 --=========================================
@@ -273,6 +281,12 @@ mod.variables = {} -- variables
 mod.variables.hidden = CreateFrame("Frame")
 mod.variables.hidden:Hide()
 mod.variables.callbacks = {}
+
+mod.variables.cooldownfont = CreateFont("BDUI_MEDIUM")
+mod.variables.cooldownfont:SetFont(bdUI.media.font, 30, "OUTLINE")
+mod.variables.cooldownfont:SetShadowColor(0, 0, 0)
+mod.variables.cooldownfont:SetShadowOffset(0, 0)
+
 mod.variables.font = CreateFont("BDUI_MEDIUM")
 mod.variables.font:SetFont(bdUI.media.font, 14, "OUTLINE")
 mod.variables.font:SetShadowColor(0, 0, 0)

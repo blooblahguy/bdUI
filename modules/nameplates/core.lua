@@ -60,6 +60,7 @@ function mod:config_callback()
 		else
 			self.Auras:Show()
 		end
+		self.Auras.size = config.raidbefuffs * config.scale
 
 		if (config.markposition == "LEFT") then
 			self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
@@ -340,7 +341,7 @@ local function nameplate_create(self, unit)
 	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24)
 	self.Auras:SetSize(config.width, config.raidbefuffs)
 	self.Auras:EnableMouse(false)
-	self.Auras.size = config.raidbefuffs
+	self.Auras.size = config.raidbefuffs * config.scale
 	self.Auras.initialAnchor  = "BOTTOMLEFT"
 	self.Auras.showStealableBuffs = config.highlightPurge
 	self.Auras.disableMouse = true
@@ -379,7 +380,7 @@ local function nameplate_create(self, unit)
 		button.cd:SetHideCountdownNumbers(false)
 	end
 	self.Auras.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		button:SetHeight(config.raidbefuffs * 0.6)
+		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
 		if (config.highlightPurge and isStealable) then -- purge alert
 			button.border:SetVertexColor(unpack(config.purgeColor))
 		elseif (config.highlightEnrage and debuffType == "") then -- enrage alert

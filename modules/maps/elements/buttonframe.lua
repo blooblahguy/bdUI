@@ -85,9 +85,6 @@ function mod:create_button_frame()
 			if (hideButtons[f:GetName()]) then
 				f:Hide()
 				f:SetAlpha(0)
-			else
-				f:Show()
-				f:SetAlpha(1)
 			end
 			if (config.buttonpos == "Top" or config.buttonpos == "Bottom") then
 				if (last) then
