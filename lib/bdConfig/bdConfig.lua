@@ -41,7 +41,12 @@ function mod:register(name, saved_variables_string, lock_toggle)
 	-- Called by individual modules/addons
 	--========================================
 	function instance:register_module(name, config, options, callback)
-		local module = mod:create_module(instance, name)
+		local module
+		if (options.hide_ui) then
+			module = CreateFrame("frame")
+		else
+			module = mod:create_module(instance, name)
+		end
 		module._config = config
 		module._containers = {}
 		module._persistent = false
@@ -51,9 +56,7 @@ function mod:register(name, saved_variables_string, lock_toggle)
 
 		-- Caps/hide the scrollbar as necessary
 		function module:update_scroll()
-			local height = self.top:GetHeight()
-
-			
+			local height = self.top:GetHeight()			
 
 			local scrollHeight = math.max(mod.dimensions.height, height) - mod.dimensions.height + 1
 			if (height > mod.dimensions.height) then
@@ -82,7 +85,7 @@ function mod:register(name, saved_variables_string, lock_toggle)
 			for option, info in pairs(config) do
 				mod:ensure_value(sv, info.key, info.value, self._persistent) -- initiate sv default
 
-				if (mod.containers[info.type] or mod.elements[info.type]) then -- only if we've created this module
+				if (not options.hide_ui and (mod.containers[info.type] or mod.elements[info.type])) then -- only if we've created this module
 					local group = parent
 
 					-- frame build here
@@ -105,7 +108,7 @@ function mod:register(name, saved_variables_string, lock_toggle)
 					end
 
 					parent.last_frame = group
-				else
+				elseif (not options.hide_ui) then
 					mod:debug("No module found for", info.type, "for", info.key)
 				end
 			end

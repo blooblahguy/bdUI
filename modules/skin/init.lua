@@ -13,4 +13,6 @@ local config = {
 	}
 }
 
-local mod = bdUI:register_module("Skinning", config)
+local mod = bdUI:register_module("Skinning", config, {
+	hide_ui = true
+})

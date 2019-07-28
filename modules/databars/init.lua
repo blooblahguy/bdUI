@@ -12,4 +12,6 @@ local config = {
 	}
 }
 
-local mod = bdUI:register_module("Databars", config)
+local mod = bdUI:register_module("Databars", config, {
+	hide_ui = true
+})
