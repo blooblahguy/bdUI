@@ -26,11 +26,11 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 - [ ] Auras
 - [x] Bags
 - [x] Grid
-- [ ] Databars
+- [x] Databars
 	- [ ] Alternative Power
 	- [ ] Azerite
 	- [ ] Honor
-	- [ ] XP
+	- [x] XP
 	- [ ] Reputation
 - [ ] Skinning
 	- [ ] Durability
