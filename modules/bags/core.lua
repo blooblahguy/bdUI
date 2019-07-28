@@ -40,9 +40,9 @@ end
 
 -- Set Up Frames
 mod.bags = CreateFrame("frame","bdBags", UIParent)
-mod.bags:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -20, 20)
+mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -14, 80)
 mod.bank = CreateFrame("frame","bdBank", UIParent)
-mod.bank:SetPoint("LEFT", UIParent, "LEFT", 20, 40)
+mod.bank:SetPoint("LEFT", bdParent, "LEFT", 14, 40)
 
 function mod:resetTracker()
 	bdUI.config.persistent.goldtrack = {}

@@ -207,7 +207,7 @@ local function StartFadeIn(frame)
 	frame.fader.anim:SetToAlpha(frame.inAlpha)
 	frame.fader.anim:SetDuration(frame.duration)
 	frame.fader.anim:SetSmoothing("OUT")
-	frame.fader.anim:SetStartDelay(frame.outDelay)
+	frame.fader.anim:SetStartDelay(0)
 	frame.fader.finAlpha = frame.inAlpha
 	frame.fader.direction = "in"
 	frame.fader:Play()
@@ -222,7 +222,7 @@ local function StartFadeOut(frame)
 	frame.fader.anim:SetToAlpha(frame.outAlpha)
 	frame.fader.anim:SetDuration(frame.duration)
 	frame.fader.anim:SetSmoothing("OUT")
-	frame.fader.anim:SetStartDelay(frame.outDelay)
+	frame.fader.anim:SetStartDelay(0)
 	frame.fader.finAlpha = frame.outAlpha
 	frame.fader.direction = "out"
 	frame.fader:Play()
@@ -241,14 +241,13 @@ local function EnterLeaveHandle(self)
 end
 
 -- Allows us to mouseover show a frame, with animation
-function bdMove:CreateFader(frame, children, inAlpha, outAlpha, duration, outDelay)
+function bdMove:CreateFader(frame, children, inAlpha, outAlpha, duration)
 	if (frame.fader) then return end
 
 	-- set variables
 	frame.inAlpha = inAlpha or 1
 	frame.outAlpha = outAlpha or 0
 	frame.duration = duration or 0.2
-	frame.outDelay = outDelay or 0
 	frame.enableFader = true
 	frame:SetAlpha(frame.outAlpha)
 

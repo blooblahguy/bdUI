@@ -220,6 +220,7 @@ local function layout(self, unit)
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
 	self.Health:SetAllPoints(self)
+	self.Health.Smooth = true
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
 	self.Health.PreUpdate = function(self, unit)

@@ -5,8 +5,8 @@ function mod:create_xp()
 	local config = mod._config
 
 	local bar = mod:create_databar("bdXP")
-	bar:SetPoint("TOP", bdParent, "TOP", 0, -10)
-	bar:SetSize(300, 16)
+	bar:SetPoint("BOTTOM", bdParent, "BOTTOM", 0, 0)
+	bar:SetSize(426, 15)
 	bar:RegisterEvent("PLAYER_XP_UPDATE")
 	bar:RegisterEvent("PLAYER_LEVEL_UP")
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
