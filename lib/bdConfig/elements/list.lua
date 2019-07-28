@@ -138,9 +138,11 @@ local function create(options, parent)
 	-- remove or add something, then redraw the text
 	function list:addRemove(value)
 		if (self.save[self.key][value]) then
+			insertbox.alert:SetTextColor(1, 0.1, 0.1)
 			insertbox.alert:SetText(value.." removed")
 			self.save[self.key][value] = false
 		else
+			insertbox.alert:SetTextColor(0, 1, .2)
 			insertbox.alert:SetText(value.." added")
 			-- @todo pass in table or integer values here to alter display
 			self.save[self.key][value] = true

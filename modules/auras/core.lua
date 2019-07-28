@@ -13,5 +13,5 @@ function mod:initialize()
 end
 
 function mod:config_callback()
-	
+	bdUI.caches.auras = {}
 end

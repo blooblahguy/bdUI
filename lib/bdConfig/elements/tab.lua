@@ -50,6 +50,9 @@ local function create(options, parent)
 		tabContainer:SetHeight(mod.dimensions.header)
 		parent.tabContainer = tabContainer
 		parent.tabs = {}
+
+		options._module.tab_containers = options._module.tab_containers or 1
+		options._module.tab_containers = options._module.tab_containers + 1
 	end
 
 	-- create tab page

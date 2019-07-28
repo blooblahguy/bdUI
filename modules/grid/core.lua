@@ -323,7 +323,7 @@ local function layout(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		-- return bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)
+		return bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)
 	end
 	self.Buffs.PostCreateIcon = function(self, button) 
 		local region = button.cd:GetRegions()
@@ -381,7 +381,7 @@ local function layout(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		-- return bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)
+		return bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)
 	end
 
 	self.Debuffs.PostCreateIcon = function(self, button)

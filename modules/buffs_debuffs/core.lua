@@ -12,7 +12,7 @@ bufffont:SetShadowColor(0, 0, 0)
 bufffont:SetShadowOffset(1, -1)
 
 local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTemplate")
-bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -140)
+bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -110)
 local debufffont = CreateFont("BD_DEBUFFS_FONT")
 debufffont:SetShadowColor(0, 0, 0)
 debufffont:SetShadowOffset(1, -1)

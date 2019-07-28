@@ -86,6 +86,8 @@ local config = {
 	},
 }
 
+bdUI.caches.auras = {}
+
 local mod = bdUI:register_module("Auras", config, {
 	persistent = true
 })

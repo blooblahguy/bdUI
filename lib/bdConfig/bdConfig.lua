@@ -53,7 +53,12 @@ function mod:register(name, saved_variables_string, lock_toggle)
 		function module:update_scroll()
 			local height = self.top:GetHeight()
 
+			
+
 			local scrollHeight = math.max(mod.dimensions.height, height) - mod.dimensions.height + 1
+			if (height > mod.dimensions.height) then
+				height = mod.dimensions.height
+			end
 			module.scrollParent:SetHeight(height)
 			module.scrollbar:SetMinMaxValues(1, scrollHeight)
 
