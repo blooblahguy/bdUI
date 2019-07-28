@@ -53,6 +53,15 @@ core\defaults.lua
 core\setup.lua
 core\load.lua
 
+# Auras
+modules\auras\elements\whitelist.lua
+modules\auras\elements\raid.lua
+modules\auras\elements\personal.lua
+modules\auras\elements\blacklist.lua
+modules\auras\init.lua
+modules\auras\functions.lua
+modules\auras\core.lua
+
 # Actionbars
 modules\actionbars\init.lua
 modules\actionbars\functions.lua
@@ -69,6 +78,12 @@ modules\bags\core.lua
 modules\bags\elements\bag.lua
 modules\bags\elements\bank.lua
 modules\bags\elements\loot.lua
+
+# Buffs & Debuffs
+modules\buffs_debuffs\template.xml
+modules\buffs_debuffs\init.lua
+modules\buffs_debuffs\core.lua
+modules\buffs_debuffs\elements\watcher.lua
 
 # Chat
 modules\chat\init.lua
@@ -103,14 +118,6 @@ modules\maps\core.lua
 modules\maps\elements\minimap.lua
 modules\maps\elements\buttonframe.lua
 modules\maps\elements\worldmap.lua
-
-# Auras
-modules\auras\template.xml
-modules\auras\init.lua
-modules\auras\functions.lua
-modules\auras\core.lua
-modules\auras\elements\watcher.lua
-modules\auras\elements\auras.lua
 
 # Nameplates
 modules\nameplates\init.lua

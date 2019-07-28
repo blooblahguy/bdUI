@@ -40,10 +40,31 @@ function mod:register(name, saved_variables_string, lock_toggle)
 	--========================================
 	-- Called by individual modules/addons
 	--========================================
-	function instance:register_module(name, config, callback)
+	function instance:register_module(name, config, options, callback)
 		local module = mod:create_module(instance, name)
 		module._config = config
 		module._containers = {}
+		module._persistent = false
+		if (options and options.persistent) then
+			module._persistent = options.persistent
+		end
+
+		-- Caps/hide the scrollbar as necessary
+		function module:update_scroll()
+			local height = self.top:GetHeight()
+
+			local scrollHeight = math.max(mod.dimensions.height, height) - mod.dimensions.height + 1
+			module.scrollParent:SetHeight(height)
+			module.scrollbar:SetMinMaxValues(1, scrollHeight)
+
+			if (scrollHeight <= 1) then
+				module.noScrollbar = true
+				module.scrollbar:Hide()
+			else
+				module.noScrollbar = false
+				module.scrollbar:Show()
+			end
+		end
 
 		--========================================
 		-- Recursively build config
@@ -54,7 +75,7 @@ function mod:register(name, saved_variables_string, lock_toggle)
 
 			-- loop through options
 			for option, info in pairs(config) do
-				mod:ensure_value(sv, info.key, info.value) -- initiate sv default
+				mod:ensure_value(sv, info.key, info.value, self._persistent) -- initiate sv default
 
 				if (mod.containers[info.type] or mod.elements[info.type]) then -- only if we've created this module
 					local group = parent
@@ -62,6 +83,7 @@ function mod:register(name, saved_variables_string, lock_toggle)
 					-- frame build here
 					info.save = sv
 					info.module = name
+					info._module = module
 					info.callback = callback or noop
 					local group = parent
 
@@ -87,8 +109,9 @@ function mod:register(name, saved_variables_string, lock_toggle)
 		-- call recursive build function
 		local group = mod.containers["group"]({}, module, true)
 		group.scroller = module
+		module.top = group
 		module:build(config, name, group)
-		group:update()
+		local height = group:update()
 
 		-- return configuration reference
 		return instance.save[name]

@@ -130,6 +130,7 @@ local function create(options, parent)
 			list.content.scrollbar:Show()
 		end
 
+		list.content:SetHeight(height)
 		list.text:SetHeight(height)
 		list.text:SetText(string)
 	end

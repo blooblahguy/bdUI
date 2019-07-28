@@ -28,11 +28,15 @@ function mod:initialize_saved_variables(saved_variable)
 		}
 	end
 
+	-- Each player login
 	if (not _G[saved_variable].users[player]) then
 		_G[saved_variable].users[player] = {
 			profile = "default"
 		}
 	end
+
+	-- Persistent: Exists between profiles and characters
+	_G[saved_variable].persistent = _G[saved_variable].persistent or {}
 	
 	local sv = _G[saved_variable]
 	local profile = sv.users[player].profile

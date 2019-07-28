@@ -10,6 +10,7 @@ local methods = {
 		return frame
 	end,
 	["update"] = function(self, options, save)
+		if (not self.active) then return 0 end
 		local height = self:calculate_height() or 0
 		self:SetHeight(height)
 
@@ -77,10 +78,12 @@ local function create(options, parent)
 	-- show page on select
 	function tab:select()
 		tab.page:Show()
-		tab.page:update()
-
 		tab.active = true
 		tab.page.active = true
+
+		tab.page:update()
+		options._module:update_scroll()
+
 		tab:OnLeave()
 		parent.activePage = page
 	end

@@ -10,8 +10,6 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- Register with bdConfig
 		bdUI.bdConfig.media.font = bdUI.media.font
 		bdUI.config_instance = bdUI.bdConfig:register("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
-		BDUI_SAVE = BDUI_SAVE or {}
-		BDUI_SAVE.persistent = BDUI_SAVE.persistent or {}
 		bdUI.persistent = BDUI_SAVE.persistent
 
 		-- set save for bdMove, so that we're not vulnerable to UI errors resetting positioning

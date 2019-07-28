@@ -45,6 +45,7 @@ local function create(options, parent)
 
 	-- scroller
 	local function scroll(self, delta)
+		if (not scrollbar:IsShown()) then return end
 		scrollbar:SetValue(scrollbar:GetValue() - (delta*30))
 	end
 	scrollbar:SetScript("OnMouseWheel", scroll)

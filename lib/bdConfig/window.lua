@@ -128,6 +128,7 @@ function mod:create_module(instance, name)
 		module.active = true
 		module.link.active = true
 		module.link:OnLeave()
+		module:update_scroll()
 	end
 	function module:unselect()
 		if (not module.active) then return end

@@ -12,18 +12,20 @@ local bdUI, c, l = unpack(select(2, ...))
 -- automatically loaded / disabled as needed
 bdUI.modules = {}
 --================================================
-function bdUI:register_module(name, config)
+function bdUI:register_module(name, config, options)
 	if (name == "Name") then return {} end
 	if (bdUI[name]) then
 		bdUI:debug('"', name, '"', "already exists as a module. Use unique names for new modules")
 		return
 	end
 	bdUI[name] = bdUI[name] or CreateFrame("frame", name, bdParent)
+	options = options or {}
 
 	local module = bdUI[name]
 	module._name = name
 	module._config = config
-	module._config_callback = callback or "config_callback"
+	module._options = options
+	module._config_callback = "config_callback"
 	table.insert(bdUI.modules, module)
 
 	return module
@@ -63,7 +65,7 @@ function bdUI:load_modules()
 			module._config_callback = module[module._config_callback]
 		end
 
-		module._config = bdUI.config_instance:register_module(module._name, module._config, module._config_callback)
+		module._config = bdUI.config_instance:register_module(module._name, module._config, module._options, module._config_callback)
 
 		bdUI:load_module(module._name)
 	end
