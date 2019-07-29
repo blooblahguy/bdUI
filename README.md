@@ -23,7 +23,7 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 - [x] Actionbars
 - [x] Nameplates
 - [x] Buffs & Debuffs
-- [ ] Auras
+- [x] Auras
 - [x] Bags
 - [x] Grid
 - [x] Databars
