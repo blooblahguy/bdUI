@@ -440,4 +440,18 @@ function mod:create_unitframes()
 		lastboss = boss
 	end
 
+	-- arena
+	local lastarena = nil
+	for i = 1, 5 do
+		local arena = oUF:Spawn("arena"..i, nil)
+		if (not lastarena) then
+			arena:SetPoint("RIGHT", bdParent, "RIGHT", -40, yoff)
+		else
+			arena:SetPoint("TOP", lastarena, "BOTTOM", -2, -30)
+		end
+		arena:SetSize(config.arenawidth, config.arenaheight)
+		bdMove:set_moveable(arena)
+		lastarena = arena
+	end
+
 end

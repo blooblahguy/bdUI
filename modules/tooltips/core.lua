@@ -191,9 +191,7 @@ function mod:create_tooltips()
 
 	for i = 1, #tooltips do
 		local frame = _G[tooltips[i]]
-		-- frame.SetPadding = frame.SetPadding or noop
 		frame:HookScript("OnShow", on_show)
-		-- GameTooltip_SetBackdropStyle(frame, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
 	end
 
 	-- delete lines in the "hide" table

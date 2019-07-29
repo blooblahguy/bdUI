@@ -11,15 +11,39 @@ mod.custom_layout["target"] = function(self, unit)
 
 	self.Debuffs.initialAnchor  = "BOTTOMLEFT"
 	self.Debuffs['growth-x'] = "RIGHT"
-	-- self.Auras.CustomFilter = function(element, unit, button, name, rank, texture, count, debuffType, duration, expiration)
-	-- 	print(unit)
-	-- 	print(duration)
-	-- end
+	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+		isBossDebuff = isBossDebuff or false
+		nameplateShowAll = nameplateShowAll or false
+		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		if (bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
+			if (caster and UnitIsUnit(caster,"player") and duration ~= 0 and duration < 300) then
+				return true 
+			end
+		end
+	end
 
 	self.Buffs:ClearAllPoints()
 	self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 7, 2)
 	self.Buffs:SetSize(80, 60)
 	self.Buffs.size = 12
+	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+		isBossDebuff = isBossDebuff or false
+		nameplateShowAll = nameplateShowAll or false
+		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+
+		-- allow it if it's tracked in the ui and not blacklisted
+		if ( bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, true) ) then
+			return true
+		end
+		-- also allow anything that might be casted by the boss
+		if (not caster and not UnitIsPlayer("target")) then
+			return true
+		end
+		-- look for non player casters
+		if (caster and not strfind(caster, "raid") and not strfind(caster, "party") and not caster == "player") then
+			return true
+		end
+	end
 	
 	self:SetSize(config.playertargetwidth, config.playertargetheight)
 

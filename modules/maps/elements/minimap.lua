@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Minimap")
+local mod = bdUI:get_module("Maps")
 
 function mod:config_callback()
 	local config = mod._config

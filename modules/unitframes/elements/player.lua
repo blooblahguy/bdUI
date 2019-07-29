@@ -15,12 +15,15 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.buffs(self, unit)
 	self.Buffs.size = 22
 
-	self.Buffs.CustomFilter = function(element, unit, button, name, rank, texture, count, debuffType, duration, expiration)
-		if (UnitIsUnit(unit, "player") and duration ~= 0 and duration < 180) then
-			return true 
+	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+		isBossDebuff = isBossDebuff or false
+		nameplateShowAll = nameplateShowAll or false
+		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		if (bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
+			if (caster == "player" and duration ~= 0 and duration < 300) then
+				return true 
+			end
 		end
-
-		return false
 	end
 	
 	

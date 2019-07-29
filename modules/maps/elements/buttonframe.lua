@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Minimap")
+local mod = bdUI:get_module("Maps")
 
 
 function mod:create_button_frame()

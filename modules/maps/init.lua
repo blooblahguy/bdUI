@@ -83,7 +83,7 @@ local config = {
 	},
 }
 
-local mod = bdUI:register_module("Minimap", config)
+local mod = bdUI:register_module("Maps", config)
 
 --=============================================
 -- Initialize function
@@ -93,4 +93,5 @@ function mod:initialize(config)
 
 	mod:create_minimap()
 	mod:create_button_frame()
+	mod:worldmap_coords()
 end

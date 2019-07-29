@@ -206,7 +206,7 @@ local config = {
 		}
 	},
 	--=========================================
-	-- BOSS
+	-- BOSS & Arena
 	--=========================================
 	{
 		key = "bosstab",
@@ -214,47 +214,104 @@ local config = {
 		label = "Boss",
 		args = {
 			{
-				key = "bossenable",
-				value = true,
-				type = "toggle",
-				label = "Enable Boss Frames"
+				key = "boss",
+				type = "group",
+				heading = "Boss",
+				args = {
+					{
+						key = "bossenable",
+						value = true,
+						type = "toggle",
+						label = "Enable Boss Frames"
+					},
+					{
+						key = "bossdebuffsize",
+						type = "range",
+						label = "Aura Size",
+						value = 30,
+						min = 10,
+						max = 100,
+						step = 2,
+					},
+					{
+						key = "bosswidth",
+						type = "range",
+						label = "Width",
+						value = 200,
+						min = 60,
+						max = 420,
+						step = 5,
+					},
+					{
+						key = "bossheight",
+						type = "range",
+						label = "Height",
+						value = 40,
+						min = 5,
+						max = 200,
+						step = 5,
+					},
+					{
+						key = "bosspower",
+						type = "range",
+						label = "Power Height",
+						value = 6,
+						min = 1,
+						max = 10,
+						step = 1,
+					},
+				}
 			},
 			{
-				key = "bossdebuffsize",
-				type = "range",
-				label = "Aura Size",
-				value = 30,
-				min = 10,
-				max = 100,
-				step = 2,
-			},
-			{
-				key = "bosswidth",
-				type = "range",
-				label = "Width",
-				value = 200,
-				min = 60,
-				max = 420,
-				step = 5,
-			},
-			{
-				key = "bossheight",
-				type = "range",
-				label = "Height",
-				value = 40,
-				min = 5,
-				max = 200,
-				step = 5,
-			},
-			{
-				key = "bosspower",
-				type = "range",
-				label = "Power Height",
-				value = 6,
-				min = 1,
-				max = 10,
-				step = 1,
-			},
+				key = "arena",
+				type = "group",
+				heading = "Arena",
+				args = {
+					{
+						key = "arenaenable",
+						value = true,
+						type = "toggle",
+						label = "Enable Boss Frames"
+					},
+					{
+						key = "arenaaurasize",
+						type = "range",
+						label = "Aura Size",
+						value = 30,
+						min = 10,
+						max = 100,
+						step = 2,
+					},
+					{
+						key = "arenawidth",
+						type = "range",
+						label = "Width",
+						value = 200,
+						min = 60,
+						max = 420,
+						step = 5,
+					},
+					{
+						key = "arenaheight",
+						type = "range",
+						label = "Height",
+						value = 40,
+						min = 5,
+						max = 200,
+						step = 5,
+					},
+					{
+						key = "arenapower",
+						type = "range",
+						label = "Power Height",
+						value = 6,
+						min = 1,
+						max = 10,
+						step = 1,
+					},
+				}
+			}
+			
 		}
 	}
 }

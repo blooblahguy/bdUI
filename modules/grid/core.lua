@@ -138,10 +138,13 @@ local function layout(self, unit)
     myHeals:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
 	myHeals:SetStatusBarTexture(bdUI.media.flat)
 	myHeals:SetStatusBarColor(0.6,1,0.6,.2)
+
     local otherHeals = CreateFrame('StatusBar', nil, self.Health)
     otherHeals:SetPoint('TOP')
     otherHeals:SetPoint('BOTTOM')
     otherHeals:SetPoint('LEFT', myHeals:GetStatusBarTexture(), 'RIGHT')
+	otherHeals:SetStatusBarTexture(bdUI.media.flat)
+	otherHeals:SetStatusBarColor(0.6,0.8,0.6,.2)
 
 	-- Damage Absorbs
     local absorbBar = CreateFrame('StatusBar', nil, self.Health)
