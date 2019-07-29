@@ -101,7 +101,7 @@ local function create(options, parent)
 	placeholder:SetWidth(repeater:GetWidth(2) / 2)
 
 	-- Buttons
-	local button = mod.elements['button']({}, repeater)
+	local button = mod.elements['button']({solo = true}, repeater)
 	button:SetText("+")
 	button:SetHeight(20)
 	button:SetPoint("BOTTOMRIGHT", repeater, "BOTTOMRIGHT", -2, -8)

@@ -5,7 +5,7 @@ local mod = ns.bdConfig
 -- Methods Here
 --========================================
 local methods = {
-	["set"] = function(self, options, save)
+	["set"] = function(self, save, key, value)
 		if (not save) then save = self.save end
 		if (not key) then key = self.key end
 		if (not value) then value = self:get(save, key) end

@@ -13,6 +13,14 @@ local placeholder = player.."-"..realm
 --============================================
 local profile_table = {}
 
+-- change profile
+local function change_profile(select, options, value)
+	--_G[profiles.sv_string].users[player].profile = value
+	print("change", value)
+
+	mod:do_action("profile_changed")
+end
+
 -- return fresh copy of available profiles
 local function get_profiles()
 	table.wipe(profile_table)
@@ -45,13 +53,7 @@ local function delete_profile(button, options)
 	change_profile("default")
 end
 
--- change profile
-local function change_profile(select, options, value)
-	--_G[profiles.sv_string].users[player].profile = value
-	print("change", value)
 
-	mod:do_action("profile_changed")
-end
 
 --============================================
 -- Spec Profiles

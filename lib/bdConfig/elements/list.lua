@@ -40,7 +40,7 @@ local function create(options, parent)
 	title:SetText(options.label)
 
 	-- button
-	local button = mod.elements['button']({}, container)
+	local button = mod.elements['button']({solo = true}, container)
 	button:SetText("Add/Remove")
 	button:SetHeight(26)
 

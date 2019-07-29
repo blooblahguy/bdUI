@@ -24,16 +24,24 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "half"
-
 	local media = mod.media
 	local border = media.border_size
+	local button
+	local container
 
-	local button = CreateFrame("Button", nil, parent)
+	if (options.solo) then
+		button = CreateFrame("Button", nil, parent)
+	else
+		container = mod:create_container(options, parent, 24)
+		button = CreateFrame("Button", nil, container)
+		button:SetPoint("LEFT", container, "LEFT")
+	end
+
 	button.inactiveColor = media.blue
 	button.activeColor = media.blue
 	button.callback = options.callback or mod.noop
 	button:SetBackdrop({bgFile = media.flat})
-
+	
 	function button:BackdropColor(r, g, b, a)
 		button.inactiveColor = button.inactiveColor or media.blue
 		button.activeColor = button.activeColor or media.blue
@@ -111,7 +119,15 @@ local function create(options, parent)
 	button:SetScript("OnLeave", button.OnLeave)
 	button:SetScript("OnClick", button.OnClickDefault)
 
-	return button
+	button:OnLeave()
+	button:SetText(options.value or options.label)
+
+	if (options.solo) then
+		return button
+	else
+		container.button = button
+		return container
+	end
 end
 
 mod:register_element("button", create)

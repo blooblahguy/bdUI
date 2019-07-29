@@ -43,7 +43,7 @@ function mod:create_windows(name, lock_toggle)
 	window.header.text:SetText(name.." Configuration")
 	window.header.text:SetJustifyV("MIDDLE")
 
-	window.header.close = mod.elements['button']({}, window.header)
+	window.header.close = mod.elements['button']({solo = true}, window.header)
 	window.header.close:SetPoint("TOPRIGHT", window.header)
 	window.header.close:SetText("x")
 	window.header.close.inactiveColor = media.red
@@ -52,7 +52,7 @@ function mod:create_windows(name, lock_toggle)
 		window:Hide()
 	end
 
-	window.header.reload = mod.elements['button']({}, window.header)
+	window.header.reload = mod.elements['button']({solo = true}, window.header)
 	window.header.reload:SetPoint("TOPRIGHT", window.header.close, "TOPLEFT", -border, 0)
 	window.header.reload:SetText("Reload UI")
 	window.header.reload.inactiveColor = media.green
@@ -61,7 +61,7 @@ function mod:create_windows(name, lock_toggle)
 		ReloadUI();
 	end
 
-	window.header.lock = mod.elements['button']({}, window.header)
+	window.header.lock = mod.elements['button']({solo = true}, window.header)
 	window.header.lock:SetPoint("TOPRIGHT", window.header.reload, "TOPLEFT", -border, 0)
 	window.header.lock:SetText("Unlock")
 	window.header.lock.autoToggle = true
@@ -142,7 +142,7 @@ function mod:create_module(instance, name)
 	end
 
 	-- Create Sidebar Link
-	local link = mod.elements['button']({}, instance._window.left)
+	local link = mod.elements['button']({solo = true}, instance._window.left)
 	link.inactiveColor = {0, 0, 0, 0}
 	link.hoverColor = {1, 1, 1, .2}
 	link:OnLeave()

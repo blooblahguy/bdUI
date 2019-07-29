@@ -68,7 +68,7 @@ local function create(options, parent)
 
 	-- create tab to link to this page
 	local index = #parent.tabs + 1
-	local tab = mod.elements['button']({}, parent.tabContainer)
+	local tab = mod.elements['button']({solo = true}, parent.tabContainer)
 
 	tab.inactiveColor = {1,1,1,0.05}
 	tab.hoverColor = {1,1,1,0.1}

@@ -8,6 +8,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
 function mod:create_community()
+	local config = mod._config
 	local commOpen = CreateFrame("frame", nil, UIParent)
 	commOpen:RegisterEvent("ADDON_LOADED")
 	commOpen:RegisterEvent("CHANNEL_UI_UPDATE")

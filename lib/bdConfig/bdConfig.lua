@@ -106,7 +106,7 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 						if (element.set and not module._persistent) then
 							mod:add_action("profile_changed", function()
 								element.save = mod:get_save(saved_variable, info.module)
-								element.set()
+								element:set()
 							end)
 						end
 					end
@@ -176,8 +176,6 @@ function mod:register_element(name, create)
 		frame._type = name
 		frame._layout = "element"
 		parent.last_frame = frame
-
-		mod:add_action("profile_changed", frame.set)
 
 		return frame
 	end
