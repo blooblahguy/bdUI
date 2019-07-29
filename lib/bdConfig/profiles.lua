@@ -3,6 +3,7 @@ local mod = ns.bdConfig
 mod.profiles = {}
 local profiles = mod.profiles
 
+local class = select(2, UnitClass("player"))
 local player, realm = UnitName("player")
 realm = GetRealmName()
 local placeholder = player.."-"..realm
@@ -14,7 +15,7 @@ local profile_table = {}
 
 -- return fresh copy of available profiles
 local function get_profiles()
-	table.wipe(profile_table}
+	table.wipe(profile_table)
 
 	for k, v in pairs(_G[profiles.sv_string].profiles) do
 		table.insert(profile_table, k)
@@ -56,17 +57,27 @@ end
 -- Spec Profiles
 --============================================
 local function build_spec_profiles()
-	local specs = GetNumSpecializations()
+	local specs = 3
+	if (class == "DEMONHUNTER") then
+		specs = 2
+	elseif (class == "DRUID") then
+		specs = 4
+	end
 
 	local spec_config = {}
 	for i = 1, specs do
 		local id, name, description, icon, background, role = GetSpecializationInfo(i)
+		if (name) then
+			name = name.." profile"
+		else
+			name = "Profile "..i
+		end
 		local c = {
 			key = "spec_profile_"..i,
 			type = "select",
 			value = "default",
-			label = name.." profile",
-			action = "profile_change",
+			label = name,
+			action = "profile_change,talent_available",
 			lookup = get_profiles,
 			options = profile_table
 		}
@@ -75,6 +86,8 @@ local function build_spec_profiles()
 
 	return spec_config
 end
+
+
 
 --============================================
 -- Main configuration
@@ -92,15 +105,13 @@ local config = {
 		options = profile_table,
 		action = "profile_change",
 		lookup = get_profiles,
-		callback = change_profile
+		callback = change_profile,
+		label = "Current Profile"
 	},
 	{
 		key = "group",
 		type = "group",
 		heading = "Spec Profiles",
-		args = {
-			build_spec_profiles()
-		}
 	},
 	{
 		key = "group",
@@ -123,7 +134,9 @@ local config = {
 	}
 }
 
-function mod:create_profiles(saved_variables_string, disable_spec_profiles)
+
+-- Main initialization
+function mod:create_profiles(instance, saved_variables_string, disable_spec_profiles)
 	profiles.sv_string = saved_variables_string
 
 	-- populate spec table
@@ -134,10 +147,29 @@ function mod:create_profiles(saved_variables_string, disable_spec_profiles)
 	-- remove spec profile options
 	if (disable_spec_profiles) then
 		table.remove(config[3])
+	else
+		config[3].args = build_spec_profiles()
 	end
 
 	-- Register inside of config window
-	local mod = bdUI:register_module("Profiles", config, {
+	instance:register_module("Profiles", config, {
 		persistent = true
 	})
+end
+
+
+-- let the UI know when talents are available
+local talent = CreateFrame("frame")
+talent:RegisterEvent("PLAYER_TALENT_UPDATE")
+talent:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+talent:SetScript("OnEvent", function(self, event)
+	if (event == "PLAYER_TALENT_UPDATE") then
+		mod:do_action("talents_available")
+	elseif (event == "ACTIVE_TALENT_GROUP_CHANGED") then
+		mod:do_action("talents_changed")
+	end
+end)
+
+function ns:unpack()
+	return self[1], self[2], self[3]
 end

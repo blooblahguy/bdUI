@@ -15,7 +15,7 @@ mod.custom_layout["target"] = function(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		if (bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
+		if (bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
 			if (caster and UnitIsUnit(caster,"player") and duration ~= 0 and duration < 300) then
 				return true 
 			end
@@ -32,7 +32,7 @@ mod.custom_layout["target"] = function(self, unit)
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 
 		-- allow it if it's tracked in the ui and not blacklisted
-		if ( bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, true) ) then
+		if ( bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true) ) then
 			return true
 		end
 		-- also allow anything that might be casted by the boss

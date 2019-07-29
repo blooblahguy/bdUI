@@ -5,6 +5,7 @@ mod.custom_layout["boss"] = function(self, unit)
 	local config = mod._config
 	
 	self.Name:SetPoint("TOPLEFT", self.Health, "TOPLEFT", 2, -4)
+	mod.additional_elements.auras(self, unit)
 
 	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -15,7 +16,7 @@ mod.custom_layout["boss"] = function(self, unit)
 			return true
 		end
 		
-		if (bdUI:filterAura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)) then
+		if (bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)) then
 			return true
 		end
 	end

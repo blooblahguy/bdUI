@@ -12,7 +12,7 @@ end
 
 -- thank you to xcoords
 function mod:worldmap_coords()
-	local mod.coords = CreateFrame("frame", nil, WorldMapFrame)
+	mod.coords = CreateFrame("frame", nil, WorldMapFrame)
 	mod.coords.text = mod.coords:CreateFontString(nil, "OVERLAY")
 	mod.coords.text:SetFont(bdUI.media.font, 14)
 	mod.coords.text:SetAllPoints()

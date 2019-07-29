@@ -29,9 +29,9 @@ local function create(options, parent)
 	local border = media.border_size
 
 	local button = CreateFrame("Button", nil, parent)
-
 	button.inactiveColor = media.blue
 	button.activeColor = media.blue
+	button.callback = options.callback or mod.noop
 	button:SetBackdrop({bgFile = media.flat})
 
 	function button:BackdropColor(r, g, b, a)
@@ -97,7 +97,7 @@ local function create(options, parent)
 
 		button:OnLeave()
 
-		options.callback(button, options)
+		button.callback(button, options)
 	end
 	function button:GetText()
 		return button.text:GetText()

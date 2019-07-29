@@ -64,16 +64,18 @@ local function BW_Style()
 		GetStyleName = function() return "BigDumb" end,
 	})
 end
-f:RegisterEvent("ADDON_LOADED")
-f:RegisterEvent("PLAYER_LOGIN")
+
+local bm = CreateFrame("frame", nil, UIParent)
+bm:RegisterEvent("ADDON_LOADED")
+bm:RegisterEvent("PLAYER_LOGIN")
 
 local reason = nil
-f:SetScript("OnEvent", function(self, event, msg)
+bm:SetScript("OnEvent", function(self, event, msg)
 	if event == "ADDON_LOADED" then
 		if not reason then reason = (select(6, GetAddOnInfo("BigWigs_Plugins"))) end
 		if (reason == "MISSING" and msg == "BigWigs") or msg == "BigWigs_Plugins" then
 			BW_Style()
-			f:UnregisterEvent("PLAYER_LOGIN")
+			bm:UnregisterEvent("PLAYER_LOGIN")
 		end
 	elseif event == "PLAYER_LOGIN" then
 		if IsAddOnLoaded("BigWigs") then

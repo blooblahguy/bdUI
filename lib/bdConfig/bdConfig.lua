@@ -28,15 +28,6 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 	-- create main window
 	instance._window = mod:create_windows(name, lock_toggle)
 
-	-- get profile save
-	mod:initialize_saved_variables(saved_variables_string)
-	instance.save = mod:get_save(saved_variable, nil)
-
-	-- create profiles
-	if (not options.hide_profiles) then
-		mod:create_profiles(saved_variables_string, options.disable_spec_profiles)
-	end
-
 	-- show config window toggle
 	function instance:toggle()
 		if (self._window:IsShown()) then
@@ -101,7 +92,7 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 				info.save = sv
 				info.module = name
 				info._module = module
-				info.callback = callback or noop
+				info.callback = info.callback or mod.noop
 
 				if (not options.hide_ui and (mod.containers[info.type] or mod.elements[info.type])) then -- only if we've created this module
 					local group = parent
@@ -141,6 +132,15 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 
 		-- return configuration reference
 		return instance.save[name]
+	end
+
+	-- get profile save
+	mod:initialize_saved_variables(saved_variables_string)
+	instance.save = mod:get_save(saved_variables_string, nil)
+
+	-- create profiles
+	if (not options.hide_profiles) then
+		mod:create_profiles(instance, saved_variables_string, options.disable_spec_profiles)
 	end
 
 	-- debug - show configuration window

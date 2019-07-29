@@ -40,6 +40,10 @@ local function create(options, parent)
 	local dropdown = CreateFrame("Button", options.module.."_"..options.key, container, "UIDropDownMenuTemplate")
 	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -20, -2)
 
+	if (options.action) then
+		print(options.action)
+	end
+
 	-- recreate dropdown each time
 	function dropdown:populate(items, value)
 		if (not value) then value = options.value end

@@ -1,12 +1,12 @@
-local MAJOR, MINOR = "bdCallback-1.0", 1
+local MAJOR, MINOR = "bdCallbacks-1.0", 1
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end -- No upgrade needed
 
--- These are global tables for addons that use bdCallback
+-- These are global tables for addons that use bdCallbacks
 lib.actions = {}
 lib.filters = {}
 
-function lib:new(object)
+function lib:New(object)
 	--====================================================
 	-- FILTERS
 	--====================================================

@@ -1,10 +1,11 @@
 local addonName, ns = ...
 local mod = ns.bdConfig
+local player = UnitName("player")
 
 --=================================================
 -- Fetch Relevant Config
 --=================================================
-function mod:get_save(saved_variable, name)
+function mod:get_save(saved_variable, name, persistent)
 	local sv = _G[saved_variable]
 	local profile = sv.users[player].profile
 	sv.profiles[profile] = sv.profiles[profile] or {}
@@ -21,8 +22,6 @@ end
 -- Initialize SavedVariables
 --=================================================
 function mod:initialize_saved_variables(saved_variable)
-	local player = UnitName("player")
-
 	-- Default configuration
 	if (not _G[saved_variable]) then
 		_G[saved_variable] = {
@@ -49,7 +48,7 @@ function mod:initialize_saved_variables(saved_variable)
 end
 
 -- makes sure a value is set in the given save index
-function mod:ensure_value(sv, option, value)
+function mod:ensure_value(sv, option, value, persistent)
 	if (sv[option] == nil) then
 		if (value == nil) then
 			value = {}
