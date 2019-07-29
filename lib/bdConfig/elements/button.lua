@@ -96,6 +96,8 @@ local function create(options, parent)
 		end
 
 		button:OnLeave()
+
+		options.callback(button, options)
 	end
 	function button:GetText()
 		return button.text:GetText()

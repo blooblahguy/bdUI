@@ -2,6 +2,7 @@
 	<Script file="init.lua"/>
 	<Script file="window.lua"/>
 	<Script file="svariables.lua"/>
+	<Script file="profiles.lua"/>
 	<Script file="bdConfig.lua"/>
 
 	<Script file="elements\button.lua"/>

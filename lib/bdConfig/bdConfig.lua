@@ -19,13 +19,23 @@ local mod = ns.bdConfig
 --=================================================================
 -- REGISTER ADDON
 --=================================================================
-function mod:register(name, saved_variables_string, lock_toggle)
+function mod:register(name, saved_variables_string, lock_toggle, options)
 	local instance = {}
-
 	instance._ns = name
 	instance._modules = {}
+	options = options or {}
+
+	-- create main window
 	instance._window = mod:create_windows(name, lock_toggle)
-	instance.save = mod:initialize_saved_variables(saved_variables_string)
+
+	-- get profile save
+	mod:initialize_saved_variables(saved_variables_string)
+	instance.save = mod:get_save(saved_variable, nil)
+
+	-- create profiles
+	if (not options.hide_profiles) then
+		mod:create_profiles(saved_variables_string, options.disable_spec_profiles)
+	end
 
 	-- show config window toggle
 	function instance:toggle()
@@ -41,16 +51,18 @@ function mod:register(name, saved_variables_string, lock_toggle)
 	-- Called by individual modules/addons
 	--========================================
 	function instance:register_module(name, config, options, callback)
+		options = options or {}
 		local module
 		if (options.hide_ui) then
-			module = CreateFrame("frame")
+			module = CreateFrame("frame", nil, UIParent)
 		else
 			module = mod:create_module(instance, name)
 		end
 		module._config = config
 		module._containers = {}
 		module._persistent = false
-		if (options and options.persistent) then
+
+		if (options.persistent) then
 			module._persistent = options.persistent
 		end
 
@@ -85,21 +97,27 @@ function mod:register(name, saved_variables_string, lock_toggle)
 			for option, info in pairs(config) do
 				mod:ensure_value(sv, info.key, info.value, self._persistent) -- initiate sv default
 
-				if (not options.hide_ui and (mod.containers[info.type] or mod.elements[info.type])) then -- only if we've created this module
-					local group = parent
+				-- frame build here
+				info.save = sv
+				info.module = name
+				info._module = module
+				info.callback = callback or noop
 
-					-- frame build here
-					info.save = sv
-					info.module = name
-					info._module = module
-					info.callback = callback or noop
+				if (not options.hide_ui and (mod.containers[info.type] or mod.elements[info.type])) then -- only if we've created this module
 					local group = parent
 
 					-- container group
 					if (mod.containers[info.type]) then
 						group = group:add(mod.containers[info.type](info, group))
 					elseif (mod.elements[info.type]) then
-						group:add(mod.elements[info.type](info, group))
+						local element = group:add(mod.elements[info.type](info, group))
+						-- hook into profile changes
+						if (element.set and not module._persistent) then
+							mod:add_action("profile_changed", function()
+								element.save = mod:get_save(saved_variable, info.module)
+								element.set()
+							end)
+						end
 					end
 
 					-- recursive call
@@ -152,11 +170,15 @@ end
 mod.elements = {}
 function mod:register_element(name, create)
 	if (mod.elements[name]) then return end
+
 	mod.elements[name] = function(options, parent, ...)
 		local frame = create(options, parent, ...)
 		frame._type = name
 		frame._layout = "element"
 		parent.last_frame = frame
+
+		mod:add_action("profile_changed", frame.set)
+
 		return frame
 	end
 end

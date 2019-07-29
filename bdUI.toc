@@ -33,6 +33,7 @@ lib\oUF_Plugins\oUF_Smooth.lua
 
 # Custom
 lib\memoize.lua
+lib\bdCallbacks\bdCallbacks.lua
 lib\bdMove\bdMove.lua
 lib\bdConfig\bdConfig.xml
 

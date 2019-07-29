@@ -112,7 +112,9 @@ function mod:create_module(instance, name)
 	-- module:SetBackdropColor(.1, .1, .9, 0.1)	
 
 	instance._modules[name] = module
-	instance._default = instance._default or module
+	if (module.name ~= "Profiles") then
+		instance._default = instance._default or module
+	end
 
 	-- module methods
 	function module:select()

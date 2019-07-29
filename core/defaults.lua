@@ -35,47 +35,47 @@ local config = {
 
 local mod = bdUI:register_module("General", config)
 
-	function mod:initialize()
+function mod:initialize()
 
+end
+-- viewports
+local function createViewport() 
+	local frame = CreateFrame("frame", "bdCore Top Viewport", nil)
+	frame:SetBackdrop({bgFile = bdUI.media.flat})
+	frame:SetBackdropBorderColor(0, 0, 0, 0)
+	frame:SetFrameStrata("BACKGROUND")
+
+	return frame
+end
+function mod:config_callback()
+	local config = mod._config
+
+	local top = 0
+	local bottom = 0
+
+	bdUI.topViewport = bdUI.topViewport or createViewport()
+	bdUI.topViewport:SetBackdropColor(unpack(config.topViewportBGColor))
+	bdUI.topViewport:SetPoint("TOPLEFT", UIParent, "TOPLEFT")
+	bdUI.topViewport:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT")
+	bdUI.topViewport:SetHeight(config.topViewport)
+	if (config.topViewport <= 0) then
+		bdUI.topViewport:Hide()
 	end
-	-- viewports
-	local function createViewport() 
-		local frame = CreateFrame("frame", "bdCore Top Viewport", nil)
-		frame:SetBackdrop({bgFile = bdUI.media.flat})
-		frame:SetBackdropBorderColor(0, 0, 0, 0)
-		frame:SetFrameStrata("BACKGROUND")
 
-		return frame
+	top = config.topViewport
+
+	bdUI.bottomViewport = bdUI.bottomViewport or createViewport()
+	bdUI.bottomViewport:SetBackdropColor(unpack(config.bottomViewportBGColor))
+	bdUI.bottomViewport:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT")
+	bdUI.bottomViewport:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT")
+	bdUI.bottomViewport:SetHeight(config.bottomViewport)
+	if (config.bottomViewport <= 0) then
+		bdUI.bottomViewport:Hide()
 	end
-	function mod:config_callback()
-		local config = mod._config
 
-		local top = 0
-		local bottom = 0
+	bottom = config.bottomViewport
 
-		bdUI.topViewport = bdUI.topViewport or createViewport()
-		bdUI.topViewport:SetBackdropColor(unpack(config.topViewportBGColor))
-		bdUI.topViewport:SetPoint("TOPLEFT", UIParent, "TOPLEFT")
-		bdUI.topViewport:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT")
-		bdUI.topViewport:SetHeight(config.topViewport)
-		if (config.topViewport <= 0) then
-			bdUI.topViewport:Hide()
-		end
-
-		top = config.topViewport
-
-		bdUI.bottomViewport = bdUI.bottomViewport or createViewport()
-		bdUI.bottomViewport:SetBackdropColor(unpack(config.bottomViewportBGColor))
-		bdUI.bottomViewport:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT")
-		bdUI.bottomViewport:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT")
-		bdUI.bottomViewport:SetHeight(config.bottomViewport)
-		if (config.bottomViewport <= 0) then
-			bdUI.bottomViewport:Hide()
-		end
-
-		bottom = config.bottomViewport
-
-		WorldFrame:ClearAllPoints()
-		WorldFrame:SetPoint("TOPLEFT", 0, -( top ) )
-		WorldFrame:SetPoint("BOTTOMRIGHT", 0, ( bottom ) )
-	end
+	WorldFrame:ClearAllPoints()
+	WorldFrame:SetPoint("TOPLEFT", 0, -( top ) )
+	WorldFrame:SetPoint("BOTTOMRIGHT", 0, ( bottom ) )
+end

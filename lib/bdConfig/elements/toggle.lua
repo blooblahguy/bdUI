@@ -6,12 +6,17 @@ local mod = ns.bdConfig
 --========================================
 local methods = {
 	["set"] = function(self, save, key, value)
+		if (not save) then save = self.save end
+		if (not key) then key = self.key end
 		if (not value) then value = self:get(save, key) end
 		save[key] = value
 
 		self:SetChecked(value)
 	end,
 	["get"] = function(self, save, key)
+		if (not save) then save = self.save end
+		if (not key) then key = self.key end
+
 		return save[key]
 	end,
 	["onclick"] = function(self)

@@ -6,10 +6,16 @@ local mod = ns.bdConfig
 --========================================
 local methods = {
 	["set"] = function(self, options, save)
-
+		if (not save) then save = self.save end
+		if (not key) then key = self.key end
+		if (not value) then value = self:get(save, key) end
+		save[key] = value
 	end,
 	["get"] = function(self, options, save)
+		if (not save) then save = self.save end
+		if (not key) then key = self.key end
 
+		return save[key]
 	end,
 	["onchange"] = function(self, options, save)
 
@@ -58,7 +64,7 @@ local function create(options, parent)
 						print(options.save[options.key])
 						value = items[i]
 
-						options:callback(items[i])
+						options:callback(dropdown, options, items[i])
 					end
 
 					-- select save value

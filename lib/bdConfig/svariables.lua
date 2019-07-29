@@ -2,10 +2,19 @@ local addonName, ns = ...
 local mod = ns.bdConfig
 
 --=================================================
--- Config Builder Helper
+-- Fetch Relevant Config
 --=================================================
-function mod:parse_config()
-	
+function mod:get_save(saved_variable, name)
+	local sv = _G[saved_variable]
+	local profile = sv.users[player].profile
+	sv.profiles[profile] = sv.profiles[profile] or {}
+
+	if (name) then
+		sv.profiles[profile][name] = sv.profiles[profile][name] or {}
+		return sv.profiles[profile][name]
+	else
+		return sv.profiles[profile]
+	end
 end
 
 --=================================================
@@ -37,12 +46,6 @@ function mod:initialize_saved_variables(saved_variable)
 
 	-- Persistent: Exists between profiles and characters
 	_G[saved_variable].persistent = _G[saved_variable].persistent or {}
-	
-	local sv = _G[saved_variable]
-	local profile = sv.users[player].profile
-	sv.profiles[profile] = sv.profiles[profile] or {}
-
-	return sv.profiles[profile]
 end
 
 -- makes sure a value is set in the given save index

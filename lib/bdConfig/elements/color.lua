@@ -11,7 +11,6 @@ local methods = {
 		if (not save) then save = self.save end
 		if (not key) then key = self.key end
 		if (not value) then value = self:get(save, key) end
-
 		save[key] = value
 
 		self:SetBackdropColor(unpack(value))

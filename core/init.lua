@@ -13,6 +13,7 @@ bdUI.class = select(2, UnitClass("player"))
 bdUI.colorString = '|cffA02C2Fbd|r'
 bdUI.Base64 = LibStub("LibBase64-1.0")
 bdUI.SharedMedia = LibStub("LibSharedMedia-3.0")
+LibStub("bdCallback-1.0"):New(bdUI)
 
 function ns:unpack()
 	return self[1], self[2], self[3]

@@ -5,15 +5,18 @@ local mod = ns.bdConfig
 -- Methods Here
 --========================================
 local methods = {
-	["set"] = function(self, value)
-		local save = self.save
-		local key = self.key
-		if (not value) then value = self:GetText() end
+	["set"] = function(self, save, key, value)
+		if (not save) then save = self.save end
+		if (not key) then key = self.key end
+		if (not value) then value = self:get(save, key) end
 		save[key] = value
 
 		self:ClearFocus()
 	end,
 	["get"] = function(self, save, key)
+		if (not save) then save = self.save end
+		if (not key) then key = self.key end
+
 		return save[key]
 	end,
 	-- ["onclick"] = function(self)
@@ -50,7 +53,7 @@ local function create(options, parent)
 	input.save = options.save
 	input.key = options.key
 	Mixin(input, methods)
-	input:set(options.value)
+	input:set()
 
 	mod:set_backdrop(input)
 

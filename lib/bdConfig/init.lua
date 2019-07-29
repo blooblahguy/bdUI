@@ -1,7 +1,8 @@
 local addonName, ns = ...
 ns.bdConfig = {}
 local mod = ns.bdConfig
-mod.callback = LibStub("CallbackHandler-1.0"):New(mod, "Register", "Unregister", "UnregisterAll")
+-- Get bdCallbacks
+LibStub("bdCallbacks-1.0"):New(mod)
 
 -- Developer functions
 function mod:noop() return end
