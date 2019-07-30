@@ -52,6 +52,7 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 		module._config = config
 		module._containers = {}
 		module._persistent = false
+		module._callback = callback or mod.noop
 
 		if (options.persistent) then
 			module._persistent = options.persistent
@@ -92,7 +93,7 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 				info.save = sv
 				info.module = name
 				info._module = module
-				info.callback = info.callback or mod.noop
+				info.callback = info.callback or module._callback
 
 				if (not options.hide_ui and (mod.containers[info.type] or mod.elements[info.type])) then -- only if we've created this module
 					local group = parent
@@ -180,7 +181,7 @@ function mod:register_element(name, create)
 		parent.last_frame = frame
 
 		if (frame.key or (object and object.key)) then
-			mod.active_elements[frame.key or object.key] = frame
+			mod.active_elements[frame.key or object.key] = object or frame
 		end
 
 		return frame

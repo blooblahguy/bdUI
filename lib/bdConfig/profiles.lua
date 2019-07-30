@@ -68,9 +68,26 @@ end
 --============================================
 -- Spec Profiles
 --============================================
-local function spec_changed(self, event, index, prev)
-	print(event, index, prev)
+local function specs_available(self, event, index, prev)
+	for i = 1, 4 do
+		local key = "spec_profile_"..i
+		if (_G[profiles.sv_string].persistent.Profiles[key]) then
+			local element = mod.active_elements[key]
+			local id, name, description, icon, background, role = GetSpecializationInfo(i)
+			element.label:SetText(name.." Profile")
+		end
+	end
 end
+
+local function spec_changed(self, event, index, prev)
+	local spec = GetSpecialization(false, false)
+	local sv = _G[profiles.sv_string].persistent.Profiles
+
+	if (sv['spec_profile_enable_'..spec]) then
+		change_profile(nil, nil, sv['spec_profile_'..spec])
+	end
+end
+
 local function build_spec_profiles()
 	local specs = 3
 	if (class == "DEMONHUNTER") then
@@ -81,12 +98,8 @@ local function build_spec_profiles()
 
 	local spec_config = {}
 	for i = 1, specs do
-		local id, name, description, icon, background, role = GetSpecializationInfo(i)
-		if (name) then
-			name = name.." profile"
-		else
-			name = "Spec "..i
-		end
+		local name = "Spec "..i
+		
 		local c = {
 			key = "spec_profile_"..i,
 			type = "select",
@@ -208,11 +221,14 @@ end
 local talent = CreateFrame("frame")
 talent:RegisterEvent("PLAYER_TALENT_UPDATE")
 talent:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
-talent:SetScript("OnEvent", function(self, event)
+talent:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_TALENT_UPDATE") then
 		mod:do_action("talents_available")
+		specs_available(self, event, ...)
+		spec_changed(self, event, ...)
 	elseif (event == "ACTIVE_TALENT_GROUP_CHANGED") then
 		mod:do_action("talents_changed")
+		spec_changed(self, event, ...)
 	end
 end)
 

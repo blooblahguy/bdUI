@@ -42,6 +42,7 @@ local function create(options, parent)
 	label:SetText(options.label)
 	local dropdown = CreateFrame("Button", options.module.."_"..options.key, container, "UIDropDownMenuTemplate")
 	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -20, -2)
+	dropdown.label = label
 
 	local default_option = options.value
 	-- recreate dropdown each time

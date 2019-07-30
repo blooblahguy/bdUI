@@ -12,6 +12,9 @@ mod.align_text = function(self, align)
 	local config = mod._config
 	local icons = self.Auras or self.Debuffs or self.Buffs
 
+	self.Name:ClearAllPoints()
+	self.Curhp:ClearAllPoints()
+
 	if (config.textlocation == "Inside") then
 		if (align == "right") then
 			self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)

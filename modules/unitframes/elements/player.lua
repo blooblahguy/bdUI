@@ -14,6 +14,20 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.buffs(self, unit)
 	self.Buffs.size = 22
 
+	self.RestingIndicator:ClearAllPoints()
+	if (config.textlocation == "Outside") then
+		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
+	elseif (config.textlocation == "Inside") then
+		self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
+	end
+
+	self.CombatIndicator:ClearAllPoints()
+	if (config.textlocation == "Outside") then
+		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
+	elseif (config.textlocation == "Inside") then
+		self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
+	end
+
 	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
