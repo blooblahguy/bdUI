@@ -9,9 +9,36 @@ function bdUI:set_slash_command(name, func, ...)
 end
 
 -- reload
-bdUI:set_slash_command('ReloadUI', ReloadUI, 'rl', 'reset')
+bdUI:set_slash_command('ReloadUI', ReloadUI, 'rl')
+
 -- readycheck
 bdUI:set_slash_command('DoReadyCheck', DoReadyCheck, 'rc', 'ready')
+
+-- lock/unlock
+bdUI:set_slash_command('ToggleLock', bdMove.toggle_lock, 'bdlock')
+bdUI:set_slash_command('ResetPositions', function()
+	BDUI_SAVE = nil
+	bdMove:reset_positions()
+end, 'bdreset', 'reset')
+
+-- framename
+bdUI:set_slash_command('Frame', function()
+	print(GetMouseFocus():GetName())
+end, 'frame')
+
+-- texture
+bdUI:set_slash_command('Texture', function()
+	local type, id, book = GetCursorInfo();
+	print((type=="item") and GetItemIcon(id) or (type=="spell") and GetSpellTexture(id,book) or (type=="macro") and select(2,GetMacroInfo(id)))
+end, 'texture')
+
+-- itemid
+bdUI:set_slash_command('ItemID', function()
+	local infoType, info1, info2 = GetCursorInfo(); 
+	if infoType == "item" then 
+		print( info1 );
+	end
+end, 'item')
 
 SLASH_BDUI1, SLASH_BDUI2 = "/bdcore", '/bd'
 SlashCmdList["BDUI"] = function(msg, editbox)

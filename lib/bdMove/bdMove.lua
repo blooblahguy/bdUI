@@ -33,8 +33,11 @@ lib.media = {
 function lib:set_save(sv)
 	lib.save = sv
 	lib.save.positions = lib.save.positions or {}
-end
 
+	for k, v in pairs(lib.moveable_frames) do
+		v:position()
+	end
+end
 
 --========================================================
 -- Methods

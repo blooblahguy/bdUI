@@ -19,7 +19,7 @@ local function change_profile(select, options, value)
 	
 	print("change", value)
 
-	mod:do_action("profile_changed")
+	mod:do_action("profile_changed", value)
 end
 
 -- return fresh copy of available profiles
