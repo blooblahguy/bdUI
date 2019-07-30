@@ -40,6 +40,8 @@ local function create(options, parent)
 	button.inactiveColor = media.blue
 	button.activeColor = media.blue
 	button.callback = options.callback or mod.noop
+	button.save = options.save
+	button.key = options.key
 	button:SetBackdrop({bgFile = media.flat})
 	
 	function button:BackdropColor(r, g, b, a)
@@ -126,7 +128,7 @@ local function create(options, parent)
 		return button
 	else
 		container.button = button
-		return container
+		return container, button
 	end
 end
 

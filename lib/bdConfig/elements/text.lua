@@ -27,7 +27,7 @@ local function create(options, parent)
 
 	container:SetHeight( (lines * 14) + 10)
 
-	return container
+	return container, text
 end
 
 mod:register_element("text", create)

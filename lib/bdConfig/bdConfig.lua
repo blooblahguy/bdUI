@@ -168,15 +168,20 @@ function mod:register_container(name, create)
 	end
 end
 
+mod.active_elements = {}
 mod.elements = {}
 function mod:register_element(name, create)
 	if (mod.elements[name]) then return end
 
 	mod.elements[name] = function(options, parent, ...)
-		local frame = create(options, parent, ...)
+		local frame, object = create(options, parent, ...)
 		frame._type = name
 		frame._layout = "element"
 		parent.last_frame = frame
+
+		if (frame.key or (object and object.key)) then
+			mod.active_elements[frame.key or object.key] = frame
+		end
 
 		return frame
 	end

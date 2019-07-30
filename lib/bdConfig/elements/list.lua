@@ -171,7 +171,7 @@ local function create(options, parent)
 
 	list:populate()
 
-	return container
+	return container, list
 end
 
 mod:register_element("list", create)

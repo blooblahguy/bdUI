@@ -46,10 +46,11 @@ local function create(options, parent)
 	check.save = options.save
 	check.key = options.key
 	Mixin(check, methods)
+
 	check:SetScript("OnClick", check.onclick)
 	check:set(options.save, options.key)
 
-	return container
+	return container, check
 end
 
 mod:register_element("toggle", create)

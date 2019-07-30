@@ -87,7 +87,7 @@ local function create(options, parent)
 	slider:set(options.save, options.key)
 	slider:SetScript("OnValueChanged", slider.onchange)
 
-	return container
+	return container, slider
 end
 
 mod:register_element("range", create)

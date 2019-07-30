@@ -10,6 +10,8 @@ local methods = {
 		if (not key) then key = self.key end
 		if (not value) then value = self:get(save, key) end
 		save[key] = value
+
+		self:SetText(value)
 	end,
 	["get"] = function(self, save, key)
 		if (not save) then save = self.save end
@@ -55,7 +57,7 @@ local function create(options, parent)
 
 	mod:create_backdrop(input)
 
-	return container
+	return container, input
 end
 
 mod:register_element("input", create)

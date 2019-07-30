@@ -14,8 +14,6 @@ loader:SetScript("OnEvent", function(self, event, addon)
 
 		-- set save for bdMove, so that we're not vulnerable to UI errors resetting positioning
 		local profile = bdUI.bdConfig:get_save("BDUI_SAVE")
-		print(profile.positions)
-		-- .positions
 		bdMove:set_save(bdUI.bdConfig:get_save("BDUI_SAVE"))
 
 		-- pass new profile to bdMove when profile changes

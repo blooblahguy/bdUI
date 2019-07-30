@@ -91,11 +91,19 @@ local function build_spec_profiles()
 			key = "spec_profile_"..i,
 			type = "select",
 			value = "default",
-			size = "third",
+			size = "twothird",
 			label = name,
 			action = "profile_change,talent_available",
 			lookup = get_profiles,
 			options = profile_table
+		}
+		table.insert(spec_config, c)
+		local c = {
+			key = "spec_profile_enable_"..i,
+			type = "toggle",
+			value = false,
+			size = "third",
+			label = "Enable Spec Profile "..i
 		}
 		table.insert(spec_config, c)
 	end
@@ -141,11 +149,6 @@ local config = {
 	{
 		key = "group",
 		type = "group",
-		heading = "Spec Profiles",
-	},
-	{
-		key = "group",
-		type = "group",
 		heading = "Manage Profiles",
 		args = {
 			{
@@ -161,7 +164,14 @@ local config = {
 				callback = create_profile
 			}
 		}
-	}
+	},
+
+	{
+		key = "group",
+		type = "group",
+		heading = "Spec Profiles",
+	},
+	
 }
 
 
@@ -177,9 +187,9 @@ function mod:create_profiles(instance, saved_variables_string, disable_spec_prof
 
 	-- remove spec profile options
 	if (disable_spec_profiles) then
-		table.remove(config[3])
+		table.remove(config[4])
 	else
-		config[3].args = build_spec_profiles()
+		config[4].args = build_spec_profiles()
 	end
 
 	-- Register inside of config window

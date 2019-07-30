@@ -80,7 +80,7 @@ local function create(options, parent)
 				end
 			end
 
-			if (selected) then
+			if (selected > 0) then
 				UIDropDownMenu_SetSelectedID(dropdown, selected)
 			else
 				UIDropDownMenu_SetSelectedID(dropdown, default_id)
@@ -98,7 +98,7 @@ local function create(options, parent)
 
 	dropdown:populate(options.options)
 
-	return container
+	return container, dropdown
 end
 
 mod:register_element("select", create)

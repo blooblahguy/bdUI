@@ -88,7 +88,7 @@ local function create(options, parent)
 	picker.text:SetText(options.label)
 	picker.text:SetPoint("LEFT", picker, "RIGHT", 8, 0)
 
-	return container
+	return container, picker
 end
 
 mod:register_element("color", create)
