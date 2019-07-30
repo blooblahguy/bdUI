@@ -22,6 +22,8 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 
 ## Complete Features
 - Configuration Overhaul
+- Profiles
+- Spec-based profiles
 - Moving overhaul (with snapping!)
 - Localization Support
 - Minimap
@@ -38,8 +40,6 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Quality of Life Additions
 
 ## TODO
-- [ ] Profiles
-- [ ] Spec Profile Switching
 - [ ] Moving Resizing
 - [ ] Arena Frames
 - [ ] Databars
