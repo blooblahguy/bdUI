@@ -4,7 +4,7 @@ An all-in-one UI that aims to be compatible with all official versions of WoW. I
 bdUI is fully modular. You can install the full UI and only use certain portions of it. Its high performance, unobtrusive, and progression raiding-oriented. Its less feature-rich than other addons, but aims to be streamlined and extentable in the features it does offer.
 
 ## Complete
-- Configuration Overwhaul
+- Configuration Overhaul
 - Moving overhaul (with snapping!)
 - Localization Support
 - Minimap
