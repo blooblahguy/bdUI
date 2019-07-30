@@ -6,7 +6,7 @@ bdUI is fully modular. You can install the full UI and only use certain portions
 # FAQ
 > I only use bd"X", I don't want to use the whole UI!
 
-Don't worry, the entire UI is modular and you can disable everything and keep only what you want.
+Don't worry, the entire UI is modular and you can disable everything and keep only what you want without any performance loss.
 
 > Why convert all of the seperate addons into a single addon?
 
