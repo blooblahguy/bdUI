@@ -1,34 +1,104 @@
-local _G = _G
-local version = 1
+local MAJOR, MINOR = "lib-1.0", 1
+local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+if not lib then return end -- No upgrade needed
 
-if _G.bdMove and _G.bdMove.version >= version then
-	bdMove = _G.bdMove
-	return -- a newer or same version has already been created, ignore this file
+-- Load library support
+local StickyFrames = LibStub("LibSimpleSticky-1.0")
+LibStub("bdCallbacks-1.0"):New(lib)
+
+--========================================================
+-- Helpers
+--========================================================
+function IsMouseOverFrame(self)
+	if MouseIsOver(self) then return true end
+	if not SpellFlyout:IsShown() then return false end
+	if not SpellFlyout.__faderParent then return false end
+	if SpellFlyout.__faderParent == self and MouseIsOver(SpellFlyout) then return true end
+
+	return false
 end
-
--- Helper functions
 noop = function() end
 
-_G.bdMove = {}
-local StickyFrames = LibStub("LibSimpleSticky-1.0")
-bdMove.moveable_frames = {}
-bdMove.save = nil
-bdMove.spacing = 2
-bdMove.media = {
+--========================================================
+-- Defaults
+--========================================================
+lib.moveable_frames = {}
+lib.save = nil
+lib.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
-	arial = "fonts\\ARIALN.ttf",
+	font = "fonts\\ARIALN.ttf",
 }
 
 -- set savedvariable
-function bdMove:set_save(sv)
-	bdMove.save = sv
-	bdMove.save.positions = bdMove.save.positions or {}
+function lib:set_save(sv)
+	lib.save = sv
+	lib.save.positions = lib.save.positions or {}
 end
 
--- main moveable registration
-function bdMove:set_moveable(frame, rename, left, top, right, bottom)
-	if (not bdMove.save) then print("bdMove needs SavedVariable to save positions") return end
-	if rename == nil then rename = frame:GetName() end
+
+--========================================================
+-- Methods
+--========================================================
+local methods = {
+	['unlock'] = function(self)
+		self:SetAlpha(1)
+		self.text:Show()
+		self:EnableMouse(true)
+		self:SetMovable(true)
+		self:SetUserPlaced(false)
+		self:RegisterForDrag("LeftButton")
+		self:SetFrameStrata("TOOLTIP")
+		self:SetScript("OnDragStart", function(self) 
+			StickyFrames:StartMoving(self, lib.moveable_frames, -bdUI.border, -bdUI.border, -bdUI.border, -bdUI.border)
+		end)
+		self:SetScript("OnDragStop", function(self) 
+			StickyFrames:StopMoving(self)
+			StickyFrames:AnchorFrame(self)
+		end)
+	end,
+	['lock'] = function(self)
+		self:SetAlpha(0)
+		self.text:Hide()
+		self:EnableMouse(false)
+		self:SetUserPlaced(false)
+		self:SetMovable(false)
+		self:SetFrameStrata("BACKGROUND")
+		self:SetScript("OnDragStart", noop)
+		self:SetScript("OnDragStop", noop)
+
+		-- save in saved variables
+		local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
+		if (not relativeTo) then relativeTo = UIParent end
+		relativeTo = relativeTo:GetName()
+
+		lib.save.positions[rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
+	end,
+	-- position save in saved variables (protects against lost positions during UI errors)
+	['position'] = function(self)
+		self:ClearAllPoints()
+		if (lib.save.positions[rename]) then
+			point, relativeTo, relativePoint, xOfs, yOfs = unpack(lib.save.positions[rename])
+			relativeTo = _G[relativeTo]
+
+			if (not point or not relativeTo or not relativePoint or not xOfs or not yOfs) then
+				lib.save.positions[rename] = nil
+				self:position()
+			else
+				self:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
+			end
+		else
+			self:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
+		end
+	end
+}
+
+--========================================================
+-- Mover
+--========================================================
+function lib:set_moveable(frame, rename, left, top, right, bottom)
+	if (not lib.save) then print("lib needs SavedVariable to save positions. Use lib:set_save(sv_string)") return end
+	rename = rename or frame:GetName()
+
 	left = left or 2
 	top = top or 2
 	right = right or left or 2
@@ -44,7 +114,7 @@ function bdMove:set_moveable(frame, rename, left, top, right, bottom)
 	local mover = CreateFrame("frame", rename, UIParent)
 	mover:EnableMouse(false)
 	mover:SetSize(width + (right + left), height + (top + bottom))
-	mover:SetBackdrop({bgFile = bdMove.media.flat})
+	mover:SetBackdrop({bgFile = lib.media.flat})
 	mover:SetBackdropColor(0,0,0,.6)
 	mover:SetFrameStrata("BACKGROUND")
 	mover:SetClampedToScreen(true)
@@ -52,7 +122,7 @@ function bdMove:set_moveable(frame, rename, left, top, right, bottom)
 	
 	-- Text Label
 	mover.text = mover:CreateFontString(mover:GetName().."_Text")
-	mover.text:SetFont(bdMove.media.arial, 14, "OUTLINE")
+	mover.text:SetFont(lib.media.font, 14, "OUTLINE")
 	mover.text:SetPoint("CENTER", mover, "CENTER", 0, 0)
 	mover.text:SetText(rename)
 	mover.text:SetJustifyH("CENTER")
@@ -72,117 +142,50 @@ function bdMove:set_moveable(frame, rename, left, top, right, bottom)
 	frame:ClearAllPoints()
 	frame:SetPoint("CENTER", mover, "CENTER", 0, 0)
 
-	-- Moving functionality
-	function mover:unlock()
-		mover:SetAlpha(1)
-		mover.text:Show()
-		mover:EnableMouse(true)
-		mover:SetMovable(true)
-		mover:SetUserPlaced(false)
-		mover:RegisterForDrag("LeftButton")
-		mover:SetFrameStrata("TOOLTIP")
-		mover:SetScript("OnDragStart", function(self) 
-			StickyFrames:StartMoving(self, bdMove.moveable_frames, -bdUI.border, -bdUI.border, -bdUI.border, -bdUI.border)
-		end)
-		mover:SetScript("OnDragStop", function(self) 
-			StickyFrames:StopMoving(self)
-			StickyFrames:AnchorFrame(self)
-		end)
-	end
-	function mover:lock()
-		mover:SetAlpha(0)
-		mover.text:Hide()
-		mover:EnableMouse(false)
-		mover:SetUserPlaced(false)
-		mover:SetMovable(false)
-		mover:SetFrameStrata("BACKGROUND")
-		mover:SetScript("OnDragStart", noop)
-		mover:SetScript("OnDragStop", noop)
-
-		-- save in saved variables
-		local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
-		if (not relativeTo) then relativeTo = UIParent end
-		relativeTo = relativeTo:GetName()
-
-		bdMove.save.positions[rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
-	end
-
-	-- position save in saved variables
-	function mover:position()
-		mover:ClearAllPoints()
-		if (bdMove.save.positions[rename]) then
-			point, relativeTo, relativePoint, xOfs, yOfs = unpack(bdMove.save.positions[rename])
-			relativeTo = _G[relativeTo]
-
-			if (not point or not relativeTo or not relativePoint or not xOfs or not yOfs) then
-				bdMove.save.positions[rename] = nil
-				mover:position()
-			else
-				mover:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
-			end
-		else
-			mover:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
-		end
-	end
+	-- Transfer Methods to this object
+	Mixin(mover, methods)
 	mover:position()
 
-	table.insert(bdMove.moveable_frames, mover)
+	table.insert(lib.moveable_frames, mover)
 end
 
-function bdMove:toggle_lock()
-	if (bdMove.unlocked) then
+function lib:toggle_lock()
+	if (lib.unlocked) then
 		-- lock
-		bdMove.unlocked = false
-		for k, frame in pairs(bdMove.moveable_frames) do
+		lib.unlocked = false
+		for k, frame in pairs(lib.moveable_frames) do
 			frame:lock()
 		end
 	else
 		-- unlock
-		bdMove.unlocked = true
-		for k, frame in pairs(bdMove.moveable_frames) do
+		lib.unlocked = true
+		for k, frame in pairs(lib.moveable_frames) do
 			frame:unlock()
 		end
 	end
 end
 
-function bdMove:reset_positions()
-	bdMove.save.positions = {}
-	ReloadUI()
-end
-
--- controls, build once and move around
-bdMove.controls = CreateFrame("frame", nil, bdParent)
-function bdMove:attach_controls(frame)
-
-end
-
-
---========================================================
--- Helpers
---========================================================
-function IsMouseOverFrame(self)
-	if MouseIsOver(self) then return true end
-	if not SpellFlyout:IsShown() then return false end
-	if not SpellFlyout.__faderParent then return false end
-	if SpellFlyout.__faderParent == self and MouseIsOver(SpellFlyout) then return true end
-
-	return false
+function lib:reset_positions()
+	lib.save.positions = {}
 end
 
 --========================================================
--- Mover
+-- Controls
 --========================================================
+lib.controls = CreateFrame("frame", nil, bdParent)
+function lib:create_controls()
 
---========================================================
--- Positioners
---========================================================
-function bdMove:CreateFrameGroup(pointa, pointb, spacing)
-	
 end
+
+function lib:attach_controls(frame)
+
+end
+
+
 --========================================================
 -- Frames / Faders
+-- lib:CreateFader(frame, children, inAlpha, outAlpha, duration)
 --========================================================
-
 -- fade out animation, basically mirrors itself onto the given frame
 local function CreateFaderAnimation(frame)
 	local animFrame = CreateFrame("Frame", nil, frame)
@@ -241,7 +244,7 @@ local function EnterLeaveHandle(self)
 end
 
 -- Allows us to mouseover show a frame, with animation
-function bdMove:CreateFader(frame, children, inAlpha, outAlpha, duration)
+function lib:CreateFader(frame, children, inAlpha, outAlpha, duration)
 	if (frame.fader) then return end
 
 	-- set variables
