@@ -48,5 +48,5 @@ mod.custom_layout["target"] = function(self, unit)
 	end
 	
 
-	mod.align_text(self)
+	mod.align_text(self, "right")
 end

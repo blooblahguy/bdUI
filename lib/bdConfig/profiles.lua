@@ -16,10 +16,9 @@ local profile_table = {}
 -- change profile
 local function change_profile(select, options, value)
 	_G[profiles.sv_string].users[player].profile = value
-	
-	print("change", value)
+	_G[profiles.sv_string].persistent.Profiles.currentprofile = value
 
-	mod:do_action("profile_changed", value)
+	mod:do_action("profile_change", value)
 end
 
 -- return fresh copy of available profiles
@@ -37,7 +36,7 @@ end
 local function create_profile(button, options)
 	local sv = _G[profiles.sv_string]
 	local value = options.save['createprofile']
-	local current = sv.users[player].profile
+	local old = sv.users[player].profile
 
 	if (sv.profiles[value]) then
 		print(value, "Already exists.", "Profile must have unique names")
@@ -46,9 +45,7 @@ local function create_profile(button, options)
 
 	-- Create profile and copy settings over
 	sv.profiles[value] = {}
-	Mixin(sv.profiles[value], sv.profiles[current])
-
-	print("create", value)
+	Mixin(sv.profiles[value], sv.profiles[old])
 
 	change_profile(nil, nil, value)
 end
@@ -57,7 +54,6 @@ end
 local function delete_profile(button, options)
 	local sv = _G[profiles.sv_string]
 	local value = sv.users[player].profile
-	print("delete", value)
 
 	if (value == "default") then
 		print("You cannot delete the \"default\" profile")
@@ -66,7 +62,7 @@ local function delete_profile(button, options)
 
 	sv.profiles[value] = nil
 
-	change_profile("default")
+	change_profile(nil, nil, "default")
 end
 
 --============================================
@@ -89,7 +85,7 @@ local function build_spec_profiles()
 		if (name) then
 			name = name.." profile"
 		else
-			name = "Profile "..i
+			name = "Spec "..i
 		end
 		local c = {
 			key = "spec_profile_"..i,
@@ -119,15 +115,29 @@ local config = {
 		value = "Profiles can be used to store different positioning and configuration settings for different characters and specs",
 	},
 	{
-		key = "currentprofile",
-		type = "select",
-		value = "default",
-		options = profile_table,
-		action = "profile_change",
-		lookup = get_profiles,
-		callback = change_profile,
-		label = "Current Profile"
+		key = "group",
+		type = "group",
+		heading = "Current Profile",
+		args = {
+			{
+				key = "currentprofile",
+				type = "select",
+				value = "default",
+				options = profile_table,
+				action = "profile_change",
+				lookup = get_profiles,
+				callback = change_profile,
+				label = "Current Profile"
+			},
+			{
+				key = "deleteprofile",
+				type = "button",
+				label = "Delete Profile",
+				callback = delete_profile
+			}
+		}
 	},
+
 	{
 		key = "group",
 		type = "group",
@@ -162,6 +172,7 @@ function mod:create_profiles(instance, saved_variables_string, disable_spec_prof
 	-- populate spec table
 	for k, v in pairs(_G[profiles.sv_string].profiles) do
 		table.insert(profile_table, k)
+		config[2].options = profile_table
 	end
 
 	-- remove spec profile options
@@ -175,6 +186,11 @@ function mod:create_profiles(instance, saved_variables_string, disable_spec_prof
 	instance:register_module("Profiles", config, {
 		persistent = true
 	})
+
+	-- update bdMove
+	if (bdMove) then
+		bdMove:set_save(mod:get_save("BDUI_SAVE"))
+	end
 end
 
 

@@ -10,8 +10,6 @@ local methods = {
 		if (not key) then key = self.key end
 		if (not value) then value = self:get(save, key) end
 		save[key] = value
-
-		self:ClearFocus()
 	end,
 	["get"] = function(self, save, key)
 		if (not save) then save = self.save end
@@ -46,8 +44,9 @@ local function create(options, parent)
 	input:SetMaxLetters(200)
 	input:SetHistoryLines(1000)
 	input:SetAutoFocus(false) 
-	input:SetScript("OnEnterPressed", function(self, key) self:set() end)
-	input:SetScript("OnEscapePressed", function(self, key) self:set() end)
+	input:SetScript("OnKeyUp", function(self, key) self:set(self.save, self.key, self:GetText()) end)
+	input:SetScript("OnEnterPressed", function(self, key) self:set(self.save, self.key, self:GetText()); self:ClearFocus(); end)
+	input:SetScript("OnEscapePressed", function(self, key) self:set(self.save, self.key, self:GetText()); self:ClearFocus(); end)
 	input:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -2)
 	input.save = options.save
 	input.key = options.key

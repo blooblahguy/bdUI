@@ -7,14 +7,19 @@ local player = UnitName("player")
 --=================================================
 function mod:get_save(saved_variable, name, persistent)
 	local sv = _G[saved_variable]
-	local profile = sv.users[player].profile
-	sv.profiles[profile] = sv.profiles[profile] or {}
-
-	if (name) then
-		sv.profiles[profile][name] = sv.profiles[profile][name] or {}
-		return sv.profiles[profile][name]
+	if (persistent) then
+		sv.persistent[name] = sv.persistent[name] or {}
+		return sv.persistent[name]
 	else
-		return sv.profiles[profile]
+		local profile = sv.users[player].profile
+		sv.profiles[profile] = sv.profiles[profile] or {}
+
+		if (name) then
+			sv.profiles[profile][name] = sv.profiles[profile][name] or {}
+			return sv.profiles[profile][name]
+		else
+			return sv.profiles[profile]
+		end
 	end
 end
 

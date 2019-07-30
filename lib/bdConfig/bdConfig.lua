@@ -82,7 +82,7 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 		--========================================
 		function module:build(config, name, parent)
 			instance.save[name] = instance.save[name] or {}
-			local sv = instance.save[name]
+			local sv = mod:get_save(saved_variables_string, name, module._persistent)
 
 			-- loop through options
 			for option, info in pairs(config) do
@@ -103,10 +103,11 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 					elseif (mod.elements[info.type]) then
 						local element = group:add(mod.elements[info.type](info, group))
 						-- hook into profile changes
-						if (element.set and not module._persistent) then
-							mod:add_action("profile_changed", function()
-								element.save = mod:get_save(saved_variable, info.module)
-								element:set()
+						if (element.set) then
+							mod:add_action("profile_change", function()
+								-- print(saved_variables_string, info.module, module._persistent)
+								-- element.save = mod:get_save(saved_variables_string, info.module, module._persistent)
+								-- element:set()
 							end)
 						end
 					end
@@ -134,9 +135,9 @@ function mod:register(name, saved_variables_string, lock_toggle, options)
 		return instance.save[name]
 	end
 
-	-- get profile save
+	-- store save object
 	mod:initialize_saved_variables(saved_variables_string)
-	instance.save = mod:get_save(saved_variables_string, nil)
+	instance.save = mod:get_save(saved_variables_string)
 
 	-- create profiles
 	if (not options.hide_profiles) then

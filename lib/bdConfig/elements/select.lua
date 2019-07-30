@@ -9,6 +9,7 @@ local methods = {
 		if (not save) then save = self.save end
 		if (not key) then key = self.key end
 		if (not value) then value = self:get(save, key) end
+
 		save[key] = value
 	end,
 	["get"] = function(self, options, save)
@@ -31,6 +32,8 @@ local methods = {
 local function create(options, parent)
 	options.size = options.size or "half"
 	local container = mod:create_container(options, parent, 48)
+	container.save = options.save
+	container.key = options.key
 	Mixin(container, methods)
 
 	-- objects
@@ -40,57 +43,58 @@ local function create(options, parent)
 	local dropdown = CreateFrame("Button", options.module.."_"..options.key, container, "UIDropDownMenuTemplate")
 	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -20, -2)
 
-	if (options.action) then
-		print(options.action)
-	end
-
+	local default_option = options.value
 	-- recreate dropdown each time
-	function dropdown:populate(items, value)
+	function dropdown:populate(items)
 		if (not value) then value = options.value end
+
 		UIDropDownMenu_SetWidth(dropdown, container:GetWidth() - 20)
 		UIDropDownMenu_JustifyText(dropdown, "LEFT")
 
 		UIDropDownMenu_Initialize(dropdown, function(self, level)
-			local selected = 1
+			local selected = 0
+			local default_id = 1
 			for i, item in pairs(items) do
 				if (type(item) == "string") then
 					opt = UIDropDownMenu_CreateInfo()
 					opt.text = item:gsub("^%l", string.upper)
 					opt.value = item
-					if (value == nil) then
-						value = item
-					end
+	
 					opt.func = function(self)
 						UIDropDownMenu_SetSelectedID(dropdown, self:GetID())
 						CloseDropDownMenus()
 
 						options.save[options.key] = items[i]
-						print(options.save[options.key])
-						value = items[i]
-
-						options:callback(dropdown, options, items[i])
+						options.callback(dropdown, options, items[i])
 					end
 
 					-- select save value
-					if (item == options.save[options.key]) then selected = i end
+					if (item == default_option) then 
+						default_id = i
+					end
+					if (item == options.save[options.key]) then 
+						selected = i
+					end
 
 					UIDropDownMenu_AddButton(opt, level)
 				end
 			end
 
-			UIDropDownMenu_SetSelectedID(dropdown, selected)
+			if (selected) then
+				UIDropDownMenu_SetSelectedID(dropdown, selected)
+			else
+				UIDropDownMenu_SetSelectedID(dropdown, default_id)
+			end
 		end)
 	end
 
-	local dropdownproxy = setmetatable({}, {
-		__newindex = function(self, key, value)
-			if not rawget(options.options, key) then
-				rawset(options.options, key, value == true and key or value)
-				
-				dropdown:populate(options.options)
-			end
-		end
-	})
+	-- hook into actions for updates
+	if (options.action) then
+		mod:add_action(options.action, function(value)
+			local results = options.lookup()
+			dropdown:populate(results)
+		end)
+	end
 
 	dropdown:populate(options.options)
 

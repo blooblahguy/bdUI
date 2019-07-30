@@ -13,12 +13,16 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		bdUI.persistent = BDUI_SAVE.persistent
 
 		-- set save for bdMove, so that we're not vulnerable to UI errors resetting positioning
-		bdMove:set_save(bdUI.config_instance.save)
+		local profile = bdUI.bdConfig:get_save("BDUI_SAVE")
+		print(profile.positions)
+		-- .positions
+		bdMove:set_save(bdUI.bdConfig:get_save("BDUI_SAVE"))
+
 		-- pass new profile to bdMove when profile changes
-		bdUI:add_action("profile_changed", function()
-			local sv = bdUI.bdConfig:get_save("BDUI_SAVE", nil)
+		bdUI:add_action("profile_change", function()
+			local sv = bdUI.bdConfig:get_save("BDUI_SAVE")
 			bdMove:set_save(sv)
-		end)
+		end, 5)
 		bdMove.spacing = bdUI.border
 
 		bdUI:debug(l['LOAD_MSG'])

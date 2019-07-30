@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "lib-1.0", 1
+local MAJOR, MINOR = "bdMove-1.0", 1
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end -- No upgrade needed
 
@@ -37,8 +37,16 @@ lib.media = {
 
 -- set savedvariable
 function lib:set_save(sv)
-	lib.save = sv
-	lib.save.positions = lib.save.positions or {}
+	-- migrate over positions from last config
+	if (lib.save and lib.save.positions and not sv.positions) then
+		local last = lib.save.positions
+		lib.save = sv
+		lib.save.positions = lib.save.positions or {}
+		Mixin(lib.save.positions, last)
+	else
+		lib.save = sv
+		lib.save.positions = lib.save.positions or {}
+	end
 
 	for k, v in pairs(lib.moveable_frames) do
 		v:position()
@@ -85,9 +93,10 @@ local methods = {
 	-- position save in saved variables (protects against lost positions during UI errors)
 	['position'] = function(self)
 		self:ClearAllPoints()
-		local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+		local point, relativeTo, relativePoint, xOfs, yOfs = self.frame:GetPoint()
 		relativeTo = _G[relativeTo] or relativeTo:GetName()
-
+		
+		-- set posiition from save
 		if (lib.save.positions[self.rename]) then
 			point, relativeTo, relativePoint, xOfs, yOfs = unpack(lib.save.positions[self.rename])
 			relativeTo = _G[relativeTo]
@@ -98,9 +107,13 @@ local methods = {
 			else
 				self:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
 			end
-		else
+		else -- set position from initial frame position
 			self:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
+			lib.save.positions[self.rename] = {point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs)}
 		end
+
+		self.frame:ClearAllPoints()
+		self.frame:SetPoint("CENTER", self, "CENTER", 0, 0)
 	end
 }
 
@@ -148,15 +161,13 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 		mover:SetSize(width+2+lib.border, height+2+lib.border)
 	end)
 
-	-- Attach the frame to the mover
+	-- Transfer Methods to this object
 	frame.mover = mover
 	mover.frame = frame
-	frame:ClearAllPoints()
-	frame:SetPoint("CENTER", mover, "CENTER", 0, 0)
-
-	-- Transfer Methods to this object
 	mover.rename = rename
 	Mixin(mover, methods)
+
+	-- position
 	mover:position()
 
 	table.insert(lib.moveable_frames, mover)
