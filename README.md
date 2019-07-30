@@ -1,53 +1,40 @@
 # bdUI
 bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It supports live WoW, as well as Classic, and will support other official releases if they happen.
 
+## Complete
+- Configuration Overwhaul
+- Moving overhaul (with snapping!)
+- Localization Support
+- Minimap
+- Unitframes (arena WiP)
+- Actionbars
+- Nameplates
+- Buffs & Debuffs
+- Aura configuration
+- Bags
+- Grid
+- Tooltips
+- Viewports
+- Quality of Life Additions
 
 ## TODO
-- [x] Config
-	- [ ] Profiles
-	- [ ] Spec Profile Switching
-- [x] Moving
-	- [ ] Resizing
-- [ ] Maps
-	- [x] Minimap
-	- [ ] World map improvements
-- [x] Unitframes
-	- [x] Heal & Absorb Predictions
-	- [x] Player
-	- [x] Target
-	- [x] ToT
-	- [x] Pet
-	- [ ] Focus
-	- [ ] Boss
-	- [ ] Arena
-- [x] Actionbars
-- [x] Nameplates
-- [x] Buffs & Debuffs
-- [x] Auras
-- [x] Bags
-- [x] Grid
-- [x] Databars
+- [ ] Profiles
+- [ ] Spec Profile Switching
+- [ ] Moving Resizing
+- [ ] Focus
+- [ ] Boss
+- [ ] Arena
+- [ ] Databars
 	- [ ] Alternative Power
 	- [ ] Azerite
 	- [ ] Honor
 	- [x] XP
 	- [ ] Reputation
 - [ ] Skinning
-	- [ ] Durability
-	- [ ] GM
-	- [ ] PVP Capture
-	- [ ] PVP Vehicle
-	- [ ] Viewports
+	- [ ] Durability Movable
+	- [ ] GM Movable
+	- [ ] PVP Capture Movable
 	- [ ] Auto-ace skinning
-	- [ ] \(Low Priority) Blizzard skinning
-- [x] Quality of Life
-	- [x] Autovendor
-	- [x] Double Click Buyout
-	- [x] Errorblock
-	- [x] GMOTD
-	- [x] Interrupt alert
-	- [ ] Raid Marker Frame
-- [x] Tooltips
-- [x] Localization Support
+- [ ] Raid Marker Frame
 - [ ] \(Low Priority) Localization for all languages
 - [ ] \(Low Priority) setup tutorial
