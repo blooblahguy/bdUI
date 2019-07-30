@@ -113,10 +113,10 @@ mod.additional_elements = {
 		self.RestingIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
 		self.RestingIndicator:SetTexCoord(0, 0.5, 0, 0.421875)
 
-		if (config.textalign == "Outside" or config.textalign == "Top") then
-			self.CombatIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
-		elseif (config.textalign == "Inside") then
-			self.CombatIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
+		if (config.textlocation == "Outside") then
+			self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
+		elseif (config.textlocation == "Inside") then
+			self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
 		end
 	end,
 
@@ -131,9 +131,9 @@ mod.additional_elements = {
 		self.CombatIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
 		self.CombatIndicator:SetTexCoord(.5, 1, 0, .49)
 
-		if (config.textalign == "Outside" or config.textalign == "Top") then
+		if (config.textlocation == "Outside") then
 			self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
-		elseif (config.textalign == "Inside") then
+		elseif (config.textlocation == "Inside") then
 			self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
 		end
 	end,

@@ -4,7 +4,10 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout["boss"] = function(self, unit)
 	local config = mod._config
 	
-	mod.align_text(self)
+	self:SetSize(config.bosswidth, config.bossheight)
+	self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
+	self.Curhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
+
 	mod.additional_elements.auras(self, unit)
 	mod.additional_elements.castbar(self, unit)
 
