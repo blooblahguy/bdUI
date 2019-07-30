@@ -35,17 +35,18 @@ end
 
 -- create new profile
 local function create_profile(button, options)
+	local sv = _G[profiles.sv_string]
 	local value = options.save['createprofile']
-	local current = _G[profiles.sv_string].users[player].profile
+	local current = sv.users[player].profile
 
-	if (_G[profiles.sv_string].profiles[value]) then
+	if (sv.profiles[value]) then
 		print(value, "Already exists.", "Profile must have unique names")
 		return
 	end
 
 	-- Create profile and copy settings over
-	_G[profiles.sv_string].profiles[value] = {}
-	Mixin(_G[profiles.sv_string].profiles[value], _G[profiles.sv_string].profiles[current])
+	sv.profiles[value] = {}
+	Mixin(sv.profiles[value], sv.profiles[current])
 
 	print("create", value)
 
@@ -54,7 +55,8 @@ end
 
 -- delete current profile
 local function delete_profile(button, options)
-	local value = _G[profiles.sv_string].users[player].profile
+	local sv = _G[profiles.sv_string]
+	local value = sv.users[player].profile
 	print("delete", value)
 
 	if (value == "default") then
@@ -62,7 +64,7 @@ local function delete_profile(button, options)
 		return
 	end
 
-	_G[profiles.sv_string].profiles[value] = nil
+	sv.profiles[value] = nil
 
 	change_profile("default")
 end
@@ -70,6 +72,9 @@ end
 --============================================
 -- Spec Profiles
 --============================================
+local function spec_changed(self, event, index, prev)
+	print(event, index, prev)
+end
 local function build_spec_profiles()
 	local specs = 3
 	if (class == "DEMONHUNTER") then
