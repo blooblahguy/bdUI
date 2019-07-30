@@ -14,6 +14,7 @@ bdUI.colorString = '|cffA02C2Fbd|r'
 bdUI.Base64 = LibStub("LibBase64-1.0")
 bdUI.SharedMedia = LibStub("LibSharedMedia-3.0")
 LibStub("bdCallbacks-1.0"):New(bdUI)
+bdMove = LibStub("bdMove-1.0")
 
 --===================================================================
 -- Basic Config
@@ -36,6 +37,8 @@ bdUI.media = {
 	blue = {['r'] = .2, ['b'] = .4, ['g'] = 0.8, ['a'] = 1},
 	green = {['r'] = .1, ['b'] = .7, ['g'] = 0.3, ['a'] = 1},
 }
+
+bdMove.media.font = bdUI.media.font
 
 --===================================================================
 -- Scale & Alt-UIParent 

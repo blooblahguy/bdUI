@@ -30,13 +30,15 @@ SlashCmdList["BDUI"] = function(msg, editbox)
 			print(bdUI.colorString.." Reset:")
 			print("   /"..bdUI.colorString.." all - Resets all profiles and positions")
 			print("   /"..bdUI.colorString.." positions - Resets positions of current profile")
+			return
 		elseif (s2 == "all") then
 			BDUI_SAVE = nil
 			bdMove:reset_positions()
 		elseif (s2 == "positions") then
-			bdMove.save.positions = {}
 			bdMove:reset_positions()
 		end
+
+		ReloadUI()
 	elseif (s1 == "config" or s1 == "conf") then
 		bdUI.config_instance:toggle()
 	else
