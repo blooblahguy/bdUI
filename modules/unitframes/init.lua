@@ -49,6 +49,13 @@ local config = {
 				type = "range",
 				label = "Out of Range Frame Alpha"
 			},
+			{
+				key = "textlocation",
+				value = "Outside",
+				type = "select",
+				options = {"Outside", "Inside"},
+				label = "Text Location"
+			},
 		}
 	},
 	--=========================================
@@ -59,13 +66,6 @@ local config = {
 		type = "tab",
 		label = "Player & Target",
 		args = {
-			{
-				key = "textlocation",
-				value = "Outside",
-				type = "select",
-				options = {"Outside", "Inside", "Top/Bottom"},
-				label = "Text Location"
-			},
 			{
 				key = "playertargetwidth",
 				value = 180,

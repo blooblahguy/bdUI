@@ -4,6 +4,8 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout["target"] = function(self, unit)
 	local config = mod._config
 	
+	self:SetSize(config.playertargetwidth, config.playertargetheight)
+	
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "right")
 	mod.additional_elements.buffs(self, unit)
@@ -45,8 +47,6 @@ mod.custom_layout["target"] = function(self, unit)
 		end
 	end
 	
-	self:SetSize(config.playertargetwidth, config.playertargetheight)
 
-	self.Name:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, -mod.padding)
-	self.Curhp:SetPoint("TOPLEFT", self.Name, "BOTTOMLEFT", 0, -mod.padding)
+	mod.align_text(self)
 end

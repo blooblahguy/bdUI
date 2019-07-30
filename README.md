@@ -1,5 +1,7 @@
 # bdUI
-bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It supports live WoW, as well as Classic, and will support other official releases if they happen.
+An all-in-one UI that aims to be compatible with all official versions of WoW. It supports live WoW, as well as Classic, and will support other official releases if they happen.
+
+bdUI is fully modular. You can install the full UI and only use certain portions of it. Its high performance, unobtrusive, and progression raiding-oriented. Its less feature-rich than other addons, but aims to be streamlined and extentable in the features it does offer.
 
 ## Complete
 - Configuration Overwhaul
@@ -15,17 +17,15 @@ bdUI is an all-in-one UI that aims to be compatible with all versions of WoW. It
 - Grid
 - Tooltips
 - Viewports
+- Alternative Power
 - Quality of Life Additions
 
 ## TODO
 - [ ] Profiles
 - [ ] Spec Profile Switching
 - [ ] Moving Resizing
-- [ ] Focus
-- [ ] Boss
-- [ ] Arena
+- [ ] Arena Frames
 - [ ] Databars
-	- [ ] Alternative Power
 	- [ ] Azerite
 	- [ ] Honor
 	- [x] XP

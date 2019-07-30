@@ -4,8 +4,9 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout["boss"] = function(self, unit)
 	local config = mod._config
 	
-	self.Name:SetPoint("TOPLEFT", self.Health, "TOPLEFT", 2, -4)
+	mod.align_text(self)
 	mod.additional_elements.auras(self, unit)
+	mod.additional_elements.castbar(self, unit)
 
 	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false

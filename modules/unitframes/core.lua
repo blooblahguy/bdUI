@@ -4,7 +4,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 local oUF = bdUI.oUF
-local config = {}
+local config
 mod.padding = 2
 mod.units = {}
 mod.custom_layout = {}
@@ -13,7 +13,7 @@ mod.custom_layout = {}
 -- Config callback
 --===============================================
 function mod:config_callback()
-	local config = mod._config
+	config = mod._config
 
 	for unit, self in pairs(mod.units) do
 		self.HealthPrediction.myBar:SetWidth(self.HealthPrediction.myBar:GetParent():GetWidth())
@@ -109,10 +109,15 @@ mod.additional_elements = {
 
 		-- Resting indicator
 		self.RestingIndicator = self.Health:CreateTexture(nil, "OVERLAY")
-		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
 		self.RestingIndicator:SetSize(size, size)
 		self.RestingIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
 		self.RestingIndicator:SetTexCoord(0, 0.5, 0, 0.421875)
+
+		if (config.textalign == "Outside" or config.textalign == "Top") then
+			self.CombatIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
+		elseif (config.textalign == "Inside") then
+			self.CombatIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
+		end
 	end,
 
 	combat = function(self, unit)
@@ -122,10 +127,15 @@ mod.additional_elements = {
 
 		-- Resting indicator
 		self.CombatIndicator = self.Health:CreateTexture(nil, "OVERLAY")
-		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
 		self.CombatIndicator:SetSize(size, size)
 		self.CombatIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
 		self.CombatIndicator:SetTexCoord(.5, 1, 0, .49)
+
+		if (config.textalign == "Outside" or config.textalign == "Top") then
+			self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
+		elseif (config.textalign == "Inside") then
+			self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
+		end
 	end,
 
 	power = function(self, unit)

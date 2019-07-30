@@ -5,8 +5,7 @@ mod.custom_layout["player"] = function(self, unit)
 	local config = mod._config
 
 	self:SetSize(config.playertargetwidth, config.playertargetheight)
-	self.Name:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -4, -mod.padding)
-	self.Curhp:SetPoint("TOPRIGHT", self.Name, "BOTTOMRIGHT", 0, -mod.padding)
+	mod.align_text(self)
 
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
@@ -25,6 +24,5 @@ mod.custom_layout["player"] = function(self, unit)
 			end
 		end
 	end
-	
-	
+
 end

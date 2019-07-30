@@ -4,20 +4,11 @@ local mod = bdUI:get_module("Databars")
 function mod:create_altpower()
 	local config = mod._config
 	
-	local powerbar = CreateFrame('StatusBar', 'bdUI Alt Power', UIParent)
-	powerbar:SetStatusBarTexture(bdUI.media.flat)
-	powerbar:SetMinMaxValues(0,200)
-	powerbar:SetSize(200, 20)
-	powerbar:SetStatusBarColor(.2, .4, 0.8, 1)
-	powerbar:SetPoint("CENTER",UIParent,"CENTER", 0, 0)
+	local powerbar = mod:create_databar("bdUI Alt Power")
+	powerbar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	powerbar:Hide()
 	bdUI:set_backdrop(powerbar)
 	bdMove:set_moveable(powerbar)
-	
-	powerbar.text = powerbar:CreateFontString(nil, "OVERLAY")
-	powerbar.text:SetFont(bdUI.media.font, 13, "THINOUTLINE")
-	powerbar.text:SetPoint("CENTER", powerbar, "CENTER")
-	powerbar.text:SetJustifyH("CENTER")
 
 	--Event handling
 	powerbar:RegisterEvent("UNIT_POWER_UPDATE")
