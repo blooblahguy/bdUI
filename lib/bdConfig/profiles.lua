@@ -15,7 +15,8 @@ local profile_table = {}
 
 -- change profile
 local function change_profile(select, options, value)
-	--_G[profiles.sv_string].users[player].profile = value
+	_G[profiles.sv_string].users[player].profile = value
+	
 	print("change", value)
 
 	mod:do_action("profile_changed")
@@ -35,6 +36,17 @@ end
 -- create new profile
 local function create_profile(button, options)
 	local value = options.save['createprofile']
+	local current = _G[profiles.sv_string].users[player].profile
+
+	if (_G[profiles.sv_string].profiles[value]) then
+		print(value, "Already exists.", "Profile must have unique names")
+		return
+	end
+
+	-- Create profile and copy settings over
+	_G[profiles.sv_string].profiles[value] = {}
+	Mixin(_G[profiles.sv_string].profiles[value], _G[profiles.sv_string].profiles[current])
+
 	print("create", value)
 
 	change_profile(nil, nil, value)
@@ -50,10 +62,10 @@ local function delete_profile(button, options)
 		return
 	end
 
+	_G[profiles.sv_string].profiles[value] = nil
+
 	change_profile("default")
 end
-
-
 
 --============================================
 -- Spec Profiles
@@ -78,6 +90,7 @@ local function build_spec_profiles()
 			key = "spec_profile_"..i,
 			type = "select",
 			value = "default",
+			size = "third",
 			label = name,
 			action = "profile_change,talent_available",
 			lookup = get_profiles,
