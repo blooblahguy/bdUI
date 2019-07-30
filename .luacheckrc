@@ -1,11 +1,6 @@
 std = "lua51"
 max_line_length = false
 exclude_files = {
-	"babelfish.lua",
-	"WeakAuras_Main.lua",
-	"WeakAuras_Options.lua",
-	"WeakAuras_Templates.lua",
-	"WeakAuras/Libs/",
 	".luacheckrc"
 }
 ignore = {
@@ -25,6 +20,7 @@ ignore = {
 	"43.", -- Shadowing an upvalue, an upvalue argument, an upvalue loop variable.
 	"542", -- An empty if branch
 }
+
 globals = {
 	"_G",
 	"bit",
