@@ -22,6 +22,12 @@ noop = function() end
 --========================================================
 -- Defaults
 --========================================================
+lib.screenheight = select(2, GetPhysicalScreenSize())
+lib.scale = 768 / lib.screenheight
+lib.ui_scale = GetCVar("uiScale") or 1
+lib.pixel = lib.scale / lib.ui_scale
+lib.border = lib.pixel * 2
+
 lib.moveable_frames = {}
 lib.save = nil
 lib.media = {
@@ -51,10 +57,10 @@ local methods = {
 		self:SetUserPlaced(false)
 		self:RegisterForDrag("LeftButton")
 		self:SetFrameStrata("TOOLTIP")
-		self:SetScript("OnDragStart", function(self) 
-			StickyFrames:StartMoving(self, lib.moveable_frames, -bdUI.border, -bdUI.border, -bdUI.border, -bdUI.border)
+		self:SetScript("OnDragStart", function(self)
+			StickyFrames:StartMoving(self, lib.moveable_frames, -lib.border, -lib.border, -lib.border, -lib.border)
 		end)
-		self:SetScript("OnDragStop", function(self) 
+		self:SetScript("OnDragStop", function(self)
 			StickyFrames:StopMoving(self)
 			StickyFrames:AnchorFrame(self)
 		end)
@@ -74,17 +80,20 @@ local methods = {
 		if (not relativeTo) then relativeTo = UIParent end
 		relativeTo = relativeTo:GetName()
 
-		lib.save.positions[rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
+		lib.save.positions[self.rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
 	end,
 	-- position save in saved variables (protects against lost positions during UI errors)
 	['position'] = function(self)
 		self:ClearAllPoints()
-		if (lib.save.positions[rename]) then
-			point, relativeTo, relativePoint, xOfs, yOfs = unpack(lib.save.positions[rename])
+		local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+		relativeTo = _G[relativeTo] or relativeTo:GetName()
+
+		if (lib.save.positions[self.rename]) then
+			point, relativeTo, relativePoint, xOfs, yOfs = unpack(lib.save.positions[self.rename])
 			relativeTo = _G[relativeTo]
 
 			if (not point or not relativeTo or not relativePoint or not xOfs or not yOfs) then
-				lib.save.positions[rename] = nil
+				lib.save.positions[self.rename] = nil
 				self:position()
 			else
 				self:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
@@ -136,7 +145,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	hooksecurefunc(frame, "SetSize", function() 
 		local height = frame:GetHeight()
 		local width = frame:GetWidth()
-		mover:SetSize(width+2+bdUI.border, height+2+bdUI.border)
+		mover:SetSize(width+2+lib.border, height+2+lib.border)
 	end)
 
 	-- Attach the frame to the mover
@@ -146,6 +155,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	frame:SetPoint("CENTER", mover, "CENTER", 0, 0)
 
 	-- Transfer Methods to this object
+	mover.rename = rename
 	Mixin(mover, methods)
 	mover:position()
 

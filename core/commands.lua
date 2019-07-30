@@ -36,7 +36,7 @@ end, 'texture')
 bdUI:set_slash_command('ItemID', function()
 	local infoType, info1, info2 = GetCursorInfo(); 
 	if infoType == "item" then 
-		print( info1 );
+		print( info1 )
 	end
 end, 'item')
 

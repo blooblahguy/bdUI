@@ -196,7 +196,7 @@ function mod:create_container(options, parent, height)
 	}
 
 	-- track row width
-	size = sizes[options.size or "full"]
+	local size = sizes[options.size or "full"]
 	parent._row = parent._row or 0
 	parent._row = parent._row + size
 
