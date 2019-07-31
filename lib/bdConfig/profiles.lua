@@ -17,7 +17,6 @@ local profile_table = {}
 
 -- change profile
 local function change_profile(select, options, value)
-	print("change", value)
 	if (type(value) == "string") then
 		_G[profiles.sv_string].users[player].profile = value
 		_G[profiles.sv_string].persistent.Profiles.currentprofile = value
