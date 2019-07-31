@@ -40,7 +40,6 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Quality of Life Additions
 
 ## TODO
-- [ ] Profile Callbacks
 - [ ] Moving Resizing
 - [ ] Arena Frames
 - [ ] Databars

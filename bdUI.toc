@@ -50,9 +50,22 @@ core\compatibility.lua
 core\core.lua
 core\media.lua
 core\modules.lua
-core\defaults.lua
 core\setup.lua
 core\load.lua
+
+# General
+modules\general\init.lua
+modules\general\functions.lua
+modules\general\core.lua
+modules\general\elements\autovendor.lua
+modules\general\elements\gmotd.lua
+modules\general\elements\doubleclickbo.lua
+modules\general\elements\developer.lua
+modules\general\elements\errorblock.lua
+modules\general\elements\interrupt.lua
+modules\general\elements\qol.lua
+modules\general\elements\raidmarker.lua
+modules\general\elements\viewports.lua
 
 # Auras
 modules\auras\elements\whitelist.lua
@@ -163,16 +176,3 @@ modules\skin\elements\pvpcapture.lua
 modules\skin\elements\gm.lua
 modules\skin\elements\vehicle.lua
 modules\skin\elements\viewports.lua
-
-# Misc
-modules\misc\init.lua
-modules\misc\functions.lua
-modules\misc\core.lua
-modules\misc\elements\autovendor.lua
-modules\misc\elements\gmotd.lua
-modules\misc\elements\doubleclickbo.lua
-modules\misc\elements\developer.lua
-modules\misc\elements\errorblock.lua
-modules\misc\elements\interrupt.lua
-modules\misc\elements\qol.lua
-modules\misc\elements\raidmarker.lua

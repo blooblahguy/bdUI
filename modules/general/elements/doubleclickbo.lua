@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Misc")
+local mod = bdUI:get_module("General")
 
 
 function mod:create_dcbo(event, addon)

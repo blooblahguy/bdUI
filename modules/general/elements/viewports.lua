@@ -1,43 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-
-local config = {
-	{
-		key = "topViewport",
-		type = "range",
-		value = 0,
-		step = 5,
-		min = 0,
-		max = 300,
-		label = "Top Viewport Size"
-	},
-	{
-		key = "topViewportBGColor",
-		type = "color",
-		value = bdUI.media.backdrop,
-		label = "Top Viewport Color"
-	},
-	{
-		key = "bottomViewport",
-		type = "range",
-		value = 0,
-		step = 5,
-		min = 0,
-		max = 300,
-		label = "Bottom Viewport Size"
-	},
-	{
-		key = "bottomViewportBGColor",
-		type = "color",
-		value = bdUI.media.backdrop,
-		label = "Bottom Viewport Color"
-	},
-}
-
-local mod = bdUI:register_module("General", config)
-
-function mod:initialize()
-
-end
+local mod = bdUI:get_module("General")
 
 -- viewports
 local function createViewport() 
@@ -48,7 +10,8 @@ local function createViewport()
 
 	return frame
 end
-function mod:config_callback(config)
+
+function mod:create_viewports()
 	local config = mod:get_save()
 
 	local top = 0

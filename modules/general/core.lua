@@ -2,13 +2,18 @@
 -- FUNCTIONS
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Misc")
+local mod = bdUI:get_module("General")
 
 --===============================================
 -- Core functionality
 -- place core functionality here
 --===============================================
+function mod:config_callback()
+	mod:create_viewports()
+	
+end
 function mod:initialize()
+	mod:create_viewports()
 	mod:create_dcbo()
 	mod:create_errorblock()
 	mod:create_gmotd()
