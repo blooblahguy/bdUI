@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Bags")
 local config
 
 function mod:create_loot()
-	config = mod._config
+	config = mod:get_save()
 
 	mod:skin_loot()
 	mod:create_qol()

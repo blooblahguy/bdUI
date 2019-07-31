@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Databars")
 
 function mod:create_xp()
-	local config = mod._config
+	local config = mod:get_save()
 
 	local bar = mod:create_databar("bdXP")
 	bar:SetPoint("BOTTOM", bdParent, "BOTTOM", 0, 0)

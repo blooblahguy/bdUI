@@ -1,29 +1,30 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
 --========================================
 local methods = {
-	["set"] = function(self, save, key, value)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
-		if (not value) then value = self:get(save, key) end
-		save[key] = value
+	-- set value to profile[key]
+	["set"] = function(self, value)
+		self.save = self.module:get_save()
 
-		self:SetChecked(value)
+		if (not value) then value = self:get() end
+		self.save[self.key] = value
+		
+		self.check:SetChecked(value)
 	end,
-	["get"] = function(self, save, key)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
+	-- return value from profile[key]
+	["get"] = function(self)
+		self.save = self.module:get_save()
 
-		return save[key]
+		return self.save[self.key]
 	end,
 	["onclick"] = function(self)
-		self.save[self.key] = self:GetChecked()
-		self:set(self.save, self.key)
+		self.save[self.key] = self.check:GetChecked()
+		self:set()
 
-		self:callback()
+		self.callback(self.check, nil, self.save[self.key])
 	end
 }
 
@@ -32,9 +33,9 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "half"
-	local container = mod:create_container(options, parent, 16)
+	local container = lib:create_container(options, parent, 16)
 
-	local check = CreateFrame("CheckButton", options.module.."_"..options.key, container, "ChatConfigCheckButtonTemplate")
+	local check = CreateFrame("CheckButton", options.name.."_"..options.key, container, "ChatConfigCheckButtonTemplate")
 	local text = _G[check:GetName().."Text"]
 	check:SetPoint("LEFT", container, "LEFT", -2, 0)
 	text:SetText(options.label)
@@ -42,15 +43,15 @@ local function create(options, parent)
 	text:ClearAllPoints()
 	text:SetPoint("LEFT", check, "RIGHT", 2, 1)
 
-	check.callback = options.callback
-	check.save = options.save
-	check.key = options.key
-	Mixin(check, methods)
+	container.callback = options.callback
+	container.key = options.key
+	container.module = options.module
+	container.check = check
+	Mixin(container, methods)
+	container:set()
+	check:SetScript("OnClick", function() container:onclick() end)
 
-	check:SetScript("OnClick", check.onclick)
-	check:set(options.save, options.key)
-
-	return container, check
+	return container
 end
 
-mod:register_element("toggle", create)
+lib:register_element("toggle", create)

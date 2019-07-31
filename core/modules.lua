@@ -18,16 +18,14 @@ function bdUI:register_module(name, config, options)
 		bdUI:debug('"', name, '"', "already exists as a module. Use unique names for new modules")
 		return
 	end
-	bdUI[name] = bdUI[name] or CreateFrame("frame", name, bdParent)
+
+	local bdConfig = bdUI.bdConfig
 	options = options or {}
 
+	-- register module frame with bdConfig
+	bdUI[name] = bdConfig:register_module(name, config, "config_callback", options)
 	local module = bdUI[name]
-	module._name = name
-	module._config = config
-	module._options = options
-	module._config_callback = "config_callback"
 	table.insert(bdUI.modules, module)
-
 	return module
 end
 
@@ -36,38 +34,28 @@ function bdUI:get_module(name)
 	return bdUI[name]
 end
 
-function bdUI:load_module(name)
-
-	local module = bdUI[name]
-
+function bdUI:load_module(module)
+	-- require initialize function
 	if (not module.initialize) then
 		bdUI:debug(module._name, "does not have an initialize() function and can't be loaded")
 		return
 	end
 
-	if (module:initialize(module._config) ~= false) then
-		-- config & initalize callback
-		if (type(module._config_callback) == "string") then
-			module[module._config_callback](module._config)
-		elseif (module._config_callback) then
-			module:_config_callback(module._config)
-		end
+	-- load SVs and build module now
+	local save = module:load()
+
+	-- initalize and callback
+	if (module:initialize(save) ~= false) then
+		-- run callback
+		module:callback(save)
 		return module
-	end
-	
+	end	
 end
 
 -- Load all modules
 function bdUI:load_modules()
 	for k, module in pairs(bdUI.modules) do
-	
-		if (type(module._config_callback) == "string") then
-			module._config_callback = module[module._config_callback]
-		end
-
-		module._config = bdUI.config_instance:register_module(module._name, module._config, module._options, module._config_callback)
-
-		bdUI:load_module(module._name)
+		bdUI:load_module(module)
 	end
 end
 

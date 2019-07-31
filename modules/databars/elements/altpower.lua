@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Databars")
 
 function mod:create_altpower()
-	local config = mod._config
+	local config = mod:get_save()
 	
 	local powerbar = mod:create_databar("bdUI Alt Power")
 	powerbar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)

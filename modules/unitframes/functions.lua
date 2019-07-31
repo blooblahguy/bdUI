@@ -9,7 +9,7 @@ local mod = bdUI:get_module("Unitframes")
 -- place custom functionality here
 --===============================================
 mod.align_text = function(self, align)
-	local config = mod._config
+	local config = mod:get_save()
 	local icons = self.Auras or self.Debuffs or self.Buffs
 
 	self.Name:ClearAllPoints()

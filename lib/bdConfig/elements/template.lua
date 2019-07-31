@@ -1,5 +1,5 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
@@ -24,10 +24,10 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "half"
-	local element = mod:create_container(options, parent)
+	local element = lib:create_container(options, parent)
 	Mixin(element, methods)
 
 
 end
 
-mod:register_element("toggle", create)
+lib:register_element("toggle", create)

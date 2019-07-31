@@ -55,7 +55,7 @@ function mod:autoUnitColor(unit)
 end
 
 local function unitColor(self, tapDenied, isPlayer, reaction, status)
-	config = mod._config
+	config = mod:get_save()
 
 	if (isPlayer or status == false) then
 		if isPlayer then

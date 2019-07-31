@@ -11,7 +11,7 @@ local gsub = string.gsub
 -- place core functionality here
 --===============================================
 function mod:initialize()
-	config = mod._config
+	config = mod:get_save()
 
 	-- defaults
 	mod:set_defaults()

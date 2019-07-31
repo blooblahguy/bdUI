@@ -1,5 +1,5 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
@@ -23,7 +23,7 @@ local methods = {
 		end
 
 		-- create a new one
-		local frame = mod:create_container({}, self, 30)
+		local frame = lib:create_container({}, self, 30)
 		frame.active = true
 		return frame
 	end,
@@ -58,7 +58,7 @@ local methods = {
 			for i, arg in pairs(entry) do
 				dump(arg)
 				if (not row[arg.key]) then
-					row[arg.key] = mod.elements[arg.type](arg, row)
+					row[arg.key] = lib.elements[arg.type](arg, row)
 				end
 			end
 
@@ -75,11 +75,11 @@ local function create(options, parent)
 	options.size = options.size or "full"
 
 	-- Title
-	table.insert(parent.children, mod.elements['heading']({value = options.label}, parent))
+	table.insert(parent.children, lib.elements['heading']({value = options.label}, parent))
 
-	local repeater = mod:create_container(options, parent, 30)
-	local border = mod:get_border(repeater)
-	repeater:SetBackdrop({bgFile = mod.media.flat, edgeFile = mod.media.flat, edgeSize = border})
+	local repeater = lib:create_container(options, parent, 30)
+	local border = lib:get_border(repeater)
+	repeater:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = border})
 	repeater:SetBackdropColor(0, 0, 0, 0.08)
 	repeater:SetBackdropBorderColor(0, 0, 0, 0.15)
 	repeater.pool = {}
@@ -101,14 +101,14 @@ local function create(options, parent)
 	placeholder:SetWidth(repeater:GetWidth(2) / 2)
 
 	-- Buttons
-	local button = mod.elements['button']({solo = true}, repeater)
+	local button = lib.elements['button']({solo = true}, repeater)
 	button:SetText("+")
 	button:SetHeight(20)
 	button:SetPoint("BOTTOMRIGHT", repeater, "BOTTOMRIGHT", -2, -8)
 	button.parent = repeater
 	button.OnClick = repeater.add_row
 
-	repeater:populate()
+	-- repeater:populate()
 
 	return repeater
 
@@ -241,4 +241,4 @@ local function create(options, parent)
 	-- return container
 end
 
-mod:register_container("repeater", create)
+lib:register_container("repeater", create)

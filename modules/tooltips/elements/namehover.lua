@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Tooltips")
 local config = {}
 
 function mod:create_mouseover_tooltips()
-	config = mod._config
+	config = mod:get_save()
 	if (not config.mott) then return end
 
 	local motooltip = CreateFrame('frame',nil)

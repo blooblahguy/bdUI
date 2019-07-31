@@ -7,7 +7,7 @@ local bordersize = 2
 -- BANK CREATION
 --==============================================
 function mod:create_bank()
-	config = mod._config
+	config = mod:get_save()
 
 	mod:setup(mod.bank)
 

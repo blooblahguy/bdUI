@@ -38,6 +38,7 @@ local mod = bdUI:register_module("General", config)
 function mod:initialize()
 
 end
+
 -- viewports
 local function createViewport() 
 	local frame = CreateFrame("frame", "bdCore Top Viewport", nil)
@@ -47,8 +48,8 @@ local function createViewport()
 
 	return frame
 end
-function mod:config_callback()
-	local config = mod._config
+function mod:config_callback(config)
+	local config = mod:get_save()
 
 	local top = 0
 	local bottom = 0

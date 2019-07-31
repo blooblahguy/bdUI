@@ -1,40 +1,42 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
 --========================================
 local methods = {
-	["set"] = function(self, save, key, value)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
-		if (not value) then value = self:get(save, key) end
-		save[key] = value
+	-- set value to profile[key]
+	["set"] = function(self, value)
+		self.save = self.module:get_save()
+
+		if (not value) then value = self:get() end
+		self.save[self.key] = value
+		
 
 		self.lastValue = value
-		self:SetValue(value)
-		self.value:SetText(value)
+		self.slider:SetValue(value)
+		self.slider.value:SetText(value)
 	end,
-	["get"] = function(self, save, key)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
+	-- return value from profile[key]
+	["get"] = function(self)
+		self.save = self.module:get_save()
 
-		return save[key]
+		return self.save[self.key]
 	end,
 	["onchange"] = function(self)
 		local newval
 		if (self.step >= 1) then
-			newval = mod:round(self:GetValue())
+			newval = lib:round(self.slider:GetValue())
 		else
-			newval = mod:round(self:GetValue(), 1)
+			newval = lib:round(self.slider:GetValue(), 1)
 		end
 
 		if (self.lastValue == newval) then return end
-		if (self:get(self.save, self.key) == newval) then -- throttle it changing on the same pixel
+		if (self:get() == newval) then -- throttle it changing on the same pixel
 			return false
 		end
 
-		self:set(self.save, self.key, newval)
+		self:set(newval)
 		
 		self:callback()
 	end,
@@ -50,8 +52,8 @@ local function create(options, parent)
 	options.size = options.size or "half"
 
 	-- container/controller
-	local container = mod:create_container(options, parent, 46)
-	local name = options.module.."_"..options.key
+	local container = lib:create_container(options, parent, 46)
+	local name = options.name.."_"..options.key
 
 	local slider = CreateFrame("Slider", name, container, "OptionsSliderTemplate")
 	slider:SetWidth(container:GetWidth())
@@ -78,16 +80,17 @@ local function create(options, parent)
 	slider.value:SetPoint("TOP", slider, "BOTTOM", 0, -2)
 
 	-- Mixin methods, reference variables
-	slider.lastValue = 0
-	slider.callback = options.callback
-	slider.step = options.step
-	slider.save = options.save
-	slider.key = options.key
-	Mixin(slider, methods)
-	slider:set(options.save, options.key)
-	slider:SetScript("OnValueChanged", slider.onchange)
+	container.lastValue = 0
+	container.callback = options.callback
+	container.step = options.step
+	container.key = options.key
+	container.slider = slider
+	container.module = options.module
+	Mixin(container, methods)
+	container:set()
+	slider:SetScript("OnValueChanged", function() container:onchange() end)
 
-	return container, slider
+	return container
 end
 
-mod:register_element("range", create)
+lib:register_element("range", create)

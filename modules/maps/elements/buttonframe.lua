@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Maps")
 
 
 function mod:create_button_frame()
-	local config = mod._config
+	local config = mod:get_save()
 
 	-- Button frame
 	Minimap.buttonFrame = CreateFrame("frame", "bdButtonFrame", Minimap)
@@ -34,7 +34,7 @@ function mod:create_button_frame()
 		self.text:SetTextColor(.4,.6,1)
 		GameTooltip:Hide()
 	end)
-	bdConfigButton:SetScript("OnClick", function() bdUI.config_instance:toggle() end)
+	bdConfigButton:SetScript("OnClick", function() bdUI.bdConfig:toggle() end)
 
 	-- Find and move buttons
 	local ignoreFrames = {}

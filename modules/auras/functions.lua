@@ -11,7 +11,7 @@ bdUI.caches.auras = {}
 --===============================================
 
 local is_blacklisted = function(self, name)
-	auras = auras or mod._config
+	auras = auras or mod:get_save()
 
 	if (auras[name]) then	
 		return true	
@@ -25,7 +25,7 @@ bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
 -- Intelligent Filtering
 --===============================================
 local filter_aura = function(self, name, castByPlayer, isRaidDebuff, nameplateShowAll, invert)
-	auras = auras or mod._config
+	auras = auras or mod:get_save()
 
 	local blacklist = auras["blacklist"]
 	local whitelist = auras["whitelist"]

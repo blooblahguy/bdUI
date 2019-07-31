@@ -13,7 +13,7 @@ mod.custom_layout = {}
 -- Config callback
 --===============================================
 function mod:config_callback()
-	config = mod._config
+	config = mod:get_save()
 
 	for unit, self in pairs(mod.units) do
 		self.HealthPrediction.myBar:SetWidth(self.HealthPrediction.myBar:GetParent():GetWidth())
@@ -403,7 +403,7 @@ local function layout(self, unit)
 end
 
 function mod:create_unitframes()
-	config = mod._config
+	config = mod:get_save()
 
 	oUF:RegisterStyle("bdUnitFrames", layout)
 	oUF:SetActiveStyle("bdUnitFrames")

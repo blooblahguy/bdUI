@@ -1,5 +1,5 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
@@ -11,13 +11,14 @@ local methods = {
 	end,
 	["update"] = function(self, options, save)
 		if (not self.active) then return 0 end
+
 		local height = self:calculate_height() or 0
 		self:SetHeight(height)
 
 		return height
 	end,
 	["calculate_height"] = function(self)
-		local height = mod.dimensions.padding
+		local height = lib.dimensions.padding
 
 		if (not self.children) then return end -- not a layout child
 		local children = self.children
@@ -25,10 +26,10 @@ local methods = {
 		for row, element in pairs(children) do
 			if (element._isrow) then
 				-- print(element._type, element:GetHeight())
-				height = height + element:GetHeight() + mod.dimensions.padding
+				height = height + element:GetHeight() + lib.dimensions.padding
 			end
 			if (element._type == "group") then
-				height = height + element:calculate_height() + mod.dimensions.padding
+				height = height + element:calculate_height() + lib.dimensions.padding
 			end
 		end
 
@@ -40,35 +41,32 @@ local methods = {
 -- Spawn Element
 --========================================
 local function create(options, parent)
-	local padding = mod.dimensions.padding
+	local padding = lib.dimensions.padding
 	local yspace = padding
 
 	-- tab container (if needed)
 	if (not parent.tabContainer) then
-		local tabContainer = mod:create_container(options, parent)
+		local tabContainer = lib:create_container(options, parent)
 		table.insert(parent.children, tabContainer)
-		tabContainer:SetHeight(mod.dimensions.header)
+		tabContainer:SetHeight(lib.dimensions.header)
 		parent.tabContainer = tabContainer
 		parent.tabs = {}
-
-		options._module.tab_containers = options._module.tab_containers or 1
-		options._module.tab_containers = options._module.tab_containers + 1
 	end
 
 	-- create tab page
-	local page = mod:create_container(options, parent)
-	local border = mod:get_border(page)
+	local page = lib:create_container(options, parent)
+	local border = lib:get_border(page)
 	page:SetSize(parent.tabContainer:GetWidth(), 30)
 	page:SetPoint("TOPLEFT", parent.tabContainer, "BOTTOMLEFT", 0, 0)
 	page.children = {}
-	page:SetBackdrop({bgFile = mod.media.flat, edgeFile = mod.media.flat, edgeSize = border})
+	page:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = border})
 	page:SetBackdropColor(0, 0, 0, 0.08)
 	page:SetBackdropBorderColor(0, 0, 0, 0.15)
 	Mixin(page, methods)
 
 	-- create tab to link to this page
 	local index = #parent.tabs + 1
-	local tab = mod.elements['button']({solo = true}, parent.tabContainer)
+	local tab = lib.elements['button']({solo = true}, parent.tabContainer)
 
 	tab.inactiveColor = {1,1,1,0.05}
 	tab.hoverColor = {1,1,1,0.1}
@@ -85,7 +83,7 @@ local function create(options, parent)
 		tab.page.active = true
 
 		tab.page:update()
-		options._module:update_scroll()
+		options.module:update_scroll()
 
 		tab:OnLeave()
 		parent.activePage = page
@@ -120,4 +118,4 @@ local function create(options, parent)
 	return page
 end
 
-mod:register_container("tab", create)
+lib:register_container("tab", create)

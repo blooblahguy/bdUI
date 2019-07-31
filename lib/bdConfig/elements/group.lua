@@ -1,5 +1,5 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
@@ -15,13 +15,13 @@ local methods = {
 		return height
 	end,
 	["calculate_height"] = function(self)
-		local height = mod.dimensions.padding
+		local height = lib.dimensions.padding
 
 		for row, element in pairs(self.children) do
 			if (element.children) then
-				height = height + element:update() + mod.dimensions.padding
+				height = height + element:update() + lib.dimensions.padding
 			elseif (element._isrow) then
-				height = height + element:GetHeight() + mod.dimensions.padding
+				height = height + element:GetHeight() + lib.dimensions.padding
 			end			
 		end
 
@@ -33,22 +33,22 @@ local methods = {
 -- Spawn Element
 --========================================
 local function create(options, parent, nobg)
-	local padding = mod.dimensions.padding
+	local padding = lib.dimensions.padding
 	local yspace = padding
 
 	-- Create Group Heading if it exists
 	if (options.heading) then
-		table.insert(parent.children, mod.elements['heading']({value = options.heading}, parent))
+		table.insert(parent.children, lib.elements['heading']({value = options.heading}, parent))
 	end
 
-	local group = mod:create_container(options, parent)
+	local group = lib:create_container(options, parent)
 	group:SetSize(parent:GetWidth() - (padding * 2), 30)
 	group.children = {}
 	Mixin(group, methods)
 
 	if (not nobg) then
-		local border = mod:get_border(group)
-		group:SetBackdrop({bgFile = mod.media.flat, edgeFile = mod.media.flat, edgeSize = border})
+		local border = lib:get_border(group)
+		group:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = border})
 		group:SetBackdropColor(0, 0, 0, 0.08)
 		group:SetBackdropBorderColor(0, 0, 0, 0.15)
 	end
@@ -62,4 +62,4 @@ local function create(options, parent, nobg)
 	return group
 end
 
-mod:register_container("group", create)
+lib:register_container("group", create)

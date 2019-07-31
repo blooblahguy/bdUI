@@ -13,8 +13,8 @@ local c = {}
 -- place core functionality here
 --===============================================
 function mod:initialize()
-	c = mod._config
-
+	c = mod:get_save()
+	
 	mod:remove_blizzard()
 
 	-- Main bars
@@ -121,7 +121,7 @@ end
 --=======================================
 function mod:LayoutBar(frame, buttonList, cfg)
 	local border = bdUI:get_border(frame)
-	local c = mod._config
+	c = mod:get_save()
 
 	-- config
 	frame.limit = c[cfg.cfg.."_buttons"] or 12

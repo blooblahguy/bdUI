@@ -10,7 +10,7 @@ local config
 -- place core functionality here
 --===============================================
 function mod:initialize()
-	config = mod._config
+	config = mod:get_save()
 
 	mod:create_xp()
 end

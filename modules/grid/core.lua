@@ -412,7 +412,7 @@ end
 -- Build positioning and attributes
 --============================================================
 function mod:get_attributes()
-	local config = mod._config
+	local config = mod:get_save()
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 	
 	-- sorting options
@@ -526,7 +526,7 @@ end
 -- Initialize
 --======================================================
 function mod:initialize()
-	config = mod._config
+	config = mod:get_save()
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
 	
 	local function enable(self)

@@ -281,7 +281,7 @@ end
 -- Initialize
 --===============================================
 function mod:initialize()
-	config = mod._config
+	config = mod:get_save()
 	
 	
 

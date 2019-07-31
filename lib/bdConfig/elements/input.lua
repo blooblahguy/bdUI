@@ -1,23 +1,24 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
 --========================================
 local methods = {
-	["set"] = function(self, save, key, value)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
-		if (not value) then value = self:get(save, key) end
-		save[key] = value
+	-- set value to profile[key]
+	["set"] = function(self, value)
+		self.save = self.module:get_save()
 
-		self:SetText(value)
+		if (not value) then value = self:get() end
+		self.save[self.key] = value
+
+		self.input:SetText(value)
 	end,
-	["get"] = function(self, save, key)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
+	-- return value from profile[key]
+	["get"] = function(self)
+		self.save = self.module:get_save()
 
-		return save[key]
+		return self.save[self.key]
 	end,
 	-- ["onclick"] = function(self)
 		-- self.save[self.key] = self:GetChecked()
@@ -32,7 +33,7 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "half"
-	local container = mod:create_container(options, parent, 36)
+	local container = lib:create_container(options, parent, 36)
 	
 	local label = container:CreateFontString(nil, "OVERLAY", "bdConfig_font")
 	label:SetText(options.label)
@@ -46,18 +47,20 @@ local function create(options, parent)
 	input:SetMaxLetters(200)
 	input:SetHistoryLines(1000)
 	input:SetAutoFocus(false) 
-	input:SetScript("OnTextChanged", function(self, key) self:set(self.save, self.key, self:GetText()) end)
-	input:SetScript("OnEnterPressed", function(self, key) self:set(self.save, self.key, self:GetText()); self:ClearFocus(); end)
-	input:SetScript("OnEscapePressed", function(self, key) self:set(self.save, self.key, self:GetText()); self:ClearFocus(); end)
+	input:SetScript("OnTextChanged", function(self, key) container:set(self:GetText()) end)
+	input:SetScript("OnEnterPressed", function(self, key) container:set(self:GetText()); self:ClearFocus(); end)
+	input:SetScript("OnEscapePressed", function(self, key) container:set(self:GetText()); self:ClearFocus(); end)
 	input:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -2)
-	input.save = options.save
-	input.key = options.key
-	Mixin(input, methods)
-	input:set()
+	lib:create_backdrop(input)
 
-	mod:create_backdrop(input)
+	container.key = options.key
+	container.input = input
+	container.label = label
+	container.module = options.module
+	Mixin(container, methods)
+	container:set()
 
-	return container, input
+	return container
 end
 
-mod:register_element("input", create)
+lib:register_element("input", create)

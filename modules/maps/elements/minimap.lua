@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 
 function mod:config_callback()
-	local config = mod._config
+	local config = mod:get_save()
 
 	-- show/hide time
 	if not IsAddOnLoaded("Blizzard_TimeManager") then
@@ -62,7 +62,7 @@ function mod:config_callback()
 end
 
 function mod:create_minimap()
-	local config = mod._config
+	local config = mod:get_save()
 
 	Minimap.background = CreateFrame("frame", "bdMinimap", Minimap)
 	local inset = ((config.size * .25) / 2)

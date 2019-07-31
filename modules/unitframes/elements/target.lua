@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
 mod.custom_layout["target"] = function(self, unit)
-	local config = mod._config
+	local config = mod:get_save()
 	
 	self:SetSize(config.playertargetwidth, config.playertargetheight)
 	

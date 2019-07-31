@@ -1,5 +1,5 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
@@ -24,7 +24,7 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "half"
-	local media = mod.media
+	local media = lib.media
 	local border = media.border_size
 	local button
 	local container
@@ -32,14 +32,14 @@ local function create(options, parent)
 	if (options.solo) then
 		button = CreateFrame("Button", nil, parent)
 	else
-		container = mod:create_container(options, parent, 24)
+		container = lib:create_container(options, parent, 24)
 		button = CreateFrame("Button", nil, container)
 		button:SetPoint("LEFT", container, "LEFT")
 	end
 
 	button.inactiveColor = media.blue
 	button.activeColor = media.blue
-	button.callback = options.callback or mod.noop
+	button.callback = options.callback or lib.noop
 	button.save = options.save
 	button.key = options.key
 	button:SetBackdrop({bgFile = media.flat})
@@ -107,7 +107,7 @@ local function create(options, parent)
 
 		button:OnLeave()
 
-		button.callback(button, options)
+		button:callback(button, options)
 	end
 	function button:GetText()
 		return button.text:GetText()
@@ -128,8 +128,8 @@ local function create(options, parent)
 		return button
 	else
 		container.button = button
-		return container, button
+		return container
 	end
 end
 
-mod:register_element("button", create)
+lib:register_element("button", create)

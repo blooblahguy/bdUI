@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Misc")
 
 
 function mod:create_dcbo(event, addon)
-	local config = mod._config
+	local config = mod:get_save()
 	local dcbo = CreateFrame('frame')
 	dcbo:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
 	dcbo:RegisterEvent("ADDON_LOADED")

@@ -1,5 +1,5 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
@@ -13,7 +13,7 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "full"
-	local container = mod:create_container(options, parent, 16)
+	local container = lib:create_container(options, parent, 16)
 
 	local text = container:CreateFontString(nil, "OVERLAY", "bdConfig_font")
 
@@ -30,4 +30,4 @@ local function create(options, parent)
 	return container, text
 end
 
-mod:register_element("text", create)
+lib:register_element("text", create)

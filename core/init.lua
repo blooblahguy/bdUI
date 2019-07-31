@@ -8,13 +8,16 @@ bdUI = engine[1]
 bdUI.oUF = ns.oUF
 bdUI.caches = {}
 bdUI.name = addonName
-bdUI.bdConfig = ns.bdConfig
 bdUI.class = select(2, UnitClass("player"))
 bdUI.colorString = '|cffA02C2Fbd|r'
 bdUI.Base64 = LibStub("LibBase64-1.0")
 bdUI.SharedMedia = LibStub("LibSharedMedia-3.0")
 LibStub("bdCallbacks-1.0"):New(bdUI)
 bdMove = LibStub("bdMove-1.0")
+
+-- Load bdConfig
+ns.bdConfig.media.font = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf"
+bdUI.bdConfig = ns.bdConfig:new("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
 
 --===================================================================
 -- Basic Config
@@ -38,6 +41,7 @@ bdUI.media = {
 	green = {['r'] = .1, ['b'] = .7, ['g'] = 0.3, ['a'] = 1},
 }
 
+-- set better fonts for libraries
 bdMove.media.font = bdUI.media.font
 
 --===================================================================

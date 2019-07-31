@@ -38,15 +38,15 @@ lib.media = {
 -- set savedvariable
 function lib:set_save(sv)
 	-- migrate over positions from last config
-	-- if (lib.save and lib.save.positions and not sv.positions) then
-	-- 	local last = lib.save.positions
-	-- 	lib.save = sv
-	-- 	lib.save.positions = lib.save.positions or {}
-	-- 	Mixin(lib.save.positions, last)
-	-- else
+	if (lib.save and lib.save.positions and not sv.positions) then
+		local last = lib.save.positions
 		lib.save = sv
 		lib.save.positions = lib.save.positions or {}
-	-- end
+		Mixin(lib.save.positions, last)
+	else
+		lib.save = sv
+		lib.save.positions = lib.save.positions or {}
+	end
 
 	for k, v in pairs(lib.moveable_frames) do
 		v:position()

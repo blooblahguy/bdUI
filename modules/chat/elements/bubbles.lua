@@ -38,7 +38,7 @@ local function ischatbubble(frame)
 end
 
 function mod:create_chat_bubbles()
-	local config = mod._config
+	local config = mod:get_save()
 
 	-- Skin chat bubbles once each
 	local function skinbubble(frame)

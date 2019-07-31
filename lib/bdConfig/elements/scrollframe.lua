@@ -1,5 +1,5 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
@@ -12,7 +12,7 @@ local methods = {
 -- Spawn Element
 --========================================
 local function create(options, parent)
-	local padding = mod.dimensions.padding
+	local padding = lib.dimensions.padding
 	local width = parent:GetWidth()
 	local height = parent:GetHeight()
 
@@ -58,4 +58,4 @@ local function create(options, parent)
 	return content
 end
 
-mod:register_element("scrollframe", create)
+lib:register_element("scrollframe", create)

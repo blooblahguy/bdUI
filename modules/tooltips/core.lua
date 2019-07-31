@@ -152,7 +152,7 @@ local function setUnit(self)
 end
 
 function mod:create_tooltips()
-	config = mod._config
+	config = mod:get_save()
 
 	---------------------------------------------
 	--	Modify default position

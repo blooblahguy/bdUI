@@ -1,28 +1,27 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
-
-
-	--========================================
+--========================================
 -- Methods Here
 --========================================
 local methods = {
-	["set"] = function(self, save, key, value)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
-		if (not value) then value = self:get(save, key) end
-		save[key] = value
+	-- set value to profile[key]
+	["set"] = function(self, value)
+		self.save = self.module:get_save()
 
-		self:SetBackdropColor(unpack(value))
+		if (not value) then value = self:get(self.save, self.key) end
+		self.save[self.key] = value
+
+		self.picker:SetBackdropColor(unpack(value))
 	end,
-	["get"] = function(self, save, key)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
+	-- return value from profile[key]
+	["get"] = function(self)
+		self.save = self.module:get_save()
 
-		return save[key]
+		return self.save[self.key]
 	end,
 	["change"] = function(self, r, g, b, a)
-		self:set(self.save, self.key, {r, g, b, a})
+		self:set({r, g, b, a})
 
 		self:callback()
 
@@ -30,7 +29,7 @@ local methods = {
 	end,
 	["onclick"] = function(self)
 		self.save[self.key] = self:GetChecked()
-		self:set(self.save, self.key)
+		self:set()
 
 		self:callback()
 	end
@@ -41,23 +40,17 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "half"
-	local container = mod:create_container(options, parent, 30)
+	local container = lib:create_container(options, parent, 30)
 
 	local picker = CreateFrame("button", nil, container)
 	picker:SetSize(20, 20)
-	picker:SetBackdrop({bgFile = mod.media.flat, edgeFile = mod.media.flat, edgeSize = 2, insets = {top = 2, right = 2, bottom = 2, left = 2}})
+	picker:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = 2, insets = {top = 2, right = 2, bottom = 2, left = 2}})
 	picker:SetBackdropBorderColor(0,0,0,1)
 	picker:SetPoint("LEFT", container, "LEFT", 0, 0)
-
-	picker.save = options.save
-	picker.key = options.key
-	picker.callback = options.callback
-	Mixin(picker, methods)
-	picker:set()
 	
 	picker:SetScript("OnClick", function(self)		
 		HideUIPanel(ColorPickerFrame)
-		local r, g, b, a = unpack(self:get())
+		local r, g, b, a = unpack(container:get())
 
 		ColorPickerFrame:SetFrameStrata("FULLSCREEN_DIALOG")
 		ColorPickerFrame:SetClampedToScreen(true)
@@ -69,14 +62,14 @@ local function create(options, parent)
 			local r, g, b = ColorPickerFrame:GetColorRGB()
 			local a = 1 - OpacitySliderFrame:GetValue()
 
-			self:change(r, g, b, a)
+			container:change(r, g, b, a)
 		end
 
 		ColorPickerFrame.func = colorChanged
 		ColorPickerFrame.opacityFunc = colorChanged
 		ColorPickerFrame.cancelFunc = function()
 			local r, g, b, a = unpack(ColorPickerFrame.old) 
-			self:change(r, g, b, a)
+			container:change(r, g, b, a)
 		end
 
 		ColorPickerFrame:SetColorRGB(r, g, b)
@@ -88,7 +81,14 @@ local function create(options, parent)
 	picker.text:SetText(options.label)
 	picker.text:SetPoint("LEFT", picker, "RIGHT", 8, 0)
 
-	return container, picker
+	container.key = options.key
+	container.callback = options.callback
+	container.module = options.module
+	container.picker = picker
+	Mixin(container, methods)
+	container:set()
+
+	return container
 end
 
-mod:register_element("color", create)
+lib:register_element("color", create)

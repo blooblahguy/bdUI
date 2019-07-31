@@ -19,7 +19,7 @@ end
 -- CREATE BAGS
 --======================================
 function mod:create_bags()
-	config = mod._config
+	config = mod:get_save()
 
 	SetSortBagsRightToLeft(false)
 	SetInsertItemsLeftToRight(false)

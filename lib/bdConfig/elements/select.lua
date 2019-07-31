@@ -1,22 +1,22 @@
-local addonName, ns = ...
-local mod = ns.bdConfig
+local parent, ns = ...
+local lib = ns.bdConfig
 
 --========================================
 -- Methods Here
 --========================================
 local methods = {
-	["set"] = function(self, save, key, value)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
-		if (not value) then value = self:get(save, key) end
+	-- set value to profile[key]
+	["set"] = function(self, value)
+		self.save = self.module:get_save()
 
-		save[key] = value
+		if (not value) then value = self:get() end
+		self.save[self.key] = value
 	end,
-	["get"] = function(self, options, save)
-		if (not save) then save = self.save end
-		if (not key) then key = self.key end
+	-- return value from profile[key]
+	["get"] = function(self)
+		self.save = self.module:get_save()
 
-		return save[key]
+		return self.save[self.key]
 	end,
 	["onchange"] = function(self, options, save)
 
@@ -31,18 +31,21 @@ local methods = {
 --========================================
 local function create(options, parent)
 	options.size = options.size or "half"
-	local container = mod:create_container(options, parent, 48)
+	local container = lib:create_container(options, parent, 48)
+
 	container.save = options.save
 	container.key = options.key
+	container.module = options.module
+	container.callback = options.callback
 	Mixin(container, methods)
 
 	-- objects
 	local label = container:CreateFontString(nil, "OVERLAY", "bdConfig_font")
 	label:SetPoint("TOPLEFT", container, "TOPLEFT", 6, -2)
 	label:SetText(options.label)
-	local dropdown = CreateFrame("Button", options.module.."_"..options.key, container, "UIDropDownMenuTemplate")
+	local dropdown = CreateFrame("Button", options.name.."_"..options.key, container, "UIDropDownMenuTemplate")
 	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -20, -2)
-	dropdown.label = label
+	container.label = label
 
 	local default_option = options.value
 	-- recreate dropdown each time
@@ -65,15 +68,15 @@ local function create(options, parent)
 						UIDropDownMenu_SetSelectedID(dropdown, self:GetID())
 						CloseDropDownMenus()
 
-						options.save[options.key] = items[i]
-						options.callback(dropdown, options, items[i])
+						container.save[options.key] = items[i]
+						container.callback(dropdown, options, items[i])
 					end
 
 					-- select save value
 					if (item == default_option) then 
 						default_id = i
 					end
-					if (item == options.save[options.key]) then 
+					if (item == container.save[options.key]) then 
 						selected = i
 					end
 
@@ -91,7 +94,7 @@ local function create(options, parent)
 
 	-- hook into actions for updates
 	if (options.action) then
-		mod:add_action(options.action, function(value)
+		lib:add_action(options.action, function(value)
 			local results = options.lookup()
 			dropdown:populate(results)
 		end)
@@ -99,7 +102,7 @@ local function create(options, parent)
 
 	dropdown:populate(options.options)
 
-	return container, dropdown
+	return container
 end
 
-mod:register_element("select", create)
+lib:register_element("select", create)

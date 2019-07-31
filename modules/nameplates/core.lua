@@ -476,7 +476,7 @@ end
 
 
 function mod:initialize()
-	config = mod._config
+	config = mod:get_save()
 	if (not config.enabled) then return end
 
 	mod:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)

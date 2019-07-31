@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Databars")
 
 function mod:create_reputation()
-	local config = mod._config
+	local config = mod:get_save()
 
 	local bar = mod:create_databar("bdReputation")
 	bar:SetPoint("TOP", bdParent, "TOP", 0, -10)
