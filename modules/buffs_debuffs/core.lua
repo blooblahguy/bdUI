@@ -56,11 +56,11 @@ end
 -- Update Borders
 --===============================================
 local debuff_colors = {
-	Curse = {1, 0, 0.6},
-	Disease = {0, 0.4, 0.6},
-	Magic = {1, 0.6, 0.2},
-	Poison = {0, 0.6, 0},
-	None = {0.6, 0.1, 0.2}
+	['Magic'] = { 0.20, 0.60, 1.00 },
+	['Curse'] = { 0.60, 0.00, 1.00 },
+	['Disease'] = { 0.60, 0.40, 0 },
+	['Poison'] = { 0.00, 0.60, 0 },
+	['None'] = { 0.6, 0.1, 0.2 }
 }
 local function UpdateAura(self, index, filter)
 	local unit = self:GetParent():GetAttribute('unit')

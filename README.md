@@ -40,7 +40,8 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Quality of Life Additions
 
 ## TODO
-- [ ] Moving Resizing
+- [ ] Grid Fixes
+- [ ] Alignment Tool
 - [ ] Arena Frames
 - [ ] Databars
 	- [ ] Azerite

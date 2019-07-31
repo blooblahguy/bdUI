@@ -22,6 +22,7 @@ function mod:create_viewports()
 	bdUI.topViewport:SetPoint("TOPLEFT", UIParent, "TOPLEFT")
 	bdUI.topViewport:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT")
 	bdUI.topViewport:SetHeight(config.topViewport)
+	bdUI.topViewport:Show()
 	if (config.topViewport <= 0) then
 		bdUI.topViewport:Hide()
 	end
@@ -33,6 +34,7 @@ function mod:create_viewports()
 	bdUI.bottomViewport:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT")
 	bdUI.bottomViewport:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT")
 	bdUI.bottomViewport:SetHeight(config.bottomViewport)
+	bdUI.bottomViewport:Show()
 	if (config.bottomViewport <= 0) then
 		bdUI.bottomViewport:Hide()
 	end
