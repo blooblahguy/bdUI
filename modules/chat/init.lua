@@ -12,6 +12,9 @@ local config = {
 		label = "Enable Chat"
 	},
 	{
+		key = "clear", type = "clear"
+	},
+	{
 		key = "skinchatbubbles",
 		type = "select",
 		value = "Removed",
