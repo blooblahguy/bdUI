@@ -227,6 +227,7 @@ end
 
 -- fade in animation
 local function StartFadeIn(frame)
+	if (not IsMouseOverFrame(frame)) then return end
 	if (not frame.enableFader) then return end
 	if (frame.fader.direction == "in") then return end
 	frame.fader:Pause()

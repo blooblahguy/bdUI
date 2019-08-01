@@ -220,10 +220,10 @@ local function update_cooldown(self)
 		end
 		-- print(remaining)
 		self.cooldowntext:SetTextColor(unpack(color))
-		self.icon:bdSetDesaturated(true)
+		self.icon:SetDesaturated(true)
 	else
 		self.cooldowntext:SetTextColor(0.9, 0.9, 0.1)
-		self.icon:bdSetDesaturated(false)
+		self.icon:SetDesaturated(false)
 	end
 end
 
@@ -270,8 +270,8 @@ function mod:SkinButton(button)
 	flash:SetTexture("")
 	icon:SetTexCoord(.1, .9, .1, .9)
 	icon:SetDrawLayer("ARTWORK")
-	icon.bdSetDesaturated = icon.SetDesaturated
-	icon.SetDesaturated = noop
+	-- icon.bdSetDesaturated = icon.SetDesaturated
+	-- icon.SetDesaturated = noop
 
 	-- Text Overrides
 	hotkey:SetFontObject(v.font)
@@ -368,13 +368,13 @@ local function StyleFlyout(self)
 		if not button then break end
 
 		mod:SkinButton(button)
-		button:ClearAllPoints()
-		button:SetSize(size, size)
-		if (i == 1) then
-			button:SetPoint("BOTTOM", SpellFlyout, "BOTTOM", 0, spacing)
-		else
-			button:SetPoint("BOTTOM", _G["SpellFlyoutButton"..i-1], "TOP", 0, spacing)
-		end
+		-- button:ClearAllPoints()
+		-- button:SetSize(size, size)
+		-- if (i == 1) then
+		-- 	button:SetPoint("BOTTOM", SpellFlyout, "BOTTOM", 0, spacing)
+		-- else
+		-- 	button:SetPoint("BOTTOM", _G["SpellFlyoutButton"..i-1], "TOP", 0, spacing)
+		-- end
 	end
 end
 
