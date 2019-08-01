@@ -11,6 +11,10 @@ local methods = {
 
 		if (not value) then value = self:get() end
 		self.save[self.key] = value
+
+		self.dropdown:populate()
+
+		self.callback(self.dropdown)
 	end,
 	-- return value from profile[key]
 	["get"] = function(self)
@@ -46,10 +50,12 @@ local function create(options, parent)
 	local dropdown = CreateFrame("Button", options.name.."_"..options.key, container, "UIDropDownMenuTemplate")
 	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -20, -2)
 	container.label = label
+	container.dropdown = dropdown
 
 	local default_option = options.value
 	-- recreate dropdown each time
 	function dropdown:populate(items)
+		items = items or options.options
 		if (not value) then value = options.value end
 
 		UIDropDownMenu_SetWidth(dropdown, container:GetWidth() - 20)
@@ -96,6 +102,7 @@ local function create(options, parent)
 	if (options.action) then
 		lib:add_action(options.action, function(value)
 			local results = options.lookup()
+			options.options = results
 			dropdown:populate(results)
 		end)
 	end
