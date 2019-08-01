@@ -40,6 +40,8 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Quality of Life Additions
 
 ## TODO
+- [ ] Detatched castbars
+- [ ] Resource display
 - [ ] Grid Fixes
 - [ ] Alignment Tool
 - [ ] Arena Frames
@@ -54,5 +56,6 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 	- [ ] PVP Capture Movable
 	- [ ] Auto-ace skinning
 - [ ] Raid Marker Frame
+- [ ] \(Low Priority) Resizable movable frames
 - [ ] \(Low Priority) Localization for all languages
 - [ ] \(Low Priority) setup tutorial
