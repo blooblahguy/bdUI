@@ -44,7 +44,7 @@ end
 -- Primary Configuration callback
 --=======================================
 function mod:config_callback()
-
+	c = mod:get_save()
 	if (InCombatLockdown()) then
 		mod:RegisterEvent("PLAYER_REGEN_DISABLED")
 		return

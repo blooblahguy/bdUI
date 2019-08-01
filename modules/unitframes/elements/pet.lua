@@ -8,4 +8,8 @@ mod.custom_layout["pet"] = function(self, unit)
 
 	self.Name:SetPoint("CENTER", self.Health, "CENTER", 0, 0)
 	self.Name:SetFont(bdUI.media.font, math.clamp(config.targetoftargetheight * 0.75, 0, 13), "OUTLINE")
+
+	self.colorClass = false
+	self.colorSmooth = false
+	self.colorReaction = true
 end

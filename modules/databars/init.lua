@@ -12,22 +12,22 @@ local config = {
 		label = "Alternate Power Bar"
 	},
 	{
-		key = "alteratepowerbar",
+		key = "xp_rep_bar",
 		type = "toggle",
 		value = true,
-		label = "Alternate Power Bar"
+		label = "XP & Rep Bar"
 	},
 	{
-		key = "alteratepowerbar",
+		key = "honorbar",
 		type = "toggle",
 		value = true,
-		label = "Alternate Power Bar"
+		label = "Honor Bar"
 	},
 	{
-		key = "alteratepowerbar",
+		key = "apbar",
 		type = "toggle",
 		value = true,
-		label = "Alternate Power Bar"
+		label = "AP Bar"
 	},
 }
 

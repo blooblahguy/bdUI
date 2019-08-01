@@ -2,6 +2,7 @@
 -- INIT
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
+local config
 
 -- Config Table
 local config = {
@@ -88,7 +89,8 @@ local mod = bdUI:register_module("Maps", config)
 --=============================================
 -- Initialize function
 --=============================================
-function mod:initialize(config)
+function mod:initialize()
+	config = mod:get_save()
 	if (not config.enabled) then return false end
 
 	mod:create_minimap()

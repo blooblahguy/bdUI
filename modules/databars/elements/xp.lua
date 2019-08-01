@@ -18,7 +18,7 @@ function mod:create_xp()
 		local name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
 
 		-- make sure it's enabled
-		if (not config.xptracker or UnitLevel("player") == MAX_PLAYER_LEVEL or IsXPUserDisabled == true) then 
+		if (not config.xp_rep_bar or UnitLevel("player") == MAX_PLAYER_LEVEL or IsXPUserDisabled == true) then 
 			self:Hide()
 			return
 		end
