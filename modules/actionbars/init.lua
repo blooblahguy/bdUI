@@ -271,7 +271,9 @@ local config = {
 -- Stance & Pet
 --=========================================
 	-- STANCE
-	addBarConf("Stance", "stancebar"),
+	addBarConf("Stance", "stancebar", {
+		mouseover = true
+	}),
 	-- PET
 	addBarConf("Pet", "petbar")
 }

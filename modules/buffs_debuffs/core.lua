@@ -191,6 +191,7 @@ end
 -- Config Callback
 --===============================================
 function mod:config_callback()
+	config = mod:get_save()
 	if (InCombatLockdown()) then return end
 
 	-- font sizes

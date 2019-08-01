@@ -5,7 +5,14 @@ mod.custom_layout["player"] = function(self, unit)
 	local config = mod:get_save()
 
 	self:SetSize(config.playertargetwidth, config.playertargetheight)
-	mod.align_text(self)
+	if (config.hideplayertext) then
+		self.Name:Hide()
+		self.Curhp:Hide()
+	else
+		mod.align_text(self)
+		self.Name:Show()
+		self.Curhp:Show()
+	end
 
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
