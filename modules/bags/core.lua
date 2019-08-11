@@ -373,4 +373,6 @@ function ToggleAllBags(func)
 
 	mod:bag_generation()
 end
-BackpackTokenFrame:Hide();
+if (BackpackTokenFrame) then
+	BackpackTokenFrame:Hide();
+end

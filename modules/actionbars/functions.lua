@@ -61,7 +61,7 @@ function mod:HideMainMenuBar()
 		BackpackTokenFrame_Update()
 	end
 	v.hidden:SetScript("OnEvent", OnEvent)
-	v.hidden:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+	-- v.hidden:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	for i, frame in next, framesToHide do
 		frame:SetParent(v.hidden)
 	end
@@ -93,13 +93,22 @@ function mod:remove_blizzard()
 	SlidingActionBarTexture0:SetTexture(nil)
 	SlidingActionBarTexture1:SetTexture(nil)
 
-	PossessBackground1:SetTexture(nil)
-	PossessBackground2:SetTexture(nil)
+	if (PossessBackground1) then
+		PossessBackground1:SetTexture(nil)
+		PossessBackground2:SetTexture(nil)
+	end
 
-	ExtraActionBarFrame.ignoreFramePositionManager = true
-	ZoneAbilityFrame.ignoreFramePositionManager = true
-
-	PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
-	OverrideActionBar:SetScript("OnShow", nil)
+	if (ExtraActionBarFrame) then
+		ExtraActionBarFrame.ignoreFramePositionManager = true
+	end
+	if (ZoneAbilityFrame) then
+		ZoneAbilityFrame.ignoreFramePositionManager = true
+	end
+	if (ZoneAbilityFrame) then
+		PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
+	end
+	if (OverrideActionBar) then
+		OverrideActionBar:SetScript("OnShow", nil)
+	end
 	MainMenuBar:SetScript("OnShow", nil)
 end

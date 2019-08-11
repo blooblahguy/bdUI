@@ -246,6 +246,7 @@ end
 -- Possess Exit
 --===============================================================
 function mod:create_possess()
+	if (bdUI:get_game_version() == "vanilla") then return end
 	cfg = {}
 	cfg.cfg = "possessbar"
 	cfg.blizzardBar = PossessBarFrame

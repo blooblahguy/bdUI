@@ -73,6 +73,8 @@ function mod:create_minimap()
 	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
 	Minimap:EnableMouse(true)
 	Minimap:SetMaskTexture("Interface\\Addons\\bdMinimap\\rectangle.tga")
+	Minimap.SetArchBlobRingScalar = Minimap.SetArchBlobRingScalar or noop
+	Minimap.SetQuestBlobRingScalar = Minimap.SetQuestBlobRingScalar or noop
 	Minimap:SetArchBlobRingScalar(0);
 	Minimap:SetQuestBlobRingScalar(0);
 	Minimap:ClearAllPoints()
@@ -210,10 +212,12 @@ function mod:difficulty()
 	rd:SetSize(24, 8)
 	rd:EnableMouse(false)
 	rd:RegisterEvent("PLAYER_ENTERING_WORLD")
-	rd:RegisterEvent("CHALLENGE_MODE_START")
-	rd:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-	rd:RegisterEvent("CHALLENGE_MODE_RESET")
-	rd:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
+	if (bdUI.version >= 50000) then
+		rd:RegisterEvent("CHALLENGE_MODE_START")
+		rd:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+		rd:RegisterEvent("CHALLENGE_MODE_RESET")
+		rd:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
+	end
 	rd:RegisterEvent("GUILD_PARTY_STATE_UPDATED")
 	rd:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	local rdt = rd:CreateFontString(nil, "OVERLAY")
@@ -224,7 +228,7 @@ function mod:difficulty()
 	rd:SetScript("OnEvent", function()
 		local difficulty = select(3, GetInstanceInfo())
 		local numplayers = select(9, GetInstanceInfo())
-		local mplusdiff = select(1, C_ChallengeMode.GetActiveKeystoneInfo()) or "";
+		local mplusdiff = C_ChallengeMode and select(1, C_ChallengeMode.GetActiveKeystoneInfo()) or "";
 
 		if (difficulty == 1) then
 			rdt:SetText("5")

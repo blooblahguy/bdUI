@@ -8,10 +8,11 @@ function mod:create_button_frame()
 	-- Button frame
 	Minimap.buttonFrame = CreateFrame("frame", "bdButtonFrame", Minimap)
 	Minimap.buttonFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-	Minimap.buttonFrame:RegisterEvent("GARRISON_UPDATE")
+	if (bdUI.version >= 60000) then
+		Minimap.buttonFrame:RegisterEvent("GARRISON_UPDATE")
+	end
 	Minimap.buttonFrame:RegisterEvent("PLAYER_XP_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("PLAYER_LEVEL_UP")
-	Minimap.buttonFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 	Minimap.buttonFrame:RegisterEvent("UPDATE_FACTION")
 	Minimap.buttonFrame:SetSize(Minimap.background:GetWidth() - (bdUI.border * 2), config.buttonsize)
 	Minimap.buttonFrame:SetPoint("TOP", Minimap.background, "BOTTOM", bdUI.border, -bdUI.border)

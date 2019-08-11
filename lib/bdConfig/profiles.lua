@@ -94,6 +94,22 @@ local function spec_changed(self, event, index, prev)
 end
 
 local function build_spec_profiles()
+	-- let the UI know when talents are available
+	local talent = CreateFrame("frame")
+	talent:RegisterEvent("PLAYER_TALENT_UPDATE")
+	talent:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+	talent:SetScript("OnEvent", function(self, event, ...)
+		if (event == "PLAYER_TALENT_UPDATE") then
+			lib:do_action("talents_available")
+			specs_available(self, event, ...)
+			spec_changed(self, event, ...)
+		elseif (event == "ACTIVE_TALENT_GROUP_CHANGED") then
+			lib:do_action("talents_changed")
+			spec_changed(self, event, ...)
+		end
+	end)
+
+	-- return spec config table
 	local specs = 3
 	if (class == "DEMONHUNTER") then
 		specs = 2
@@ -204,7 +220,8 @@ function lib:create_profiles(instance, options)
 	end
 
 	-- remove spec profile options
-	if (options.disable_spec_profiles) then
+	print(bdUI:get_game_version())
+	if (options.disable_spec_profiles or bdUI:get_game_version() == "vanilla") then
 		table.remove(config[4])
 	else
 		config[4].args = build_spec_profiles()
@@ -221,22 +238,6 @@ function lib:create_profiles(instance, options)
 		bdMove:set_save(lib:get_save("BDUI_SAVE"))
 	end
 end
-
-
--- let the UI know when talents are available
-local talent = CreateFrame("frame")
-talent:RegisterEvent("PLAYER_TALENT_UPDATE")
-talent:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
-talent:SetScript("OnEvent", function(self, event, ...)
-	if (event == "PLAYER_TALENT_UPDATE") then
-		lib:do_action("talents_available")
-		specs_available(self, event, ...)
-		spec_changed(self, event, ...)
-	elseif (event == "ACTIVE_TALENT_GROUP_CHANGED") then
-		lib:do_action("talents_changed")
-		spec_changed(self, event, ...)
-	end
-end)
 
 function ns:unpack()
 	return self[1], self[2], self[3]

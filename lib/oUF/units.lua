@@ -165,16 +165,19 @@ end
 -- Handles unit specific actions.
 function oUF:HandleUnit(object, unit)
 	local unit = object.unit or unit
+	if (select(4, GetBuildInfo()) > 20000) then
+		local classic = true
+	end
 	if(unit == 'target') then
 		object:RegisterEvent('PLAYER_TARGET_CHANGED', object.UpdateAllElements, true)
 	elseif(unit == 'mouseover') then
 		object:RegisterEvent('UPDATE_MOUSEOVER_UNIT', object.UpdateAllElements, true)
-	elseif(unit == 'focus') then
+	elseif(unit == 'focus' and not classic) then
 		object:RegisterEvent('PLAYER_FOCUS_CHANGED', object.UpdateAllElements, true)
-	elseif(unit:match('boss%d?$')) then
+	elseif(unit:match('boss%d?$') and not classic) then
 		object:RegisterEvent('INSTANCE_ENCOUNTER_ENGAGE_UNIT', object.UpdateAllElements, true)
 		object:RegisterEvent('UNIT_TARGETABLE_CHANGED', object.UpdateAllElements)
-	elseif(unit:match('arena%d?$')) then
+	elseif(unit:match('arena%d?$') and not classic) then
 		object:RegisterEvent('ARENA_OPPONENT_UPDATE', object.UpdateAllElements, true)
 		object:RegisterEvent('ARENA_PREP_OPPONENT_SPECIALIZATIONS', updateArenaPreparation, true)
 		object:SetAttribute('oUF-enableArenaPrep', true)

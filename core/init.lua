@@ -94,19 +94,29 @@ bdUI.font_small:SetShadowOffset(0, 0)
 --Return game version, so that we can have cross version compatibility when possible
 --===================================================================
 local versions = {}
-versions[20400] = "tbc"
+versions[89999] = "bfa"
+versions[79999] = "legion"
+versions[69999] = "wod"
+versions[59999] = "mop"
+versions[49999] = "cataclysm"
+versions[39999] = "wrath"
+versions[29999] = "tbc"
+versions[19999] = "vanilla"
 function bdUI:get_game_version()
 	local version, build, date, tocversion = GetBuildInfo()
 
 	local game = 0
-	local vers = 0
+	local version = 1000000
 
 	for k, v in pairs(versions) do
-		if (k < tocversion and k > vers) then 
-			vers = k 
+		if (tocversion < k and k < version) then
+			version = k
 			game = v
 		end
 	end
+
+	bdUI.version = version
+	bdUI.expansion = game 
 
 	return game
 end

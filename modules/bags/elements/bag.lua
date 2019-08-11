@@ -47,17 +47,19 @@ function mod:bag_slots()
 		CharacterBag3Slot
 	}
 
-	BackpackTokenFrameToken1:ClearAllPoints()
-	BackpackTokenFrameToken1:SetPoint("BOTTOMLEFT", mod.bags, "BOTTOMLEFT", 0, 8)
-	for i = 1, 3 do
-		_G["BackpackTokenFrameToken"..i]:SetFrameStrata("TOOLTIP")
-		_G["BackpackTokenFrameToken"..i]:SetFrameLevel(5)
-		_G["BackpackTokenFrameToken"..i.."Icon"]:SetSize(12,12) 
-		_G["BackpackTokenFrameToken"..i.."Icon"]:SetTexCoord(.1,.9,.1,.9) 
-		_G["BackpackTokenFrameToken"..i.."Icon"]:SetPoint("LEFT", _G["BackpackTokenFrameToken"..i], "RIGHT", -8, 2) 
-		_G["BackpackTokenFrameToken"..i.."Count"]:SetFont(bdUI.media.font, 14)
-		if (i ~= 1) then
-			_G["BackpackTokenFrameToken"..i]:SetPoint("LEFT", _G["BackpackTokenFrameToken"..(i-1)], "RIGHT", 10, 0)
+	if (BackpackTokenFrameToken1) then
+		BackpackTokenFrameToken1:ClearAllPoints()
+		BackpackTokenFrameToken1:SetPoint("BOTTOMLEFT", mod.bags, "BOTTOMLEFT", 0, 8)
+		for i = 1, 3 do
+			_G["BackpackTokenFrameToken"..i]:SetFrameStrata("TOOLTIP")
+			_G["BackpackTokenFrameToken"..i]:SetFrameLevel(5)
+			_G["BackpackTokenFrameToken"..i.."Icon"]:SetSize(12,12) 
+			_G["BackpackTokenFrameToken"..i.."Icon"]:SetTexCoord(.1,.9,.1,.9) 
+			_G["BackpackTokenFrameToken"..i.."Icon"]:SetPoint("LEFT", _G["BackpackTokenFrameToken"..i], "RIGHT", -8, 2) 
+			_G["BackpackTokenFrameToken"..i.."Count"]:SetFont(bdUI.media.font, 14)
+			if (i ~= 1) then
+				_G["BackpackTokenFrameToken"..i]:SetPoint("LEFT", _G["BackpackTokenFrameToken"..(i-1)], "RIGHT", 10, 0)
+			end
 		end
 	end
 
@@ -98,6 +100,7 @@ end
 
 -- search boxes
 local function position_search(self, id)
+	if (not BagItemSearchBox) then return end
 	BagItemSearchBox:ClearAllPoints()
 	BagItemSearchBox:SetPoint("LEFT", ContainerFrame1MoneyFrame, "RIGHT", 8, 0)
 	BagItemSearchBox.ClearAllPoints = noop

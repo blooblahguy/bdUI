@@ -271,7 +271,9 @@ function mod:skin_single_chat(frame)
 	resize:SetAlpha(0.7)
 
 	-- to do: find out how best to display chat actionables, instead of just hiding them all
-	thumb:Hide()
+	if (thumb) then
+		thumb:Hide()
+	end
 	
 	-- kill textures
 	for g = 1, #CHAT_FRAME_TEXTURES do

@@ -58,6 +58,7 @@ function mod:create_bank_bags()
 	local lastbutton = nil
 	for i = 1, 7 do
 		local bankbag = BankSlotsFrame["Bag"..i]
+		if (not bankbag) then break end
 		local icon = bankbag.icon
 		
 		bankbag:SetParent(mod.bank.bags)
@@ -138,6 +139,7 @@ end
 -- REAGENT/TABS
 --==============================================
 function mod:create_bank_tabs()
+	if (bdUI:get_game_version() == "vanilla") then return end
 	mod.bank.tab1 = CreateFrame("frame", nil, mod.bank)
 	mod.bank.tab2 = CreateFrame("frame", nil, mod.bank)
 
@@ -177,6 +179,7 @@ function mod:create_bank_tabs()
 
 	for i = 1, 2 do
 		local tab = _G["BankFrameTab"..i]
+		if not tab then break end
 		bdUI:strip_textures(tab)
 		tab:ClearAllPoints()
 		tab:Hide()

@@ -4,6 +4,7 @@ local bdUI, c, l = unpack(select(2, ...))
 -- Media Functions
 --================================================
 	function bdUI:strip_textures(object, strip_text)
+		if (not object) then return end
 		for i = 1, object:GetNumRegions() do
 			local region = select(i, object:GetRegions())
 
@@ -347,29 +348,3 @@ local bdUI, c, l = unpack(select(2, ...))
 			end
 		end
 	end
-
-	-- Allows us to track is mouse is over SpellFlyout child
-	local function spell_flyout_hook(self)
-		local topParent = self:GetParent():GetParent():GetParent()
-		if (not topParent.__fader) then return end
-
-		-- toplevel
-		if (not self.__faderParent) then
-			self.__faderParent = topParent
-			self:HookScript("OnEnter", EnterLeaveHandle)
-			self:HookScript("OnLeave", EnterLeaveHandle)
-		end
-
-		-- children
-		for i=1, NUM_ACTIONBAR_BUTTONS do
-			local button = _G["SpellFlyoutButton"..i]
-			if not button then break end
-
-			if not button.__faderParent then
-				button.__faderParent = topParent
-				button:HookScript("OnEnter", EnterLeaveHandle)
-				button:HookScript("OnLeave", EnterLeaveHandle)
-			end
-		end
-	end
-	SpellFlyout:HookScript("OnShow", spell_flyout_hook)

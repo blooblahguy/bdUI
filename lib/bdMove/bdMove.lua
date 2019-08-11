@@ -325,4 +325,7 @@ local function SpellFlyoutHook(self)
 		end
 	end
 end
-SpellFlyout:HookScript("OnShow", SpellFlyoutHook)
+-- classic doesn't have SpellFlyout?
+if (SpellFlyout) then
+	SpellFlyout:HookScript("OnShow", SpellFlyoutHook)
+end
