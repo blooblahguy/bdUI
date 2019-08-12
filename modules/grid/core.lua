@@ -633,31 +633,31 @@ function mod:create_container()
 	mod.raidpartyholder = CreateFrame('frame', "bdGrid", UIParent)
 	mod.raidpartyholder:SetSize(config['width'], config['height']*5)
 	mod.raidpartyholder:SetPoint("TOP", bdParent, "CENTER", 0, -200)
-	bdMove:set_moveable(mod.raidpartyholder)
+	bdMove:set_moveable(mod.raidpartyholder, "Raid Frames")
 end
 
 function mod:resize_container()
 	mod.frameHeader:ClearAllPoints();
 	if (config.group_growth == "Right") then
-		mod.raidpartyholder:SetSize(config.width, config.height*5+8)
+		mod.raidpartyholder:SetSize(config.width*4+8, config.height*5+8)
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
 		
 	elseif (config.group_growth == "Left") then
-		mod.raidpartyholder:SetSize(config.width, config.height*5+8)
+		mod.raidpartyholder:SetSize(config.width*4+8, config.height*5+8)
 		hgrowth = "RIGHT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
 		
 	elseif (config.group_growth == "Upwards") then
-		mod.raidpartyholder:SetSize(config.width*5+8, config.height)
+		mod.raidpartyholder:SetSize(config.width*5+8, config.height*4+8)
 		hgrowth = "LEFT"
 		vgrowth = "BOTTOM"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end
 		
 	elseif (config.group_growth == "Downwards") then
-		mod.raidpartyholder:SetSize(config.width*5+8, config.height)
+		mod.raidpartyholder:SetSize(config.width*5+8, config.height*4+8)
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end

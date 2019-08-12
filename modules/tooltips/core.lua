@@ -160,7 +160,7 @@ function mod:create_tooltips()
 	local tooltipanchor = CreateFrame("frame","bdTooltip",bdParent)
 	tooltipanchor:SetSize(150, 100)
 	tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 450, 0)
-	bdMove:set_moveable(tooltipanchor)
+	bdMove:set_moveable(tooltipanchor, "Tooltips")
 
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
 		self:SetOwner(parent, "ANCHOR_NONE")

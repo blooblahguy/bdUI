@@ -229,7 +229,8 @@ local function layout(self, unit)
 	-- Health
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
-	self.Health:SetAllPoints(self)
+	self.Health:SetPoint("TOPLEFT", self)
+	self.Health:SetPoint("BOTTOMRIGHT", self)
 	self.Health.Smooth = true
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
@@ -423,39 +424,43 @@ function mod:create_unitframes()
 	-- player
 	local player = oUF:Spawn("player")
 	player:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff)
-	bdMove:set_moveable(player)
+	bdMove:set_moveable(player, "Player")
 
 	-- target
 	local target = oUF:Spawn("target")
 	target:SetPoint("LEFT", bdParent, "CENTER", xoff, -yoff)
-	bdMove:set_moveable(target)
+	bdMove:set_moveable(target, "Target")
 
 	-- targetoftarget
 	local targettarget = oUF:Spawn("targettarget")
 	targettarget:SetPoint("TOPRIGHT", target, "BOTTOMRIGHT", 0, -config.castbarheight-20)
-	bdMove:set_moveable(targettarget)
+	bdMove:set_moveable(targettarget, "Target of Target")
 
 	-- pet
 	local pet = oUF:Spawn("pet")
 	pet:SetPoint("TOPLEFT", player, "BOTTOMLEFT", 0, -config.castbarheight-20)
-	bdMove:set_moveable(pet)
+	bdMove:set_moveable(pet, "Pet")
 
 	-- focus
 	local focus = oUF:Spawn("focus")
 	focus:SetPoint("TOP", bdParent, "TOP", 0, -30)
-	bdMove:set_moveable(focus)
+	bdMove:set_moveable(focus, "Focus")
+
+	local arena_boss = CreateFrame("frame", "bdArenaBoss", bdParent)
+	arena_boss:SetPoint("RIGHT", bdParent, "RIGHT", -xoff, 0)
+	arena_boss:SetSize(config.bosswidth, (config.bossheight + 40) * 5)
+	bdMove:set_moveable(arena_boss, "Boss & Arena Frames")
 
 	-- boss
 	local lastboss = nil
 	for i = 1, 5 do
 		local boss = oUF:Spawn("boss"..i, nil)
 		if (not lastboss) then
-			boss:SetPoint("LEFT", bdParent, "LEFT", 40, yoff)
+			boss:SetPoint("TOP", arena_boss, "TOP", 0, 0)
 		else
 			boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -50)
 		end
 		boss:SetSize(config.bosswidth, config.bossheight)
-		bdMove:set_moveable(boss)
 		lastboss = boss
 	end
 
@@ -464,12 +469,11 @@ function mod:create_unitframes()
 	for i = 1, 5 do
 		local arena = oUF:Spawn("arena"..i, nil)
 		if (not lastarena) then
-			arena:SetPoint("RIGHT", bdParent, "RIGHT", -40, yoff)
+			arena:SetPoint("TOP", arena_boss, "TOP", 0, 0)
 		else
 			arena:SetPoint("TOP", lastarena, "BOTTOM", -2, -30)
 		end
-		arena:SetSize(config.arenawidth, config.arenaheight)
-		bdMove:set_moveable(arena)
+		arena:SetSize(config.bosswidth, config.bossheight)
 		lastarena = arena
 	end
 

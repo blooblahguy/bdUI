@@ -275,7 +275,9 @@ local config = {
 		mouseover = true
 	}),
 	-- PET
-	addBarConf("Pet", "petbar")
+	addBarConf("Pet", "petbar", {
+		scale = 0.5
+	})
 }
 
 local mod = bdUI:register_module("Actionbars", config)

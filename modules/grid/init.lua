@@ -54,6 +54,10 @@ local config = {
 				label = "Frame Spacing",
 			},
 			{
+				type = "clear",
+				key = "clear",
+			},
+			{
 				key = "width",
 				type = "range",
 				value = 62,
@@ -72,6 +76,12 @@ local config = {
 				step = 2,
 				label = "Height",
 				tooltip = "The height of each player in the raid frames",
+			},
+			{
+				key = "showsolo",
+				type = "toggle",
+				value = false,
+				label = "Show raid frames when solo",
 			},
 			{
 				key = "hideabsorbs",
@@ -186,12 +196,6 @@ local config = {
 		type = "tab",
 		label = "Growth & Grouping",
 		args = {
-			{
-				key = "showsolo",
-				type = "toggle",
-				value = true,
-				label = "Show raid frames when solo",
-			},
 			{
 				key = "num_groups",
 				type = "range",

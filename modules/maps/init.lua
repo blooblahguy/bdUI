@@ -96,4 +96,5 @@ function mod:initialize()
 	mod:create_minimap()
 	mod:create_button_frame()
 	mod:worldmap_coords()
+	mod:create_objective_tracker()
 end

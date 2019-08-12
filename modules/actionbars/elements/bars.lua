@@ -13,6 +13,7 @@ function mod:create_actionbar1()
 	cfg.blizzardBar = nil
 	cfg.cfg = "bar1"
 	cfg.frameName = "bdActionbars_1"
+	cfg.moveName = "Actionbar 1"
 	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.actionPage = "[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
 	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, defaultPadding}
@@ -61,6 +62,7 @@ function mod:create_actionbar2()
 	cfg.blizzardBar = MultiBarBottomLeft
 	cfg.cfg = "bar2"
 	cfg.frameName = "bdActionbars_2"
+	cfg.moveName = "Actionbar 2"
 	-- cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod][@target,exists,nodead] show; hide"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
 	cfg.frameSpawn = {"BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -defaultPadding, defaultPadding}
@@ -76,6 +78,7 @@ function mod:create_actionbar3()
 	cfg = {}
 	cfg.blizzardBar = MultiBarBottomRight
 	cfg.frameName = "bdActionbars_3"
+	cfg.moveName = "Actionbar 3"
 	cfg.cfg = "bar3"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
 	cfg.frameSpawn = {"BOTTOM", mod.bars['bar2'], "TOP", 0, 0}
@@ -91,6 +94,7 @@ function mod:create_actionbar4()
 	cfg = {}
 	cfg.blizzardBar = MultiBarRight
 	cfg.frameName = "bdActionbars_4"
+	cfg.moveName = "Actionbar 4"
 	cfg.cfg = "bar4"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
 	cfg.frameSpawn = {"TOP", bdParent, "CENTER", 0, -163}
@@ -106,6 +110,7 @@ function mod:create_actionbar5()
 	cfg = {}
 	cfg.blizzardBar = MultiBarLeft
 	cfg.frameName = "bdActionbars_5"
+	cfg.moveName = "Actionbar 5"
 	cfg.cfg = "bar5"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
 	cfg.frameSpawn = {"RIGHT", bdParent, "RIGHT", -defaultPadding, 0}
@@ -122,6 +127,7 @@ function mod:create_petbar()
 	cfg.cfg = "petbar"
 	cfg.blizzardBar = PetActionBarFrame
 	cfg.frameName = "bdActionbars_PetBar"
+	cfg.moveName = "Pet Bar"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [pet] show; hide"
 	cfg.frameSpawn = {"BOTTOMRIGHT", mod.bars['bar1'], "TOPRIGHT", 0, defaultPadding}
 
@@ -138,10 +144,20 @@ function mod:create_stancebar()
 	cfg.cfg = "stancebar"
 	cfg.blizzardBar = StanceBarFrame
 	cfg.frameName = "bdActionbars_StanceBar"
+	cfg.moveName = "Stance Bar"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
 	cfg.frameSpawn = {"BOTTOMLEFT", mod.bars['bar1'], "TOPLEFT", 0, defaultPadding}
 
-	local buttonList = mod:GetButtonList("StanceButton", NUM_STANCE_SLOTS)
+	local stances = 0
+	for i = 1, NUM_STANCE_SLOTS do
+		local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i);
+		if (not icon) then break end
+		stances = stances + 1
+	end
+
+	if (stances == 0) then return end
+
+	local buttonList = mod:GetButtonList("StanceButton", stances)
 	local stancebar = mod:CreateBar(buttonList, cfg)
 	stancebar:EnableMouse(false)
 end
@@ -155,6 +171,7 @@ function mod:create_micromenu()
 	cfg = {}
 	cfg.cfg = "microbar"
 	cfg.frameName = "bdActionbars_MicroMenuBar"
+	cfg.moveName = "Micromenu"
 	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.frameSpawn = {"BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -defaultPadding, defaultPadding}
 	cfg.widthScale = 0.777
@@ -187,6 +204,7 @@ function mod:create_bagbar()
 	cfg = {}
 	cfg.cfg = "bagbar"
 	cfg.frameName = "bdActionbars_BagBar"
+	cfg.moveName = "Bagbar"
 	-- cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['microbar'] or bdParent, "TOPRIGHT", 0, defaultPadding }
 	function cfg:callback(frame)
@@ -207,6 +225,7 @@ function mod:create_vehicle()
 	cfg = {}
 	cfg.cfg = "vehiclebar"
 	cfg.frameName = "bdActionbars_VehicleExitBar"
+	cfg.moveName = "Vehicle Exit"
 	cfg.frameVisibility = "[canexitvehicle]c;[mounted]m;n"
 	cfg.frameVisibilityFunc = "exit"
 	cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['bar1'], "TOPLEFT", -defaultPadding, defaultPadding }
@@ -251,8 +270,9 @@ function mod:create_possess()
 	cfg.cfg = "possessbar"
 	cfg.blizzardBar = PossessBarFrame
 	cfg.frameName = "bdActionbars_PossessExitBar"
+	cfg.moveName = "Possess Exit"
 	cfg.frameVisibility = "[possessbar] show; hide"
-	cfg.frameSpawn = { "BOTTOMLEFT", mod.bars['bar1'], "TOPRIGHT", defaultPadding, defaultPadding }
+	cfg.frameSpawn = { "BOTTOM", mod.bars['vehiclebar'], "TOP", 0, defaultPadding }
 
 	local buttonList = mod:GetButtonList("PossessButton", NUM_POSSESS_SLOTS)
 	local possess = mod:CreateBar(buttonList, cfg)
@@ -266,6 +286,7 @@ function mod:create_extra()
 	cfg.cfg = "extrabar"
 	cfg.blizzardBar = ExtraActionBarFrame
 	cfg.frameName = "bdActionbars_ExtraBar"
+	cfg.moveName = "Extra Button"
 	cfg.frameVisibility = "[extrabar] show; hide"
 	cfg.frameSpawn = { "LEFT", UIParent, "LEFT", 300, 0 }
 

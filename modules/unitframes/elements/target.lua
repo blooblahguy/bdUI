@@ -11,6 +11,9 @@ mod.custom_layout["target"] = function(self, unit)
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 
+	self.Power:SetHeight(config.playertargetpowerheight)
+	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
+
 	self.Debuffs.initialAnchor  = "BOTTOMLEFT"
 	self.Debuffs['growth-x'] = "RIGHT"
 	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)

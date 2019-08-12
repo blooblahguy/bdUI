@@ -103,7 +103,7 @@ function mod:CreateBar(buttonList, cfg)
 	end
 
 	-- Moveable
-	bdMove:set_moveable(frame)
+	bdMove:set_moveable(frame, cfg.moveName)
 
 	--reparent the Blizzard bar
 	if cfg.blizzardBar then

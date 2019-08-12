@@ -8,8 +8,12 @@ mod.custom_layout["boss"] = function(self, unit)
 	self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
 	self.Curhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
 
+	mod.additional_elements.power(self, unit)
 	mod.additional_elements.auras(self, unit)
 	mod.additional_elements.castbar(self, unit)
+
+	self.Power:SetHeight(config.bosspower)
+	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
 
 	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false

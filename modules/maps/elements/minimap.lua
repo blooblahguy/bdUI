@@ -88,9 +88,6 @@ function mod:create_minimap()
 		local action = delta < 0 and MinimapZoomOut:Click()
 	end)
 
-	ObjectiveTrackerFrame:ClearAllPoints()
-	ObjectiveTrackerFrame:SetPoint("TOP", Minimap.background, "BOTTOM", 0, -100)
-
 	Minimap:SetScript('OnMouseUp', function (self, button)
 		if button == 'RightButton' then
 			ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, Minimap.background, (Minimap:GetWidth()), (Minimap.background:GetHeight()-2))
@@ -106,7 +103,6 @@ function mod:create_minimap()
 		end
 	end)
 
-	bdMove:set_moveable(UIErrorsFrame)	
 	bdMove:set_moveable(Minimap.background)
 
 	local frames = {
@@ -269,32 +265,3 @@ function mod:difficulty()
 		end
 	end)
 end
-
-local xOff = 0
-local yOff = -10
-local ignore_point
-
-local function move_objective_tracker()
-	local tracker = ObjectiveTrackerFrame
-	tracker:ClearAllPoints()
-	ignore_point = true
-	tracker:SetPoint("TOP", Minimap, "BOTTOM", 0, yOff)
-	-- tracker:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", 0, yOff)
-	ignore_point = false
-end
-
-local f = CreateFrame("Frame")
-f:SetScript("OnEvent",function(self, event, addon)
-	if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
-		move_objective_tracker()
-		hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
-			if (not ignore_point) then
-				move_objective_tracker()
-			end
-		end)
-		self:UnregisterEvent("ADDON_LOADED")
-	else
-		self:RegisterEvent("ADDON_LOADED")
-	end
-end)
-f:RegisterEvent("PLAYER_LOGIN")

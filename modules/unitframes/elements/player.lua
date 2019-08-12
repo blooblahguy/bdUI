@@ -21,6 +21,9 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.buffs(self, unit)
 	self.Buffs.size = 22
 
+	self.Power:SetHeight(config.playertargetpowerheight)
+	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
+
 	self.RestingIndicator:ClearAllPoints()
 	if (config.textlocation == "Outside") then
 		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)

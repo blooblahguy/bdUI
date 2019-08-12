@@ -11,6 +11,9 @@ mod.custom_layout["focus"] = function(self, unit)
 	mod.additional_elements.castbar(self, unit)
 	mod.additional_elements.auras(self, unit)
 
+	self.Power:SetHeight(config.focuspower)
+	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.focuspower + bdUI.border)
+
 	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false

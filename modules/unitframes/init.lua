@@ -217,72 +217,16 @@ local config = {
 	{
 		key = "bosstab",
 		type = "tab",
-		label = "Boss",
+		label = "Boss & Arena",
 		args = {
 			{
-				key = "boss",
-				type = "group",
-				heading = "Boss",
-				args = {
-					{
-						key = "bossenable",
-						value = true,
-						type = "toggle",
-						label = "Enable Boss Frames"
-					},
-					{
-						key = "bossdebuffsize",
-						type = "range",
-						label = "Aura Size",
-						value = 30,
-						min = 10,
-						max = 100,
-						step = 2,
-					},
-					{
-						key = "bosswidth",
-						type = "range",
-						label = "Width",
-						value = 200,
-						min = 60,
-						max = 420,
-						step = 5,
-					},
-					{
-						key = "bossheight",
-						type = "range",
-						label = "Height",
-						value = 40,
-						min = 5,
-						max = 200,
-						step = 5,
-					},
-					{
-						key = "bosspower",
-						type = "range",
-						label = "Power Height",
-						value = 6,
-						min = 1,
-						max = 10,
-						step = 1,
-					},
-				}
-			},
-		},
-	},
-	{
-		key = "arena",
-		type = "tab",
-		label = "Arena",
-		args = {
-			{
-				key = "arenaenable",
+				key = "bossenable",
 				value = true,
 				type = "toggle",
-				label = "Enable Arena Frames"
+				label = "Enable Boss Frames"
 			},
 			{
-				key = "arenaaurasize",
+				key = "bossdebuffsize",
 				type = "range",
 				label = "Aura Size",
 				value = 30,
@@ -291,7 +235,7 @@ local config = {
 				step = 2,
 			},
 			{
-				key = "arenawidth",
+				key = "bosswidth",
 				type = "range",
 				label = "Width",
 				value = 200,
@@ -300,7 +244,7 @@ local config = {
 				step = 5,
 			},
 			{
-				key = "arenaheight",
+				key = "bossheight",
 				type = "range",
 				label = "Height",
 				value = 40,
@@ -309,17 +253,16 @@ local config = {
 				step = 5,
 			},
 			{
-				key = "arenapower",
+				key = "bosspower",
 				type = "range",
 				label = "Power Height",
-				value = 6,
+				value = 3,
 				min = 1,
 				max = 10,
 				step = 1,
 			},
 		}
 	}
-
 }
 
 local mod = bdUI:register_module("Unitframes", config)
