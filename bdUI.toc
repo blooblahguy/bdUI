@@ -130,6 +130,7 @@ modules\maps\init.lua
 modules\maps\functions.lua
 modules\maps\core.lua
 modules\maps\elements\minimap.lua
+modules\maps\elements\objectivetracker.lua
 modules\maps\elements\buttonframe.lua
 modules\maps\elements\worldmap.lua
 
