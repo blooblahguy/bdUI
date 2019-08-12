@@ -22,7 +22,7 @@ function lib:create_windows(name, lock_toggle)
 	window:SetSize(dimensions.left_column + dimensions.right_column, dimensions.height + dimensions.header)
 	window:SetMovable(true)
 	window:SetUserPlaced(true)
-	window:SetFrameStrata("DIALOG")
+	window:SetFrameStrata("TOOLTIP")
 	window:SetClampedToScreen(true)
 	window:Hide()
 
