@@ -96,7 +96,7 @@ local bdUI, c, l = unpack(select(2, ...))
 	end
 
 	function bdUI:create_shadow(frame, offset)
-		if f._shadow then return end
+		if frame._shadow then return end
 		
 		local shadow = CreateFrame("Frame", nil, frame)
 		shadow:SetFrameLevel(1)

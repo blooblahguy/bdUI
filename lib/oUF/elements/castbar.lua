@@ -86,8 +86,6 @@ A default texture will be applied to the StatusBar and Texture widgets if they d
 local _, ns = ...
 local oUF = ns.oUF
 
-if (not UnitCastingInfo) then return end
-
 local GetNetStats = GetNetStats
 local GetTime = GetTime
 local UnitCastingInfo = UnitCastingInfo
@@ -530,7 +528,7 @@ end
 
 local function Enable(self, unit)
 	local element = self.Castbar
-	if(element) then
+	if(element and not oUF.classic) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 

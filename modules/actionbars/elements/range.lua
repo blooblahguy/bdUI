@@ -58,7 +58,7 @@ local function UpdateButtonFlash(self, elapsed)
 	if self.flashing ~= 1 then return end
 
 	self.flashtime = self.flashtime + elapsed
-	if (flashtime >= ATTACK_BUTTON_FLASH_TIME) then
+	if (self.flashtime >= ATTACK_BUTTON_FLASH_TIME) then
 		local flashTexture = self.Flash;
 		if ( flashTexture:IsShown() ) then
 			flashTexture:Hide();

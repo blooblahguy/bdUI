@@ -537,6 +537,11 @@ local tagEvents = {
 	['threatcolor']         = 'UNIT_THREAT_SITUATION_UPDATE',
 }
 
+if (oUF.classic) then
+	tagEvents['threat'] = nil
+	tagEvents['threatcolor'] = nil
+end
+
 local unitlessEvents = {
 	ARENA_PREP_OPPONENT_SPECIALIZATIONS = true,
 	GROUP_ROSTER_UPDATE = true,

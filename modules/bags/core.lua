@@ -180,6 +180,7 @@ function mod:icon_border(border)
 end
 
 function mod:SkinEditBox(frame)
+	if (not frame.Left) then return end
 	frame.Left:Hide()
 	frame.Right:Hide()
 	frame.Middle:Hide()
@@ -291,7 +292,8 @@ function mod:Draw(frame,size,id)
 	for i = 1, 5 do				
 		select(i, _G['BankFrame']:GetRegions()):Hide()
 	end
-	for i = 1, 5 do				
+	for i = 1, 5 do
+		if (not select(i, _G['BankFrame']:GetChildren())) then return end	
 		select(i, _G['BankFrame']:GetChildren()):Hide()
 	end
 	for i = 1, 5 do

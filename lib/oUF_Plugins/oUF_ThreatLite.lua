@@ -53,7 +53,7 @@ end
 
 local function Enable(self, unit)
 	local element = self.ThreatLite
-	if(element) then
+	if(element and not oUF.classic) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 

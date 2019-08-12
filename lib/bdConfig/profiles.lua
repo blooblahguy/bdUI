@@ -220,7 +220,6 @@ function lib:create_profiles(instance, options)
 	end
 
 	-- remove spec profile options
-	print(bdUI:get_game_version())
 	if (options.disable_spec_profiles or bdUI:get_game_version() == "vanilla") then
 		table.remove(config[4])
 	else

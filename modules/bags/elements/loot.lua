@@ -51,6 +51,7 @@ function mod:create_loot()
 	end
 
 	hooksecurefunc("LootFrame_UpdateButton", function(index)
+		if (bdUI:get_game_version() == "vanilla") then return end
 		local texture, item, quantity, quality, locked, isQuestItem, questId, isActive = GetLootSlotInfo(index)
 		local frame = _G["LootButton"..index]
 		if (config.skinloot) then

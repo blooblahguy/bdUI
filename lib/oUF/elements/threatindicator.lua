@@ -104,7 +104,7 @@ end
 
 local function Enable(self)
 	local element = self.ThreatIndicator
-	if(element) then
+	if(element and not oUF.classic) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
@@ -121,7 +121,7 @@ end
 
 local function Disable(self)
 	local element = self.ThreatIndicator
-	if(element) then
+	if (element) then
 		element:Hide()
 
 		self:UnregisterEvent('UNIT_THREAT_SITUATION_UPDATE', Path)
