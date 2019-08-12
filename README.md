@@ -38,12 +38,15 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Viewports
 - Alternative Power
 - Quality of Life Additions
+- Misc
+	- Alignment Grid
 
 ## TODO
+- [ ] Default Profiles
 - [ ] Detatched castbars
 - [ ] Resource display
 - [ ] Grid Fixes
-- [ ] Alignment Tool
+- [ ] Alignment Tools
 - [ ] Arena Frames
 - [ ] Databars
 	- [ ] Azerite
@@ -54,8 +57,10 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 	- [ ] Durability Movable
 	- [ ] GM Movable
 	- [ ] PVP Capture Movable
-	- [ ] Auto-ace skinning
+
+## Low Priority Todo
+- [ ] Auto-ace skinning
 - [ ] Raid Marker Frame
-- [ ] \(Low Priority) Resizable movable frames
-- [ ] \(Low Priority) Localization for all languages
-- [ ] \(Low Priority) setup tutorial
+- [ ] Resizable frames instead of size sliders
+- [ ] Localization for all languages
+- [ ] setup tutorial
