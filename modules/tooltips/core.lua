@@ -165,7 +165,7 @@ function mod:create_tooltips()
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
 		self:SetOwner(parent, "ANCHOR_NONE")
 		self:ClearAllPoints()
-		self:SetPoint("LEFT", tooltipanchor)
+		self:SetPoint("CENTER", tooltipanchor)
 	end)
 
 	-- for skinning all the tooltips in the UI

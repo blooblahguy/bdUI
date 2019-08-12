@@ -37,15 +37,17 @@ function mod:create_button_frame()
 		GameTooltip:Hide()
 	end)
 	bdConfigButton:SetScript("OnClick", function(self, button)
+		if (IsControlKeyDown()) then
+			ReloadUI()
+		end
+		
 		if (button == "LeftButton") then
 			bdUI.bdConfig:toggle()
 		elseif (button == "RightButton") then
 			bdUI.bdConfig.header.lock:Click()
 		end
 
-		if (IsControlKeyDown()) then
-			ReloadUI()
-		end
+		
 	end)
 
 	-- Find and move buttons

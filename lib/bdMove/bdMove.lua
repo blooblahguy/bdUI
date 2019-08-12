@@ -37,7 +37,9 @@ lib.save = nil
 lib.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
 	font = "fonts\\ARIALN.ttf",
-	border = {.62, .17, .18, 0.6}
+	border = {.62, .17, .18, 0.6},
+	backdrop = {.1, .1, .1, 0.6},
+	arrow = "Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up",
 }
 
 -- set savedvariable
@@ -65,6 +67,7 @@ local methods = {
 	['unlock'] = function(self)
 		self:SetAlpha(1)
 		self.text:Show()
+		self.locked = false
 		self:EnableMouse(true)
 		self:SetMovable(true)
 		self:SetUserPlaced(false)
@@ -78,9 +81,18 @@ local methods = {
 			StickyFrames:AnchorFrame(self)
 		end)
 	end,
+	['save'] = function(self)
+		-- save in saved variables
+		local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
+		if (not relativeTo) then relativeTo = UIParent end
+		relativeTo = relativeTo:GetName()
+
+		lib.save.positions[self.rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
+	end,
 	['lock'] = function(self)
 		self:SetAlpha(0)
 		self.text:Hide()
+		self.locked = true
 		self:EnableMouse(false)
 		self:SetUserPlaced(false)
 		self:SetMovable(false)
@@ -88,12 +100,7 @@ local methods = {
 		self:SetScript("OnDragStart", noop)
 		self:SetScript("OnDragStop", noop)
 
-		-- save in saved variables
-		local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
-		if (not relativeTo) then relativeTo = UIParent end
-		relativeTo = relativeTo:GetName()
-
-		lib.save.positions[self.rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
+		self:save()
 	end,
 	-- position save in saved variables (protects against lost positions during UI errors)
 	['position'] = function(self)
@@ -150,6 +157,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	mover:SetFrameStrata("BACKGROUND")
 	mover:SetClampedToScreen(true)
 	mover:SetAlpha(0)
+	mover.locked = true
 	
 	-- Text Label
 	mover.text = mover:CreateFontString(mover:GetName().."_Text")
@@ -172,6 +180,16 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	mover.frame = frame
 	mover.rename = rename
 	Mixin(mover, methods)
+
+	-- nudge controls
+	mover:SetScript("OnEnter", function(self)
+		lib:attach_controls(self)
+	end)
+	mover:SetScript("OnLeave", function(self)
+		if (not MouseIsOver(lib.controls)) then
+			lib.controls:Hide()
+		end
+	end)
 
 	-- position
 	mover:position()
@@ -240,12 +258,174 @@ end
 -- Controls
 --========================================================
 lib.controls = CreateFrame("frame", nil, bdParent)
-function lib:create_controls()
+lib.controls:SetPoint("CENTER", UIParent)
+lib.controls:SetSize(110, 22)
+lib.controls:SetFrameStrata("TOOLTIP")
+lib.controls:SetFrameLevel(129)
+lib.controls:Hide()
+lib.controls:SetScript("OnLeave", function(self)
+	if (MouseIsOver(self)) then return end
+	if (not self._frame) then
+		self:Hide()
+	elseif (not MouseIsOver(self._frame)) then
+		self:Hide()
+	end
+end)
 
+local function create_nudge_button(moveX, moveY, callback)
+	local controls = lib.controls
+	moveX = moveX or 0
+	moveY = moveY or 0
+
+	local button = CreateFrame("button", nil, controls)
+	button:SetSize(16, 16)
+	button:SetBackdrop({bgFile = lib.media.flat})
+	button:SetBackdropColor(0,0,0,1)
+	button.controls = controls
+
+	-- l, r, t, b
+	local texcoord = {.25, 0.72, 0.32, 0.68}
+	button.tex = button:CreateTexture(nil, "OVERLAY")
+	button.tex:SetTexture(lib.media.arrow)
+	button.tex:SetTexCoord(unpack(texcoord))
+	button.tex:SetPoint("CENTER")
+	button.tex:SetSize(8, 8)
+	button.tex:SetDesaturated(1)
+
+	button.tex2 = button:CreateTexture(nil, "OVERLAY")
+	button.tex2:SetTexture(lib.media.arrow)
+	button.tex2:SetTexCoord(unpack(texcoord))
+	button.tex2:SetPoint("CENTER")
+	button.tex2:SetSize(8, 8)
+	button.tex2:SetDesaturated(1)
+	button.tex2:Hide()
+
+	button:SetScript("OnEnter", function(self)
+		self.tex:SetDesaturated(false)
+		self.tex2:SetDesaturated(false)
+	end)
+	button:SetScript("OnLeave", function(self)
+		self.tex:SetDesaturated(1)
+		self.tex2:SetDesaturated(1)
+	end)
+
+	-- default callback
+	callback = callback or function(self)
+		local frame = self.controls._frame
+		if (not frame) then print("no frame") return end
+		local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+		if (IsShiftKeyDown()) and IsControlKeyDown() then
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(moveX*20), yOfs+(moveY*20))
+		elseif (IsShiftKeyDown()) then
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(moveX*5), yOfs+(moveY*5))
+		else
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(moveX*1), yOfs+(moveY*1))
+		end
+		frame:save()
+	end
+
+	button:SetScript("OnClick", callback)
+
+	-- automatically position
+	if (controls.last) then
+		button:SetPoint("LEFT", controls.last, "RIGHT", 2, 0)
+	else
+		button:SetPoint("LEFT", controls, "LEFT", 2, 0)
+	end
+
+	controls.last = button
+
+	return button
 end
 
-function lib:attach_controls(frame)
+-- left
+lib.controls.left = create_nudge_button(-1, 0)
+lib.controls.left.tex:SetRotation(-1.5708)
 
+-- up
+lib.controls.up = create_nudge_button(0, 1)
+lib.controls.up.tex:SetRotation(3.14159)
+
+-- down
+lib.controls.down = create_nudge_button(0, -1)
+lib.controls.down.tex:SetRotation(0)
+
+-- right
+lib.controls.right = create_nudge_button(1, 0)
+lib.controls.right.tex:SetRotation(1.5708)
+
+-- center horizontal
+lib.controls.center_h = create_nudge_button(nil, nil, function(self)
+	local frame = self.controls._frame
+	if (not frame) then return end
+	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+	local width, height = frame:GetSize()
+	local s_width, s_height = GetScreenWidth(), GetScreenHeight()
+
+	frame:ClearAllPoints()
+	if (point == "LEFT" or point == "TOPLEFT" or point == "BOTTOMLEFT") then
+		frame:SetPoint(point, UIParent, point, ((s_width / 2) - (width / 2)), yOfs)
+	elseif (point == "CENTER" or point == "TOP" or point == "BOTTOM") then
+		frame:SetPoint(point, UIParent, point, 0, yOfs)
+	elseif (point == "RIGHT" or point == "TOPRIGHT" or point == "BOTTOMRIGHT") then
+		frame:SetPoint(point, UIParent, point, -((s_width / 2) - (width / 2)), yOfs)
+	end
+
+	frame:save()
+end)
+
+lib.controls.center_h.tex2:ClearAllPoints()
+lib.controls.center_h.tex2:SetPoint("LEFT", lib.controls.center_h, "CENTER", -2, 0)
+lib.controls.center_h.tex2:SetHeight(4)
+lib.controls.center_h.tex2:SetRotation(-1.5708)
+lib.controls.center_h.tex2:Show()
+
+lib.controls.center_h.tex:ClearAllPoints()
+lib.controls.center_h.tex:SetPoint("RIGHT", lib.controls.center_h, "CENTER", 2, 0)
+lib.controls.center_h.tex:SetHeight(4)
+lib.controls.center_h.tex:SetRotation(1.5708)
+
+-- center vertically
+lib.controls.center_v = create_nudge_button(nil, nil, function(self)
+	local frame = self.controls._frame
+	if (not frame) then return end
+	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+	local width, height = frame:GetSize()
+	local s_width, s_height = GetScreenWidth(), GetScreenHeight()
+
+	yOfs = ((s_height / 2) - (height / 2))
+
+	frame:ClearAllPoints()
+	if (point == "TOPLEFT" or point == "TOP" or point == "TOPRIGHT") then
+		frame:SetPoint(point, UIParent, point, xOfs, -yOfs)
+	elseif (point == "LEFT" or point == "CENTER" or point == "RIGHT") then
+		frame:SetPoint(point, UIParent, point, xOfs, 0)
+	elseif (point == "BOTTOMLEFT" or point == "BOTTOM" or point == "BOTTOMRIGHT") then
+		frame:SetPoint(point, UIParent, point, xOfs, yOfs)
+	end
+	
+	frame:save()
+end)
+
+lib.controls.center_v.tex2:SetPoint("TOP", lib.controls.center_v, "CENTER", 0, 0)
+lib.controls.center_v.tex2:SetHeight(4)
+lib.controls.center_v.tex2:SetRotation(3.14159)
+lib.controls.center_v.tex2:Show()
+
+lib.controls.center_v.tex:SetHeight(4)
+lib.controls.center_v.tex:ClearAllPoints()
+lib.controls.center_v.tex:SetPoint("BOTTOM", lib.controls.center_v, "CENTER", 0, 0)
+lib.controls.center_v.tex:SetRotation(0)
+
+function lib:attach_controls(frame)
+	if (frame.locked) then 
+		lib.controls:Hide()
+		return
+	end
+	lib.controls._frame = frame
+	lib.controls:Show()
+	lib.controls:ClearAllPoints()
+	lib.controls:SetPoint("BOTTOM", frame, "TOP", 0, 0)
 end
 
 

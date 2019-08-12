@@ -27,6 +27,7 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Moving overhaul (with snapping!)
 - Localization Support
 - Minimap
+- Chat (with emojis)
 - Unitframes (arena WiP)
 - Actionbars
 - Nameplates
@@ -38,15 +39,12 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Viewports
 - Alternative Power
 - Quality of Life Additions
-- Misc
-	- Alignment Grid
 
 ## TODO
 - [ ] Default Profiles
 - [ ] Detatched castbars
 - [ ] Resource display
 - [ ] Grid Fixes
-- [ ] Alignment Tools
 - [ ] Arena Frames
 - [ ] Databars
 	- [ ] Azerite

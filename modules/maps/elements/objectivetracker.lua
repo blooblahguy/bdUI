@@ -22,18 +22,26 @@ function mod:create_objective_tracker()
 
 	local f = CreateFrame("Frame")
 	f:SetScript("OnEvent",function(self, event, addon)
-		if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
-			move_objective_tracker()
-			hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
-				if (not ignore_point) then
-					move_objective_tracker()
-				end
-			end)
-			self:UnregisterEvent("ADDON_LOADED")
+		if (event == "ENCOUNTER_START") then
+			ObjectiveTrackerFrame:Hide()
+		elseif (event == "ENCOUNTER_END") then
+			ObjectiveTrackerFrame:Show()
 		else
-			self:RegisterEvent("ADDON_LOADED")
+			if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
+				move_objective_tracker()
+				hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
+					if (not ignore_point) then
+						move_objective_tracker()
+					end
+				end)
+				self:UnregisterEvent("ADDON_LOADED")
+			else
+				self:RegisterEvent("ADDON_LOADED")
+			end
 		end
 	end)
 	f:RegisterEvent("PLAYER_LOGIN")
+	f:RegisterEvent("ENCOUNTER_START")
+	f:RegisterEvent("ENCOUNTER_END")
 
 end
