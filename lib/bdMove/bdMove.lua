@@ -4,6 +4,7 @@ if not lib then return end -- No upgrade needed
 
 -- Load library support
 local StickyFrames = LibStub("LibSimpleSticky-1.0")
+
 LibStub("bdCallbacks-1.0"):New(lib)
 
 --========================================================
@@ -28,11 +29,15 @@ lib.ui_scale = GetCVar("uiScale") or 1
 lib.pixel = lib.scale / lib.ui_scale
 lib.border = lib.pixel * 2
 
+StickyFrames.rangeX = lib.border * 3
+StickyFrames.rangeY = lib.border * 3
+
 lib.moveable_frames = {}
 lib.save = nil
 lib.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
 	font = "fonts\\ARIALN.ttf",
+	border = {.62, .17, .18, 0.6}
 }
 
 -- set savedvariable
@@ -124,10 +129,10 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	if (not lib.save) then print("lib needs SavedVariable to save positions. Use lib:set_save(sv_string)") return end
 	rename = rename or frame:GetName()
 
-	left = left or 2
-	top = top or 2
-	right = right or left or 2
-	bottom = bottom or top or 2
+	left = left or lib.border
+	top = top or lib.border
+	right = right or left or lib.border
+	bottom = bottom or top or lib.border
 
 	-- get dimensions
 	local height = frame:GetHeight()
@@ -139,8 +144,9 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	local mover = CreateFrame("frame", rename, UIParent)
 	mover:EnableMouse(false)
 	mover:SetSize(width + (right + left), height + (top + bottom))
-	mover:SetBackdrop({bgFile = lib.media.flat})
+	mover:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})
 	mover:SetBackdropColor(0,0,0,.6)
+	mover:SetBackdropBorderColor(unpack(lib.media.border))
 	mover:SetFrameStrata("BACKGROUND")
 	mover:SetClampedToScreen(true)
 	mover:SetAlpha(0)
@@ -177,12 +183,18 @@ function lib:toggle_lock()
 	if (lib.unlocked) then
 		-- lock
 		lib.unlocked = false
+		lib.align:Hide()
 		for k, frame in pairs(lib.moveable_frames) do
 			frame:lock()
 		end
 	else
+		if (InCombatLockdown()) then
+			print("Moving not allowed in combat")
+			return
+		end
 		-- unlock
 		lib.unlocked = true
+		lib.align:Show()
 		for k, frame in pairs(lib.moveable_frames) do
 			frame:unlock()
 		end
@@ -191,6 +203,37 @@ end
 
 function lib:reset_positions()
 	lib.save.positions = {}
+end
+
+--========================================================
+-- Align Grid
+--========================================================
+lib.align = CreateFrame('Frame', nil, UIParent) 
+lib.align:SetAllPoints(UIParent)
+lib.align:Hide()
+local grid_x = 32
+local grid_y = 18
+local w = GetScreenWidth() / grid_x
+local h = GetScreenHeight() / grid_y
+for i = 0, grid_x do
+	local t = lib.align:CreateTexture(nil, 'BACKGROUND')
+	if i == grid_x / 2 then
+		t:SetColorTexture(unpack(lib.media.border))
+	else
+		t:SetColorTexture(1, 1, 1, 0.1)
+	end
+	t:SetPoint('TOPLEFT', lib.align, 'TOPLEFT', i * w - 1, 0)
+	t:SetPoint('BOTTOMRIGHT', lib.align, 'BOTTOMLEFT', i * w + 1, 0)
+end
+for i = 0, grid_y do
+	local t = lib.align:CreateTexture(nil, 'BACKGROUND')
+	if i == grid_y / 2 then
+		t:SetColorTexture(unpack(lib.media.border))
+	else
+		t:SetColorTexture(1, 1, 1, 0.15)
+	end
+	t:SetPoint('TOPLEFT', lib.align, 'TOPLEFT', 0, -i * h + 1)
+	t:SetPoint('BOTTOMRIGHT', lib.align, 'TOPRIGHT', 0, -i * h - 1)
 end
 
 --========================================================
