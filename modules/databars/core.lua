@@ -9,8 +9,41 @@ local config
 -- Core functionality
 -- place core functionality here
 --===============================================
+local azerite, honor, rep, xp, altpower, container
 function mod:initialize()
 	config = mod:get_save()
 
-	mod:create_xp()
+
+	-- framestack bars
+	container = CreateFrame("frame", "bdDatabars", bdParent)
+	
+	-- create the bars
+	altpower = mod:create_altpower()
+	xp = mod:create_xp()
+	rep = mod:create_rep()
+	honor = mod:create_honor()
+	azerite = mod:create_azerite()
+
+	-- put into frame group
+	bdUI:frame_group(container, "upwards", azerite, honor, rep, xp)
+	bdMove:set_moveable(container, "Databars")
+end
+
+
+-- config callback
+function mod:config_callback()
+
+	xp:callback()
+	rep:callback()
+	honor:callback()
+	azerite:callback()
+	altpower:callback()
+
+	xp:SetSize(config.databars_width, config.databars_height)
+	rep:SetSize(config.databars_width, config.databars_height)
+	honor:SetSize(config.databars_width, config.databars_height)
+	azerite:SetSize(config.databars_width, config.databars_height)
+	altpower:SetSize(config.alt_width, config.alt_height)
+	
+	bdUI:frame_group(container, "upwards", azerite, honor, rep, xp)
 end

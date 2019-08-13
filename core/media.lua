@@ -18,7 +18,9 @@ function bdUI:frame_group(container, direction, ...)
 		if (frame:IsShown()) then
 			-- frame #1 gets to be the "anchor" point
 			if (not last) then
-				container:SetPoint(frame:GetPoint())
+				if (not container:GetPoint()) then
+					container:SetPoint(frame:GetPoint())
+				end
 				frame:ClearAllPoints()
 				if (direction == "down") then
 					frame:SetPoint("TOP", container)

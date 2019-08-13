@@ -41,8 +41,6 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Quality of Life Additions
 
 ## TODO
-- [ ] Detatched castbars
-- [ ] Resource display
 - [ ] Grid Fixes
 - [ ] Arena Frames
 - [ ] Databars

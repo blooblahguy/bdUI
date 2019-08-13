@@ -6,12 +6,12 @@ function mod:create_xp()
 
 	local bar = mod:create_databar("bdXP")
 	bar:SetPoint("BOTTOM", bdParent, "BOTTOM", 0, 0)
-	bar:SetSize(426, 15)
+	bar:SetSize(config.databars_width, config.databars_height)
 	bar:RegisterEvent("PLAYER_XP_UPDATE")
 	bar:RegisterEvent("PLAYER_LEVEL_UP")
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
 	bar:RegisterEvent("UPDATE_FACTION")
-	bar:SetScript("OnEvent", function(self, event)
+	bar.callback = function(self, event)
 		local xp = UnitXP("player")
 		local mxp = UnitXPMax("player")
 		local rxp = GetXPExhaustion("player")
@@ -44,6 +44,8 @@ function mod:create_xp()
 			self.text:SetText(bdUI:numberize(xp).." / "..bdUI:numberize(mxp).." - "..floor((xp / mxp) * 1000) / 10 .."%")
 			self.layer:Hide()
 		end
+	end
+	bar:SetScript("OnEvent", bar.callback)
 
-	end)
+	return bar
 end

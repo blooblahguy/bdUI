@@ -4,19 +4,19 @@ local mod = bdUI:get_module("Databars")
 function mod:create_altpower()
 	local config = mod:get_save()
 	
-	local powerbar = mod:create_databar("bdUI Alt Power")
-	powerbar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-	powerbar:Hide()
-	bdUI:set_backdrop(powerbar)
-	bdMove:set_moveable(powerbar)
+	local bar = mod:create_databar("bdUI Alt Power")
+	bar:SetSize(config.alt_width, config.alt_height)
+	bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	bar:Hide()
+	bdUI:set_backdrop(bar)
+	bdMove:set_moveable(bar, "Alternative Power")
 
 	--Event handling
-	powerbar:RegisterEvent("UNIT_POWER_UPDATE")
-	powerbar:RegisterEvent("UNIT_POWER_BAR_SHOW")
-	powerbar:RegisterEvent("UNIT_POWER_BAR_HIDE")
-	powerbar:RegisterEvent("PLAYER_ENTERING_WORLD")
-	powerbar:SetScript("OnEvent", function(self, event, arg1)
-
+	bar:RegisterEvent("UNIT_POWER_UPDATE")
+	bar:RegisterEvent("UNIT_POWER_BAR_SHOW")
+	bar:RegisterEvent("UNIT_POWER_BAR_HIDE")
+	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
+	bar.callback = function(self, event, arg1)
 		if (not config.alteratepowerbar) then 
 			PlayerPowerBarAlt:RegisterEvent("UNIT_POWER_BAR_SHOW")
 			PlayerPowerBarAlt:RegisterEvent("UNIT_POWER_BAR_HIDE")
@@ -45,5 +45,8 @@ function mod:create_altpower()
 				self:Hide()
 			end
 		end
-	end)
+	end
+	bar:SetScript("OnEvent", bar.callback)
+
+	return bar
 end
