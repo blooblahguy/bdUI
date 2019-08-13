@@ -4,7 +4,6 @@ local bdUI, c, l = unpack(select(2, ...))
 bdUI.events = bdUI.events or {}
 bdUI.eventer = CreateFrame("frame", nil, bdParent)
 --================================================
-
 	-- register events in a single frame
 	function bdUI:RegisterEvent(event, callback)
 		local event = {strsplit(",", event)} or {event}

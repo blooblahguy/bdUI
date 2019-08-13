@@ -41,7 +41,6 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Quality of Life Additions
 
 ## TODO
-- [ ] Default Profiles
 - [ ] Detatched castbars
 - [ ] Resource display
 - [ ] Grid Fixes
@@ -57,6 +56,7 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 	- [ ] PVP Capture Movable
 
 ## Low Priority Todo
+- [ ] Default Profiles
 - [ ] Auto-ace skinning
 - [ ] Raid Marker Frame
 - [ ] Resizable frames instead of size sliders

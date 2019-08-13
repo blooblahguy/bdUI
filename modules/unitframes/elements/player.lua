@@ -19,9 +19,14 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.resting(self, unit)
 	mod.additional_elements.combat(self, unit)
 	mod.additional_elements.buffs(self, unit)
+
 	self.Buffs.size = 22
 
 	self.Power:SetHeight(config.playertargetpowerheight)
+	self.Power:Show()
+	if (config.playertargetpowerheight == 0) then
+		self.Power:Hide()
+	end
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
 
 	self.RestingIndicator:ClearAllPoints()
@@ -49,4 +54,6 @@ mod.custom_layout["player"] = function(self, unit)
 		end
 	end
 
+	-- create standalone resource bar
+	mod.create_resources(self, unit)
 end

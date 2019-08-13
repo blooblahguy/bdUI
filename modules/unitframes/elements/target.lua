@@ -12,6 +12,10 @@ mod.custom_layout["target"] = function(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 
 	self.Power:SetHeight(config.playertargetpowerheight)
+	self.Power:Show()
+	if (config.playertargetpowerheight == 0) then
+		self.Power:Hide()
+	end
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
 
 	self.Debuffs.initialAnchor  = "BOTTOMLEFT"

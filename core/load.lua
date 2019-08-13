@@ -25,5 +25,10 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		bdUI:debug(l['LOAD_MSG'])
 		bdUI:do_action("loaded")
 		bdUI:do_action("post_loaded")
+
+		-- if (not BDUI_SAVE.first_run) then
+		-- 	BDUI_SAVE.first_run = true
+		-- 	bdUI:do_action("setup")
+		-- end
 	end
 end)

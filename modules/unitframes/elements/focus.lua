@@ -12,6 +12,10 @@ mod.custom_layout["focus"] = function(self, unit)
 	mod.additional_elements.auras(self, unit)
 
 	self.Power:SetHeight(config.focuspower)
+	self.Power:Show()
+	if (config.focuspower == 0) then
+		self.Power:Hide()
+	end
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.focuspower + bdUI.border)
 
 	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)

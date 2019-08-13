@@ -1,5 +1,75 @@
 local bdUI, c, l = unpack(select(2, ...))
 
+--========================================================
+-- Frames Groups
+-- automatically positions frames in given direction, and
+-- returns dimensions of the "stack"
+--========================================================
+function bdUI:frame_group(container, direction, ...)
+	direction = string.lower(direction) or "down"
+	container = container or CreateFrame("frame", nil, bdParent)
+	local last = nil
+	local height = 0
+	local width = 0
+
+	-- loop through frames provided in other parameters
+	for k, frame in pairs(...) do
+		-- ignore frames that are hidden
+		if (frame:IsShown()) then
+			-- frame #1 gets to be the "anchor" point
+			if (not last) then
+				container:SetPoint(frame:GetPoint())
+				frame:ClearAllPoints()
+				if (direction == "down") then
+					frame:SetPoint("TOP", container)
+					width = frame:GetWidth() > width and frame:GetWidth() or width
+					height = height + frame:GetHeight()
+				elseif (direction == "up") then
+					frame:SetPoint("BOTTOM", container)
+					width = frame:GetWidth() > width and frame:GetWidth() or width
+					height = height + frame:GetHeight()
+
+				elseif (direction == "right") then
+					frame:SetPoint("LEFT", container)
+					height = frame:GetHeight() > height and frame:GetHeight() or height
+					width = width + frame:GetWidth()
+				elseif (direction == "left") then
+					frame:SetPoint("RIGHT", container)
+					height = frame:GetHeight() > height and frame:GetHeight() or height
+					width = width + frame:GetWidth()
+				end
+			else
+				-- everything else is positioned opposite
+				frame:ClearAllPoints()
+				if (direction == "down") then
+					frame:SetPoint("TOP", last, "BOTTOM", 0, -bdUI.border)
+					width = frame:GetWidth() > width and frame:GetWidth() or width
+					height = height + frame:GetHeight() + bdUI.border
+				elseif (direction == "up") then
+					frame:SetPoint("BOTTOM", last, "TOP", 0, bdUI.border)
+					width = frame:GetWidth() > width and frame:GetWidth() or width
+					height = height + frame:GetHeight() + bdUI.border
+
+				elseif (direction == "right") then
+					frame:SetPoint("LEFT", last, "RIGHT", bdUI.border, 0)
+					height = frame:GetHeight() > height and frame:GetHeight() or height
+					width = width + frame:GetWidth() + bdUI.border
+				elseif (direction == "left") then
+					frame:SetPoint("RIGHT", last, "LEFT", -bdUI.border, 0)
+					height = frame:GetHeight() > height and frame:GetHeight() or height
+					width = width + frame:GetWidth() + bdUI.border
+				end
+			end
+
+			local last = frame
+		end
+	end
+
+	-- returns max of one dimension, and total of other dimension, based on direction provided
+	container:SetSize(width, height)
+	return container
+end
+
 --================================================
 -- Media Functions
 --================================================
