@@ -43,7 +43,7 @@ local config = {
 			{
 				key = "buttonpos",
 				type = "select",
-				value = "Bottom",
+				value = "Top",
 				options = {"Disabled", "Top", "Right", "Bottom", "Left"},
 				label = "Button Frame Position"
 			},
