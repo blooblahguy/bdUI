@@ -38,11 +38,11 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Tooltips
 - Viewports
 - Databars (xp, azerite, honor, reputation)
+- Standalone Resource Bar (power, stagger, runes, totems, holy power, combo points, chi)
 - Alternative Power
 - Quality of Life Additions
 
 ## TODO
-- [ ] Player Resource Bar
 - [ ] Grid Fixes
 - [ ] Arena Frames
 - [ ] Skinning
@@ -51,7 +51,7 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 	- [ ] PVP Capture Movable
 
 ## Low Priority Todo
-- [ ] Default Profiles
+- [ ] Multiple Default Profiles
 - [ ] Auto-ace skinning
 - [ ] Raid Marker Frame
 - [ ] Resizable frames instead of size sliders

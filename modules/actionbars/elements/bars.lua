@@ -16,7 +16,7 @@ function mod:create_actionbar1()
 	cfg.moveName = "Actionbar 1"
 	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.actionPage = "[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
-	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, defaultPadding}
+	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 100}
 
 	local buttonName = "ActionButton"
 	local numButtons = NUM_ACTIONBAR_BUTTONS
@@ -65,7 +65,7 @@ function mod:create_actionbar2()
 	cfg.moveName = "Actionbar 2"
 	-- cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod][@target,exists,nodead] show; hide"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -defaultPadding, defaultPadding}
+	cfg.frameSpawn = {"TOPLEFT", mod.bars['bar1'], "BOTTOMLEFT", 0, -defaultPadding}
 
 	local buttonList = mod:GetButtonList("MultiBarBottomLeftButton", NUM_ACTIONBAR_BUTTONS)
 	local bar2 = mod:CreateBar(buttonList, cfg)
@@ -81,7 +81,7 @@ function mod:create_actionbar3()
 	cfg.moveName = "Actionbar 3"
 	cfg.cfg = "bar3"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"BOTTOM", mod.bars['bar2'], "TOP", 0, 0}
+	cfg.frameSpawn = {"TOPRIGHT", mod.bars['bar1'], "BOTTOMRIGHT", 0, -defaultPadding}
 
 	local buttonList = mod:GetButtonList("MultiBarBottomRightButton", NUM_ACTIONBAR_BUTTONS)
 	local bar3 = mod:CreateBar(buttonList, cfg)
@@ -97,7 +97,7 @@ function mod:create_actionbar4()
 	cfg.moveName = "Actionbar 4"
 	cfg.cfg = "bar4"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"TOP", bdParent, "CENTER", 0, -163}
+	cfg.frameSpawn = {"RIGHT", bdParent, "RIGHT", -defaultPadding, 0}
 
 	local buttonList = mod:GetButtonList("MultiBarRightButton", NUM_ACTIONBAR_BUTTONS)
 	local bar4 = mod:CreateBar(buttonList, cfg)
@@ -113,7 +113,7 @@ function mod:create_actionbar5()
 	cfg.moveName = "Actionbar 5"
 	cfg.cfg = "bar5"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"RIGHT", bdParent, "RIGHT", -defaultPadding, 0}
+	cfg.frameSpawn = {"RIGHT", mod.bars['bar4'], "LEFT", -defaultPadding, 0}
 
 	local buttonList = mod:GetButtonList("MultiBarLeftButton", NUM_ACTIONBAR_BUTTONS)
 	local bar5 = mod:CreateBar(buttonList, cfg)

@@ -99,7 +99,7 @@ mod.additional_elements = {
 		self.Castbar.PostCastNotInterruptible = castbar_kickable
 		self.Castbar.PostCastInterruptible = castbar_kickable
 
-		bdMove:set_moveable(self.Castbar, unit.." Castbar")
+		-- bdMove:set_moveable(self.Castbar, unit.." Castbar")
 		bdUI:set_backdrop(self.Castbar)
 	end,
 
