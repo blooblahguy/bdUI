@@ -37,17 +37,14 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Grid
 - Tooltips
 - Viewports
+- Databars (xp, azerite, honor, reputation)
 - Alternative Power
 - Quality of Life Additions
 
 ## TODO
+- [ ] Player Resource Bar
 - [ ] Grid Fixes
 - [ ] Arena Frames
-- [ ] Databars
-	- [ ] Azerite
-	- [ ] Honor
-	- [x] XP
-	- [ ] Reputation
 - [ ] Skinning
 	- [ ] Durability Movable
 	- [ ] GM Movable

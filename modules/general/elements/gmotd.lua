@@ -37,7 +37,7 @@ function mod:create_gmotd()
 	gmotd:RegisterEvent("GUILD_ROSTER_UPDATE")
 	gmotd:SetScript("OnEvent", function(self, event, message)
 		if (not config.skingmotd) then return end
-		
+
 		local guild = false
 		local msg = false
 		if (event == "GUILD_MOTD") then
