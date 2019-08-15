@@ -6,7 +6,7 @@ function mod:create_altpower()
 	
 	local bar = mod:create_databar("bdUI Alt Power")
 	bar:SetSize(config.alt_width, config.alt_height)
-	bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	bar:SetPoint("CENTER", UIParent, "CENTER", 0, -200)
 	bar:Hide()
 	bdUI:set_backdrop(bar)
 	bdMove:set_moveable(bar, "Alternative Power")

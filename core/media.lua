@@ -7,68 +7,72 @@ local bdUI, c, l = unpack(select(2, ...))
 --========================================================
 function bdUI:frame_group(container, direction, ...)
 	direction = string.lower(direction) or "down"
-	container = container or CreateFrame("frame", nil, bdParent)
 	local last = nil
 	local height = 0
 	local width = 0
+	local children = {...}
 
-	-- loop through frames provided in other parameters
-	for k, frame in pairs(...) do
+	-- first, do height, and hook vision
+	for k, frame in pairs(children) do
 		-- ignore frames that are hidden
-		if (frame:IsShown()) then
+		if (type(frame) == "table" and frame:IsShown()) then
+			if (direction == "upwards" or direction == "downwards") then
+				width = frame:GetWidth() > width and frame:GetWidth() or width
+				height = height + frame:GetHeight() + bdUI.border
+			elseif (direction == "left" or direction == "right") then
+				height = frame:GetHeight() > height and frame:GetHeight() or height
+				width = width + frame:GetWidth() + bdUI.border
+			end
+		end
+
+		if (not frame._hooked) then
+			frame._hooked = true
+			hooksecurefunc(frame, "Show", function()
+				bdUI:frame_group(container, direction, unpack(children))
+			end)
+			hooksecurefunc(frame, "Hide", function()
+				bdUI:frame_group(container, direction, unpack(children))
+			end)
+		end
+	end
+
+	container:SetSize(width, height)
+
+	-- loop through frames provided in other parameters	
+	for k, frame in pairs(children) do
+		-- ignore frames that are hidden
+		if (type(frame) == "table" and frame:IsShown()) then
 			-- frame #1 gets to be the "anchor" point
 			if (not last) then
-				if (not container:GetPoint()) then
-					container:SetPoint(frame:GetPoint())
-				end
 				frame:ClearAllPoints()
-				if (direction == "down") then
-					frame:SetPoint("TOP", container)
-					width = frame:GetWidth() > width and frame:GetWidth() or width
-					height = height + frame:GetHeight()
-				elseif (direction == "up") then
-					frame:SetPoint("BOTTOM", container)
-					width = frame:GetWidth() > width and frame:GetWidth() or width
-					height = height + frame:GetHeight()
-
+				if (direction == "downwards") then
+					frame:SetPoint("TOP", container, "TOP")
+				elseif (direction == "upwards") then
+					frame:SetPoint("BOTTOM", container, "BOTTOM")
 				elseif (direction == "right") then
-					frame:SetPoint("LEFT", container)
-					height = frame:GetHeight() > height and frame:GetHeight() or height
-					width = width + frame:GetWidth()
+					frame:SetPoint("RIGHT", container, "RIGHT")
 				elseif (direction == "left") then
-					frame:SetPoint("RIGHT", container)
-					height = frame:GetHeight() > height and frame:GetHeight() or height
-					width = width + frame:GetWidth()
+					frame:SetPoint("LEFT", container, "LEFT")
 				end
 			else
 				-- everything else is positioned opposite
 				frame:ClearAllPoints()
-				if (direction == "down") then
+				if (direction == "downwards") then
 					frame:SetPoint("TOP", last, "BOTTOM", 0, -bdUI.border)
-					width = frame:GetWidth() > width and frame:GetWidth() or width
-					height = height + frame:GetHeight() + bdUI.border
-				elseif (direction == "up") then
+				elseif (direction == "upwards") then
 					frame:SetPoint("BOTTOM", last, "TOP", 0, bdUI.border)
-					width = frame:GetWidth() > width and frame:GetWidth() or width
-					height = height + frame:GetHeight() + bdUI.border
-
 				elseif (direction == "right") then
 					frame:SetPoint("LEFT", last, "RIGHT", bdUI.border, 0)
-					height = frame:GetHeight() > height and frame:GetHeight() or height
-					width = width + frame:GetWidth() + bdUI.border
 				elseif (direction == "left") then
 					frame:SetPoint("RIGHT", last, "LEFT", -bdUI.border, 0)
-					height = frame:GetHeight() > height and frame:GetHeight() or height
-					width = width + frame:GetWidth() + bdUI.border
 				end
 			end
 
-			local last = frame
+			last = frame
 		end
 	end
 
 	-- returns max of one dimension, and total of other dimension, based on direction provided
-	container:SetSize(width, height)
 	return container
 end
 

@@ -18,6 +18,12 @@ function IsMouseOverFrame(self)
 
 	return false
 end
+local function GetQuadrant(frame)
+	local x,y = frame:GetCenter()
+	local hhalf = (x > UIParent:GetWidth()/2) and "RIGHT" or "LEFT"
+	local vhalf = (y > UIParent:GetHeight()/2) and "TOP" or "BOTTOM"
+	return vhalf..hhalf, vhalf, hhalf
+end
 noop = function() end
 
 --========================================================
@@ -146,6 +152,9 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	local width = frame:GetWidth()
 	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
 	relativeTo = _G[relativeTo] or relativeTo:GetName()
+
+	-- frame:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})
+	-- frame:SetBackdropColor(0,0.2,0,.4)
 
 	-- Create Mover Parent
 	local mover = CreateFrame("frame", rename, UIParent)
@@ -422,10 +431,17 @@ function lib:attach_controls(frame)
 		lib.controls:Hide()
 		return
 	end
+
+	local quad, y, h = GetQuadrant(frame)
+	-- print(quad, h, y)
 	lib.controls._frame = frame
 	lib.controls:Show()
 	lib.controls:ClearAllPoints()
-	lib.controls:SetPoint("BOTTOM", frame, "TOP", 0, 0)
+	if (y == "TOP") then
+		lib.controls:SetPoint("TOP", frame, "BOTTOM", 0, 0)
+	else
+		lib.controls:SetPoint("BOTTOM", frame, "TOP", 0, 0)
+	end
 end
 
 

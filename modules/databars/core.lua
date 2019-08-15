@@ -15,24 +15,24 @@ function mod:initialize()
 
 
 	-- framestack bars
-	container = CreateFrame("frame", "bdDatabars", bdParent)
+	container = CreateFrame("frame", "bdDatabars", UIParent)
 	
 	-- create the bars
 	altpower = mod:create_altpower()
 	xp = mod:create_xp()
-	rep = mod:create_rep()
+	rep = mod:create_reputation()
 	honor = mod:create_honor()
 	azerite = mod:create_azerite()
 
 	-- put into frame group
-	bdUI:frame_group(container, "upwards", azerite, honor, rep, xp)
+	bdUI:frame_group(container, "downwards", azerite, honor, rep, xp)
+	container:SetPoint("TOP", bdParent, "TOP", 0, -10)
 	bdMove:set_moveable(container, "Databars")
 end
 
 
 -- config callback
 function mod:config_callback()
-
 	xp:callback()
 	rep:callback()
 	honor:callback()
@@ -45,5 +45,5 @@ function mod:config_callback()
 	azerite:SetSize(config.databars_width, config.databars_height)
 	altpower:SetSize(config.alt_width, config.alt_height)
 	
-	bdUI:frame_group(container, "upwards", azerite, honor, rep, xp)
+	bdUI:frame_group(container, "downwards", azerite, honor, rep, xp)
 end

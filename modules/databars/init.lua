@@ -6,9 +6,9 @@ local bdUI, c, l = unpack(select(2, ...))
 -- Config Table
 local config = {
 	{
-		key = "group",
-		type "group",
-		heading = "Databars",
+		key = "dbgroup",
+		type = "group",
+		heading = "Alternative Power",
 		args = {
 			{
 				key = "alteratepowerbar",
@@ -22,9 +22,9 @@ local config = {
 				type = "range",
 				label = "Alternative Power Width",
 				min = 40,
-				max = 1200,
+				max = 400,
 				step = 5,
-				value = 300,	
+				value = 200,	
 			},
 			{
 				key = "alt_height",
@@ -39,8 +39,8 @@ local config = {
 	},
 
 	{
-		key = "group",
-		type "group",
+		key = "dbgroup2",
+		type = "group",
 		heading = "Databars",
 		args = {
 			{
@@ -50,7 +50,7 @@ local config = {
 				min = 40,
 				max = 1200,
 				step = 5,
-				value = 300,	
+				value = 320,	
 			},
 			{
 				key = "databars_height",
@@ -59,24 +59,33 @@ local config = {
 				min = 4,
 				max = 60,
 				step = 4,
-				value = 16,	
+				value = 14,	
 			},
 			{
-				key = "xp_rep_bar",
-				type = "toggle",
-				value = true,
-				label = "XP & Rep Bar"
+				key = "repbar",
+				type = "select",
+				value = "Show When Tracking & Max Level",
+				options = {"Always Hide", "Show When Tracking", "Show When Tracking & Max Level"},
+				label = "Rep Bar"
+			},
+			{
+				key = "xpbar",
+				type = "select",
+				value = "Show When Leveling",
+				options = {"Always Hide", "Show When Leveling"},
+				label = "XP Bar"
 			},
 			{
 				key = "honorbar",
 				type = "toggle",
-				value = true,
+				value = false,
 				label = "Honor Bar"
 			},
 			{
 				key = "apbar",
-				type = "toggle",
-				value = true,
+				type = "select",
+				value = "Only At Max Level",
+				options = {"Always Show", "Always Hide", "Only At Max Level"},
 				label = "AP Bar"
 			},
 		}
@@ -84,6 +93,4 @@ local config = {
 
 }
 
-local mod = bdUI:register_module("Databars", config, {
-	hide_ui = true
-})
+local mod = bdUI:register_module("Databars", config)

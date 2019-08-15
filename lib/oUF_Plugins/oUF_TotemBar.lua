@@ -19,11 +19,8 @@
 			.multiplier : Sets the multiplier for the text or the background (can be two differents multipliers)
 --]]
 
-local parent = debugstack():match[[\AddOns\(.-)\]]
-local global = GetAddOnMetadata(parent, 'X-oUF')
-local ns = oUF
+local _, ns = ...
 local oUF = ns.oUF
-assert(oUF, 'oUF not loaded')
 
 local _, pClass = UnitClass("player")
 local total = 0

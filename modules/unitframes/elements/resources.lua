@@ -21,7 +21,7 @@ mod.update_resources = function(self, unit)
 	end
 
 	-- now update stack positioning
-	bdUI:frame_group(self.Resources, "downwards", self.Resources.power, self.Resources.primary, self.Resources.secondary)
+	-- bdUI:frame_group(self.Resources, "downwards", self.Resources.power, self.Resources.primary, self.Resources.secondary)
 end
 
 -- Mega resource display
@@ -37,6 +37,7 @@ mod.create_resources = function(self, unit)
 
 	-- displays class resources
 	self.Resources = CreateFrame("frame", "bdResources", self)
+	self.Resources:SetPoint("CENTER", bdParent, "CENTER", 0, -100)
 	bdMove:set_moveable(self.Resources, "Player Resources")
 
 	-- For Power Display
@@ -101,6 +102,7 @@ mod.create_resources = function(self, unit)
 		end
 
 		-- Rune Indicator
+		self.Runes = {}
 		for index = 1, 6 do
 			local rune = CreateFrame('StatusBar', nil, self.Resources)
 			local width = self.Resources:GetWidth() - (bdUI.border * 6) / 6
@@ -109,10 +111,10 @@ mod.create_resources = function(self, unit)
 			if (index == 1) then
 				rune:SetPoint('BOTTOMLEFT', self.Resources, 'BOTTOMLEFT', 0, 0)
 			else
-				rune:SetPoint('BOTTOMLEFT', self.runes[index - 1], 'BOTTOMRIGHT', bdUI.border, 0)
+				rune:SetPoint('BOTTOMLEFT', self.Runes[index - 1], 'BOTTOMRIGHT', bdUI.border, 0)
 			end
 
-			self.runes[index] = rune
+			self.Runes[index] = rune
 		end		
 	else
 		-- also add stagger bar
@@ -123,6 +125,7 @@ mod.create_resources = function(self, unit)
 		end
 
 		-- power for all other classes
+		self.ClassPower = {}
 		for index = 1, 10 do
 			local bar = CreateFrame('StatusBar', nil, self.Resources)
 			local width = self.Resources:GetWidth() - (bdUI.border * 10) / 10
@@ -141,9 +144,9 @@ mod.create_resources = function(self, unit)
 		-- resize available bars
 		function self.ClassPower:PostUpdate(cur, max, changed, powerType)
 			if (not self.isEnabled) then
-				self.Resources:Hide()
+				self.__owner.Resources:Hide()
 			else
-				self.Resources:Show()
+				self.__owner.Resources:Show()
 				if (changed) then
 					for index = 1, max do
 						local width = self.Resources:GetWidth() - (bdUI.border * max) / max

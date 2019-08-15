@@ -5,15 +5,20 @@ function mod:create_reputation()
 	local config = mod:get_save()
 
 	local bar = mod:create_databar("bdReputation")
-	bar:SetPoint("TOP", bdParent, "TOP", 0, -10)
 	bar:SetSize(config.databars_width, config.databars_height)
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
 	bar:RegisterEvent("UPDATE_FACTION")
 	bar.callback = function(self, event)
 		local name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
+		local disable = false
 
 		-- make sure it's enabled
-		if (not config.reptracker or not name) then 
+		if (config.repbar == "Always Hide") then
+			disable = true
+		elseif (config.repbar == "Show When Tracking & Max Level" and UnitLevel("player") ~= MAX_PLAYER_LEVEL) then
+			disable = true
+		end
+		if (disable or not name) then 
 			self:Hide()
 			return
 		end

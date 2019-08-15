@@ -5,7 +5,6 @@ function mod:create_xp()
 	local config = mod:get_save()
 
 	local bar = mod:create_databar("bdXP")
-	bar:SetPoint("BOTTOM", bdParent, "BOTTOM", 0, 0)
 	bar:SetSize(config.databars_width, config.databars_height)
 	bar:RegisterEvent("PLAYER_XP_UPDATE")
 	bar:RegisterEvent("PLAYER_LEVEL_UP")
@@ -18,7 +17,7 @@ function mod:create_xp()
 		local name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
 
 		-- make sure it's enabled
-		if (not config.xp_rep_bar or UnitLevel("player") == MAX_PLAYER_LEVEL or IsXPUserDisabled == true) then 
+		if (config.xpbar == "Always Hide" or (config.xpbar == "Show When Leveling" and UnitLevel("player") == MAX_PLAYER_LEVEL and IsXPUserDisabled == true)) then 
 			self:Hide()
 			return
 		end

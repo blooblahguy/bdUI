@@ -5,24 +5,28 @@ function mod:create_honor()
 	local config = mod:get_save()
 
 	local bar = mod:create_databar("bdHonor")
-	bar:SetPoint("TOP", bdParent, "TOP", 0, -10)
 	bar:SetSize(200, 20)
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
-	bar:RegisterEvent("UPDATE_FACTION")
+	bar:RegisterEvent("HONOR_XP_UPDATE")
 	bar.callback = function(self, event)
-		local name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
+
+		local current = UnitHonor("player");
+		local maxHonor = UnitHonorMax("player");
+		local level = UnitHonorLevel("player");
+		local color = {0.8, 0.2, 0.2}
 
 		-- make sure it's enabled
-		if (not config.reptracker or not name) then 
+		if (not config.honorbar or not level) then 
 			self:Hide()
 			return
 		end
 
 		self:Show()
-		self:SetMinMaxValues(minrep, maxrep)
-		self:SetValue(value)
-		self:SetStatusBarColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b, 1)
-		self.text:SetText(value - minrep.." / "..maxrep - minrep.." - "..math.floor(((value - minrep) / (maxrep - minrep)) * 1000) / 10 .."% - ".. name)
+		self:SetMinMaxValues(0, maxHonor)
+		self:SetValue(current)
+		self:SetStatusBarColor(unpack(color))
+		self.text:SetText(string.format("%s - %s / %s - %s", level, current, maxHonor, bdUI:round((current / maxHonor) * 100, 1)).."%")
+		
 	end
 	bar:SetScript("OnEvent", bar.callback)
 
