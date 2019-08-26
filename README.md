@@ -56,4 +56,4 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - [ ] Raid Marker Frame
 - [ ] Resizable frames instead of size sliders
 - [ ] Localization for all languages
-- [ ] setup tutorial
+- [ ] Setup tutorial

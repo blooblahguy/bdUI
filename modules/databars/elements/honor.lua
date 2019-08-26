@@ -3,6 +3,7 @@ local mod = bdUI:get_module("Databars")
 
 function mod:create_honor()
 	local config = mod:get_save()
+	if (not UnitHonorLevel) then return end
 
 	local bar = mod:create_databar("bdHonor")
 	bar:SetSize(200, 20)

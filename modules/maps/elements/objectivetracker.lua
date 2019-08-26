@@ -23,9 +23,9 @@ function mod:create_objective_tracker()
 	local f = CreateFrame("Frame")
 	f:SetScript("OnEvent",function(self, event, addon)
 		if (event == "ENCOUNTER_START") then
-			ObjectiveTrackerFrame:Hide()
+			ObjectiveTracker_Collapse()
 		elseif (event == "ENCOUNTER_END") then
-			ObjectiveTrackerFrame:Show()
+			ObjectiveTracker_Expand()
 		else
 			if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
 				move_objective_tracker()

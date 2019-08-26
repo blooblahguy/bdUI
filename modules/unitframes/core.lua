@@ -444,7 +444,7 @@ function mod:create_unitframes()
 
 	-- focus
 	local focus = oUF:Spawn("focus")
-	focus:SetPoint("TOP", bdParent, "TOP", 0, -30)
+	focus:SetPoint("TOP", bdParent, "TOP", 0, -120)
 	bdMove:set_moveable(focus, "Focus")
 
 	local arena_boss = CreateFrame("frame", "bdArenaBoss", bdParent)

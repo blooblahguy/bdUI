@@ -4,6 +4,8 @@ local mod = bdUI:get_module("Databars")
 function mod:create_azerite()
 	local config = mod:get_save()
 
+	if (not C_AzeriteItem) then return end
+
 	local bar = mod:create_databar("bdAzerite")
 	bar:SetSize(config.databars_width, config.databars_height)
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")

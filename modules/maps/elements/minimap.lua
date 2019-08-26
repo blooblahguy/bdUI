@@ -163,6 +163,9 @@ function mod:create_minimap()
 	TimeManagerClockTicker:SetJustifyH('LEFT')
 	TimeManagerClockTicker:SetShadowColor(0,0,0,0)
 
+	TicketStatusFrame:ClearAllPoints()
+	TicketStatusFrame:SetPoint("TOP", UIParent, "TOP", 0, -20)
+
 	-- zone
 	mod:zone()
 	-- difficulty
