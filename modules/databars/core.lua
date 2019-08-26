@@ -33,17 +33,27 @@ end
 
 -- config callback
 function mod:config_callback()
-	xp:callback()
-	rep:callback()
-	honor:callback()
-	azerite:callback()
-	altpower:callback()
+	if (xp) then
+		xp:SetSize(config.databars_width, config.databars_height)
+		xp:callback()
+	end
+	if (rep) then
+		rep:SetSize(config.databars_width, config.databars_height)
+		rep:callback()
+	end
+	if (honor) then
+		honor:SetSize(config.databars_width, config.databars_height)
+		honor:callback()
+	end
+	if (azerite) then
+		azerite:SetSize(config.databars_width, config.databars_height)
+		azerite:callback()
+	end
+	if (altpower) then
+		altpower:SetSize(config.alt_width, config.alt_height)
+		altpower:callback()
+	end
 
-	xp:SetSize(config.databars_width, config.databars_height)
-	rep:SetSize(config.databars_width, config.databars_height)
-	honor:SetSize(config.databars_width, config.databars_height)
-	azerite:SetSize(config.databars_width, config.databars_height)
-	altpower:SetSize(config.alt_width, config.alt_height)
 	
 	bdUI:frame_group(container, "downwards", azerite, honor, rep, xp)
 end

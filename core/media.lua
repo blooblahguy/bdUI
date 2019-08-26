@@ -15,7 +15,7 @@ function bdUI:frame_group(container, direction, ...)
 	-- first, do height, and hook vision
 	for k, frame in pairs(children) do
 		-- ignore frames that are hidden
-		if (type(frame) == "table" and frame:IsShown()) then
+		if (frame and type(frame) == "table" and frame:IsShown()) then
 			if (direction == "upwards" or direction == "downwards") then
 				width = frame:GetWidth() > width and frame:GetWidth() or width
 				height = height + frame:GetHeight() + bdUI.border

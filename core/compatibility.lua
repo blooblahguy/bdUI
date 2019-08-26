@@ -18,6 +18,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	UnitCastingInfo = UnitCastingInfo or noop
 	UnitChannelInfo = UnitChannelInfo or noop
 	UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
+	GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 
 	-- frames
 	ChatFrameMenuButton = ChatFrameMenuButton or noob
