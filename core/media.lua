@@ -41,7 +41,7 @@ function bdUI:frame_group(container, direction, ...)
 	-- loop through frames provided in other parameters	
 	for k, frame in pairs(children) do
 		-- ignore frames that are hidden
-		if (type(frame) == "table" and frame:IsShown()) then
+		if (frame and type(frame) == "table" and frame:IsShown()) then
 			-- frame #1 gets to be the "anchor" point
 			if (not last) then
 				frame:ClearAllPoints()
