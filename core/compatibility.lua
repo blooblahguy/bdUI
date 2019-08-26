@@ -17,6 +17,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	UnitThreatSituation = UnitThreatSituation or noop
 	UnitCastingInfo = UnitCastingInfo or noop
 	UnitChannelInfo = UnitChannelInfo or noop
+	UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
 
 	-- frames
 	ChatFrameMenuButton = ChatFrameMenuButton or noob

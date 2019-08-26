@@ -326,6 +326,7 @@ end
 -- Frames / Faders
 --========================================================
 	function IsMouseOverFrame(self)
+		if not (SpellFlyout) then return false end
 		if MouseIsOver(self) then return true end
 		if not SpellFlyout:IsShown() then return false end
 		if not SpellFlyout.__faderParent then return false end

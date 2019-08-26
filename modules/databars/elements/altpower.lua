@@ -3,6 +3,8 @@ local mod = bdUI:get_module("Databars")
 
 function mod:create_altpower()
 	local config = mod:get_save()
+
+	if (not PlayerPowerBarAlt) then return end
 	
 	local bar = mod:create_databar("bdUI Alt Power")
 	bar:SetSize(config.alt_width, config.alt_height)

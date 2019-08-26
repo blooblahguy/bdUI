@@ -3,6 +3,8 @@ local mod = bdUI:get_module("Databars")
 
 function mod:create_honor()
 	local config = mod:get_save()
+
+	if (bdUI:get_game_version() == "vanilla") then return end
 	if (not UnitHonorLevel) then return end
 
 	local bar = mod:create_databar("bdHonor")
