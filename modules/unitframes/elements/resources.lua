@@ -130,20 +130,20 @@ mod.create_resources = function(self, unit)
 
 	elseif (class == "DEATHKNIGHT") then
 		-- Necrostrike Indicator
-		self.Health.NecroticOverlay = self.Resources.secondary:CreateTexture(nil, "OVERLAY", self.Resources.secondary)
-		self.Health.NecroticOverlay:SetAllPoints(self.Resources.secondary)
-		self.Health.NecroticOverlay:SetTexture(bdUI.media.flat)
-		self.Health.NecroticOverlay:SetBlendMode("BLEND")
-		self.Health.NecroticOverlay:SetVertexColor(0, 0, 0, 0.4)
-		self.Health.NecroticOverlay:Hide()
-		self.Resources.secondary:Show()
-		function self.Health.NecroticOverlay:PostUpdate(amount)
-			if (amount > 0) then
-				self.__owner.Resources.secondary:Show()
-			else
-				self.__owner.Resources.secondary:Hide()
-			end
-		end
+		-- self.Health.NecroticOverlay = self.Resources.secondary:CreateTexture(nil, "OVERLAY", self.Resources.secondary)
+		-- self.Health.NecroticOverlay:SetAllPoints(self.Resources.secondary)
+		-- self.Health.NecroticOverlay:SetTexture(bdUI.media.flat)
+		-- self.Health.NecroticOverlay:SetBlendMode("BLEND")
+		-- self.Health.NecroticOverlay:SetVertexColor(0, 0, 0, 0.4)
+		-- self.Health.NecroticOverlay:Hide()
+		-- self.Resources.secondary:Show()
+		-- function self.Health.NecroticOverlay:PostUpdate(amount)
+		-- 	if (amount > 0) then
+		-- 		self.__owner.Resources.secondary:Show()
+		-- 	else
+		-- 		self.__owner.Resources.secondary:Hide()
+		-- 	end
+		-- end
 
 
 		-- Rune Indicator

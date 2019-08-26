@@ -30,7 +30,7 @@ lib\oUF_Plugins\oUF_AuraBars.lua
 lib\oUF_Plugins\oUF_PVPSpecIcons.lua
 lib\oUF_Plugins\oUF_Trinkets.lua
 lib\oUF_Plugins\oUF_Smooth.lua
-lib\oUF_Plugins\oUF_NecroStrike.lua
+# lib\oUF_Plugins\oUF_NecroStrike.lua
 lib\oUF_Plugins\oUF_TotemBar.lua
 
 # Custom
