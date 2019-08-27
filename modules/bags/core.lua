@@ -12,7 +12,7 @@ local bordersize = 2
 --===============================================
 function mod:initialize()
 	config = mod:get_save()
-	if (not config.enabled) then return end
+	if (not config.enabled) then mod.disabled = true; return end
 
 	BACKPACK_HEIGHT = BACKPACK_HEIGHT or 22
 

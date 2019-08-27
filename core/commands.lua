@@ -67,7 +67,7 @@ SlashCmdList["BDUI"] = function(msg, editbox)
 
 		ReloadUI()
 	elseif (s1 == "config" or s1 == "conf") then
-		bdUI.config_instance:toggle()
+		bdUI.bdConfig:toggle()
 	else
 		print(bdUI.colorString.." "..msg.." not recognized as a command.")
 	end

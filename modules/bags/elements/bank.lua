@@ -334,27 +334,29 @@ function mod:bank_generation(...)
 	-- bank frames
 	for index = 1, 28 do
 		local item = _G["BankFrameItem"..index]
-		item:ClearAllPoints()
-		item:SetWidth(config.bankbuttonsize)
-		item:SetHeight(config.bankbuttonsize)
-		item:Show()
-		mod:skin(item)
-		
-		if index == 1 then
-			item:SetPoint("TOPLEFT", mod.bank, "TOPLEFT", 10, -30)
-			lastrowitem = item
-		else
-			item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
-			if (numitems == config.bankbuttonsperrow) then
-				item:ClearAllPoints()
-				item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
+		if (item) then
+			item:ClearAllPoints()
+			item:SetWidth(config.bankbuttonsize)
+			item:SetHeight(config.bankbuttonsize)
+			item:Show()
+			mod:skin(item)
+			
+			if index == 1 then
+				item:SetPoint("TOPLEFT", mod.bank, "TOPLEFT", 10, -30)
 				lastrowitem = item
-				numrows = numrows + 1
-				numitems = 0
+			else
+				item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
+				if (numitems == config.bankbuttonsperrow) then
+					item:ClearAllPoints()
+					item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
+					lastrowitem = item
+					numrows = numrows + 1
+					numitems = 0
+				end
 			end
+			numitems = numitems + 1
+			lastitem = item
 		end
-		numitems = numitems + 1
-		lastitem = item
 	end
 	
 	-- bank bags

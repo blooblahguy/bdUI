@@ -18,16 +18,18 @@ mod.custom_layout["target"] = function(self, unit)
 	end
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
 
+	mod.version = bdUI:get_game_version()
+
 	self.Debuffs.initialAnchor  = "BOTTOMLEFT"
 	self.Debuffs['growth-x'] = "RIGHT"
 	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		if (bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
-			if (caster and UnitIsUnit(caster,"player") and duration ~= 0 and duration < 300) then
+
+		if (bdUI:filter_aura(name, casterIsPlayer, isBossDebuff, nameplateShowAll, true)) then
+			if (casterIsPlayer and (mod.version == "vanilla" or (duration ~= 0 and duration < 300))) then
 				return true 
-			end
+			end	
 		end
 	end
 
@@ -38,10 +40,9 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 
 		-- allow it if it's tracked in the ui and not blacklisted
-		if ( bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true) ) then
+		if ( bdUI:filter_aura(name, casterIsPlayer, isBossDebuff, nameplateShowAll, true) ) then
 			return true
 		end
 		-- also allow anything that might be casted by the boss

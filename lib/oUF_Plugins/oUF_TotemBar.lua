@@ -192,10 +192,12 @@ local function Enable(self)
 
 		self:RegisterEvent('PLAYER_TOTEM_UPDATE', Path, true)
 
-		TotemFrame:UnregisterEvent('PLAYER_TOTEM_UPDATE')
-		TotemFrame:UnregisterEvent('PLAYER_ENTERING_WORLD')
-		TotemFrame:UnregisterEvent('UPDATE_SHAPESHIFT_FORM')
-		TotemFrame:UnregisterEvent('PLAYER_TALENT_UPDATE')
+		if (TotemFrame) then
+			TotemFrame:UnregisterEvent('PLAYER_TOTEM_UPDATE')
+			TotemFrame:UnregisterEvent('PLAYER_ENTERING_WORLD')
+			TotemFrame:UnregisterEvent('UPDATE_SHAPESHIFT_FORM')
+			TotemFrame:UnregisterEvent('PLAYER_TALENT_UPDATE')
+		end
 
 		return true
 	end
@@ -208,10 +210,12 @@ local function Disable(self)
 			element[i]:Hide()
 		end
 
-		TotemFrame:RegisterEvent('PLAYER_TOTEM_UPDATE')
-		TotemFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
-		TotemFrame:RegisterEvent('UPDATE_SHAPESHIFT_FORM')
-		TotemFrame:RegisterEvent('PLAYER_TALENT_UPDATE')
+		if (TotemFrame) then
+			TotemFrame:RegisterEvent('PLAYER_TOTEM_UPDATE')
+			TotemFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
+			TotemFrame:RegisterEvent('UPDATE_SHAPESHIFT_FORM')
+			TotemFrame:RegisterEvent('PLAYER_TALENT_UPDATE')
+		end	
 
 		self:UnregisterEvent('PLAYER_TOTEM_UPDATE', Path)
 	end

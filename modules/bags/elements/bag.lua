@@ -3,6 +3,8 @@ local fpmod = mod
 local mod = bdUI:get_module("Bags")
 local config
 
+local floor, abs = math.floor, math.abs
+
 --======================================
 -- SKIN BLIZZARD
 --======================================
@@ -192,6 +194,7 @@ function mod:create_moneyframe()
 end
 
 function mod:bag_generation(...)
+	if (mod.disabled) then return end
 	local bordersize = bdUI:get_border(_G["ContainerFrame1Item1"])
 
 	local numrows, lastrowitem, numitems, lastitem = 0, nil, 0, nil
@@ -206,27 +209,30 @@ function mod:bag_generation(...)
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bagID, slot);
 
 			local item = _G["ContainerFrame"..(bagID+1).."Item"..slot]
-			item:ClearAllPoints()
 
-			item:SetWidth(config.buttonsize)
-			item:SetHeight(config.buttonsize)
-			mod:skin(item)
-			
-			if (not lastitem) then
-				item:SetPoint("TOPLEFT", mod.bags, "TOPLEFT", 10, -30)
-				lastrowitem = item
-			else
-				item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
-				if (numitems == config.buttonsperrow) then
-					item:ClearAllPoints()
-					item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
+			if (item) then
+				item:ClearAllPoints()
+
+				item:SetWidth(config.buttonsize)
+				item:SetHeight(config.buttonsize)
+				mod:skin(item)
+				
+				if (not lastitem) then
+					item:SetPoint("TOPLEFT", mod.bags, "TOPLEFT", 10, -30)
 					lastrowitem = item
-					numrows = numrows + 1
-					numitems = 0
+				else
+					item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
+					if (numitems == config.buttonsperrow) then
+						item:ClearAllPoints()
+						item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
+						lastrowitem = item
+						numrows = numrows + 1
+						numitems = 0
+					end
 				end
+				numitems = numitems + 1
+				lastitem = item
 			end
-			numitems = numitems + 1
-			lastitem = item
 		end
 	end
 	

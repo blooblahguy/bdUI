@@ -16,9 +16,11 @@ if (bdUI:get_game_version() == "vanilla") then
 	UnitGroupRolesAssigned = UnitGroupRolesAssigned or noop
 	UnitThreatSituation = UnitThreatSituation or noop
 	UnitHasVehicleUI = UnitHasVehicleUI or noop
-	UnitCastingInfo = UnitCastingInfo or noop
-	UnitChannelInfo = UnitChannelInfo or noop
+	UnitCastingInfo = UnitCastingInfo or CastingInfo
+	UnitChannelInfo = UnitChannelInfo or ChannelInfo
 	UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
+	GetSpecialization = GetSpecialization or noop
+	CanExitVehicle = CanExitVehicle or noop
 	GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 
 	-- frames
@@ -35,6 +37,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	BagItemAutoSortButton = BagItemAutoSortButton or noob
 	BankItemAutoSortButton = BankItemAutoSortButton or noob
 	BankItemSearchBox = BankItemSearchBox or noob
+	ReagentBankFrame = ReagentBankFrame or noob
 end
 
 --====================================================
