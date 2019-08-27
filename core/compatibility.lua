@@ -15,6 +15,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	SetSortBagsRightToLeft = SetSortBagsRightToLeft or noop
 	UnitGroupRolesAssigned = UnitGroupRolesAssigned or noop
 	UnitThreatSituation = UnitThreatSituation or noop
+	UnitHasVehicleUI = UnitHasVehicleUI or noop
 	UnitCastingInfo = UnitCastingInfo or noop
 	UnitChannelInfo = UnitChannelInfo or noop
 	UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
