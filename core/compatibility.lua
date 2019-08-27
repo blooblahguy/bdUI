@@ -16,9 +16,10 @@ if (bdUI:get_game_version() == "vanilla") then
 	UnitGroupRolesAssigned = UnitGroupRolesAssigned or noop
 	UnitThreatSituation = UnitThreatSituation or noop
 	UnitHasVehicleUI = UnitHasVehicleUI or noop
-	UnitCastingInfo = UnitCastingInfo or noop
-	UnitChannelInfo = UnitChannelInfo or noop
+	UnitCastingInfo = UnitCastingInfo or CastingInfo
+	UnitChannelInfo = UnitChannelInfo or ChannelInfo
 	UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
+	GetSpecialization = GetSpecialization or noop
 	GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 
 	-- frames
