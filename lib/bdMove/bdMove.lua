@@ -166,6 +166,8 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	mover:SetFrameStrata("BACKGROUND")
 	mover:SetClampedToScreen(true)
 	mover:SetAlpha(0)
+	mover:EnableMouse(false)
+	mover:SetMovable(false)
 	mover.locked = true
 	
 	-- Text Label
@@ -175,7 +177,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	mover.text:SetText(rename)
 	mover.text:SetJustifyH("CENTER")
 	mover.text:SetAlpha(0.8)
-	mover.text:Hide()
+	mover.text:Hide()	
 
 	-- Sizing
 	hooksecurefunc(frame, "SetSize", function() 
@@ -198,6 +200,12 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 		if (not MouseIsOver(lib.controls)) then
 			lib.controls:Hide()
 		end
+	end)
+
+	mover:RegisterEvent("PLAYER_ENTERING_WORLD")
+	mover:SetScript("OnEvent", function()
+		mover:EnableMouse(false)
+		mover:SetMovable(false)
 	end)
 
 	-- position
