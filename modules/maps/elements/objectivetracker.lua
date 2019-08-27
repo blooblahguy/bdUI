@@ -27,7 +27,7 @@ function mod:create_objective_tracker()
 		elseif (event == "ENCOUNTER_END") then
 			ObjectiveTracker_Expand()
 		else
-			if IsAddOnLoaded("Blizzard_ObjectiveTracker") then
+			if (IsAddOnLoaded("Blizzard_ObjectiveTracker") or bdUI:get_game_version() == "vanilla") then
 				move_objective_tracker()
 				hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
 					if (not ignore_point) then
@@ -40,6 +40,7 @@ function mod:create_objective_tracker()
 			end
 		end
 	end)
+	f:RegisterEvent("PLAYER_ENTERING_WORLD")
 	f:RegisterEvent("PLAYER_LOGIN")
 	f:RegisterEvent("ENCOUNTER_START")
 	f:RegisterEvent("ENCOUNTER_END")
