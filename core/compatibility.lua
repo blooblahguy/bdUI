@@ -36,6 +36,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	BagItemAutoSortButton = BagItemAutoSortButton or noob
 	BankItemAutoSortButton = BankItemAutoSortButton or noob
 	BankItemSearchBox = BankItemSearchBox or noob
+	TotemFrame = TotemFrame or noob
 end
 
 --====================================================
