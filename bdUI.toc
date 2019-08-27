@@ -21,6 +21,11 @@ lib\ace\LibButtonGlow-1.0.lua
 lib\ace\LibSharedMedia-3.0.lua
 lib\ace\LibSimpleSticky.lua
 
+# Classic
+lib\classic\LibClassicCasterino\LibClassicCasterino.lua
+lib\classic\LibClassicDurations\LibClassicDurations.xml
+lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
+
 # oUF
 lib\oUF\oUF.xml
 lib\oUF_Plugins\oUF_Fixate.lua

@@ -38,6 +38,30 @@ if (bdUI:get_game_version() == "vanilla") then
 	BankItemAutoSortButton = BankItemAutoSortButton or noob
 	BankItemSearchBox = BankItemSearchBox or noob
 	ReagentBankFrame = ReagentBankFrame or noob
+
+	-- library for spell durations
+	-- bdUI.spell_durations = LibStub("LibClassicDurations")
+    -- bdUI.spell_durations:Register("bdUI")
+
+	function bdUI:update_duration(cd_frame, unit, spellID, caster, duration, expiration)
+		if (bdUI.spell_durations) then
+			local durationNew, expirationTimeNew = bdUI.spell_durations:GetAuraDurationByUnit(unit, spellID, caster)
+			if duration == 0 and durationNew then
+				duration = durationNew
+				expirationTime = expirationTimeNew
+			end
+
+			local enabled = expirationTime and expirationTime ~= 0;
+			if enabled then
+				local startTime = expirationTime - duration;
+				CooldownFrame_Set(cd_frame, startTime, duration, true);
+			else
+				CooldownFrame_Clear(cd_frame);
+			end
+		end
+
+		return duration, expiration
+	end
 end
 
 --====================================================
