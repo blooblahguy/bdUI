@@ -138,23 +138,24 @@ local function layout(self, unit)
     myHeals:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
 	myHeals:SetStatusBarTexture(bdUI.media.flat)
 	myHeals:SetStatusBarColor(0.6,1,0.6,.2)
-
+	myHeals:Hide()
     local otherHeals = CreateFrame('StatusBar', nil, self.Health)
     otherHeals:SetPoint('TOP')
     otherHeals:SetPoint('BOTTOM')
     otherHeals:SetPoint('LEFT', myHeals:GetStatusBarTexture(), 'RIGHT')
-	otherHeals:SetStatusBarTexture(bdUI.media.flat)
-	otherHeals:SetStatusBarColor(0.6,0.8,0.6,.2)
+	otherHeals:Hide()
 
 	-- Damage Absorbs
     local absorbBar = CreateFrame('StatusBar', nil, self.Health)
     absorbBar:SetAllPoints()
 	absorbBar:SetStatusBarTexture(bdUI.media.flat)
 	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
+	absorbBar:Hide()
 	local overAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
     overAbsorbBar:SetAllPoints()
 	overAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overAbsorbBar:SetStatusBarColor(.1, .1, .2, .6)
+	overAbsorbBar:Hide()
 
 	-- Healing Absorbs
     local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
@@ -162,11 +163,13 @@ local function layout(self, unit)
     healAbsorbBar:SetReverseFill(true)
 	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	healAbsorbBar:Hide()
 	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
     overHealAbsorbBar:SetAllPoints()
     overHealAbsorbBar:SetReverseFill(true)
 	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	overHealAbsorbBar:Hide()
 
 	-- Register and callback
     self.HealthPrediction = {
@@ -182,8 +185,11 @@ local function layout(self, unit)
         maxOverflow = 1,
         frequentUpdates = true,
     }
+
 	
 	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
+		if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
+		
 		local absorb = UnitGetTotalAbsorbs(unit) or 0
 		local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
 		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
