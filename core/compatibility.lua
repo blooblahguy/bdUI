@@ -24,6 +24,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 
 	-- frames
+	TalentMicroButtonAlert = TalentMicroButtonAlert or noob
 	ChatFrameMenuButton = ChatFrameMenuButton or noob
 	QuickJoinToastButton = QuickJoinToastButton or noob
 	ChatFrameChannelButton = ChatFrameChannelButton or noob
@@ -32,7 +33,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	MiniMapInstanceDifficulty = MiniMapInstanceDifficulty or noob
 	GarrisonLandingPageMinimapButton = GarrisonLandingPageMinimapButton or noob
 	QueueStatusMinimapButton = QueueStatusMinimapButton or noob
-	MiniMapTracking = MiniMapTracking or noob
+	MiniMapTracking = MiniMapTracking or MiniMapTrackingFrame or noob
 	BagItemSearchBox = BagItemSearchBox or noob
 	BagItemAutoSortButton = BagItemAutoSortButton or noob
 	BankItemAutoSortButton = BankItemAutoSortButton or noob
@@ -40,10 +41,10 @@ if (bdUI:get_game_version() == "vanilla") then
 	ReagentBankFrame = ReagentBankFrame or noob
 
 	-- library for spell durations
-	-- bdUI.spell_durations = LibStub("LibClassicDurations")
-    -- bdUI.spell_durations:Register("bdUI")
+	bdUI.spell_durations = LibStub("LibClassicDurations")
+    bdUI.spell_durations:Register("bdUI")
 
-	function bdUI:update_duration(cd_frame, unit, spellID, caster, duration, expiration)
+	function bdUI:update_duration(cd_frame, unit, spellID, spellName, caster, duration, expiration)
 		if (bdUI.spell_durations) then
 			local durationNew, expirationTimeNew = bdUI.spell_durations:GetAuraDurationByUnit(unit, spellID, caster)
 			if duration == 0 and durationNew then

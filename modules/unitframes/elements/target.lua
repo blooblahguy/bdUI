@@ -25,9 +25,10 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
+		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, name, caster, duration, expiration)
 
 		if (bdUI:filter_aura(name, casterIsPlayer, isBossDebuff, nameplateShowAll, true)) then
-			if (casterIsPlayer and (mod.version == "vanilla" or (duration ~= 0 and duration < 300))) then
+			if (casterIsPlayer and (duration ~= 0 and duration < 300)) then
 				return true 
 			end	
 		end
