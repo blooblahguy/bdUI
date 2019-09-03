@@ -10,7 +10,7 @@ if (bdUI:get_game_version() == "vanilla") then
 end
 
 function bdUI:update_duration(cd_frame, unit, spellID, caster, name, duration, expiration)
-	if (bdUI.spell_durations) then
+	if (bdUI.spell_durations and duration == 0 and expiration == 0) then
 
 		local durationNew, expirationTimeNew = bdUI.spell_durations:GetAuraDurationByUnit(unit, spellID, caster, name)
 		if duration == 0 and durationNew then
