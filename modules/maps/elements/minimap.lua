@@ -89,7 +89,7 @@ function mod:create_minimap()
 	end)
 
 	Minimap:SetScript('OnMouseUp', function (self, button)
-		if button == 'RightButton' then
+		if button == 'RightButton' and bdUI:get_game_version() == "vanilla" then
 			ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, Minimap.background, (Minimap:GetWidth()), (Minimap.background:GetHeight()-2))
 			GameTooltip:Hide()
 		elseif (button == 'MiddleButton') then
@@ -120,7 +120,6 @@ function mod:create_minimap()
 		"MiniMapChallengeMode",
 		"MinimapBorderTop",
 		"MinimapBorder",
-		"MiniMapTracking",
 	}
 	for i = 1, #frames do
 		if (_G[frames[i]]) then

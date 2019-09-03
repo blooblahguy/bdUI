@@ -566,6 +566,7 @@ function mod:initialize()
 		mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
 		mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
 			mod:update_header()
+			mod:config_callback()
 		end)
 	end
 

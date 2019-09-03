@@ -41,8 +41,10 @@ function mod:create_bank()
 					-- Redraw bank in rank
 					mod.onreagents = false
 					mod:quickbank(true)
-					mod.bank.tab1.text:SetTextColor(1,1,1)
-					mod.bank.tab2.text:SetTextColor(.4,.4,.4)
+					if (mod.bank.tab1) then
+						mod.bank.tab1.text:SetTextColor(1,1,1)
+						mod.bank.tab2.text:SetTextColor(.4,.4,.4)
+					end
 				end
 			else
 				panel:Hide()
@@ -300,7 +302,9 @@ function mod:quickbank(show)
 		mod.bank:SetFrameLevel(1)
 	end
 	
-	mod.bank.unlock:Hide()
+	if (mod.bank.unlock) then
+		mod.bank.unlock:Hide()
+	end
 end
 
 function mod:create_bank_money()
@@ -334,29 +338,30 @@ function mod:bank_generation(...)
 	-- bank frames
 	for index = 1, 28 do
 		local item = _G["BankFrameItem"..index]
-		if (item) then
-			item:ClearAllPoints()
-			item:SetWidth(config.bankbuttonsize)
-			item:SetHeight(config.bankbuttonsize)
-			item:Show()
-			mod:skin(item)
-			
-			if index == 1 then
-				item:SetPoint("TOPLEFT", mod.bank, "TOPLEFT", 10, -30)
+		if (not item) then break end
+
+		item:ClearAllPoints()
+		item:SetWidth(config.bankbuttonsize)
+		item:SetHeight(config.bankbuttonsize)
+		item:Show()
+		mod:skin(item)
+		
+		if index == 1 then
+			item:SetPoint("TOPLEFT", mod.bank, "TOPLEFT", 10, -30)
+			lastrowitem = item
+		else
+			item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
+			if (numitems == config.bankbuttonsperrow) then
+				item:ClearAllPoints()
+				item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
 				lastrowitem = item
-			else
-				item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
-				if (numitems == config.bankbuttonsperrow) then
-					item:ClearAllPoints()
-					item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
-					lastrowitem = item
-					numrows = numrows + 1
-					numitems = 0
-				end
+				numrows = numrows + 1
+				numitems = 0
 			end
-			numitems = numitems + 1
-			lastitem = item
 		end
+		numitems = numitems + 1
+		lastitem = item
+
 	end
 	
 	-- bank bags

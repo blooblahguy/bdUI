@@ -96,7 +96,7 @@ local function setUnit(self)
 		for i = 2, numLines do
 			local line = _G['GameTooltipTextLeft'..i]
 			if not line or not line:GetText() then break end
-			if (level and line:GetText():find('^'..LEVEL) or (creatureType and line:GetText():find('^'..creatureType))) then
+			if (level and line:GetText():find('^'..level) or (creatureType and line:GetText():find('^'..creatureType))) then
 				line:SetFormattedText('|cff%s%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, classification, RGBPercToHex(friendColor), creatureType or 'Unknown')
 			end
 		end

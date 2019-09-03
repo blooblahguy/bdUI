@@ -408,7 +408,7 @@ local config = {
 						{
 				key = "automydebuff",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Automatically track debuffs cast by you."
 			},
 			{

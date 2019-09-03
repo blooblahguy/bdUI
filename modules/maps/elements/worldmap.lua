@@ -23,8 +23,8 @@ function mod:worldmap_coords()
 	mod.coords:SetScript("OnUpdate", function(self)
 		-- Player
 		local uiMapID = C_Map.GetBestMapForUnit("player")
+		if (not uiMapID) then return end
 		local position = C_Map.GetPlayerMapPosition(uiMapID, "player")
-
 		if (not position) then return end
 		
 		local pX, pY = position:GetXY()

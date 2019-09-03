@@ -56,6 +56,7 @@ core\commands.lua
 core\compatibility.lua
 core\core.lua
 core\media.lua
+core\auras.lua
 core\modules.lua
 core\setup.lua
 core\load.lua

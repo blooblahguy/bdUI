@@ -169,6 +169,10 @@ mod.additional_elements = {
 		self.Buffs.num = 20
 		self.Buffs['growth-y'] = "UP"
 		self.Buffs['growth-x'] = "RIGHT"
+		self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+			local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+			duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		end
 		self.Buffs.PostCreateIcon = function(buffs, button)
 			bdUI:set_backdrop_basic(button)
 			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
@@ -191,6 +195,10 @@ mod.additional_elements = {
 		self.Debuffs.num = 20
 		self.Debuffs['growth-y'] = "UP"
 		self.Debuffs['growth-x'] = "LEFT"
+		self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+			local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+			duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		end
 		self.Debuffs.PostCreateIcon = function(Debuffs, button)
 			bdUI:set_backdrop_basic(button)
 			button.cd:GetRegions():SetAlpha(0)
@@ -212,6 +220,10 @@ mod.additional_elements = {
 		self.Auras.num = 20
 		self.Auras['growth-y'] = "UP"
 		self.Auras['growth-x'] = "RIGHT"
+		self.Auras.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+			local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+			duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		end
 		self.Auras.PostCreateIcon = function(Debuffs, button)
 			bdUI:set_backdrop_basic(button)
 			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
@@ -379,9 +391,10 @@ local function layout(self, unit)
 	oUF.Tags.Events['curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
 	oUF.Tags.Methods['curhp'] = function(unit)
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
-		if (not UnitIsPlayer(unit) and LMH) then
-			hp, hpMax = math.max(LMH:GetUnitCurrentHP(unit), hp), math.max(LMH:GetUnitMaxHP(unit), hpMax)
+		if (bdUI.mobhealth) then
+			hp, hpMax, IsFound = bdUI.mobhealth:GetUnitHealth(unit)
 		end
+
 		local hpPercent = hp / hpMax
 		if hpMax == 0 then return end
 		local r, g, b = bdUI:ColorGradient(hpPercent, 1,0,0, 1,1,0, 1,1,1)

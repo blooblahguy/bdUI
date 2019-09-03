@@ -269,6 +269,9 @@ local function nameplate_create(self, unit)
 	oUF.Tags.Methods["bdncurhp"] = function(unit)
 		if (config.hptext == "None") then return '' end
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
+		if (bdUI.mobhealth) then
+			hp, hpMax, IsFound = bdUI.mobhealth:GetUnitHealth(unit)
+		end
 		local hpPercent = bdUI:round(hp / hpMax * 100,1)
 		hp = bdUI:numberize(hp)
 		
@@ -382,6 +385,9 @@ local function nameplate_create(self, unit)
 		button.cd:SetHideCountdownNumbers(false)
 	end
 	self.Auras.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+
 		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
 		if (config.highlightPurge and isStealable) then -- purge alert
 			button.border:SetVertexColor(unpack(config.purgeColor))
@@ -481,6 +487,7 @@ function mod:initialize()
 
 	mod:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
 	mod:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
+	mod:RegisterEvent("PLAYER_ENTERING_WORLD", mod.nameplate_size)
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
 	oUF:SetActiveStyle("bdNameplates")

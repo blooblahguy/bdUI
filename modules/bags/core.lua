@@ -19,6 +19,51 @@ function mod:initialize()
 	mod:create_bags()
 	mod:create_bank()
 	mod:create_loot()
+
+	-- Make entire bags show or hide when the main bag closes
+	ContainerFrame1Item1:HookScript("OnHide",function() mod.bags:Hide() end)
+	ContainerFrame1Item1:HookScript("OnShow",function() mod.bags:Show() end)
+	BankFrame:HookScript("OnHide",function() ToggleAllBags() end)
+	BankFrame:HookScript("OnShow",function() ToggleAllBags() end)
+	hooksecurefunc(BankFrame,"Show",function() ToggleAllBags() end)
+	hooksecurefunc(BankFrame,"Hide",function() ToggleAllBags() end)
+
+	-- Hijack blizzard functions
+	-- -- PS i hate that i'm doing this. todo is rewrite this entire addon
+	-- Open all Bags
+	function ToggleAllBags(func)
+		-- show all bags
+		if (BankFrame:IsShown()) then
+			mod.bank:Show()
+			mod.bags:Show()
+			for i=0, NUM_CONTAINER_FRAMES, 1 do OpenBag(i) end
+		else -- show only main backpack
+			if (mod.bags:IsShown() and (not func or not func == "open")) then
+				for i=0, NUM_CONTAINER_FRAMES, 1 do CloseBag(i) end
+				mod.bags:Hide()
+				mod.bank:Hide()
+				CloseBankFrame()
+			else
+				for i=0, NUM_CONTAINER_FRAMES, 1 do OpenBag(i) end
+				mod.bags:Show()
+			end
+		end
+
+		mod:bag_generation()
+	end
+
+	function ToggleBag() return end
+	ToggleBackpack = ToggleAllBags
+	function OpenBackpack() return end
+	function CloseBackpack() return end
+	function updateContainerFrameAnchors() return end
+	function ContainerFrame_GenerateFrame(frame, size, id) mod:Draw(frame, size, id) end
+	function OpenAllBags(frame) ToggleAllBags("open") end
+
+	if (BackpackTokenFrame) then
+		BackpackTokenFrame:Hide();
+	end
+
 end
 
 --===============================================
@@ -200,11 +245,11 @@ function mod:SkinEditBox(frame)
 end
 
 function mod:skin(frame)
-	if (frame.skinned) then return end
+	frame:SetFrameStrata("TOOLTIP")
+	frame:SetFrameLevel(3)
 
+	if (frame.skinned) then return end
 	local border = bdUI:get_border(frame)
-	frame:SetFrameStrata("HIGH")
-	frame:SetFrameLevel(6)
 	frame:SetNormalTexture("")
 	frame:SetPushedTexture("")
 	frame:SetAlpha(1)
@@ -243,7 +288,7 @@ function mod:skin(frame)
 end
 
 -- Calls when each bag is opened
-function mod:Draw(frame,size,id)
+function mod:Draw(frame, size, id)
 	BagItemSearchBox:ClearAllPoints()
 	frame.size = size;
 	for i = 1, size do
@@ -261,6 +306,7 @@ function mod:Draw(frame,size,id)
 	elseif (id == 5) then
 		mod:bank_generation(frame,size,id)
 	end
+	
 	
 	-- hide everything that shouldn't be there
 	for i = 1, 12 do
@@ -293,28 +339,32 @@ function mod:Draw(frame,size,id)
 		select(i, _G['BankFrame']:GetRegions()):Hide()
 	end
 	for i = 1, 5 do
-		if (not select(i, _G['BankFrame']:GetChildren())) then return end	
+		if (not select(i, _G['BankFrame']:GetChildren())) then break end	
 		select(i, _G['BankFrame']:GetChildren()):Hide()
 	end
 	for i = 1, 5 do
 		local child = select(i, _G['BankFrameMoneyFrameInset']:GetChildren())
-		if (not child) then break end
-		child:Hide()
+		if (child) then
+			child:Hide()
+		end
 	end
 	-- _G['BankFrame'].NineSlice:Hide()
-	_G["BackpackTokenFrame"]:GetRegions():SetAlpha(0)
-	
-	
+	if (_G["BackpackTokenFrame"]:GetRegions()) then
+		_G["BackpackTokenFrame"]:GetRegions():SetAlpha(0)
+	end
+
 	BankFrameCloseButton:Hide()
 	BankFrameMoneyFrame:Hide()
 	bdUI:strip_textures(BankFrameMoneyFrameInset)
 	bdUI:strip_textures(BankFrameMoneyFrameBorder)
 	bdUI:strip_textures(BankFrameMoneyFrame)
 	bdUI:strip_textures(BankFrame)
-	bdUI:strip_textures(BankSlotsFrame,true)
+	bdUI:strip_textures(BankSlotsFrame, true)
+
 	BankSlotsFrame:SetFrameStrata("HIGH")
-	BankSlotsFrame:SetFrameLevel(3)
+	BankSlotsFrame:SetFrameLevel(8)
 	BankSlotsFrame:SetParent(mod.bank)
+
 	ReagentBankFrame:SetFrameStrata("HIGH")
 	ReagentBankFrame:SetFrameLevel(3)
 	ReagentBankFrame:SetParent(mod.bank)
@@ -328,14 +378,7 @@ function mod:Draw(frame,size,id)
 end
 
 
--- Make entire bags show or hide when the main bag closes
-ContainerFrame1Item1:HookScript("OnHide",function() mod.bags:Hide() end)
-ContainerFrame1Item1:HookScript("OnShow",function() mod.bags:Show() end)
-BankFrame:HookScript("OnHide",function() ToggleAllBags() end)
-BankFrame:HookScript("OnShow",function() ToggleAllBags() end)
-hooksecurefunc(BankFrame,"Show",function() ToggleAllBags() end)
-hooksecurefunc(BankFrame,"Hide",function() ToggleAllBags() end)
--- hooksecurefunc("SortBags", function()  end)
+
 
 local evHandler = CreateFrame("frame")
 evHandler:RegisterEvent("BAG_NEW_ITEMS_UPDATED")
@@ -343,38 +386,3 @@ evHandler:SetScript("OnEvent", function()
 	-- print("bnew item")
 	mod:bag_generation()
 end)
-
--- Hijack blizzard functions
--- -- PS i hate that i'm doing this. todo is rewrite this entire addon
-function ToggleBag() return end
-function ToggleBackpack() return end
-function OpenBackpack() return end
-function CloseBackpack() return end
-function updateContainerFrameAnchors() return end
-function ContainerFrame_GenerateFrame(frame, size, id) mod:Draw(frame, size, id) end
-function OpenAllBags(frame) ToggleAllBags("open") end
-
--- Open all Bags
-function ToggleAllBags(func)
-	-- show all bags
-	if (BankFrame:IsShown()) then
-		mod.bank:Show()
-		mod.bags:Show()
-		for i=0, NUM_CONTAINER_FRAMES, 1 do OpenBag(i) end
-	else -- show only main backpack
-		if (mod.bags:IsShown() and (not func or not func == "open")) then
-			for i=0, NUM_CONTAINER_FRAMES, 1 do CloseBag(i) end
-			mod.bags:Hide()
-			mod.bank:Hide()
-			CloseBankFrame()
-		else
-			for i=0, NUM_CONTAINER_FRAMES, 1 do OpenBag(i) end
-			mod.bags:Show()
-		end
-	end
-
-	mod:bag_generation()
-end
-if (BackpackTokenFrame) then
-	BackpackTokenFrame:Hide();
-end

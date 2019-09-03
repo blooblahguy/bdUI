@@ -18,6 +18,9 @@ function mod:create_objective_tracker()
 		ignore_point = true
 		tracker:SetPoint("TOP", quest_anchor, "TOP", 0, 0)
 		ignore_point = false
+
+		DurabilityFrame:ClearAllPoints()
+		DurabilityFrame:SetPoint("BOTTOMRIGHT", Minimap.background, "BOTTOMLEFT", -20, 0)
 	end
 
 	local f = CreateFrame("Frame")

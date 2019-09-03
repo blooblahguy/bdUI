@@ -45,9 +45,7 @@ function mod:create_button_frame()
 			bdUI.bdConfig:toggle()
 		elseif (button == "RightButton") then
 			bdUI.bdConfig.header.lock:Click()
-		end
-
-		
+		end		
 	end)
 
 	-- Find and move buttons
@@ -60,7 +58,9 @@ function mod:create_button_frame()
 
 	MiniMapTracking:SetParent(Minimap)
 	GarrisonLandingPageMinimapButton:SetParent(Minimap)
+	manualTarget['CodexBrowserIcon'] = true
 	manualTarget['MiniMapTracking'] = true
+	manualTarget['MiniMapTrackingFrame'] = true
 	manualTarget['MiniMapMailFrame'] = true
 	manualTarget['COHCMinimapButton'] = true
 	manualTarget['ZygorGuidesViewerMapIcon'] = true
@@ -75,6 +75,8 @@ function mod:create_button_frame()
 	hideTextures['Interface\\Minimap\\MiniMap-TrackingBorder'] = true
 	hideTextures['Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight'] = true
 	hideTextures['Interface\\Minimap\\UI-Minimap-Background'] = true 
+	hideTextures[136430] = true 
+	hideTextures[136467] = true 
 
 	--===================================
 	-- Position buttons
@@ -125,12 +127,7 @@ function mod:create_button_frame()
 		if (f.skinned) then return end
 
 		f:SetScale(1)
-		f.SetSize = bdUI.noop
-		f.SetWidth = bdUI.noop
-		f.SetHeight = bdUI.noop
-		f:SetParent(Minimap.buttonFrame)
 		f:SetFrameStrata("MEDIUM")
-		f:Show()
 
 		-- Skin textures
 		local r = {f:GetRegions()}
@@ -153,28 +150,7 @@ function mod:create_button_frame()
 		end
 		
 		-- Create background
-		f.bdbackground = f.bdbackground or CreateFrame("frame",nil,f)
-		f.bdbackground:SetAllPoints(f)
-		f.bdbackground:SetFrameStrata("BACKGROUND")
-		bdUI:set_backdrop(f.bdbackground)
-		f:SetHitRectInsets(0, 0, 0, 0)
-		f:HookScript("OnEnter",function(self)
-			local newlines = {}
-			for l = 1, 10 do
-				local line = _G["GameTooltipTextLeft"..l]
-				if (line and line:GetText()) then
-					newlines[line:GetText()] = true
-				end
-			end
-			
-			GameTooltip:Hide()
-			GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 0, 6)
-			for k, v in pairs(newlines) do
-				GameTooltip:AddLine(k)
-			end
-			GameTooltip:Show()
-		end)
-
+		bdUI:set_backdrop(f)
 		f.skinned = true
 	end
 
@@ -193,16 +169,29 @@ function mod:create_button_frame()
 			local last = nil
 			for i = 1, #c do
 				local f = c[i]
-				local n = f:GetName() or "";
-				if ((manualTarget[n] and f:IsShown() ) or (
-					f:GetName() and 
-					f:IsShown() and 
-					(strfind(n, "LibDB") or strfind(n, "Button") or strfind(n, "Btn")) and 
-					not ignoreFrames[n]
-				)) then
+				local n = f:GetName() or i;
+
+				if (f:IsShown() and not ignoreFrames[n] and (
+						(manualTarget[n])
+						or
+						(f:GetName() and (strfind(n, "LibDB") or strfind(n, "Button") or strfind(n, "Btn")))
+					)
+				) then
 					skin(f)
-					frames[i] = f
+					frames[n] = f
 				end
+			end
+		else
+			for f, v in pairs(manualTarget) do
+				local f = _G[f]
+				if (f) then
+					local n = f:GetName() or i;
+					if (f:IsShown()) then
+						skin(f)
+						frames[n] = f
+					end
+				end
+
 			end
 		end
 
@@ -214,11 +203,9 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:SetScript("OnEvent",moveMinimapButtons)
 	Minimap.buttonFrame:SetScript("OnUpdate", function(self, elapsed)
 		total = total + elapsed
-		if (total > .5) then
+		if (total > 1) then
 			total = 0
-			-- if (not InCombatLockdown()) then
-				move_buttons()
-			-- end
+			move_buttons()
 		end
 	end)
 end

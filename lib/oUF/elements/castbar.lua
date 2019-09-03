@@ -85,7 +85,9 @@ A default texture will be applied to the StatusBar and Texture widgets if they d
 --]]
 local _, ns = ...
 local oUF = ns.oUF
-local LibClassicCasterino = LibStub('LibClassicCasterino', true)
+if (oUF.classic) then
+	local LibClassicCasterino = LibStub('LibClassicCasterino', true)
+end
 
 local GetNetStats = GetNetStats
 local GetTime = GetTime
