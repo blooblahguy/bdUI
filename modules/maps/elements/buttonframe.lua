@@ -65,6 +65,7 @@ function mod:create_button_frame()
 	manualTarget['COHCMinimapButton'] = true
 	manualTarget['ZygorGuidesViewerMapIcon'] = true
 	manualTarget['MiniMapBattlefieldFrame'] = true
+	manualTarget['PeggledMinimapIcon'] = true
 
 	ignoreFrames['bdButtonFrame'] = true
 	ignoreFrames['MinimapBackdrop'] = true

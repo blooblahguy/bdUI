@@ -120,6 +120,7 @@ function mod:create_minimap()
 		"MiniMapChallengeMode",
 		"MinimapBorderTop",
 		"MinimapBorder",
+		"MinimapToggleButton",
 	}
 	for i = 1, #frames do
 		if (_G[frames[i]]) then
