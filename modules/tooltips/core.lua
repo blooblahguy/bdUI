@@ -87,9 +87,10 @@ local function setUnit(self)
 		GameTooltipTextLeft1:SetFormattedText('%s%s', dnd(), name)
 		if guild then
 			GameTooltipTextLeft2:SetFormattedText('%s <%s>', rank, guild)
+			GameTooltip:AddLine("a",1,1,1)
 			GameTooltipTextLeft3:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race)
 		else
-			GameTooltip:AddLine("",1,1,1)
+			-- GameTooltip:AddLine("a",1,1,1)
 			GameTooltipTextLeft2:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race)
 		end
 	else
@@ -200,8 +201,11 @@ function mod:create_tooltips()
 	hide["Alliance"] = true
 	hide["PvE"] = true
 	hide["PvP"] = true
-	for k, v in pairs(hide)do
-		GameTooltip:DeleteLine(k, true)
+	for k, v in pairs(hide) do
+		local txt, line = GameTooltip:FindLine(k)
+		if (line) then
+			GameTooltip:DeleteLine(line, true)
+		end
 	end
 
 	---------------------------------------------------------------------

@@ -178,12 +178,16 @@ function mod:create_micromenu()
 	TalentMicroButtonAlert:Hide()
 	TalentMicroButtonAlert.Show = noop
 	cfg.buttonSkin = function(button)
+		local flash = _G[button:GetName().."Flash"]
+		-- print(button:GetName().."Flash")
+		flash:SetAllPoints()
 		local regions = {button:GetRegions()}
 		for k, v in pairs(regions) do
-			if (v == button.background or v == button.border) then return end
-			v:SetTexCoord(.17, .80, .22, .82)
-			v:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -6)
-			v:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -4, 6)
+			if (not v.protected) then
+				v:SetTexCoord(.17, .80, .22, .82)
+				v:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -6)
+				v:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -4, 6)
+			end
 		end
 		bdUI:set_backdrop(button)
 	end
@@ -222,6 +226,7 @@ end
 -- Vehicle Exit
 --===============================================================
 function mod:create_vehicle()
+	if (bdUI:get_game_version() == "vanilla") then return end
 	cfg = {}
 	cfg.cfg = "vehiclebar"
 	cfg.frameName = "bdActionbars_VehicleExitBar"

@@ -26,6 +26,7 @@ if (bdUI:get_game_version() == "vanilla") then
 	UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
 	GetSpecialization = GetSpecialization or noop
 	CanExitVehicle = CanExitVehicle or noop
+	SortBags = SortBags or noop
 	GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 
 	-- frames

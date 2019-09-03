@@ -197,7 +197,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 				lastRow = button
 				index = 1
 			else
-				button:SetPoint("LEFT", buttonList[i - 1], "RIGHT", frame.spacing, 0)
+				button:SetPoint("TOPLEFT", buttonList[i - 1], "TOPRIGHT", frame.spacing, 0)
 			end
 		end
 		index = index + 1

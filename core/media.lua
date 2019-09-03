@@ -157,6 +157,7 @@ end
 
 			frame.border = frame:CreateTexture(nil, "BACKGROUND")
 			frame.border:Hide()
+			frame.border.protected = true
 			frame.border.SetVertexColor = function(self, r, g, b, a)
 				frame.t:SetVertexColor(r, g, b, a)
 				frame.b:SetVertexColor(r, g, b, a)

@@ -171,6 +171,7 @@ function mod:create_button_frame()
 			for i = 1, #c do
 				local f = c[i]
 				local n = f:GetName() or i;
+				f.buttonindex = i
 
 				if (f:IsShown() and not ignoreFrames[n] and (
 						(manualTarget[n])
@@ -179,7 +180,7 @@ function mod:create_button_frame()
 					)
 				) then
 					skin(f)
-					frames[n] = f
+					frames[i] = f
 				end
 			end
 		else
@@ -189,7 +190,9 @@ function mod:create_button_frame()
 					local n = f:GetName() or i;
 					if (f:IsShown()) then
 						skin(f)
-						frames[n] = f
+						frames[f.buttonindex or n] = f
+					else
+						frames[f.buttonindex or n] = nil
 					end
 				end
 
