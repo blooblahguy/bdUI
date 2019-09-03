@@ -533,6 +533,9 @@ end
 --======================================================
 function mod:initialize()
 	config = mod:get_save()
+
+	if (not config.enabled) then return false end
+
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
 	
 	local function enable(self)
