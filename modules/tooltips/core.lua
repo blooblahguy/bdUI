@@ -87,7 +87,9 @@ local function setUnit(self)
 		GameTooltipTextLeft1:SetFormattedText('%s%s', dnd(), name)
 		if guild then
 			GameTooltipTextLeft2:SetFormattedText('%s <%s>', rank, guild)
-			GameTooltip:AddLine("a",1,1,1)
+			if (not GameTooltipTextLeft3:GetText()) then
+				GameTooltip:AddLine("a",1,1,1)
+			end
 			GameTooltipTextLeft3:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race)
 		else
 			-- GameTooltip:AddLine("a",1,1,1)

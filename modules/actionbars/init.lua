@@ -270,7 +270,7 @@ local config = {
 --=========================================
 	-- STANCE
 	addBarConf("Stance", "stancebar", {
-		mouseover = true
+		scale = 0.8
 	}),
 	-- PET
 	addBarConf("Pet", "petbar", {

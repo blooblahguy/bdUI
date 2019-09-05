@@ -486,6 +486,7 @@ function mod:initialize()
 	if (not config.enabled) then return end
 
 	mod:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
+	mod:RegisterEvent("PLAYER_REGEN_ENABLED", mod.nameplate_size)
 	mod:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
 	mod:RegisterEvent("PLAYER_ENTERING_WORLD", mod.nameplate_size)
 
