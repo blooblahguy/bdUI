@@ -265,14 +265,14 @@ end
 	end
 
 	function bdUI:numberize(v)
-		if v <= 9999 then return v end
+		if v <= 999 then return v end
 		if v >= 1000000000 then
 			local value = string.format("%.1fb", v/1000000000)
 			return value
 		elseif v >= 1000000 then
 			local value = string.format("%.1fm", v/1000000)
 			return value
-		elseif v >= 10000 then
+		elseif v >= 1000 then
 			local value = string.format("%.1fk", v/1000)
 			return value
 		end

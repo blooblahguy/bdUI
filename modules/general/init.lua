@@ -48,6 +48,12 @@ local config = {
 		label = "Quality of Life",
 		args = {
 			{
+				key = "autodismount",
+				type = "toggle",
+				value = true,
+				label = "Auto Dismount & Stand"
+			},
+			{
 				key = "doubleclickbo",
 				type = "toggle",
 				value = true,

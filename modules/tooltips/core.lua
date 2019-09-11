@@ -56,6 +56,7 @@ local function setUnit(self)
 		level = '??'
 		levelColor = {r = 1, g = 0, b = 0}
 	end
+	local levelhex = RGBPercToHex(levelColor)
 
 	-- FRIENDLY COLORING
 	local isFriend = UnitIsFriend("player", unit)

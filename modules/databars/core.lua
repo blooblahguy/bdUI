@@ -35,6 +35,13 @@ end
 function mod:config_callback()
 	if (xp) then
 		xp:SetSize(config.databars_width, config.databars_height)
+		for i = 1, 19 do
+			local tex = xp.tex[i]
+			local offset = (xp:GetWidth() / 20) * i
+			tex:SetPoint("TOP", xp, "TOP")
+			tex:SetPoint("BOTTOM", xp, "BOTTOM")
+			tex:SetPoint("LEFT", xp, "LEFT", offset, 0)
+		end
 		xp:callback()
 	end
 	if (rep) then

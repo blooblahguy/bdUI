@@ -6,6 +6,20 @@ function mod:create_xp()
 
 	local bar = mod:create_databar("bdXP")
 	bar:SetSize(config.databars_width, config.databars_height)
+	bar.tex = {}
+
+	for i = 1, 19 do
+		local tex = bar:CreateTexture(nil, "OVERLAY")
+		local offset = (bar:GetWidth() / 20) * i
+		tex:SetPoint("TOP", bar, "TOP")
+		tex:SetPoint("BOTTOM", bar, "BOTTOM")
+		tex:SetPoint("LEFT", bar, "LEFT", offset, 0)
+		tex:SetWidth(bdUI.border)
+		tex:SetAlpha(0.06)
+		tex:SetTexture(bdUI.media.flat)
+		tex:SetVertexColor(1, 1, 1)
+		bar.tex[i] = tex
+	end
 	bar:RegisterEvent("PLAYER_XP_UPDATE")
 	bar:RegisterEvent("PLAYER_LEVEL_UP")
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
