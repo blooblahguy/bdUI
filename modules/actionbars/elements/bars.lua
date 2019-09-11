@@ -148,12 +148,13 @@ function mod:create_stancebar()
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
 	cfg.frameSpawn = {"BOTTOMLEFT", mod.bars['bar1'], "TOPLEFT", 0, defaultPadding}
 
-	local stances = 0
-	for i = 1, NUM_STANCE_SLOTS do
-		local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i);
-		if (not icon) then break end
-		stances = stances + 1
-	end
+	local stances = NUM_STANCE_SLOTS
+	-- todo: fire on event to make only the correct number of stance buttons
+	-- for i = 1, NUM_STANCE_SLOTS do
+	-- 	local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i);
+	-- 	if (not icon) then break end
+	-- 	stances = stances + 1
+	-- end
 
 	if (stances == 0) then return end
 
