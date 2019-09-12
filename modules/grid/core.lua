@@ -353,6 +353,11 @@ local function layout(self, unit)
 		button.cd:SetReverse(true)
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 	end
+
+	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+	end
 	
 	-- special spell alerts
 	self.Glow = CreateFrame("frame", "glow", self.Health)
@@ -389,6 +394,9 @@ local function layout(self, unit)
 	self.Debuffs.CustomFilter = function(self, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
+
+		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 		return bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)
 	end
@@ -408,6 +416,11 @@ local function layout(self, unit)
 			region:SetAlpha(0)
 		end
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+	end
+
+	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
 	end
 	
 	table.insert(mod.frames, self)

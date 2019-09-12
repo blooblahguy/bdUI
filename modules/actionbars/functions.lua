@@ -18,7 +18,9 @@ function mod:noop() return end
 function mod:ForceHide(frame)
 	if (not frame) then return end
 	frame:Hide()
-	frame.Show = mod.noop
+	hooksecurefunc(frame, "Show", function(self)
+		self:Hide()
+	end)
 end
 
 --=======================================

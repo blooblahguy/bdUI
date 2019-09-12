@@ -270,8 +270,6 @@ function mod:SkinButton(button)
 	flash:SetTexture("")
 	icon:SetTexCoord(.1, .9, .1, .9)
 	icon:SetDrawLayer("ARTWORK")
-	-- icon.bdSetDesaturated = icon.SetDesaturated
-	-- icon.SetDesaturated = noop
 
 	-- Text Overrides
 	hotkey:SetFontObject(v.font)
