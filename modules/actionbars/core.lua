@@ -14,6 +14,7 @@ local c = {}
 --===============================================
 function mod:initialize()
 	c = mod:get_save()
+	if (not c.enabled) then mod.disabled = true; return end
 	
 	mod:remove_blizzard()
 
