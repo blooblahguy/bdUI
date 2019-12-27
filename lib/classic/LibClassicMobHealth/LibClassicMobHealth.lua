@@ -7,6 +7,9 @@ Description: Estimate a mob's health
 License: LGPL v2.1
 ]]
 
+-- only load in classic
+if (select(4, GetBuildInfo()) < 20000) then return false end
+
 local MAJOR_VERSION = "LibClassicMobHealth-1.0"
 local MINOR_VERSION = 1
 

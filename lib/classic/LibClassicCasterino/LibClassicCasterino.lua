@@ -2,9 +2,9 @@
 LibClassicCasterino
 Author: d87
 --]================]
+if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 
-
-local MAJOR, MINOR = "LibClassicCasterino", 12
+local MAJOR, MINOR = "LibClassicCasterino", 29
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -25,15 +25,19 @@ local MOVECHECK_TIMEOUT = 4
 
 local UnitGUID = UnitGUID
 local bit_band = bit.band
+
+local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
 local CastingInfo = CastingInfo
 local ChannelInfo = ChannelInfo
 local GetUnitSpeed = GetUnitSpeed
+local UnitIsUnit = UnitIsUnit
 
-local COMBATLOG_OBJECT_TYPE_PLAYER = COMBATLOG_OBJECT_TYPE_PLAYER
 local COMBATLOG_OBJECT_REACTION_FRIENDLY = COMBATLOG_OBJECT_REACTION_FRIENDLY
+local COMBATLOG_OBJECT_TYPE_PLAYER_OR_PET = COMBATLOG_OBJECT_TYPE_PLAYER + COMBATLOG_OBJECT_TYPE_PET
 local classCasts
-local classChannels
+local classChannelsByAura
+local classChannelsByCast
 local talentDecreased
 local crowdControlAuras
 local FireToUnits
@@ -49,6 +53,11 @@ local NPCSpells
 
 local castTimeCache = {}
 local castTimeCacheStartTimes = setmetatable({}, { __mode = "v" })
+
+local AIMED_SHOT = GetSpellInfo(19434)
+local MULTI_SHOT = GetSpellInfo(25294)
+local castingAimedShot = false
+local playerGUID = UnitGUID("player")
 
 --[[
 function DUMPCASTS()
@@ -81,13 +90,21 @@ local makeCastUID = function(guid, spellName)
 end
 
 local function CastStart(srcGUID, castType, spellName, spellID, overrideCastTime, isSrcEnemyPlayer )
+    -- This cast time can't be used reliably because it's changing depending on player's own haste
     local _, _, icon, castTime = GetSpellInfo(spellID)
-    if castType == "CHANNEL" then
-        castTime = classChannels[spellID]*1000
-        local decreased = talentDecreased[spellID]
-        if decreased then
-            castTime = castTime - decreased
+    if castType == "CAST" then
+        local knownCastDuration = classCasts[spellID]
+        if knownCastDuration then
+            castTime = knownCastDuration*1000
         end
+    end
+    if castType == "CHANNEL" then
+        local channelDuration = classChannelsByAura[spellID] or classChannelsByCast[spellID]
+        castTime = channelDuration*1000
+    end
+    local decreased = talentDecreased[spellID]
+    if decreased then
+        castTime = castTime - decreased
     end
     if overrideCastTime then
         castTime = overrideCastTime
@@ -104,10 +121,20 @@ local function CastStart(srcGUID, castType, spellName, spellID, overrideCastTime
     end
 
     if isSrcEnemyPlayer then
-        movecheckGUIDs[srcGUID] = MOVECHECK_TIMEOUT
+        if not (spellID == 4068 or spellID == 19769) then -- Iron Grenade, Thorium Grenade
+            movecheckGUIDs[srcGUID] = MOVECHECK_TIMEOUT
+        end
     end
 
     if castType == "CAST" then
+        if srcGUID == playerGUID and (spellName == AIMED_SHOT or spellName == MULTI_SHOT) then
+            castingAimedShot = true
+            movecheckGUIDs[srcGUID] = MOVECHECK_TIMEOUT
+            if spellName == MULTI_SHOT then
+                casters[srcGUID][5] = startTime + 500
+            end
+            callbacks:Fire("UNIT_SPELLCAST_START", "player")
+        end
         FireToUnits("UNIT_SPELLCAST_START", srcGUID)
     else
         FireToUnits("UNIT_SPELLCAST_CHANNEL_START", srcGUID)
@@ -124,6 +151,10 @@ local function CastStop(srcGUID, castType, suffix )
 
         if castType == "CAST" then
             local event = "UNIT_SPELLCAST_"..suffix
+            if srcGUID == playerGUID and castingAimedShot then
+                castingAimedShot = false
+                callbacks:Fire(event, "player")
+            end
             FireToUnits(event, srcGUID)
         else
             FireToUnits("UNIT_SPELLCAST_CHANNEL_STOP", srcGUID)
@@ -138,7 +169,7 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
     dstGUID, dstName, dstFlags, dstFlags2,
     spellID, spellName, arg3, arg4, arg5 = CombatLogGetCurrentEventInfo()
 
-    local isSrcPlayer = bit_band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0
+    local isSrcPlayer = bit_band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER_OR_PET) > 0
     if isSrcPlayer and spellID == 0 then
         spellID = spellNameToID[spellName]
     end
@@ -154,7 +185,7 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
             local cachedTime = castTimeCache[castUID]
             local spellID = NPCspellNameToID[spellName] -- just for the icon
             if not spellID then
-                spellID = 2050
+                spellID = 4036 -- Engineering Icon
             end
             if cachedTime then
                 CastStart(srcGUID, "CAST", spellName, spellID, cachedTime*1000)
@@ -165,12 +196,22 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
         end
     elseif eventType == "SPELL_CAST_FAILED" then
 
-            CastStop(srcGUID, "CAST", "FAILED")
+            CastStop(srcGUID, "CAST", "INTERRUPTED")
 
     elseif eventType == "SPELL_CAST_SUCCESS" then
-            if isSrcPlayer and classChannels[spellID] then
-                -- SPELL_CAST_SUCCESS can come right after AURA_APPLIED, so ignoring it
-                return
+            if isSrcPlayer then
+                if classChannelsByAura[spellID] then
+                    -- SPELL_CAST_SUCCESS can come right after AURA_APPLIED, so ignoring it
+                    return
+                elseif classChannelsByCast[spellID] then
+                    -- Channels fire SPELL_CAST_SUCCESS at their start
+                    local isChanneling = classChannelsByCast[spellID]
+                    if isChanneling then
+                        local isSrcFriendlyPlayer = bit_band(srcFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) > 0
+                        CastStart(srcGUID, "CHANNEL", spellName, spellID, nil, not isSrcFriendlyPlayer)
+                    end
+                    return
+                end
             end
             if not isSrcPlayer then
                 local castUID = makeCastUID(srcGUID, spellName)
@@ -192,7 +233,7 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
 
             CastStop(dstGUID, nil, "INTERRUPTED")
     elseif eventType == "UNIT_DIED" then
-            CastStop(dstGUID, nil, "FAILED")
+            CastStop(dstGUID, nil, "INTERRUPTED")
 
     elseif  eventType == "SPELL_AURA_APPLIED" or
             eventType == "SPELL_AURA_REFRESH" or
@@ -200,11 +241,11 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
     then
         if isSrcPlayer then
             if crowdControlAuras[spellName] then
-                CastStop(dstGUID, nil, "FAILED")
+                CastStop(dstGUID, nil, "INTERRUPTED")
                 return
             end
 
-            local isChanneling = classChannels[spellID]
+            local isChanneling = classChannelsByAura[spellID]
             if isChanneling then
                 local isSrcFriendlyPlayer = bit_band(srcFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) > 0
                 CastStart(srcGUID, "CHANNEL", spellName, spellID, nil, not isSrcFriendlyPlayer)
@@ -212,7 +253,7 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
         end
     elseif eventType == "SPELL_AURA_REMOVED" then
         if isSrcPlayer then
-            local isChanneling = classChannels[spellID]
+            local isChanneling = classChannelsByAura[spellID]
             if isChanneling then
                 CastStop(srcGUID, "CHANNEL", "STOP")
             end
@@ -221,30 +262,67 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
 
 end
 
--- local castTimeIncreases = {
---     [1714] = 60,    -- Curse of Tongues (60%)
---     [5760] = 60,    -- Mind-Numbing Poison (60%)
--- }
-local function IsSlowedDown(unit)
-    for i=1,16 do
-        local name, _, _, _, _, _, _, _, _, spellID = UnitAura(unit, i, "HARMFUL")
-        if not name then return end
-        if spellID == 1714 or spellID == 5760 then
-            return true
+local castTimeIncreases = {
+    [1714] = 1.6,    -- Curse of Tongues (60%)
+    [5760] = 1.6,    -- Mind-Numbing Poison (60%)
+    [1098] = 1.3,    -- Enslave Demon
+}
+local attackTimeDecreases = {
+    [6150] = 1.3,    -- Quick Shots/ Imp Aspect of the Hawk (Aimed)
+    [3045] = 1.4,    -- Rapid Fire (Aimed)
+    [28866] = 1.2,   -- Kiss of the Spider (Increases your _attack speed_ by 20% for 15 sec.) -- For Aimed
+}
+
+local function GetTrollBerserkHaste(unit)
+    local perc = UnitHealth(unit)/UnitHealthMax(unit)
+    local speed = min((1.3 - perc)/3, .3) + 1
+    return speed
+end
+local function GetRangedHaste(unit)
+    local positiveMul = 1
+    for i=1, 100 do
+        local name, _, _, _, _, _, _, _, _, spellID = UnitAura(unit, i, "HELPFUL")
+        if not name then return positiveMul end
+        if attackTimeDecreases[spellID] or spellID == 26635 then
+            positiveMul = positiveMul * (attackTimeDecreases[spellID] or GetTrollBerserkHaste(unit))
         end
     end
+    return positiveMul
+end
+local function GetCastSlowdown(unit)
+    local negativeEx = 1
+    for i=1, 100 do
+        local name, _, _, _, _, _, _, _, _, spellID = UnitAura(unit, i, "HARMFUL")
+        if not name then return negativeEx end
+        if castTimeIncreases[spellID] then
+            negativeEx = math.max(negativeEx, castTimeIncreases[spellID])
+        end
+    end
+    return negativeEx
 end
 
 function lib:UnitCastingInfo(unit)
-    if unit == "player" then return CastingInfo() end
+    if UnitIsUnit(unit,"player") then
+        if not castingAimedShot then
+            return CastingInfo()
+        end
+    end
     local guid = UnitGUID(unit)
     local cast = casters[guid]
     if cast then
         local castType, name, icon, startTimeMS, endTimeMS, spellID = unpack(cast)
-        if IsSlowedDown(unit) then
+        if castingAimedShot and spellID ~= 25294 then -- Multi-Shot spellID
+            local haste = GetRangedHaste(unit)
             local duration = endTimeMS - startTimeMS
-            endTimeMS = startTimeMS + duration * 1.6
+            endTimeMS = startTimeMS + duration/haste
         end
+
+        local slowdown = GetCastSlowdown(unit)
+        if slowdown ~= 1 then
+            local duration = endTimeMS - startTimeMS
+            endTimeMS = startTimeMS + duration * slowdown
+        end
+
         if castType == "CAST" and endTimeMS > GetTime()*1000 then
             local castID = nil
             return name, nil, icon, startTimeMS, endTimeMS, nil, castID, false, spellID
@@ -253,7 +331,7 @@ function lib:UnitCastingInfo(unit)
 end
 
 function lib:UnitChannelInfo(unit)
-    if unit == "player" then return ChannelInfo() end
+    if UnitIsUnit(unit, "player") then return ChannelInfo() end
     local guid = UnitGUID(unit)
     local cast = casters[guid]
     if cast then
@@ -266,9 +344,9 @@ function lib:UnitChannelInfo(unit)
 end
 
 
-local Passthrough = function(self, event, unit)
-    if unit == "player" then
-        callbacks:Fire(event, unit)
+local Passthrough = function(self, event, unit, ...)
+    if unit == "player" or UnitIsUnit(unit, "player") then
+        callbacks:Fire(event, unit, ...)
     end
 end
 f.UNIT_SPELLCAST_START = Passthrough
@@ -279,6 +357,7 @@ f.UNIT_SPELLCAST_INTERRUPTED = Passthrough
 f.UNIT_SPELLCAST_CHANNEL_START = Passthrough
 f.UNIT_SPELLCAST_CHANNEL_UPDATE = Passthrough
 f.UNIT_SPELLCAST_CHANNEL_STOP = Passthrough
+f.UNIT_SPELLCAST_SUCCEEDED = Passthrough
 
 function callbacks.OnUsed()
     f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -291,6 +370,7 @@ function callbacks.OnUsed()
     f:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
     f:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
     f:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
+    f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
     -- for unit lookup
     f:RegisterEvent("GROUP_ROSTER_UPDATE")
@@ -366,6 +446,8 @@ classCasts = {
     [17923] = 1.5, -- Searing Pain
     [25307] = 3, -- Shadow Bolt
     [17924] = 4, -- Soul Fire
+    [6358] = 1.5, -- Seduction
+    [11763] = 2, -- Firebolt (Imp)
 
     [9853] = 1.5, -- Entangling Roots
     [18658] = 1.5, -- Hibernate
@@ -389,6 +471,18 @@ classCasts = {
     [10216] = 3, -- Flamestrike
     [10207] = 1.5, -- Scorch
     [25304] = 3, -- Frostbolt
+    [3561] = 10, -- Teleport: Stormwind
+    [3562] = 10, -- Teleport: Ironforge
+    [3563] = 10, -- Teleport: Undercity
+    [3565] = 10, -- Teleport: Darnassus
+    [3566] = 10, -- Teleport: Thuner Bluff
+    [3567] = 10, -- Teleport: Orgrimmar
+    [10059] = 10, -- Portal: Stormwind
+    [11416] = 10, -- Portal: Ironforge
+    [11418] = 10, -- Portal: Undercity
+    [11419] = 10, -- Portal: Darnassus
+    [11420] = 10, -- Portal: Thuner Bluff
+    [11417] = 10, -- Portal: Orgrimmar
 
     [10876] = 3, -- Mana Burn
     [10955] = 1.5, -- Shackle Undead
@@ -428,6 +522,7 @@ classCasts = {
     [11605] = 1.5, -- Slam
 
     [20904] = 3, -- Aimed Shot
+    [25294] = 0.5, -- Multi-Shot
     [1002] = 2, -- Eyes of the Beast
     [2641] = 5, -- Dismiss pet
     [982] = 10, -- Revive Pet
@@ -435,21 +530,22 @@ classCasts = {
 
     [8690] = 10, -- Hearthstone
     [4068] = 1, -- Iron Grenade
+    [19769] = 1, -- Thorium Grenade
+    [20589] = 0.5, -- Escape Artist
 
     -- Munts do not generate SPELL_CAST_START
     -- [8394] = 3, -- Striped Frostsaber
     -- [10793] = 3, -- Striped Nightsaber
 }
 
-classChannels = {
+classChannelsByAura = {
     [746] = 6,      -- First Aid
-    [13278] = 4,    -- Gnomish Death Ray
     [20577] = 10,   -- Cannibalize
     [19305] = 6,    -- Starshards
 
     -- DRUID
-    [17402] = 9.5,  -- Hurricane
-    [9863] = 9.5,      -- Tranquility
+    [17402] = 10,  -- Hurricane
+    [9863] = 10,      -- Tranquility
 
     -- HUNTER
     [6197] = 60,     -- Eagle Eye
@@ -458,8 +554,6 @@ classChannels = {
     [1002] = 60,     -- Eyes of the Beast
     [14295] = 6,     -- Volley
 
-    -- MAGE
-    [25345] = 5,     -- Arcane Missiles
     [10187] = 8,     -- Blizzard
     [12051] = 8,     -- Evocation
 
@@ -470,21 +564,32 @@ classChannels = {
 
     -- WARLOCK
     [126] = 45,       -- Eye of Kilrogg
-    [11700] = 4.5,    -- Drain Life
-    [11704] = 4.5,    -- Drain Mana
-    [11675] = 14.5,   -- Drain Soul
-    [11678] = 7.5,    -- Rain of Fire
+    [11700] = 5,    -- Drain Life
+    [11704] = 5,    -- Drain Mana
+    [11675] = 15,   -- Drain Soul
+    [11678] = 8,    -- Rain of Fire
     [11684] = 15,     -- Hellfire
     [11695] = 10,     -- Health Funnel
+    [6358] = 15,    -- Seduction
+    [17854] = 10,   -- Consume Shadows (Voidwalker)
 }
+
+classChannelsByCast = {
+    [13278] = 4,    -- Gnomish Death Ray
+
+    -- MAGE
+    [25345] = 5,     -- Arcane Missiles
+}
+
 
 for id in pairs(classCasts) do
     spellNameToID[GetSpellInfo(id)] = id
-    -- AddSpellNameRecognition(id)
 end
-for id in pairs(classChannels) do
+for id in pairs(classChannelsByAura) do
     spellNameToID[GetSpellInfo(id)] = id
-    -- AddSpellNameRecognition(id)
+end
+for id in pairs(classChannelsByCast) do
+    spellNameToID[GetSpellInfo(id)] = id
 end
 
 local partyGUIDtoUnit = {}
@@ -647,12 +752,15 @@ do
         while guid ~= nil do
             -- Removing while iterating here, but it doesn't matter
 
-            local unit = GetUnitForFreshGUID(guid)
-            if unit then
-                if GetUnitSpeed(unit) ~= 0 then
-                    CastStop(guid, nil, "FAILED")
-                    movecheckGUIDs[guid] = nil
-                    return
+            local timeStart = MOVECHECK_TIMEOUT - timeout
+            if timeStart > 0.25 then
+                local unit = GetUnitForFreshGUID(guid)
+                if unit then
+                    if GetUnitSpeed(unit) ~= 0 then
+                        CastStop(guid, nil, "INTERRUPTED")
+                        movecheckGUIDs[guid] = nil
+                        return
+                    end
                 end
             end
 
