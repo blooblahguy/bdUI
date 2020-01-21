@@ -72,3 +72,47 @@ SlashCmdList["BDUI"] = function(msg, editbox)
 		print(bdUI.colorString.." "..msg.." not recognized as a command.")
 	end
 end
+
+
+--======================================
+-- World Marker Buttons
+--======================================
+if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	local marks_table = {
+		[1] = {"Blue", "0496ff", 6}
+		, [2] = {"Green", "119c0c", 4}
+		, [3] = {"Purple", "a80ec0", 3}
+		, [4] = {"Red", "a6140d", 7}
+		, [5] = {"Yellow", "deda32", 1}
+		, [6] = {"Orange", "d16f00", 2}
+		, [7] = {"Silver", "749bb3", 5}
+		, [8] = {"White", "f3f1eb", 8}
+	}
+
+	local bdui_wm_buttons = CreateFrame("frame", nil, bdParent)
+	BINDING_HEADER_BDUI = "bdUI"
+	for i = 1, 8 do
+		local name, color, index = unpack(marks_table[i])
+
+		local text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..index..":12|t |cff"..color..name.."|r World Marker"
+
+		_G["BINDING_NAME_CLICK BDUI_WM"..i..":LeftButton"] = text
+	end
+
+	_G["BINDING_NAME_CLICK BDUI_CWM:LeftButton"] = "Clear All World Markers"
+
+	for i = 1, 8 do
+		local button = CreateFrame("Button", "BDUI_WM"..i, bdui_wm_buttons, "SecureActionButtonTemplate");
+		button:SetID(i)
+		button:RegisterForClicks("AnyUp","AnyDown");
+		button:SetAttribute("type","macro")
+		button:SetAttribute("macrotext", "/cwm "..i.."\n/wm "..i)
+	end
+
+	-- clear all button
+	local button = CreateFrame("Button", "BDUI_CWM", bdui_wm_buttons, "SecureActionButtonTemplate");
+	button:SetID(9)
+	button:RegisterForClicks("AnyUp","AnyDown");
+	button:SetAttribute("type","macro")
+	button:SetAttribute("macrotext", "/cwm 0")
+end

@@ -43,7 +43,8 @@ end
 local scripts = { "OnShow", "OnHide", "OnEvent", "OnEnter", "OnLeave", "OnUpdate", "OnValueChanged", "OnClick", "OnMouseDown", "OnMouseUp"}
 local framesToHide = { MainMenuBar, OverrideActionBar }
 local framesToDisable = { MainMenuBar, MicroButtonAndBagsBar, MainMenuBarArtFrame, StatusTrackingBarManager, ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton, OverrideActionBar,
-  OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame }
+  OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame 
+  }
 
 -- loops through and kills hooked scripts
 local function StripScripts(frame)
@@ -63,7 +64,7 @@ function mod:HideMainMenuBar()
 		BackpackTokenFrame_Update()
 	end
 	v.hidden:SetScript("OnEvent", OnEvent)
-	-- v.hidden:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+	v.hidden:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	for i, frame in next, framesToHide do
 		frame:SetParent(v.hidden)
 	end

@@ -179,7 +179,7 @@ local function update_threat(self, event, unit)
 	healthbar:SetMinMaxValues(0, max)
 	healthbar:SetValue(cur)
 
-	if (((cur / max) * 100) <= config.executerange) then
+	if (((cur / max) * 100) <= config.executerange and not self.tapDenied) then
 		healthbar:SetStatusBarColor(unpack(config.executecolor))
 	elseif (config.specialunits[UnitName(unit)]) then
 		healthbar:SetStatusBarColor(unpack(config.specialcolor))

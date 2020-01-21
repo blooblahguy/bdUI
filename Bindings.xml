@@ -1,0 +1,11 @@
+<Bindings>
+	<Binding name="CLICK BDUI_WM1:LeftButton" header="BDUI"/>
+	<Binding name="CLICK BDUI_WM2:LeftButton"/>
+	<Binding name="CLICK BDUI_WM3:LeftButton"/>
+	<Binding name="CLICK BDUI_WM4:LeftButton"/>
+	<Binding name="CLICK BDUI_WM5:LeftButton"/>
+	<Binding name="CLICK BDUI_WM6:LeftButton"/>
+	<Binding name="CLICK BDUI_WM7:LeftButton"/>
+	<Binding name="CLICK BDUI_WM8:LeftButton"/>
+	<Binding name="CLICK BDUI_CWM:LeftButton"/>
+</Bindings>
