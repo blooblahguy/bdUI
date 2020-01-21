@@ -246,6 +246,52 @@ local function nameplate_create(self, unit)
 	self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
 
 	--==========================================
+	-- DAMAGE ABSORBS
+	--==========================================
+    local absorbBar = CreateFrame('StatusBar', nil, self.Health)
+    absorbBar:SetAllPoints()
+	absorbBar:SetStatusBarTexture(bdUI.media.flat)
+	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
+	absorbBar:Hide()
+	local overAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+    overAbsorbBar:SetAllPoints()
+	overAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
+	overAbsorbBar:SetStatusBarColor(.1, .1, .2, .6)
+	overAbsorbBar:Hide()
+
+	-- Register and callback
+    self.HealthPrediction = {
+        absorbBar = absorbBar,
+		overAbsorb = overAbsorbBar,
+
+        maxOverflow = 1,
+    }
+
+	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
+		if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
+		
+		local absorb = UnitGetTotalAbsorbs(unit) or 0
+		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
+
+		local overA = 0
+		local overH = 0
+
+		-- 2nd dmg absorb shield
+		if (absorb > maxHealth) then
+			overA = absorb - maxHealth
+			self.overAbsorb:Show()
+		else
+			self.overAbsorb:Hide()
+		end
+		
+		self.overAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
+		self.overAbsorb:SetValue(overA)
+
+		self.absorbBar:SetValue(absorb)
+
+	end
+
+	--==========================================
 	-- THREAT
 	--==========================================
 	self.Health.Override = update_threat

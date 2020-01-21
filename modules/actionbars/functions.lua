@@ -108,9 +108,13 @@ function mod:remove_blizzard()
 	end
 	if (ZoneAbilityFrame) then
 		PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
+		-- bdUI:hide_protected(PetBattleFrame.BottomFrame.MicroButtonFrame)
 	end
 	if (OverrideActionBar) then
 		OverrideActionBar:SetScript("OnShow", nil)
+		-- bdUI:hide_protected(OverrideActionBar)
 	end
 	MainMenuBar:SetScript("OnShow", nil)
+
+	-- bdUI:hide_protected(MainMenuBar)
 end

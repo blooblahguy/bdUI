@@ -267,8 +267,9 @@ function mod:SkinButton(button)
 	button:SetNormalTexture("")
 
 	if ( not flash ) then return end
-
 	flash:SetTexture("")
+
+	if (not icon) then return end
 	icon:SetTexCoord(.1, .9, .1, .9)
 	icon:SetDrawLayer("ARTWORK")
 

@@ -1,5 +1,16 @@
 local bdUI, c, l = unpack(select(2, ...))
 
+
+--==============================================
+-- Hide Protected things
+--==============================================
+function bdUI:hide_protected(frame)
+	frame:Hide()
+	frame:EnableMouse(false)
+	hooksecurefunc(frame, "Show", function(self) self:Hide() end)
+end
+
+
 --==============================================
 -- Aura Funcitonality
 -- library for spell durations

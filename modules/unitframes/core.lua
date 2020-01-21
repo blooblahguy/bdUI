@@ -348,7 +348,6 @@ local function layout(self, unit)
         overHealAbsorb = overHealAbsorbBar,
 
         maxOverflow = 1,
-        frequentUpdates = true,
     }
 
 	

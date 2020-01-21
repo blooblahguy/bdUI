@@ -57,15 +57,21 @@ function mod:create_button_frame()
 	local numChildren = 0
 
 	MiniMapTracking:SetParent(Minimap)
+	MiniMapTrackingButtonBorder:Hide()
+	MiniMapTrackingButtonShine:Hide()
+	MiniMapTrackingButtonShine.Show = noop
 	GarrisonLandingPageMinimapButton:SetParent(Minimap)
 	manualTarget['CodexBrowserIcon'] = true
 	manualTarget['MiniMapTracking'] = true
-	manualTarget['MiniMapTrackingFrame'] = true
+	manualTarget['HelpOpenWebTicketButton'] = true
+	manualTarget['GarrisonLandingPageMinimapButton'] = true
+	-- manualTarget['MiniMapTrackingFrame'] = true
 	manualTarget['MiniMapMailFrame'] = true
 	manualTarget['COHCMinimapButton'] = true
 	manualTarget['ZygorGuidesViewerMapIcon'] = true
 	manualTarget['MiniMapBattlefieldFrame'] = true
 	manualTarget['PeggledMinimapIcon'] = true
+	manualTarget['QueueStatusMinimapButton'] = true
 
 	ignoreFrames['bdButtonFrame'] = true
 	ignoreFrames['MinimapBackdrop'] = true
@@ -136,11 +142,12 @@ function mod:create_button_frame()
 			if (r[o].GetTexture and r[o]:GetTexture()) then
 				local tex = r[o]:GetTexture()
 				r[o]:SetAllPoints(f)
+				r[o]:SetDrawLayer("ARTWORK")
 				if (hideTextures[tex]) then
 					r[o]:Hide()
 				elseif (not strfind(tex,"WHITE8x8")) then
 					local coord = table.concat({r[o]:GetTexCoord()})
-					if (coord == "00011011") then
+					if (coord == "00011011" and not f:GetName() == "MinimMapTracking") then
 						r[o]:SetTexCoord(0.3, 0.7, 0.3, 0.7)
 						if (n == "DugisOnOffButton") then
 							r[o]:SetTexCoord(0.25, 0.75, 0.2, 0.7)								

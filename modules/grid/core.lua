@@ -599,6 +599,8 @@ end
 --======================================================
 function mod:config_callback()
 	if (InCombatLockdown()) then return end
+
+	config = mod:get_save()
 	
 	for k, self in pairs(mod.frames) do
 		self:SetSize(config.width, config.height)

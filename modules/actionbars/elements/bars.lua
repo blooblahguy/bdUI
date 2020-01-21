@@ -176,11 +176,10 @@ function mod:create_micromenu()
 	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.frameSpawn = {"BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -defaultPadding, defaultPadding}
 	cfg.widthScale = 0.777
-	TalentMicroButtonAlert:Hide()
-	TalentMicroButtonAlert.Show = noop
+	-- TalentMicroButtonAlert:Hide()
+	-- TalentMicroButtonAlert.Show = noop
 	cfg.buttonSkin = function(button)
 		local flash = _G[button:GetName().."Flash"]
-		-- print(button:GetName().."Flash")
 		flash:SetAllPoints()
 		local regions = {button:GetRegions()}
 		for k, v in pairs(regions) do
@@ -200,6 +199,12 @@ function mod:create_micromenu()
 		end
 	end
 	local micromenu = mod:CreateBar(buttonList, cfg)
+
+	-- lose the alert boxex
+	bdUI:hide_protected(CharacterMicroButtonAlert)
+	bdUI:hide_protected(TalentMicroButtonAlert)
+	-- CharacterMicroButtonAlert:Hide()
+	-- CharacterMicroButtonAlert.Show = noop
 end
 	
 --===============================================================

@@ -6,6 +6,7 @@ local auras = {
 	["Die by the Sword"] = true,
 	["Shield Wall"] = true,
 	["Demoralizing Shout"] = true,
+	["Piercing Howl"] = true,
 	--["Enraged Regeneration"] = true,
 	--["Last Stand"] = true,
 	["Safeguard"] = true,

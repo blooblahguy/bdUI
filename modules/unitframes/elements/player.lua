@@ -47,11 +47,12 @@ mod.custom_layout["player"] = function(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		if (bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
-			if (caster == "player" and duration ~= 0 and duration < 300) then
-				return true 
-			end
-		end
+
+		-- filter from whitelist/blacklist
+		if ( not bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then return false end
+		-- but also only show player and with durations
+		if (caster == "player" and duration ~= 0 and duration < 300) then return true end
+
 	end
 
 	-- create standalone resource bar

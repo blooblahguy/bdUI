@@ -10,3 +10,15 @@ local mod = bdUI:get_module("Maps")
 -- place core functionality here
 --===============================================
 
+--=============================================
+-- Initialize function
+--=============================================
+function mod:initialize()
+	config = mod:get_save()
+	if (not config.enabled) then return false end
+
+	mod:create_minimap()
+	mod:create_button_frame()
+	mod:worldmap_coords()
+	mod:create_objective_tracker()
+end
