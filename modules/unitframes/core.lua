@@ -16,9 +16,6 @@ function mod:config_callback()
 	config = mod:get_save()
 
 	for unit, self in pairs(mod.units) do
-		self.HealthPrediction.myBar:SetWidth(self.HealthPrediction.myBar:GetParent():GetWidth())
-		self.HealthPrediction.otherBar:SetWidth(self.HealthPrediction.otherBar:GetParent():GetWidth())
-
 		local func = unit
 		if (string.find(func, "boss")) then func = "boss" end
 		if (string.find(func, "arena")) then func = "arena" end
@@ -296,23 +293,17 @@ local function layout(self, unit)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.RaidTargetIndicator:SetPoint('CENTER', self, 0, 0)
 
+	--===============================================
+	-- Healing & Damage Absorbs
+	--===============================================
 	-- Heal predections
-    local myHeals = CreateFrame('StatusBar', nil, self.Health)
-    myHeals:SetPoint('TOP')
-    myHeals:SetPoint('BOTTOM')
-    myHeals:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
-	myHeals:SetStatusBarTexture(bdUI.media.flat)
-	myHeals:SetStatusBarColor(0.6,1,0.6,.2)
-	myHeals:Hide()
-    local otherHeals = CreateFrame('StatusBar', nil, self.Health)
-    otherHeals:SetPoint('TOP')
-    otherHeals:SetPoint('BOTTOM')
-    otherHeals:SetPoint('LEFT', myHeals:GetStatusBarTexture(), 'RIGHT')
-	otherHeals:Hide()
+    local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
+	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
+	incomingHeals:SetStatusBarColor(0.6,1,0.6,.2)
+	incomingHeals:Hide()
 
 	-- Damage Absorbs
     local absorbBar = CreateFrame('StatusBar', nil, self.Health)
-    absorbBar:SetAllPoints()
 	absorbBar:SetStatusBarTexture(bdUI.media.flat)
 	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
 	absorbBar:Hide()
@@ -324,67 +315,26 @@ local function layout(self, unit)
 
 	-- Healing Absorbs
     local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    healAbsorbBar:SetAllPoints()
     healAbsorbBar:SetReverseFill(true)
 	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 	healAbsorbBar:Hide()
 	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overHealAbsorbBar:SetAllPoints()
     overHealAbsorbBar:SetReverseFill(true)
 	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 	overHealAbsorbBar:Hide()
 
 	-- Register and callback
-    self.HealthPrediction = {
-        myBar = myHeals,
-        otherBar = otherHeals,
+    self.bdHealthPrediction = {
+        incomingHeals = incomingHeals,
 
         absorbBar = absorbBar,
 		overAbsorb = overAbsorbBar,
 
         healAbsorbBar = healAbsorbBar,
         overHealAbsorb = overHealAbsorbBar,
-
-        maxOverflow = 1,
     }
-
-	
-	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
-		if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
-		
-		local absorb = UnitGetTotalAbsorbs(unit) or 0
-		local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
-		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
-
-		local overA = 0
-		local overH = 0
-
-		-- 2nd dmg absorb shield
-		if (absorb > maxHealth) then
-			overA = absorb - maxHealth
-			self.overAbsorb:Show()
-		else
-			self.overAbsorb:Hide()
-		end
-		
-		-- 2nd heal absorb shield
-		if (healAbsorb > maxHealth) then
-			overH = healAbsorb - maxHealth
-			self.overHealAbsorb:Show()
-		else
-			self.overHealAbsorb:Hide()
-		end
-
-		self.overHealAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
-		self.overHealAbsorb:SetValue(overH)
-		self.overAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
-		self.overAbsorb:SetValue(overA)
-
-		self.absorbBar:SetValue(absorb)
-
-	end
 
 	-- Tags
 	oUF.Tags.Events['curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'

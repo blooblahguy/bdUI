@@ -532,6 +532,76 @@ local auras = {
 	--Jaina,
 	["Broadside"] = 1,
 	["Siegebreaker Blast"] = 1,
+
+
+-- Battle for Dazar'alor,
+	-- Wrathion
+	['Incineration'] = true,
+	['Scorching Blister'] = true,
+	['Burning Madness'] = true,
+
+	-- Maut
+	['Shadow Wounds'] = true,
+	['Devoured Abyss'] = true,
+	['Devour Magic'] = true,
+	['Drain Essence'] = true,
+
+	-- Skitra
+	['Shadow Shock'] = true,
+	['Shred Psyche'] = true,
+
+	-- Xanesh
+	['Abyssal Strike'] = true,
+	['Voidwoken'] = true,
+
+	-- Hivemind
+	['Acid Pool'] = true,
+	['Nullification'] = true,
+	['Corrosion'] = true,
+
+	-- Shadhar
+	['Disolve'] = true,
+	['Debilitating Spit'] = true,
+	['Entropic Breath'] = true,
+	['Umbral Breath'] = true,
+
+	-- Drestagath
+	['Volatile Vulnerability'] = true,
+	['Unleashed Insanity'] = true,
+	['Void Glare'] = true,
+
+	-- Ilgynoth
+	['Recurring Nightmare'] = true,
+	['Cursed Blood'] = true,
+	['Touch of the Corruptor'] = true,
+
+	-- Vexiona
+	['Annihilation'] = true,
+	['Terrifying Presence'] = true,
+	['Twilight Decimator'] = true,
+
+	-- Raden
+	['Unstable Vita'] = true,
+	['Unleashed Void'] = true,
+	['Charged Bonds'] = true,
+	['Nullifying Strike'] = true,
+
+	-- Carapace
+	['Mental Decay'] = true,
+	['Nightmare Antibody'] = true,
+	['Madness Bomb'] = true,
+	["Gift of N'Zoth"] = true,
+	["Servant of N'Zoth"] = true,
+	["Mycelial Growth"] = true,
+	["Insanity Bomb"] = true,
+	["Breed Madness"] = true,
+
+	-- Nzoth
+	["Mindwrack"] = true,
+	["Paranoia"] = true,
+	["Anguish"] = true,
+	["Evoke Anguish"] = true,
+	["Corrupted Mind"] = true,
 }
 
 bdUI.aura_lists.raid = auras

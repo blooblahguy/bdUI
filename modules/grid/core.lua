@@ -44,8 +44,8 @@ local function layout(self, unit)
 	--===============================================
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.flat)
-	self.Health:SetAllPoints(self)
-	self.Health:SetFrameLevel(0)
+	self.Health:SetPoint("TOPLEFT", self)
+	self.Health:SetPoint("BOTTOMRIGHT", self)
 	self.Health.frequentUpdates = true
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
@@ -132,22 +132,13 @@ local function layout(self, unit)
 	-- Healing & Damage Absorbs
 	--===============================================
 	-- Heal predections
-    local myHeals = CreateFrame('StatusBar', nil, self.Health)
-    myHeals:SetPoint('TOP')
-    myHeals:SetPoint('BOTTOM')
-    myHeals:SetPoint('LEFT', self.Health:GetStatusBarTexture(), 'RIGHT')
-	myHeals:SetStatusBarTexture(bdUI.media.flat)
-	myHeals:SetStatusBarColor(0.6,1,0.6,.2)
-	myHeals:Hide()
-    local otherHeals = CreateFrame('StatusBar', nil, self.Health)
-    otherHeals:SetPoint('TOP')
-    otherHeals:SetPoint('BOTTOM')
-    otherHeals:SetPoint('LEFT', myHeals:GetStatusBarTexture(), 'RIGHT')
-	otherHeals:Hide()
+    local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
+	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
+	incomingHeals:SetStatusBarColor(0.6,1,0.6,.2)
+	incomingHeals:Hide()
 
 	-- Damage Absorbs
     local absorbBar = CreateFrame('StatusBar', nil, self.Health)
-    absorbBar:SetAllPoints()
 	absorbBar:SetStatusBarTexture(bdUI.media.flat)
 	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
 	absorbBar:Hide()
@@ -159,68 +150,26 @@ local function layout(self, unit)
 
 	-- Healing Absorbs
     local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    healAbsorbBar:SetAllPoints()
     healAbsorbBar:SetReverseFill(true)
 	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 	healAbsorbBar:Hide()
 	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overHealAbsorbBar:SetAllPoints()
     overHealAbsorbBar:SetReverseFill(true)
 	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 	overHealAbsorbBar:Hide()
 
 	-- Register and callback
-    self.HealthPrediction = {
-        myBar = myHeals,
-        otherBar = otherHeals,
+    self.bdHealthPrediction = {
+        incomingHeals = incomingHeals,
 
         absorbBar = absorbBar,
 		overAbsorb = overAbsorbBar,
 
         healAbsorbBar = healAbsorbBar,
         overHealAbsorb = overHealAbsorbBar,
-
-        maxOverflow = 1,
-        frequentUpdates = true,
     }
-
-	
-	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
-		if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
-		
-		local absorb = UnitGetTotalAbsorbs(unit) or 0
-		local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
-		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
-
-		local overA = 0
-		local overH = 0
-
-		-- 2nd dmg absorb shield
-		if (absorb > maxHealth) then
-			overA = absorb - maxHealth
-			self.overAbsorb:Show()
-		else
-			self.overAbsorb:Hide()
-		end
-		
-		-- 2nd heal absorb shield
-		if (healAbsorb > maxHealth) then
-			overH = healAbsorb - maxHealth
-			self.overHealAbsorb:Show()
-		else
-			self.overHealAbsorb:Hide()
-		end
-
-		self.overHealAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
-		self.overHealAbsorb:SetValue(overH)
-		self.overAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
-		self.overAbsorb:SetValue(overA)
-
-		self.absorbBar:SetValue(absorb)
-
-	end
 
 	-- Resurrect 
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -456,7 +405,7 @@ function mod:get_attributes()
 	-- group growth/spacing
 	if (config.group_growth == "Upwards") then
 		new_group_anchor = "BOTTOM"
-		yOffset = config.spacing
+		yOffset = -config.spacing
 	elseif (config.group_growth == "Downwards") then
 		new_group_anchor = "TOP"
 		yOffset = -config.spacing
@@ -488,7 +437,7 @@ function mod:get_attributes()
 	end
 	
 	-- group limit
-	local difficultySize = {[3] = 1, [4] = 25, [5] = 10, [6] = 25, [7] = 25, [9] = 40, [14] = 30, [15] = 30, [16] = 20, [17] = 30, [18] = 40, [20] = 25}
+	local difficultySize = {[3] = 1, [4] = 25, [5] = 10, [6] = 25, [7] = 25, [9] = 40, [14] = 30, [15] = 30, [16] = 20, [17] = 30, [18] = 40, [20] = 25, [149] = 30}
 	num_groups = config.num_groups
 	if (config.intel_groups) then
 		local difficulty = select(3, GetInstanceInfo()) -- maybe use maxPlayers instead?
@@ -580,6 +529,7 @@ function mod:initialize()
 
 		mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
 		mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
+		mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
 		mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
 			mod:update_header()
 			mod:config_callback()

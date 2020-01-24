@@ -71,7 +71,7 @@ local config = {
 				value = 200,
 				min = 40,
 				max = 400,
-				step = 5,
+				step = 2,
 				type = "range",
 				label = "Width"
 			},

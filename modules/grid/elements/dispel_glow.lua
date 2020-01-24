@@ -36,7 +36,7 @@ mod.dispel_glow = function(self, event, unit)
 			if (not debuff) then
 				noMoreDebuffs = true
 			else
-				if (dispelColors[debuffType]) then
+				if (dispelColors[debuffType] and not bdUI:is_blacklisted(debuff)) then
 					foundDispel = debuffType
 					noMoreDebuffs = true
 				end

@@ -61,6 +61,8 @@ function mod:create_button_frame()
 	MiniMapTrackingButtonShine:Hide()
 	MiniMapTrackingButtonShine.Show = noop
 	GarrisonLandingPageMinimapButton:SetParent(Minimap)
+	-- QueueStatusMinimapButton:SetFrameLevel(5)
+	QueueStatusMinimapButtonIcon:SetParent(QueueStatusMinimapButton)
 	manualTarget['CodexBrowserIcon'] = true
 	manualTarget['MiniMapTracking'] = true
 	manualTarget['HelpOpenWebTicketButton'] = true
@@ -99,6 +101,10 @@ function mod:create_button_frame()
 		if (config.hideclasshall) then
 			hideButtons['GarrisonLandingPageMinimapButton'] = true
 		end
+
+		table.sort(frames, function(a, b)
+			return a.name < b.name
+		end)
 
 		for k, f in pairs(frames) do
 			f:SetWidth(config.buttonsize)
@@ -179,6 +185,7 @@ function mod:create_button_frame()
 				local f = c[i]
 				local n = f:GetName() or i;
 				f.buttonindex = i
+				f.name = n
 
 				if (f:IsShown() and not ignoreFrames[n] and (
 						(manualTarget[n])
@@ -195,6 +202,7 @@ function mod:create_button_frame()
 				local f = _G[f]
 				if (f) then
 					local n = f:GetName() or i;
+					f.name = n
 					if (f:IsShown()) then
 						skin(f)
 						frames[f.buttonindex or n] = f
