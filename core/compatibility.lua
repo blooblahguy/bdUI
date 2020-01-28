@@ -11,7 +11,7 @@ end
 --====================================================
 -- VANILLA
 --====================================================
-if (bdUI:get_game_version() == "vanilla") then
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 	-- globals
 	ATTACK_BUTTON_FLASH_TIME = ATTACK_BUTTON_FLASH_TIME or 0.4
 
@@ -48,6 +48,12 @@ if (bdUI:get_game_version() == "vanilla") then
 	BankFrameMoneyFrameInset = BankFrameMoneyFrameInset or noob
 	BackpackTokenFrame = BackpackTokenFrame or noob
 	BankFrameCloseButton = BankFrameCloseButton or noob
+	CharacterMicroButtonAlert = CharacterMicroButtonAlert or noob
+	TalentMicroButtonAlert = TalentMicroButtonAlert or noob
+	MiniMapTrackingButtonBorder = MiniMapTrackingButtonBorder or noob
+	MiniMapTrackingButtonShine = MiniMapTrackingButtonShine or noob
+	QueueStatusMinimapButton = QueueStatusMinimapButton or noob
+	QueueStatusMinimapButtonIcon = QueueStatusMinimapButtonIcon or noob
 end
 
 --====================================================

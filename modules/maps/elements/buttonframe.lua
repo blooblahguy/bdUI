@@ -61,8 +61,8 @@ function mod:create_button_frame()
 	MiniMapTrackingButtonShine:Hide()
 	MiniMapTrackingButtonShine.Show = noop
 	GarrisonLandingPageMinimapButton:SetParent(Minimap)
-	-- QueueStatusMinimapButton:SetFrameLevel(5)
-	QueueStatusMinimapButtonIcon:SetParent(QueueStatusMinimapButton)
+	-- QueueStatusMinimapButton:DisableDrawLayer("BACKGROUND")
+	QueueStatusMinimapButtonIcon:SetFrameLevel(50)
 	manualTarget['CodexBrowserIcon'] = true
 	manualTarget['MiniMapTracking'] = true
 	manualTarget['HelpOpenWebTicketButton'] = true

@@ -2,7 +2,7 @@
 local _, ns = ...
 local oUF = ns.oUF
 
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
  
 local function Update(self, event, unit)
 	if(self.unit ~= unit) then return end
