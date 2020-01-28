@@ -80,31 +80,31 @@ local function setUnit(self)
 		return UnitIsAFK(unit) and "|cffAAAAAA<AFK>|r " or UnitIsDND(unit) and "|cffAAAAAA<DND>|r " or ""
 	end
 
-	-- build the tooltip and its lines
-	local lines = {}
-	lines[1] = GameTooltipTextLeft1:GetText()
+	-- -- build the tooltip and its lines
+	-- local lines = {}
+	-- lines[1] = GameTooltipTextLeft1:GetText()
 	
-	if UnitIsPlayer(unit) then
-		GameTooltipTextLeft1:SetFormattedText('%s%s', dnd(), name)
-		if guild then
-			GameTooltipTextLeft2:SetFormattedText('%s <%s>', rank, guild)
-			if (not GameTooltipTextLeft3:GetText()) then
-				GameTooltip:AddLine("a",1,1,1)
-			end
-			GameTooltipTextLeft3:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race)
-		else
-			-- GameTooltip:AddLine("a",1,1,1)
-			GameTooltipTextLeft2:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race)
-		end
-	else
-		for i = 2, numLines do
-			local line = _G['GameTooltipTextLeft'..i]
-			if not line or not line:GetText() then break end
-			if (level and line:GetText():find('^'..level) or (creatureType and line:GetText():find('^'..creatureType))) then
-				line:SetFormattedText('|cff%s%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, classification, RGBPercToHex(friendColor), creatureType or 'Unknown')
-			end
-		end
-	end
+	-- if UnitIsPlayer(unit) then
+	-- 	GameTooltipTextLeft1:SetFormattedText('%s%s', dnd(), name)
+	-- 	if guild then
+	-- 		GameTooltipTextLeft2:SetFormattedText('%s <%s>', rank, guild)
+	-- 		if (not GameTooltipTextLeft3:GetText()) then
+	-- 			GameTooltip:AddLine("a",1,1,1)
+	-- 		end
+	-- 		GameTooltipTextLeft3:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race)
+	-- 	else
+	-- 		-- GameTooltip:AddLine("a",1,1,1)
+	-- 		GameTooltipTextLeft2:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race)
+	-- 	end
+	-- else
+	-- 	for i = 2, numLines do
+	-- 		local line = _G['GameTooltipTextLeft'..i]
+	-- 		if not line or not line:GetText() then break end
+	-- 		if (level and line:GetText():find('^'..level) or (creatureType and line:GetText():find('^'..creatureType))) then
+	-- 			line:SetFormattedText('|cff%s%s%s|r |cff%s%s|r', RGBPercToHex(levelColor), level, classification, RGBPercToHex(friendColor), creatureType or 'Unknown')
+	-- 		end
+	-- 	end
+	-- end
 
 	if (UnitExists(unit..'target')) then
 		local r, g, b = mod:getReactionColor(unit..'target')
