@@ -163,13 +163,13 @@ function mod:create_tooltips()
 	---------------------------------------------
 	local tooltipanchor = CreateFrame("frame","bdTooltip",bdParent)
 	tooltipanchor:SetSize(150, 100)
-	tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 450, 0)
+	tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 474, -116)
 	bdMove:set_moveable(tooltipanchor, "Tooltips")
 
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
 		self:SetOwner(parent, "ANCHOR_NONE")
 		self:ClearAllPoints()
-		self:SetPoint("CENTER", tooltipanchor)
+		self:SetPoint("TOPLEFT", tooltipanchor, "TOPLEFT", -34, 16)
 	end)
 
 	-- for skinning all the tooltips in the UI
