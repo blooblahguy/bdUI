@@ -59,8 +59,8 @@ SlashCmdList["BDUI"] = function(msg, editbox)
 			print("   /"..bdUI.colorString.." positions - Resets positions of current profile")
 			return
 		elseif (s2 == "all") then
-			BDUI_SAVE = nil
 			bdMove:reset_positions()
+			BDUI_SAVE = nil
 		elseif (s2 == "positions") then
 			bdMove:reset_positions()
 		end
