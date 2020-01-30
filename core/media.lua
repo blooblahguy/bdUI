@@ -164,6 +164,13 @@ end
 				frame.l:SetVertexColor(r, g, b, a)
 				frame.r:SetVertexColor(r, g, b, a)
 			end
+
+			frame.set_border_color = function(self, r, g, b, a)
+				frame.border:SetVertexColor(r, g, b, a)
+			end
+			frame.reset_border_color = function(self, r, g, b, a)
+				frame.border:SetVertexColor(unpack(bdUI.media.border))
+			end
 		end
 
 		frame.t:SetHeight(border)
@@ -178,19 +185,23 @@ end
 		local shadow = CreateFrame("Frame", nil, frame)
 		shadow:SetFrameLevel(1)
 		shadow:SetFrameStrata(frame:GetFrameStrata())
-		shadow:SetPoint("TOPLEFT", -offset, offset)
-		shadow:SetPoint("BOTTOMLEFT", -offset, -offset)
-		shadow:SetPoint("TOPRIGHT", offset, offset)
-		shadow:SetPoint("BOTTOMRIGHT", offset, -offset)
 		shadow:SetAlpha(0.7)
-		
-		shadow:SetBackdrop( { 
-			edgeFile = bdUI.media.shadow, edgeSize = offset,
-			insets = {left = offset, right = offset, top = offset, bottom = offset},
-		})
-		
 		shadow:SetBackdropColor(0, 0, 0, 0)
 		shadow:SetBackdropBorderColor(0, 0, 0, 0.8)
+
+		shadow.set_size = function(self, offset)
+			shadow:SetPoint("TOPLEFT", -offset, offset)
+			shadow:SetPoint("BOTTOMLEFT", -offset, -offset)
+			shadow:SetPoint("TOPRIGHT", offset, offset)
+			shadow:SetPoint("BOTTOMRIGHT", offset, -offset)
+
+			shadow:SetBackdrop( { 
+				edgeFile = bdUI.media.shadow, edgeSize = offset,
+				insets = {left = offset, right = offset, top = offset, bottom = offset},
+			})
+		end
+
+		shadow:set_size(offset)
 		frame._shadow = shadow
 	end
 
@@ -264,18 +275,26 @@ end
 		return _in
 	end
 
-	function bdUI:numberize(v)
-		if v <= 999 then return v end
-		if v >= 1000000000 then
-			local value = string.format("%.1fb", v/1000000000)
-			return value
-		elseif v >= 1000000 then
-			local value = string.format("%.1fm", v/1000000)
-			return value
-		elseif v >= 1000 then
-			local value = string.format("%.1fk", v/1000)
-			return value
+	function bdUI:numberize(n)
+		if n >= 10^6 then
+			return string.format("%.0fm", n / 10^6)
+		elseif n >= 10^3 then
+			return string.format("%.0fk", n / 10^3)
+		else
+			return tostring(n)
 		end
+
+		-- if v <= 999 then return v end
+		-- if v >= 1000000000 then
+		-- 	local value = string.format("%.1fb", v/1000000000)
+		-- 	return value
+		-- elseif v >= 1000000 then
+		-- 	local value = string.format("%.1fm", v/1000000)
+		-- 	return value
+		-- elseif v >= 1000 then
+		-- 	local value = string.format("%.1fk", v/1000)
+		-- 	return value
+		-- end
 	end
 
 	-- Skin Button
