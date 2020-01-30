@@ -216,7 +216,7 @@ local config = {
 			{
 				key = "group_growth",
 				type = "select",
-				value = "Downwards",
+				value = "Upwards",
 				options = {"Left","Right","Upwards","Downwards"},
 				label = "Group stack direction",
 				tooltip = "Group stacking direction for when a new group is added.",

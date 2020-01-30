@@ -19,9 +19,76 @@ mod.frames = {}
 -- [buffs] [debuffs] [raid cooldowns] [my casts] [personals]
 -- [name] [status] [raid target] [readycheck]
 
+--======================================================
+-- Callback on creation and configuration change
+--======================================================
+local function update_frame(self)
+	config = mod:get_save()
+
+	self:SetSize(config.width, config.height)
+	self.RaidTargetIndicator:SetSize(12, 12)
+	self.ReadyCheckIndicator:SetSize(12, 12)
+	self.ResurrectIndicator:SetSize(16, 16)
+	self.ThreatLite:SetSize(60, 50)
+	self.Dispel:SetSize(60, 50)
+	
+	self.Short:SetWidth(config.width)
+	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
+
+	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Buffs:SetFrameLevel(27)
+	self.Buffs:SetSize(64, 16)
+
+	self.Debuffs:SetPoint("CENTER", self.Health, "CENTER")
+	self.Debuffs:SetFrameLevel(27)
+	self.Debuffs:SetSize(44, 22)
+
+	self.Buffs.size = config.buffSize
+	self.Debuffs.size = config.debuffSize
+
+	self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
+
+	if (config.showGroupNumbers and IsInRaid()) then
+		self.Group:Show()
+	else
+		self.Group:Hide()
+	end
+
+	self.Range = {
+		insideAlpha = config.inrangealpha,
+		outsideAlpha = config.outofrangealpha,
+	}
+
+	if (not config.roleicon) then
+		self.GroupRoleIndicator:Hide()
+	end
+
+	
+	if (config.showGroupNumbers and IsInRaid()) then
+		self.Group:Show()
+	else
+		self.Group:Hide()
+	end
+end
+function mod:config_callback()
+	if (InCombatLockdown()) then return end
+
+	if (mod.frameHeader) then
+		mod:update_header()
+	end
+
+	for k, self in pairs(mod.frames) do
+		update_frame(self)
+	end
+end
+
+--===============================================
+-- Layout
+--===============================================
 local index = 0;
 local function layout(self, unit)
 	self:RegisterForClicks('AnyDown')
+	self:RegisterEvent('PLAYER_REGEN_ENABLED', update_frame, true)
 	index = index + 1
 	self.index = index
 
@@ -441,6 +508,7 @@ function mod:get_attributes()
 	num_groups = config.num_groups
 	if (config.intel_groups) then
 		local difficulty = select(3, GetInstanceInfo()) -- maybe use maxPlayers instead?
+		-- print(difficulty, difficultySize[difficulty])
 		if (difficultySize[difficulty]) then
 			num_groups = (difficultySize[difficulty] / 5)
 		end
@@ -501,6 +569,15 @@ function mod:initialize()
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
 	
 	local function enable(self)
+		mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
+		mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
+		mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
+		mod.raidpartyholder:RegisterEvent("LOADING_SCREEN_DISABLED")
+		mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
+			mod:update_header()
+			mod:config_callback()
+		end)
+
 		self:SetActiveStyle("bdGrid")
 
 		-- Initial header spawning
@@ -524,80 +601,14 @@ function mod:initialize()
 			"point", new_player_anchor,
 			"groupBy", group_by
 		);
-
-		mod:config_callback()
-
-		mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
-		mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
-		mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
-		mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
-			mod:update_header()
-			mod:config_callback()
-		end)
 	end
-
-	oUF:RegisterStyle("bdGrid", layout)
-	oUF:Factory(enable)
 
 	mod:create_container()
 	mod:disable_blizzard()
 	mod:create_alias()
-end
 
---======================================================
--- Callback on creation and configuration change
---======================================================
-function mod:config_callback()
-	if (InCombatLockdown()) then return end
-
-	config = mod:get_save()
-	
-	for k, self in pairs(mod.frames) do
-		self:SetSize(config.width, config.height)
-		self.RaidTargetIndicator:SetSize(12, 12)
-		self.ReadyCheckIndicator:SetSize(12, 12)
-		self.ResurrectIndicator:SetSize(16, 16)
-		self.ThreatLite:SetSize(60, 50)
-		self.Dispel:SetSize(60, 50)
-		
-		self.Short:SetWidth(config.width)
-		self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
-
-		self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
-		self.Buffs:SetFrameLevel(27)
-		self.Buffs:SetSize(64, 16)
-
-		self.Debuffs:SetPoint("CENTER", self.Health, "CENTER")
-		self.Debuffs:SetFrameLevel(27)
-		self.Debuffs:SetSize(44, 22)
-
-		self.Buffs.size = config.buffSize
-		self.Debuffs.size = config.debuffSize
-
-		self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
-
-		if (config.showGroupNumbers and IsInRaid()) then
-			self.Group:Show()
-		else
-			self.Group:Hide()
-		end
-
-		self.Range = {
-			insideAlpha = config.inrangealpha,
-			outsideAlpha = config.outofrangealpha,
-		}
-
-		if (not config.roleicon) then
-			self.GroupRoleIndicator:Hide()
-		end
-
-		
-		if (config.showGroupNumbers and IsInRaid()) then
-			self.Group:Show()
-		else
-			self.Group:Hide()
-		end		
-	end
+	oUF:RegisterStyle("bdGrid", layout)
+	oUF:Factory(enable)
 end
 
 
@@ -607,7 +618,7 @@ end
 function mod:create_container()
 	mod.raidpartyholder = CreateFrame('frame', "bdGrid", UIParent)
 	mod.raidpartyholder:SetSize(config['width'], config['height']*5)
-	mod.raidpartyholder:SetPoint("LEFT", bdParent, "LEFT", 30, -200)
+	mod.raidpartyholder:SetPoint("LEFT", bdParent, "LEFT", 34, -188)
 	bdMove:set_moveable(mod.raidpartyholder, "Raid Frames")
 end
 
