@@ -22,27 +22,27 @@ local function BW_Style()
 			bar.bg = CreateFrame('frame', nil, bar)
 			bar.bg:SetFrameStrata("BACKGROUND")
 			bar.bg:SetAllPoints(bar.candyBarBar)
-			bdCore:setBackdrop(bar.bg)
+			bdUI:set_backdrop(bar.bg)
 			
 			bar.ibg = CreateFrame('frame', nil, bar)
 			bar.ibg:SetFrameStrata("BACKGROUND")
 			bar.ibg:SetAllPoints(bar.candyBarIconFrame)
-			bdCore:setBackdrop(bar.ibg)
+			bdUI:set_backdrop(bar.ibg)
 			
-			bar.candyBarDuration:SetFont(bdCore.media.font, 14, "OUTLINE")
+			bar.candyBarDuration:SetFont(bdUI.media.font, 14, "OUTLINE")
 			bar.candyBarDuration:SetShadowOffset(0,0)
 			bar.candyBarDuration:SetJustifyH("RIGHT")
 			bar.candyBarDuration:ClearAllPoints()
 			bar.candyBarDuration:SetPoint("RIGHT", bar, "RIGHT", 2, 4)
 			
-			bar.candyBarLabel:SetFont(bdCore.media.font, 13, "OUTLINE")
+			bar.candyBarLabel:SetFont(bdUI.media.font, 13, "OUTLINE")
 			bar.candyBarLabel:SetShadowOffset(0,0)
 			bar.candyBarLabel:SetJustifyH("LEFT")
 			bar.candyBarLabel:ClearAllPoints()
 			bar.candyBarLabel:SetPoint("LEFT", bar, "LEFT", -2, 4)
 					
-			bar.candyBarBar:SetStatusBarTexture(bdCore.media.flat)
-			bar.candyBarBackground:SetTexture(bdCore.media.flat)
+			bar.candyBarBar:SetStatusBarTexture(bdUI.media.flat)
+			bar.candyBarBackground:SetTexture(bdUI.media.flat)
 			bar.candyBarBackground:SetVertexColor(.1,.1,.1,.4)
 			bar.candyBarBackground.SetVertexColor = function() return end
 			
