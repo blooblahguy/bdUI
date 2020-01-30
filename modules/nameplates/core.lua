@@ -228,6 +228,8 @@ local function nameplate_create(self, unit)
 	self:SetPoint("TOPLEFT", 0, -math.floor(config.targetingTopPadding))
 	self:SetPoint("TOPRIGHT", 0, -math.floor(config.targetingTopPadding))
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", find_target, true)
+	self:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback, true)
+	self:RegisterEvent("PLAYER_LOGIN", mod.config_callback, true)
 
 	--==========================================
 	-- HEALTHBAR
@@ -531,9 +533,6 @@ function mod:initialize()
 	config = mod:get_save()
 	if (not config.enabled) then return end
 
-	mod:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback)
-	mod:RegisterEvent("PLAYER_REGEN_ENABLED", mod.nameplate_size)
-	mod:RegisterEvent("PLAYER_LOGIN", mod.config_callback)
 	mod:RegisterEvent("PLAYER_ENTERING_WORLD", mod.nameplate_size)
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
