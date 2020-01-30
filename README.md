@@ -43,7 +43,6 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Quality of Life Additions
 
 ## TODO
-- [ ] Grid Fixes
 - [ ] Arena Frames
 - [ ] Skinning
 	- [ ] Durability Movable
