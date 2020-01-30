@@ -26,11 +26,12 @@ mod.custom_layout["target"] = function(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 
-		if (casterIsPlayer and (duration ~= 0 and duration < 300)) then
+		if (castByPlayer and (duration ~= 0 and duration < 300)) then
 			if (bdUI:filter_aura(name, casterIsPlayer, isBossDebuff, nameplateShowAll, true)) then
-				return true 
-			end	
+				return true
+			end
 		end
 	end
 

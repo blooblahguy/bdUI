@@ -29,19 +29,49 @@ end
 --===============================================
 local function castbar_kickable(self)
 	if (self.notInterruptible) then
-		self.Icon:SetDesaturated(1)
+		if (self.Icon) then
+			self.Icon:SetDesaturated(1)
+		end
 		self:SetStatusBarColor(0.7, 0.7, 0.7, 1)
 	else
-		self.Icon:SetDesaturated(false)
+		if (self.Icon) then
+			self.Icon:SetDesaturated(false)
+		end
 		self:SetStatusBarColor(.1, .4, .7, 1)
 	end
 end
 
+local function update_borders(self)
+	if (UnitIsUnit(self.unit, "target")) then
+		self.Border._shadow:Show()
+		self.Border._shadow:SetAlpha(1)
+		self.Border._shadow:SetBackdropColor(self.Health:GetStatusBarColor())
+		self.Border._shadow:SetBackdropBorderColor(self.Health:GetStatusBarColor())
+	elseif (UnitIsUnit(self.unit, "mouseover") or MouseIsOver(self)) then
+		self.Border._shadow:Show()
+		self.Border._shadow:SetAlpha(0.6)
+		self.Border._shadow:SetBackdropColor(1, 1, 1, 1)
+		self.Border._shadow:SetBackdropBorderColor(1, 1, 1, 1)
+	else
+		self.Border._shadow:Hide()
+	end
+end
+
+local function update_borders_pre(self, event)
+	if (self.unit) then -- unit event
+		update_borders(self)
+	else -- unitless event
+		for unit, self in pairs(mod.units) do
+			update_borders(self)
+		end
+	end
+end
+
 mod.additional_elements = {
-	castbar = function(self, unit, align)
+	castbar = function(self, unit, align, icon)
 		if (self.Castbar) then return end
 
-		local font_size = math.restrict(config.castbarheight * 0.85, 8, 14)
+		local font_size = math.restrict(config.castbarheight * 0.8, 8, 14)
 
 		self.Castbar = CreateFrame("StatusBar", nil, self)
 		self.Castbar:SetFrameLevel(3)
@@ -55,38 +85,44 @@ mod.additional_elements = {
 		end
 		
 		self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
-		self.Castbar.Text:SetFont(bdUI.media.font, font_size, "OUTLINE")
+		self.Castbar.Text:SetFont(bdUI.media.font, font_size, "THINOUTLINE")
 		self.Castbar.Text:SetJustifyV("MIDDLE")
 
-		self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
-		self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-		self.Castbar.Icon:SetDrawLayer('ARTWORK')
-		self.Castbar.Icon.bg = self.Castbar:CreateTexture(nil, "BORDER")
-		self.Castbar.Icon.bg:SetTexture(bdUI.media.flat)
-		self.Castbar.Icon.bg:SetVertexColor(unpack(bdUI.media.border))
-		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -bdUI.border, bdUI.border)
-		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
+		if (icon) then
+			self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
+			self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+			self.Castbar.Icon:SetDrawLayer('ARTWORK')
+			self.Castbar.Icon.bg = self.Castbar:CreateTexture(nil, "BORDER")
+			self.Castbar.Icon.bg:SetTexture(bdUI.media.flat)
+			self.Castbar.Icon.bg:SetVertexColor(unpack(bdUI.media.border))
+			self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -bdUI.border, bdUI.border)
+			self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
+		end
 
 		self.Castbar.SafeZone = self.Castbar:CreateTexture(nil, "OVERLAY")
 		self.Castbar.SafeZone:SetVertexColor(0.85, 0.10, 0.10, 0.20)
 		self.Castbar.SafeZone:SetTexture(bdUI.media.flat)
 
 		self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY")
-		self.Castbar.Time:SetFont(bdUI.media.font, font_size, "OUTLINE")
+		self.Castbar.Time:SetFont(bdUI.media.font, font_size, "THINOUTLINE")
 
 		-- Positioning
 		if (align == "right") then
 			self.Castbar.Time:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
 			self.Castbar.Time:SetJustifyH("RIGHT")
 			self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
-			self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar,"TOPRIGHT", mod.padding*2, 0)
-			self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
+			if (icon) then
+				self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar,"TOPRIGHT", mod.padding*2, 0)
+				self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
+			end
 		else
 			self.Castbar.Time:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
 			self.Castbar.Time:SetJustifyH("LEFT")
 			self.Castbar.Text:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
-			self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
-			self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
+			if (icon) then
+				self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
+				self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
+			end			
 		end
 
 		self.Castbar.PostChannelStart = castbar_kickable
@@ -98,6 +134,26 @@ mod.additional_elements = {
 
 		-- bdMove:set_moveable(self.Castbar, unit.." Castbar")
 		bdUI:set_backdrop(self.Castbar)
+	end,
+
+	perhppp = function(self, unit)
+		if (self.Perhp) then return end
+
+		self.Perhp = self.Health:CreateFontString(nil, "OVERLAY")
+		self.Perhp:SetFont(bdUI.media.font, 12, "OUTLINE")
+		self.Perhp:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
+
+		self.Perpp = self.Health:CreateFontString(nil, "OVERLAY")
+		self.Perpp:SetFont(bdUI.media.font, 12, "OUTLINE")
+		self.Perpp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
+		self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
+
+		self:RegisterEvent("UNIT_POWER_UPDATE", function(self)
+			self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
+		end, true)
+
+		self:Tag(self.Perhp, '[perhp]')
+		self:Tag(self.Perpp, '[perpp]')
 	end,
 
 	resting = function(self, unit)
@@ -150,6 +206,8 @@ mod.additional_elements = {
 		self.Power.colorPower = true
 		self.Power.Smooth = true
 		bdUI:set_backdrop(self.Power)
+		
+		self.Border:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
 	end,
 
 	buffs = function(self, unit)
@@ -235,6 +293,7 @@ local function layout(self, unit)
 	self:RegisterForClicks('AnyDown')
 	self:SetScript('OnEnter', UnitFrame_OnEnter)
 	self:SetScript('OnLeave', UnitFrame_OnLeave)
+	self.PostUpdate = update_borders_pre 
 
 	-- Health
 	self.Health = CreateFrame("StatusBar", nil, self)
@@ -276,22 +335,12 @@ local function layout(self, unit)
 		outsideAlpha = config.outofrangealpha,
 	}
 
-	-- Name & Text
-	self.Name = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Name:SetFont(bdUI.media.font, 13, "OUTLINE")
-
-	self.Status = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Status:SetFont(bdUI.media.font, 10, "OUTLINE")
-	self.Status:SetPoint("CENTER", self.Health, "CENTER")
-	
-	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Curhp:SetFont(bdUI.media.font, 10, "OUTLINE")
-	self.Curhp.frequentUpdates = 0.1
-
-	-- Raid Icon
-	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)
-	self.RaidTargetIndicator:SetSize(12, 12)
-	self.RaidTargetIndicator:SetPoint('CENTER', self, 0, 0)
+	-- Borders
+	self.Border = CreateFrame("Frame", nil, self.Health)
+	self.Border:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border)
+	self.Border:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
+	bdUI:create_shadow(self.Border, bdUI.border)
+	self.Border._shadow:Hide()
 
 	--===============================================
 	-- Healing & Damage Absorbs
@@ -336,6 +385,22 @@ local function layout(self, unit)
         overHealAbsorb = overHealAbsorbBar,
     }
 
+	-- Name & Text
+	self.Name = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Name:SetFont(bdUI.media.font, 13, "OUTLINE")
+
+	self.Status = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Status:SetFont(bdUI.media.font, 10, "OUTLINE")
+	self.Status:SetPoint("CENTER", self.Health, "CENTER")
+	
+	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Curhp:SetFont(bdUI.media.font, 10, "OUTLINE")
+
+	-- Raid Icon
+	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)
+	self.RaidTargetIndicator:SetSize(12, 12)
+	self.RaidTargetIndicator:SetPoint('CENTER', self, 0, 0)
+
 	-- Tags
 	oUF.Tags.Events['curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
 	oUF.Tags.Methods['curhp'] = function(unit)
@@ -348,7 +413,7 @@ local function layout(self, unit)
 		if hpMax == 0 then return end
 		local r, g, b = bdUI:ColorGradient(hpPercent, 1,0,0, 1,1,0, 1,1,1)
 		local hex = RGBPercToHex(r, g, b)
-		local perc = table.concat({"|cFF", hex, bdUI:round(hpPercent * 100, 2), "|r"}, "")
+		local perc = table.concat({"|cFF", hex, bdUI:round(hpPercent * 100, 1), "|r"}, "")
 
 		return table.concat({bdUI:numberize(hp), "-", perc}, " ")
 	end
@@ -410,8 +475,8 @@ function mod:create_unitframes()
 	bdMove:set_moveable(focus, "Focus")
 
 	local arena_boss = CreateFrame("frame", "bdArenaBoss", bdParent)
-	arena_boss:SetPoint("RIGHT", bdParent, "RIGHT", -xoff, 0)
-	arena_boss:SetSize(config.bosswidth, (config.bossheight + 40) * 5)
+	arena_boss:SetPoint("TOPRIGHT", Minimap, "BOTTOMLEFT", -10, -10)
+	arena_boss:SetSize(config.bosswidth, (config.bossheight + 30) * 5)
 	bdMove:set_moveable(arena_boss, "Boss & Arena Frames")
 
 	-- boss
@@ -421,7 +486,7 @@ function mod:create_unitframes()
 		if (not lastboss) then
 			boss:SetPoint("TOP", arena_boss, "TOP", 0, 0)
 		else
-			boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -50)
+			boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -30)
 		end
 		boss:SetSize(config.bosswidth, config.bossheight)
 		lastboss = boss
@@ -439,5 +504,9 @@ function mod:create_unitframes()
 		arena:SetSize(config.bosswidth, config.bossheight)
 		lastarena = arena
 	end
+
+	mod:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+	mod:RegisterEvent("PLAYER_TARGET_CHANGED")
+	mod:SetScript("OnEvent", update_borders_pre)
 
 end
