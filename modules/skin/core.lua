@@ -10,4 +10,5 @@ local mod = bdUI:get_module("Skinning")
 --===============================================
 function mod:initialize()
 	-- mod:create_fonts()
+	mod:move_vehicle()
 end
