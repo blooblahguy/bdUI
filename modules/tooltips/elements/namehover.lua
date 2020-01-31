@@ -4,7 +4,7 @@ local config = {}
 
 function mod:create_mouseover_tooltips()
 	config = mod:get_save()
-	if (not config.mott) then return end
+	if (not config.enablemott) then return end
 
 	local motooltip = CreateFrame('frame',nil)
 	motooltip:SetFrameStrata("TOOLTIP")
@@ -13,7 +13,7 @@ function mod:create_mouseover_tooltips()
 
 	-- Show unit name at mouse
 	motooltip:SetScript("OnUpdate", function(self)
-		if (not config.mott) then motooltip:Hide() return end
+		if (not config.enablemott) then motooltip:Hide() return end
 
 		if GetMouseFocus() and GetMouseFocus():IsForbidden() then self:Hide() return end
 		if GetMouseFocus() and GetMouseFocus():GetName()~="WorldFrame" then self:Hide() return end

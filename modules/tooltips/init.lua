@@ -62,13 +62,8 @@ local config = {
 local mod = bdUI:register_module("Tooltips", config)
 
 function mod:initialize(config)
-	_G['tooltipconfig'] = config
-	-- dump(config)
 	if (config.enablett) then
 		mod:create_tooltips()
-	end
-
-	if (config.enablett) then
 		mod:color_tooltips()
 		mod:create_mouseover_tooltips()
 	end
