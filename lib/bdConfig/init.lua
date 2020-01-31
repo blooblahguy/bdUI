@@ -23,7 +23,7 @@ lib.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
 	arrow = "Interface\\Buttons\\Arrow-Down-Down.PNG",
 	font = "fonts\\ARIALN.ttf",
-	fontSize = 14,
+	fontSize = 13,
 	fontHeaderScale = 1.1,
 	padding = 10,
 	border_size = 2,
@@ -32,6 +32,7 @@ lib.media = {
 	red = {0.62, 0.17, 0.18, 1},
 	blue = {0.2, 0.4, 0.8, 1},
 	green = {0.1, 0.7, 0.3, 1},
+	muted = 0.75
 }
 lib.media.primary = lib.media.blue
 
@@ -48,6 +49,7 @@ function lib:get_border(frame)
 
 	return border
 end
+lib.border = lib:get_border(UIParent)
 
 -- Create 2px background frame
 function lib:create_backdrop(frame, alpha)

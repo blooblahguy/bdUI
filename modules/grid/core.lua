@@ -73,10 +73,6 @@ end
 function mod:config_callback()
 	if (InCombatLockdown()) then return end
 
-	if (mod.frameHeader) then
-		mod:update_header()
-	end
-
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
 	end
@@ -440,7 +436,6 @@ local function layout(self, unit)
 	end
 	
 	table.insert(mod.frames, self)
-	mod:config_callback()
 end
 
 --============================================================
@@ -601,6 +596,8 @@ function mod:initialize()
 			"point", new_player_anchor,
 			"groupBy", group_by
 		);
+
+		mod:config_callback()
 	end
 
 	mod:create_container()

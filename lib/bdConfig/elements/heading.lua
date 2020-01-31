@@ -26,18 +26,21 @@ local function create(options, parent)
 	options.size = options.size or "full"
 
 	local container = lib:create_container(options, parent)
-	container:SetHeight(20)
+	container:SetHeight(lib.dimensions.header)
 	container:SetBackdropColor(.8, .8, .8, 0)
 
 	local heading = container:CreateFontString(nil, "OVERLAY", "bdConfig_font")
-	heading:SetText(options.value)
-	heading:SetAlpha(1)
-	heading:SetScale(1.1)
-	-- heading:SetTextColor(unpack(lib.media.primary))
-	heading:SetAlpha(0.8)
+	heading:SetText(string.upper(options.value))
+	heading:SetAlpha(lib.media.muted)
 	heading:SetJustifyH("LEFT")
 	heading:SetJustifyV("MIDDLE")
 	heading:SetPoint("BOTTOMLEFT", container, "BOTTOMLEFT", 4, 0)
+	heading.border = container:CreateTexture(nil, "OVERLAY")
+	heading.border:SetTexture(lib.media.flat)
+	heading.border:SetVertexColor(1, 1, 1, 0.2)
+	heading.border:SetHeight(lib.border)
+	heading.border:SetPoint("BOTTOMLEFT", container, "BOTTOMLEFT", 0, -10)
+	heading.border:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT", 0, -10)
 
 	container.value = options.value
 

@@ -41,13 +41,13 @@ local function castbar_kickable(self)
 	end
 end
 
-local function update_borders(self)
+local function update_borders(self, event)
 	if (UnitIsUnit(self.unit, "target")) then
 		self.Border._shadow:Show()
 		self.Border._shadow:SetAlpha(1)
 		self.Border._shadow:SetBackdropColor(self.Health:GetStatusBarColor())
 		self.Border._shadow:SetBackdropBorderColor(self.Health:GetStatusBarColor())
-	elseif (UnitIsUnit(self.unit, "mouseover") or MouseIsOver(self)) then
+	elseif ((type(event) == "string") and (UnitIsUnit(self.unit, "mouseover") or MouseIsOver(self))) then
 		self.Border._shadow:Show()
 		self.Border._shadow:SetAlpha(0.6)
 		self.Border._shadow:SetBackdropColor(1, 1, 1, 1)
@@ -59,10 +59,10 @@ end
 
 local function update_borders_pre(self, event)
 	if (self.unit) then -- unit event
-		update_borders(self)
+		update_borders(self, event)
 	else -- unitless event
 		for unit, self in pairs(mod.units) do
-			update_borders(self)
+			update_borders(self, event)
 		end
 	end
 end
@@ -294,6 +294,7 @@ local function layout(self, unit)
 	self:SetScript('OnEnter', UnitFrame_OnEnter)
 	self:SetScript('OnLeave', UnitFrame_OnLeave)
 	self.PostUpdate = update_borders_pre 
+	self:HookScript("OnLeave", update_borders_pre)
 
 	-- Health
 	self.Health = CreateFrame("StatusBar", nil, self)

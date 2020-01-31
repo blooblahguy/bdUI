@@ -32,7 +32,7 @@ local function create(options, parent)
 	if (options.solo) then
 		button = CreateFrame("Button", nil, parent)
 	else
-		container = lib:create_container(options, parent, 24)
+		container = lib:create_container(options, parent, 28)
 		button = CreateFrame("Button", nil, container)
 		button:SetPoint("LEFT", container, "LEFT")
 	end
@@ -42,6 +42,9 @@ local function create(options, parent)
 	button.callback = options.callback or lib.noop
 	button.save = options.save
 	button.key = options.key
+	button.activeAlpha = 1
+	button.hoverAlpha = 0.8
+	button.inactiveAlpha = 0.5
 	button:SetBackdrop({bgFile = media.flat})
 	
 	function button:BackdropColor(r, g, b, a)
@@ -58,7 +61,7 @@ local function create(options, parent)
 	button.SetVertexColor = button.BackdropColor
 
 	button:SetBackdropColor(unpack(media.blue))
-	button:SetAlpha(0.6)
+	button:SetAlpha(button.inactiveAlpha)
 	button:SetHeight(30)
 	button:EnableMouse(true)
 
@@ -69,30 +72,33 @@ local function create(options, parent)
 
 	function button:Select()
 		button.SetVertexColor(unpack(button.activeColor))
+		button:SetAlpha(button.activeAlpha)
 	end
 	function button:Deselect()
 		button.SetVertexColor(unpack(button.inactiveColor))
+		button:SetAlpha(button.inactiveAlpha)
 	end
 	function button:OnEnter()
 		if (button.active) then
 			button:SetBackdropColor(unpack(button.activeColor))
+			button:SetAlpha(button.activeAlpha)
 		else
 			if (button.hoverColor) then
 				button:SetBackdropColor(unpack(button.hoverColor))
 			else
 				button:SetBackdropColor(unpack(button.inactiveColor))
 			end
+			button:SetAlpha(button.hoverAlpha)
 		end
-		button:SetAlpha(1)
 	end
 
 	function button:OnLeave()
 		if (button.active) then
 			button:SetBackdropColor(unpack(button.activeColor))
-			button:SetAlpha(1)
+			button:SetAlpha(button.activeAlpha)
 		else
 			button:SetBackdropColor(unpack(button.inactiveColor))
-			button:SetAlpha(0.6)
+			button:SetAlpha(button.inactiveAlpha)
 		end
 	end
 	function button:OnClickDefault()

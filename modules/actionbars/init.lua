@@ -145,10 +145,6 @@ local config = {
 				label = "Bar Fade Duration"
 			},
 			{
-				key = "clear", 
-				type = "clear"
-			},
-			{
 				key = "showMicro",
 				type = "toggle",
 				value = false,

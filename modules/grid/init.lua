@@ -146,6 +146,34 @@ local config = {
 		},
 	},
 	--=============================================
+	-- Spell Highlights
+	--=============================================
+	{
+		key = "tab",
+		type = "tab",
+		label = "Highlights",
+		args = {
+			{
+				key = "text",
+				type = "text",
+				value = "Spells in the following list will create a 'Glow' animation around the frame when the unit has the bufff OR debuff.",
+			},
+			{
+				key = "showspecialicons",
+				type = "toggle",
+				value = true,
+				label = "Show Special Spell icons by default",
+			},
+
+			{
+				key = "specialalerts",
+				type = "list",
+				value = specialspells,
+				label = "Special Alerts",
+			},
+		}
+	},
+	--=============================================
 	-- Aura Display
 	--=============================================
 	{
@@ -235,34 +263,6 @@ local config = {
 				options = {"Group","Role","Class","Name"},
 				label = "Group By",
 				tooltip = "Method by which the groups should be formed.",
-			},
-		}
-	},
-	--=============================================
-	-- Spell Highlights
-	--=============================================
-	{
-		key = "tab",
-		type = "tab",
-		label = "Spell Highlights",
-		args = {
-			{
-				key = "text",
-				type = "text",
-				value = "Spells in the following list will create a 'Glow' animation around the frame when the unit has the bufff OR debuff.",
-			},
-			{
-				key = "showspecialicons",
-				type = "toggle",
-				value = true,
-				label = "Show Special Spell icons by default",
-			},
-
-			{
-				key = "specialalerts",
-				type = "list",
-				value = specialspells,
-				label = "Special Alerts",
 			},
 		}
 	},

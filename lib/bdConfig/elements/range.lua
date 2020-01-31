@@ -45,6 +45,44 @@ local methods = {
 	end
 }
 
+local function skin(frame)
+	assert(frame, "doesn't exist!")
+
+	local orientation = frame:GetOrientation()
+	local thumb_height = 12
+	local slider_height = 7
+
+	for k, v in pairs ({frame:GetRegions()}) do
+		if (v:GetObjectType() == "TEXTURE") then
+			v:Hide()
+		end
+	end
+	frame:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.border})
+	frame:SetBackdropColor(unpack(lib.media.background))
+	frame:SetBackdropBorderColor(unpack(lib.media.border))
+
+	local thumb = frame:GetThumbTexture()
+	frame:SetThumbTexture(lib.media.flat)
+	thumb:SetVertexColor(unpack(lib.media.blue))
+	thumb:SetSize(slider_height, thumb_height)
+
+	if orientation == 'VERTICAL' then
+		frame:SetWidth(slider_height)
+	else
+		frame:SetHeight(slider_height)
+
+		for i=1, frame:GetNumRegions() do
+			local region = select(i, frame:GetRegions())
+			if region and region:IsObjectType('FontString') then
+				local point, anchor, anchorPoint, x, y = region:GetPoint()
+				if strfind(anchorPoint, 'BOTTOM') then
+					region:SetPoint(point, anchor, anchorPoint, x, y - 4)
+				end
+			end
+		end
+	end
+end
+
 --========================================
 -- Spawn Element
 --========================================
@@ -52,32 +90,30 @@ local function create(options, parent)
 	options.size = options.size or "half"
 
 	-- container/controller
-	local container = lib:create_container(options, parent, 46)
+	local container = lib:create_container(options, parent, 36)
 	local name = options.name.."_"..options.key
 
 	local slider = CreateFrame("Slider", name, container, "OptionsSliderTemplate")
 	slider:SetWidth(container:GetWidth())
-	slider:SetHeight(14)
-	slider:SetPoint("LEFT", container ,"LEFT", 0, 0)
+	slider:SetHeight(8)
+	slider:SetPoint("LEFT", container ,"LEFT", 0, -8)
 	slider:SetOrientation('HORIZONTAL')
 	slider:SetMinMaxValues(options.min, options.max)
 	slider.SetObeyStepOnDrag = slider.SetObeyStepOnDrag or noop
 	slider:SetObeyStepOnDrag(true)
 	slider:SetValueStep(options.step)
 
-	_G[name..'Low']:SetText(options.min);
-	_G[name..'Low']:SetFontObject("bdConfig_font")
-	_G[name..'Low']:ClearAllPoints()
-	_G[name..'Low']:SetPoint("TOPLEFT", slider,"BOTTOMLEFT",0,-1)
-	_G[name..'High']:SetText(options.max);
-	_G[name..'High']:SetFontObject("bdConfig_font")
-	_G[name..'High']:ClearAllPoints()
-	_G[name..'High']:SetPoint("TOPRIGHT", slider,"BOTTOMRIGHT",0,-1)
+	_G[name..'Low']:Hide();
+	_G[name..'High']:Hide();
+	_G[name..'Text']:ClearAllPoints()
+	_G[name..'Text']:SetPoint("BOTTOMLEFT", slider, "TOPLEFT", 4, 2)
 	_G[name..'Text']:SetText(options.label);
 	_G[name..'Text']:SetFontObject("bdConfig_font")
+	_G[name..'Text']:SetAlpha(lib.media.muted)
 	
 	slider.value = slider:CreateFontString(nil, "OVERLAY", "bdConfig_font")
-	slider.value:SetPoint("TOP", slider, "BOTTOM", 0, -2)
+	slider.value:SetPoint("BOTTOMRIGHT", slider, "TOPRIGHT", -4, 2)
+	slider.value:SetAlpha(lib.media.muted)
 
 	-- Mixin methods, reference variables
 	container.lastValue = 0
@@ -89,6 +125,8 @@ local function create(options, parent)
 	Mixin(container, methods)
 	container:set()
 	slider:SetScript("OnValueChanged", function() container:onchange() end)
+
+	skin(slider)
 
 	return container
 end

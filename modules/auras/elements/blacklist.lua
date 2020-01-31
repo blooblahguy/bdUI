@@ -20,7 +20,6 @@ local auras = {
 	["Victorious"] = true,
 	["Deep Wounds"] = true,
 	["Mortal Wounds"] = true,
-	["Enrage"] = true,
 	["Blood Craze"] = true,
 	["Ultimatum"] = true,
 	["Sword and Board"] = true,

@@ -80,6 +80,7 @@ local function create(options, parent)
 	picker.text = picker:CreateFontString(nil, "OVERLAY", "bdConfig_font")
 	picker.text:SetText(options.label)
 	picker.text:SetPoint("LEFT", picker, "RIGHT", 8, 0)
+	picker.text:SetAlpha(lib.media.muted)
 
 	container.key = options.key
 	container.callback = options.callback

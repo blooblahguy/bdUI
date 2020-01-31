@@ -51,27 +51,34 @@ local function create(options, parent)
 		tabContainer:SetHeight(lib.dimensions.header)
 		parent.tabContainer = tabContainer
 		parent.tabs = {}
+		tabContainer.border = tabContainer:CreateTexture(nil, "OVERLAY")
+		tabContainer.border:SetTexture(lib.media.flat)
+		tabContainer.border:SetVertexColor(1, 1, 1, 0.2)
+		tabContainer.border:SetHeight(lib.border)
+		tabContainer.border:SetPoint("BOTTOMLEFT", tabContainer, "BOTTOMLEFT", 0, 0)
+		tabContainer.border:SetPoint("BOTTOMRIGHT", tabContainer, "BOTTOMRIGHT", 0, 0)
 	end
 
 	-- create tab page
 	local page = lib:create_container(options, parent)
 	local border = lib:get_border(page)
 	page:SetSize(parent.tabContainer:GetWidth(), 30)
-	page:SetPoint("TOPLEFT", parent.tabContainer, "BOTTOMLEFT", 0, 0)
+	page:SetPoint("TOPLEFT", parent.tabContainer, "BOTTOMLEFT", 0, -lib.media.padding)
 	page.children = {}
-	page:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = border})
-	page:SetBackdropColor(0, 0, 0, 0.08)
-	page:SetBackdropBorderColor(0, 0, 0, 0.15)
+	-- page:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = border})
+	-- page:SetBackdropColor(0, 0, 0, 0.08)
+	-- page:SetBackdropBorderColor(0, 0, 0, 0.15)
 	Mixin(page, methods)
 
 	-- create tab to link to this page
 	local index = #parent.tabs + 1
 	local tab = lib.elements['button']({solo = true}, parent.tabContainer)
 
-	tab.inactiveColor = {1,1,1,0.05}
-	tab.hoverColor = {1,1,1,0.1}
+	tab.inactiveColor = {1, 1, 1, 0}
+	tab.hoverColor = {1, 1, 1, 0}
+	tab.activeColor = {1, 1, 1, 0}
 	tab:OnLeave()
-	tab:SetText(options.value or options.label)
+	tab:SetText(string.upper(options.value or options.label))
 	tab.page = page
 	tab.page:Hide()
 	parent.tabs[index] = tab
@@ -79,6 +86,7 @@ local function create(options, parent)
 	-- show page on select
 	function tab:select()
 		tab.page:Show()
+		UIFrameFadeIn(tab.page, 0.2, 0, 1)
 		tab.active = true
 		tab.page.active = true
 
@@ -91,7 +99,10 @@ local function create(options, parent)
 
 	-- hide page on tab unselect
 	function tab:unselect()
-		tab.page:Hide()
+		UIFrameFadeOut(tab.page, 0.2, tab.page:GetAlpha(), 0)
+		tab.page.fadeInfo.finishedFunc = function()
+			tab.page:Hide()
+		end
 		tab.active = false
 		tab.page.active = false
 		tab:OnLeave()

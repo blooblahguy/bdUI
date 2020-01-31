@@ -91,6 +91,7 @@ function lib:create_windows(name, lock_toggle)
 	window.right:SetPoint("TOPRIGHT", window, "TOPRIGHT", 0, -dimensions.header - border)
 	window.right:SetSize(dimensions.right_column - border, dimensions.height)
 	lib:create_backdrop(window.right)
+	window.right.bd_background:SetVertexColor(0.09, 0.1, 0.12, 1)
 
 	return window
 end
@@ -123,6 +124,7 @@ function lib:create_module(instance, name)
 
 		instance.default = module
 		module:Show()
+		UIFrameFadeIn(module, 0.2, 0, 1)
 		module.scrollParent:Show()
 		module.active = true
 		module.link.active = true
@@ -131,7 +133,10 @@ function lib:create_module(instance, name)
 	end
 	function module:unselect()
 		if (not module.active) then return end
-		module:Hide()
+		UIFrameFadeOut(module, 0.2, module:GetAlpha(), 0)
+		module.fadeInfo.finishedFunc = function()
+			module:Hide()
+		end
 		module.scrollParent:Hide()
 		module.active = false
 		module.link.active = false

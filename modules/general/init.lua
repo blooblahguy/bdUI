@@ -7,7 +7,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local config = {
 	{
 		key = "tab",
-		type = "tab",
+		type = "group",
 		label = "Viewports",
 		args = {
 			{
@@ -44,7 +44,7 @@ local config = {
 	},
 	{
 		key = "tab",
-		type = "tab",
+		type = "group",
 		label = "Quality of Life",
 		args = {
 			{

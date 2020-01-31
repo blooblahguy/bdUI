@@ -56,60 +56,55 @@ local config = {
 				options = {"Outside", "Inside"},
 				label = "Text Location"
 			},
+			--=========================================
+			-- RESOURCES
+			--=========================================
+			{
+				key = "resources",
+				type = "group",
+				label = "Resources",
+				args = {
+					{
+						key = "resources_width",
+						value = 200,
+						min = 40,
+						max = 400,
+						step = 2,
+						type = "range",
+						label = "Width"
+					},
+					{
+						key = "resources_power_height",
+						value = 14,
+						min = 0,
+						max = 30,
+						step = 1,
+						type = "range",
+						label = "Power Height"
+					},
+					{
+						key = "resources_primary_height",
+						value = 5,
+						min = 0,
+						max = 20,
+						step = 1,
+						type = "range",
+						label = "Primary Resource Height"
+					},
+					{
+						key = "resources_secondary_height",
+						value = 3,
+						min = 0,
+						max = 20,
+						step = 1,
+						type = "range",
+						label = "Secondary Resource Height"
+					},
+				}
+			},
 		}
 	},
-	--=========================================
-	-- RESOURCES
-	--=========================================
-	{
-		key = "resources",
-		type = "tab",
-		label = "Resources",
-		args = {
-			{
-				key = "resources_width",
-				value = 200,
-				min = 40,
-				max = 400,
-				step = 2,
-				type = "range",
-				label = "Width"
-			},
-			{
-				key = "resources_power_height",
-				value = 14,
-				min = 0,
-				max = 30,
-				step = 1,
-				type = "range",
-				label = "Power Height"
-			},
-			{
-				key = "resources_primary_height",
-				value = 5,
-				min = 0,
-				max = 20,
-				step = 1,
-				type = "range",
-				label = "Primary Resource Height"
-			},
-			{
-				key = "resources_secondary_height",
-				value = 3,
-				min = 0,
-				max = 20,
-				step = 1,
-				type = "range",
-				label = "Secondary Resource Height"
-			},
-			-- {
-			-- 	key = "reourcepower",
-			-- 	value = false,
-			-- 	type = "toggle",
-			-- 	label = "Display Class Power"
-			-- },
-		}
-	},
+
 	--=========================================
 	-- PLAYER & TARGET
 	--=========================================

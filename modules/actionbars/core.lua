@@ -299,16 +299,16 @@ function mod:SkinButton(button)
 	macro:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,1)
 
 	-- Fix cooldown Spiral Positioning
-	button.cooldowntext = cooldown:GetRegions()
-	button.cooldowntext:SetFont(bdUI.media.font, 16, "OUTLINE")
-	button.cooldowntext:SetJustifyH("Center")
-	button.cooldowntext:ClearAllPoints()
-	button.cooldowntext:SetAllPoints(cooldown)
-	cooldown:SetParent(button)
-	cooldown:ClearAllPoints()
-	cooldown:SetAllPoints(button)
-	button.icon = icon
-	hook_cooldown(button)
+	-- button.cooldowntext = cooldown:GetRegions()
+	-- button.cooldowntext:SetFont(bdUI.media.font, 16, "OUTLINE")
+	-- button.cooldowntext:SetJustifyH("Center")
+	-- button.cooldowntext:ClearAllPoints()
+	-- button.cooldowntext:SetAllPoints(cooldown)
+	-- cooldown:SetParent(button)
+	-- cooldown:ClearAllPoints()
+	-- cooldown:SetAllPoints(button)
+	-- button.icon = icon
+	-- hook_cooldown(button)
 
 	-- Button Overwrite Textures
 	button.hover = button:CreateTexture()
@@ -332,22 +332,22 @@ function mod:SkinButton(button)
 	button:SetCheckedTexture(button.checked)	
 
 	-- Position these things onto the button
-	if (shine) then
-		shine:SetAlpha(0)
-		shine:Hide()
-		shine:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 0)
-		shine:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
-	end
-	if (checked) then
-		checked:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 0)
-		checked:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
-	end
+	-- if (shine) then
+	-- 	shine:SetAlpha(0)
+	-- 	shine:Hide()
+	-- 	shine:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 0)
+	-- 	shine:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
+	-- end
+	-- if (checked) then
+	-- 	checked:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 0)
+	-- 	checked:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
+	-- end
 
-	-- Force hide elements we don't want
-	mod:ForceHide(autocastable)
-	mod:ForceHide(normal2)
-	mod:ForceHide(border)
-	mod:ForceHide(btnBG)
+	-- -- Force hide elements we don't want
+	-- mod:ForceHide(autocastable)
+	-- mod:ForceHide(normal2)
+	-- mod:ForceHide(border)
+	-- mod:ForceHide(btnBG)
 
 	button.skinned = true
 end

@@ -119,6 +119,11 @@ local function kickable_cast(self)
 		self.Icon:SetDesaturated(false)
 		self:SetStatusBarColor(unpack(config.kickable))
 	end
+
+	local border = bdUI:get_border(self)
+	self.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)
+	self.Icon.bg:SetPoint("TOPLEFT", self.Icon, "TOPLEFT", -border, border)
+	self.Icon.bg:SetPoint("BOTTOMRIGHT", self.Icon, "BOTTOMRIGHT", border, -border)
 end
 
 --==============================================
@@ -290,7 +295,6 @@ local function nameplate_create(self, unit)
 		self.overAbsorb:SetValue(overA)
 
 		self.absorbBar:SetValue(absorb)
-
 	end
 
 	--==========================================

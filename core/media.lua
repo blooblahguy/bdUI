@@ -277,7 +277,7 @@ end
 
 	function bdUI:numberize(n)
 		if n >= 10^6 then
-			return string.format("%.0fm", n / 10^6)
+			return string.format("%.1fm", n / 10^6)
 		elseif n >= 10^3 then
 			return string.format("%.0fk", n / 10^3)
 		else

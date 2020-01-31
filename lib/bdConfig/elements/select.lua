@@ -30,6 +30,47 @@ local methods = {
 	end
 }
 
+local function skin(frame, pos)
+
+	local frameName = frame.GetName and frame:GetName()
+	local button = frame.Button or frameName and (_G[frameName.."Button"] or _G[frameName.."_Button"])
+	local text = frameName and _G[frameName.."Text"] or frame.Text
+	local icon = frame.Icon
+
+
+	for k, v in pairs ({frame:GetRegions()}) do
+		if (v:GetObjectType() == "TEXTURE") then
+			v:SetTexture("")
+			v:Hide()
+		end
+	end
+
+	lib:create_backdrop(frame)
+	frame:SetFrameLevel(frame:GetFrameLevel() + 2)
+	-- frame.backdrop:SetPoint("TOPLEFT", 20, -2)
+	-- frame.backdrop:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
+
+	button:ClearAllPoints()
+
+	if pos then
+		button:SetPoint("TOPRIGHT", frame.Right, -20, -21)
+	else
+		button:SetPoint("RIGHT", frame, "RIGHT", -10, 3)
+	end
+
+	button.SetPoint = lib.noop
+	-- S:HandleNextPrevButton(button)
+
+	if text then
+		text:ClearAllPoints()
+		text:SetPoint("RIGHT", button, "LEFT", -2, 0)
+	end
+
+	if icon then
+		icon:SetPoint("LEFT", 23, 0)
+	end
+end
+
 --========================================
 -- Spawn Element
 --========================================
@@ -47,6 +88,7 @@ local function create(options, parent)
 	local label = container:CreateFontString(nil, "OVERLAY", "bdConfig_font")
 	label:SetPoint("TOPLEFT", container, "TOPLEFT", 6, -2)
 	label:SetText(options.label)
+	label:SetAlpha(lib.media.muted)
 	local dropdown = CreateFrame("Button", options.name.."_"..options.key, container, "UIDropDownMenuTemplate")
 	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -20, -2)
 	container.label = label
@@ -108,6 +150,8 @@ local function create(options, parent)
 	end
 
 	dropdown:populate(options.options)
+
+	-- skin(dropdown)
 
 	return container
 end
