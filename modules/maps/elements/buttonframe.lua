@@ -92,6 +92,7 @@ function mod:create_button_frame()
 	--===================================
 	local function size_move()
 		local last = nil
+		if (config.buttonpos == "Disabled") then return end
 
 		hideButtons = {}
 
@@ -138,6 +139,7 @@ function mod:create_button_frame()
 	--===================================
 	local function skin(f)
 		if (f.skinned) then return end
+		if (config.buttonpos == "Disabled") then return end
 
 		f:SetScale(1)
 		f:SetFrameStrata("MEDIUM")
@@ -171,6 +173,7 @@ function mod:create_button_frame()
 	
 	local function move_buttons()
 		-- if (InCombatLockdown()) then return end
+		if (config.buttonpos == "Disabled") then return end
 		
 		local c = {Minimap.buttonFrame:GetChildren()}
 		local d = {Minimap:GetChildren()}
