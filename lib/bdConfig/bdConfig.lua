@@ -105,7 +105,7 @@ local module_methods = {
 	end,
 	-- Update scrollframe to size of build
 	['update_scroll'] = function(self)
-		local height = self.first:GetHeight()
+		local height = self.first:GetHeight() + lib.dimensions.padding
 
 		local scrollHeight = math.max(lib.dimensions.height, height) - lib.dimensions.height + 1
 		if (height > lib.dimensions.height) then
