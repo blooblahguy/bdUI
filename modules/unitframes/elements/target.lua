@@ -20,7 +20,8 @@ mod.custom_layout["target"] = function(self, unit)
 
 	mod.version = bdUI:get_game_version()
 
-	self.Debuffs.initialAnchor  = "BOTTOMLEFT"
+	self.Debuffs.initialAnchor = "BOTTOMLEFT"
+	self.Debuffs.size = 22
 	self.Debuffs['growth-x'] = "RIGHT"
 	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
