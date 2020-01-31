@@ -100,6 +100,10 @@ local module_methods = {
 		local group = lib.containers["group"]({}, self, true)
 		self:build(self.config, group)
 		group:update()
+		
+		if (group:GetHeight() < lib.dimensions.height) then
+			group:SetHeight(lib.dimensions.height - (lib.dimensions.padding * 2))
+		end
 
 		return self.save
 	end,

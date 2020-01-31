@@ -299,7 +299,7 @@ function mod:create_extra()
 	cfg.frameName = "bdActionbars_ExtraBar"
 	cfg.moveName = "Extra Button"
 	cfg.frameVisibility = "[extrabar] show; hide"
-	cfg.frameSpawn = { "LEFT", UIParent, "LEFT", 300, 0 }
+	cfg.frameSpawn = { "LEFT", UIParent, "LEFT", 440, 0 }
 
 	local buttonList = mod:GetButtonList("ExtraActionButton", NUM_ACTIONBAR_BUTTONS)
 	table.insert(buttonList, ZoneAbilityFrame)

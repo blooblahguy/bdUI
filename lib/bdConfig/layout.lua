@@ -56,8 +56,8 @@ function lib:create_container(options, parent, height)
 	local container = CreateFrame("frame", nil, parent)
 	container:SetSize((parent:GetWidth() * size) - (padding * 2), height)
 	-- TESTING : shows a background around each container for debugging
-	-- container:SetBackdrop({bgFile = lib.media.flat})
-	-- container:SetBackdropColor(.1, .8, .2, 0.1)
+	container:SetBackdrop({bgFile = lib.media.flat})
+	container:SetBackdropColor(.1, .8, .2, 0.1)
 
 	if (parent._row > 1 or not parent._lastel) then
 		-- new or first row

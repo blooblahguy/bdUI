@@ -97,7 +97,7 @@ local function create(options, parent)
 	text:SetText(options.label)
 	text:SetFontObject("bdConfig_font")
 	text:ClearAllPoints()
-	text:SetPoint("LEFT", check, "RIGHT", 2, 0)
+	text:SetPoint("LEFT", check, "RIGHT", 2, -1)
 
 	container.callback = options.callback
 	container.key = options.key

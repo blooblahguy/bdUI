@@ -1,6 +1,15 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 
+local function has_value (tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
 
 function mod:create_button_frame()
 	local config = mod:get_save()
@@ -60,13 +69,13 @@ function mod:create_button_frame()
 	MiniMapTrackingButtonBorder:Hide()
 	MiniMapTrackingButtonShine:Hide()
 	MiniMapTrackingButtonShine.Show = noop
-	GarrisonLandingPageMinimapButton:SetParent(Minimap)
+	-- GarrisonLandingPageMinimapButton:SetParent(Minimap)
 	-- QueueStatusMinimapButton:DisableDrawLayer("BACKGROUND")
 	QueueStatusMinimapButtonIcon:SetFrameLevel(50)
 	manualTarget['CodexBrowserIcon'] = true
 	manualTarget['MiniMapTracking'] = true
 	manualTarget['HelpOpenWebTicketButton'] = true
-	manualTarget['GarrisonLandingPageMinimapButton'] = true
+	-- manualTarget['GarrisonLandingPageMinimapButton'] = true
 	-- manualTarget['MiniMapTrackingFrame'] = true
 	manualTarget['MiniMapMailFrame'] = true
 	manualTarget['COHCMinimapButton'] = true
@@ -102,10 +111,6 @@ function mod:create_button_frame()
 		if (config.hideclasshall) then
 			hideButtons['GarrisonLandingPageMinimapButton'] = true
 		end
-
-		table.sort(frames, function(a, b)
-			return a.name < b.name
-		end)
 
 		for k, f in pairs(frames) do
 			f:SetWidth(config.buttonsize)
@@ -197,7 +202,9 @@ function mod:create_button_frame()
 					)
 				) then
 					skin(f)
-					frames[i] = f
+					if (not has_value(frames, f)) then
+						table.insert(frames, f)
+					end
 				end
 			end
 		else
@@ -208,9 +215,9 @@ function mod:create_button_frame()
 					f.name = n
 					if (f:IsShown()) then
 						skin(f)
-						frames[f.buttonindex or n] = f
-					else
-						frames[f.buttonindex or n] = nil
+						if (not has_value(frames, f)) then
+							table.insert(frames, f)
+						end
 					end
 				end
 

@@ -436,6 +436,7 @@ local function layout(self, unit)
 	end
 	
 	table.insert(mod.frames, self)
+	update_frame(self)
 end
 
 --============================================================

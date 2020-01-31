@@ -205,38 +205,49 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	end
 end
 
-local function update_cooldown(self)
-	if (not self.action) then return end
-	local start, duration, enable = GetActionCooldown(self.action)
-
-	-- print(start, duration, enable)
-
-	local color = {1, 1, 1}
-	if (start > 0 and enable and duration > 2) then
-		local remaining = start + duration - GetTime()
-		if (remaining < 3) then
+local function update_cooldown(button, progress, force)
+	if (progress > 0) then
+		local color = {1, 1, 1}
+		local threshhold = 0
+		if (progress < 3) then
+			threshhold = 3
 			color = {0.8, 0.1, 0.1}
-		elseif (remaining < 60) then
+		elseif (progress < 60) then
+			threshhold = 60
 			color = {0.9, 0.9, 0.1}
 		end
-		-- print(remaining)
-		self.cooldowntext:SetTextColor(unpack(color))
-		self.icon:SetDesaturated(true)
+		-- don't call blizzard functions more often than neccesary
+		if (button.threshhold ~= threshhold or force) then
+			button.threshhold = threshhold
+			_G[button:GetName().."Cooldown"]:GetRegions():SetTextColor(unpack(color))
+			_G[button:GetName().."Icon"]:SetDesaturated(true)
+		end
 	else
-		self.cooldowntext:SetTextColor(0.9, 0.9, 0.1)
-		self.icon:SetDesaturated(false)
+		-- default
+		_G[button:GetName().."Cooldown"].end_time = false
+		_G[button:GetName().."Cooldown"]:GetRegions():SetTextColor(0.9, 0.9, 0.1)
+		_G[button:GetName().."Icon"]:SetDesaturated(false)
 	end
 end
 
 local function hook_cooldown(self)
-	self.cooldown:SetScript("OnShow", function() update_cooldown(self) end)
-	self.total = 0
-	self:SetScript("OnUpdate", function(self, elapsed)
-		self.total = self.total + elapsed
-		if (self.total > 0.25) then
-			self.total = 0
-			update_cooldown(self)
+	local button = self
+	local cooldown = _G[self:GetName().."Cooldown"]
+
+	-- update cooldown remaining when its set
+	hooksecurefunc(cooldown, "SetCooldown", function(self, start, duration)
+		local progress = start + duration - GetTime()
+		if (start and duration and duration > 1.5) then
+			self.end_time = start + duration
+			self.duration = duration
+			update_cooldown(button, progress, true)
 		end
+	end)
+
+	-- check math every frame
+	cooldown:SetScript("OnUpdate", function(self)
+		if (not cooldown.end_time) then return end
+		update_cooldown(button, cooldown.end_time - GetTime())
 	end)
 end
 
@@ -244,10 +255,9 @@ end
 -- Skinning
 --=======================================
 function mod:SkinButton(button)
-	bdUI:set_backdrop(button)
 	if button.skinned then return end
-	
-	if (not button.SetNormalTexture) then return end
+
+	bdUI:set_backdrop(button)
 
 	local name = button:GetName()
 	local icon = _G[name.."Icon"]
@@ -264,90 +274,103 @@ function mod:SkinButton(button)
 	local btnBG = _G[name.."FloatingBG"]
 	local autocastable = _G[name.."AutoCastable"]
 
-	button:SetNormalTexture("")
+	if (button.SetNormalTexture) then
+		button:SetNormalTexture("")
+	end
 
-	if ( not flash ) then return end
-	flash:SetTexture("")
+	-- FLASH
+	if (flash) then
+		flash:SetColorTexture(1.0, 0.2, 0.2, 0.45)
+		bdUI:set_outside(flash)
+		flash:SetDrawLayer("BACKGROUND", -1)
+	end
 
-	if (not icon) then return end
-	icon:SetTexCoord(.1, .9, .1, .9)
-	icon:SetDrawLayer("ARTWORK")
+	-- ICON
+	if (icon) then
+		icon:SetTexCoord(.1, .9, .1, .9)
+		icon:SetDrawLayer("ARTWORK")
+	end
 
-	-- Text Overrides
-	hotkey:SetFontObject(v.font)
-	hotkey:SetJustifyH("Right")
-	hotkey:SetVertexColor(1, 1, 1)
-	hotkey:SetTextColor(1, 1, 1)
-	hotkey.SetTextColor = mod.noop
-	hotkey.SetVertexColor = mod.noop
-	hotkey:ClearAllPoints()
-	hotkey:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0,-3)
+	-- HOTKEY
+	if (hotkey) then
+		hotkey:SetFontObject(v.font)
+		hotkey:SetJustifyH("Right")
+		hotkey:SetTextColor(1, 1, 1)
+		hotkey:ClearAllPoints()
+		hotkey:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0,-3)
+	end
 
-	count:SetFontObject(v.font)
-	count:SetTextColor(0.7,0.7,0.7)
-	count:SetJustifyH("Center")
-	count:SetTextColor(1,1,1)
-	count:ClearAllPoints()
-	count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,0)
+	-- COUNT
+	if (count) then
+		count:SetFontObject(v.font)
+		count:SetTextColor(0.7,0.7,0.7)
+		count:SetJustifyH("Center")
+		count:SetTextColor(1,1,1)
+		count:ClearAllPoints()
+		count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,0)
+	end
 	
-	if (not macro) then return end
-	macro:SetFontObject(v.font)
-	macro:SetTextColor(0.7,0.7,0.7)
-	macro:SetJustifyH("RIGHT")
-	macro:SetTextColor(1,1,1)
-	macro:ClearAllPoints()
-	macro:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,1)
+	-- MACRO
+	if (macro) then
+		macro:SetFontObject(v.font)
+		macro:SetTextColor(0.7,0.7,0.7)
+		macro:SetJustifyH("RIGHT")
+		macro:SetTextColor(1,1,1)
+		macro:ClearAllPoints()
+		macro:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,1)
+	end
 
-	-- Fix cooldown Spiral Positioning
-	button.cooldowntext = cooldown:GetRegions()
-	button.cooldowntext:SetFont(bdUI.media.font, 16, "OUTLINE")
-	button.cooldowntext:SetJustifyH("Center")
-	button.cooldowntext:ClearAllPoints()
-	button.cooldowntext:SetAllPoints(cooldown)
-	cooldown:SetParent(button)
-	cooldown:ClearAllPoints()
-	cooldown:SetAllPoints(button)
-	button.icon = icon
-	hook_cooldown(button)
+	-- COOLDOWN
+	if (cooldown) then
+		local cooldowntext = cooldown:GetRegions()
+		cooldowntext = cooldown:GetRegions()
+		cooldowntext:SetFont(bdUI.media.font, 16, "OUTLINE")
+		cooldowntext:SetJustifyH("Center")
+		cooldowntext:ClearAllPoints()
+		cooldowntext:SetAllPoints(cooldown)
+		cooldown:SetParent(button)
+		cooldown:ClearAllPoints()
+		cooldown:SetAllPoints(button)
+		hook_cooldown(button)
+	end
 
-	-- Button Overwrite Textures
-	button.hover = button:CreateTexture()
-	button.hover:SetTexture(bdUI.media.flat)
-	button.hover:SetVertexColor(1, 1, 1, 0.1)
-	button.hover:SetAllPoints(button)
-	button:SetHighlightTexture(button.hover)
+	-- HOVER
+	if (button.SetHighlightTexture) then
+		local hover = button:CreateTexture()
+		hover:SetTexture(bdUI.media.flat)
+		hover:SetVertexColor(1, 1, 1, 0.1)
+		hover:SetAllPoints(button)
+		button:SetHighlightTexture(hover)
+	end
 
-	button.pushed = button:CreateTexture()
-	button.pushed:SetTexture(bdUI.media.flat)
-	button.pushed:SetVertexColor(1, 1, 1, 0.2)
-	button.pushed:SetAllPoints(button)
-	button:SetPushedTexture(button.pushed)
+	-- PUSHED
+	if (button.SetPushedTexture) then
+		local pushed = button:CreateTexture()
+		pushed:SetTexture(bdUI.media.flat)
+		pushed:SetVertexColor(1, 1, 1, 0.2)
+		pushed:SetAllPoints(button)
+		button:SetPushedTexture(pushed)
+	end
 
-	button.checked = button:CreateTexture()
-	button.checked:SetTexture(bdUI.media.flat)
-	button.checked:SetVertexColor(0.2,1,0.2)
-	button.checked:SetAlpha(0.3)
-	button.checked.SetAlpha = mod.noop
-	button.checked:SetAllPoints(button)
-	button:SetCheckedTexture(button.checked)	
+	-- CHECKED
+	if (button.SetCheckedTexture) then
+		local checked = button:CreateTexture()
+		checked:SetAllPoints()
+		checked:SetColorTexture(1, 1, 1, 0.2)
+		button:SetCheckedTexture(checked)
+	end
 
-	-- Position these things onto the button
+	-- SHINE
 	if (shine) then
-		shine:SetAlpha(0)
-		shine:Hide()
-		shine:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 0)
-		shine:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
-	end
-	if (checked) then
-		checked:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 0, 0)
-		checked:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, 0)
+		shine:SetParent(button)
+		bdUI:set_inside(shine)
 	end
 
-	-- Force hide elements we don't want
-	mod:ForceHide(autocastable)
-	mod:ForceHide(normal2)
-	mod:ForceHide(border)
-	mod:ForceHide(btnBG)
+	-- HIDE
+	bdUI:kill(autocastable)
+	bdUI:kill(normal2)
+	bdUI:kill(border)
+	bdUI:kill(btnBG)
 
 	button.skinned = true
 end

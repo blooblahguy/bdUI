@@ -25,7 +25,6 @@ local methods = {
 
 		for row, element in pairs(children) do
 			if (element._isrow) then
-				-- print(element._type, element:GetHeight())
 				height = height + element:GetHeight() + lib.dimensions.padding
 			end
 			if (element._type == "group") then

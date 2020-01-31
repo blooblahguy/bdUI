@@ -7,6 +7,7 @@ function mod:move_vehicle(...)
 	Minimap.background = Minimap.background or Minimap
 	-- VehicleSeatIndicator:ClearAllPoints()
 	-- VehicleSeatIndicator:SetPoint("BOTTOMRIGHT", Minimap.background, "BOTTOMLEFT", -4, 0)
+
 	vehicle_move:RegisterEvent("VEHICLE_UPDATE")
 	vehicle_move:RegisterEvent("PLAYER_GAINS_VEHICLE_DATA")
 	vehicle_move:SetScript("OnEvent", mod.move_vehicle)

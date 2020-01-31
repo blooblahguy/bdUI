@@ -402,7 +402,7 @@ local function layout(self, unit)
 	self.Curhp:SetFont(bdUI.media.font, 10, "OUTLINE")
 
 	-- Raid Icon
-	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)
+	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 7)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.RaidTargetIndicator:SetPoint('CENTER', self, 0, 0)
 

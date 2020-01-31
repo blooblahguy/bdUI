@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 
 
 --==============================================
--- Hide Protected things
+-- Useful Functions
 --==============================================
 function bdUI:hide_protected(frame)
 	frame:Hide()
@@ -10,6 +10,33 @@ function bdUI:hide_protected(frame)
 	hooksecurefunc(frame, "Show", function(self) self:Hide() end)
 end
 
+function bdUI:set_outside(frame)
+	if (not frame) then return end
+	local border = bdUI:get_border(frame)
+	frame:ClearAllPoints()
+	frame:SetPoint("TOPLEFT", -border, border)
+	frame:SetPoint("BOTTOMRIGHT", border, -border)
+end
+
+function bdUI:set_inside(frame)
+	if (not frame) then return end
+	local border = bdUI:get_border(frame)
+	frame:ClearAllPoints()
+	frame:SetPoint("TOPLEFT", border, -border)
+	frame:SetPoint("BOTTOMRIGHT", -border, border)
+end
+
+function bdUI:kill(frame)
+	if (not frame) then return end
+	if frame.UnregisterAllEvents then
+		frame:UnregisterAllEvents()
+		frame:SetParent(bdUI.hidden)
+	else
+		frame.Show = frame.Hide
+	end
+
+	frame:Hide()
+end
 
 --==============================================
 -- Aura Funcitonality
