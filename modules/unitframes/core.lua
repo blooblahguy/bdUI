@@ -69,6 +69,10 @@ end
 
 mod.additional_elements = {
 	castbar = function(self, unit, align, icon)
+		if (not config.enablecastbars) then 
+			self:DisableElement("Castbar")
+			return
+		end
 		if (self.Castbar) then return end
 
 		local font_size = math.restrict(config.castbarheight * 0.8, 8, 14)

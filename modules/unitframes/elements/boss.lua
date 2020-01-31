@@ -61,8 +61,6 @@ mod.custom_layout["boss"] = function(self, unit)
 				return true
 			end
 		end
-		
-		
 	end
 
 end
