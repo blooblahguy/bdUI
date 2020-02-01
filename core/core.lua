@@ -32,7 +32,8 @@ function bdUI:kill(frame)
 		frame:UnregisterAllEvents()
 		frame:SetParent(bdUI.hidden)
 	else
-		frame.Show = frame.Hide
+		hooksecurefunc(frame, "Show", function(self) self:Hide() end)
+		-- frame.Show = frame.Hide
 	end
 
 	frame:Hide()

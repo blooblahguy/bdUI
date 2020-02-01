@@ -326,10 +326,8 @@ function mod:SkinButton(button)
 		cooldowntext = cooldown:GetRegions()
 		cooldowntext:SetFont(bdUI.media.font, 16, "OUTLINE")
 		cooldowntext:SetJustifyH("Center")
-		cooldowntext:ClearAllPoints()
 		cooldowntext:SetAllPoints(cooldown)
 		cooldown:SetParent(button)
-		cooldown:ClearAllPoints()
 		cooldown:SetAllPoints(button)
 		hook_cooldown(button)
 	end
@@ -354,10 +352,10 @@ function mod:SkinButton(button)
 
 	-- CHECKED
 	if (button.SetCheckedTexture) then
-		local checked = button:CreateTexture()
-		checked:SetAllPoints()
-		checked:SetColorTexture(1, 1, 1, 0.2)
-		button:SetCheckedTexture(checked)
+		local new_checked = button:CreateTexture()
+		new_checked:SetAllPoints()
+		new_checked:SetColorTexture(1, 1, 1, 0.2)
+		button:SetCheckedTexture(new_checked)
 	end
 
 	-- SHINE
