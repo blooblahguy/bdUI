@@ -206,7 +206,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 end
 
 local function update_cooldown(button, progress, force)
-	if (progress > 0) then
+	if (progress > 1.5) then
 		local color = {1, 1, 1}
 		local threshhold = 0
 		if (progress < 3) then

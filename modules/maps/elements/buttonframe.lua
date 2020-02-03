@@ -183,7 +183,16 @@ function mod:create_button_frame()
 		local c = {Minimap.buttonFrame:GetChildren()}
 		local d = {Minimap:GetChildren()}
 
+		for k, v in pairs(d) do table.insert(c,v) end
+
+		for i = 1, #c do
+			if (f:IsShown()) then
+				numChildren = #d
+			end
+		end
+
 		if (#d ~= numChildren) then
+			print("run")
 			numChildren = #d
 			frames = {}
 

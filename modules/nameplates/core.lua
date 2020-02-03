@@ -121,7 +121,7 @@ local function kickable_cast(self)
 	end
 
 	local border = bdUI:get_border(self)
-	self.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)
+	self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -border, 0)
 	self.Icon.bg:SetPoint("TOPLEFT", self.Icon, "TOPLEFT", -border, border)
 	self.Icon.bg:SetPoint("BOTTOMRIGHT", self.Icon, "BOTTOMRIGHT", border, -border)
 end
@@ -476,7 +476,7 @@ local function nameplate_create(self, unit)
 	self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 	self.Castbar.Icon:SetDrawLayer('ARTWORK')
 	self.Castbar.Icon:SetSize( config.height+config.castbarheight, config.height+config.castbarheight )
-	self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -(border), 0)
+	self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)
 	
 	-- icon bg
 	self.Castbar.Icon.bg = self.Castbar:CreateTexture(nil, "BORDER")

@@ -174,6 +174,15 @@ local config = {
 				value = false,
 				label = "Hide Castbar Icon",
 			},
+			{
+				key = "unselectedalpha",
+				type = "range",
+				value = 0.5,
+				min = 0.1,
+				max = 1,
+				step = 0.1,
+				label = "Unselected nameplate alpha",
+			},
 		}
 	},
 	--=======================================
@@ -345,15 +354,6 @@ local config = {
 				max = 40,
 				step = 5,
 				label = "Execute range",
-			},
-			{
-				key = "unselectedalpha",
-				type = "range",
-				value = 0.5,
-				min = 0.1,
-				max = 1,
-				step = 0.1,
-				label = "Unselected nameplate alpha",
 			},
 		}
 	},
