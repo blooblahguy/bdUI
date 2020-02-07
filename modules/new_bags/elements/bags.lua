@@ -1,12 +1,14 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("New Bags")
+mod.bags = mod:create_container("Bags", 0, 4)
 
 function mod:create_bags()
-	mod.bags = mod:create_container("Bags", 0, 4)
+	mod.bags:Show()
+	mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
+
 	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 	mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 	mod.bags.category_items = {}
-	-- mod.bags:Hide()
 
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
@@ -37,9 +39,10 @@ function mod:create_bags()
 	-- hooksecurefunc('CloseSpecialWindows', mod.bags.close)
 	-- hooksecurefunc("CloseBag", mod.bags.close)
 	-- hooksecurefunc("CloseBackpack", mod.bags.close)
-	
+
 
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
+		print(event)
 		if (event == "EQUIPMENT_SWAP_PENDING" or event == "AUCTION_MULTISELL_START") then
 			self.paused = true
 		elseif (event == "EQUIPMENT_SWAP_FINISHED" or event == "AUCTION_MULTISELL_FAILURE") then
@@ -138,7 +141,7 @@ function mod:draw_bags()
 		["columns"] = 2,
 		["parent"] = mod.bags,
 		["loop"] = function(frame, i, category)
-			if (not mod.bags.category_items[category.name]) then return false end
+			if (not mod.bags.category_items[category.name]) then return end
 			frame.text:SetText(category.name:upper())
 
 			-- now loop through items
@@ -159,9 +162,13 @@ function mod:draw_bags()
 
 					button:full_update()
 				end,
-				["callback"] = frame.update_size
+				["callback"] = function(width, height)
+					frame:update_size(width, height)
+				end
 			})
 		end,
-		["callback"] = mod.bags.update_size
+		["callback"] = function(width, height)
+			mod.bags:update_size(width, height)
+		end
 	})
 end

@@ -9,7 +9,6 @@ local config = {}
 mod.containers = {}
 mod.bag_frames = {}
 
-
 local filter_table = {}
 filter_table[12] = "Quest"
 
@@ -89,13 +88,12 @@ function mod:create_container(name, start_id, end_id)
 	bags:EnableMouse(true)
 	bags:SetMovable(true)
 	bags:SetUserPlaced(true)
-	bags:SetClampedToScreen(true)
 	bags:SetFrameStrata("HIGH")
-	bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
 	bags:RegisterForDrag("LeftButton","RightButton")
 	bags:RegisterForDrag("LeftButton","RightButton")
 	bags:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	bags:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+	bags:Hide()
 	bdUI:set_backdrop(bags)
 
 	-- header
@@ -144,11 +142,10 @@ function mod:create_container(name, start_id, end_id)
 	searchBox:SetHeight(20)
 	searchBox:SetPoint("RIGHT", bags_button, "LEFT", -4, 0)
 	searchBox:SetFrameLevel(27)
-	-- headerRightRegion:AddWidget(searchBox, -10, 130, 0, -1)
 	tinsert(_G.ITEM_SEARCHBAR_LIST, searchBox:GetName())
 
 	-- callback for sizing
-	function bags.update_size(width, height)
+	function bags:update_size(width, height)
 		bags:SetSize(width + 20, height + 40)
 	end
 

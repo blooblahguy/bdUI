@@ -39,8 +39,11 @@ function mod:position_objects(options)
 	local last, lastrow, first, lastcol
 	local index = 1
 
+	local rows, columns = 1, 1
+
 	for k, v in pairs(options.table) do
 		local frame = options.pool:Acquire()
+		local border = bdUI:get_border(frame)
 		frame:Show()
 
 		if (not first) then first = frame end
@@ -48,12 +51,16 @@ function mod:position_objects(options)
 			frame:SetPoint("TOPLEFT", options.parent, "TOPLEFT", 0, 0)
 			lastrow = frame
 		elseif (index > options.columns) then
-			frame:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -mod.border)
+			frame:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -border)
 			lastrow = frame
 			lastcol = last
 			index = 1
+			rows = rows + 1
 		else
-			frame:SetPoint("TOPLEFT", last, "TOPRIGHT", mod.border, 0)
+			frame:SetPoint("TOPLEFT", last, "TOPRIGHT", border, 0)
+			if (not lastcol) then
+				columns = columns + 1
+			end
 		end
 		last = frame
 		index = index + 1
@@ -63,9 +70,9 @@ function mod:position_objects(options)
 		end
 	end
 
-	if (options.callback and first and last and lastcol) then
-		local width = select(1, mod:measure("TOPLEFT", first, "BOTTOMRIGHT", lastcol))
-		local height = select(2, mod:measure("TOPLEFT", first, "BOTTOMRIGHT", last))
+	if (options.callback and first) then
+		local height = first:GetHeight() * rows
+		local width = first:GetWidth() * columns
 		options.callback(width, height)
 	end
 end

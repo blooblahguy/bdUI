@@ -34,9 +34,7 @@ local methods = {
 
 		count:ClearAllPoints()
 		local r, g, b = self.IconBorder:GetVertexColor()
-		-- print(r, g, b)
 		local color = bdUI:round(r, 1)..bdUI:round(g, 1)..bdUI:round(b, 1)
-		-- print(color)
 		if (color == "111" or color == "0.70.70.7" or color == "000") then
 			self.IconBorder:Hide()
 			self.quality_border:Hide()
@@ -109,6 +107,20 @@ local methods = {
 		local count = _G[self:GetName().."Count"]
 		local icon = _G[self:GetName().."IconTexture"]
 
+		-- overlay for testing
+		self.overlay = self:CreateTexture(nil, "OVERLAY")
+		self.overlay:SetAllPoints()
+		self.overlay:SetTexture(bdUI.media.flat)
+		self.overlay:SetVertexColor(0, 0, 0, 0)
+
+		-- border
+		self.quality_border = self:CreateTexture(nil, "OVERLAY")
+		self.quality_border:SetPoint("BOTTOMLEFT", self.IconBorder, "TOPLEFT", 0, 0)
+		self.quality_border:SetPoint("TOPRIGHT", self.IconBorder, "TOPRIGHT", 0, 1)
+		self.quality_border:SetTexture(bdUI.media.flat)
+		self.quality_border:SetVertexColor(0, 0, 0, 1)
+		self.quality_border:Hide()
+
 		-- icon
 		self:SetNormalTexture("")
 		self:SetPushedTexture("")
@@ -144,12 +156,6 @@ mod.item_pool_create = function(self)
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
 	button:SetScript('OnShow', button.OnShow)
 	button:SetScript('OnHide', button.OnHide)
-
-	button.quality_border = button:CreateTexture(nil, "OVERLAY")
-	button.quality_border:SetPoint("BOTTOMLEFT", button.IconBorder, "TOPLEFT", 0, 0)
-	button.quality_border:SetPoint("TOPRIGHT", button.IconBorder, "TOPRIGHT", 0, 1)
-	button.quality_border:SetTexture(bdUI.media.flat)
-	button.quality_border:SetVertexColor(0, 0, 0, 1)
 
 	bdUI:set_backdrop(button)
 	Mixin(button, methods)
