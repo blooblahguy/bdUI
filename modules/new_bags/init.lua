@@ -8,8 +8,11 @@ local config = {
 	{
 		key = "enabled",
 		type = "toggle",
+		label = "Enable New Bag Code (not ready)",
 		value = false,
 	}
 }
 
-local mod = bdUI:register_module("New Bags", config)
+local mod = bdUI:register_module("New Bags", config, {
+	hide_ui = true
+})
