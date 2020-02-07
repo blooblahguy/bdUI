@@ -78,6 +78,19 @@ local config = {
 				label = "Announce interrupts"
 			},
 		}
+	},
+	{
+		key = "tab",
+		type = "tab",
+		label = "Skinning",
+		args = {
+			{
+				key = "skin_was",
+				type = "toggle",
+				value = true,
+				label = "Skin WeakAuras"
+			},
+		}
 	}
 
 }

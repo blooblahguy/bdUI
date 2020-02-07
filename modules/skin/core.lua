@@ -12,4 +12,7 @@ function mod:initialize()
 	-- mod:create_fonts()
 	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 	mod:move_vehicle()
+
+	-- General config
+	mod:skin_weak_auras()
 end
