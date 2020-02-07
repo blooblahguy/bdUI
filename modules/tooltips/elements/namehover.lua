@@ -24,8 +24,9 @@ function mod:create_mouseover_tooltips()
 	end)
 	motooltip:SetScript("OnEvent", function(self)
 		if GetMouseFocus():GetName()~="WorldFrame" then return end
-		
 		local name = UnitName("mouseover")
+		if not name then return end
+		
 		local AFK = UnitIsAFK("mouseover")
 		local DND = UnitIsDND("mouseover")
 		local prefix = ""

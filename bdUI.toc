@@ -53,6 +53,7 @@ core\locales\enUS.lua
 core\locales\deDE.lua
 
 # Core
+core\performance.lua
 core\commands.lua
 core\compatibility.lua
 core\core.lua
@@ -95,6 +96,15 @@ modules\actionbars\elements\hoverbind.lua
 modules\actionbars\elements\hotkeys.lua
 
 # Bags
+modules\new_bags\init.lua
+modules\new_bags\functions.lua
+modules\new_bags\core.lua
+modules\new_bags\elements\categories.lua
+modules\new_bags\elements\items.lua
+modules\new_bags\elements\bags.lua
+modules\new_bags\elements\bank.lua
+modules\new_bags\elements\loot.lua
+
 modules\bags\init.lua
 modules\bags\functions.lua
 modules\bags\core.lua

@@ -10,11 +10,8 @@ local nameplates = {}
 -- Fonts we use
 mod.font = CreateFont("BDN_FONT")
 mod.font:SetFont(bdUI.media.font, 14)
-
 mod.font_friendly = CreateFont("BDN_FONT_FRIENDLY")
-
 mod.font_small = CreateFont("BDN_FONT_SMALL")
-
 mod.font_castbar = CreateFont("BDN_FONT_CASTBAR")
 
 --===============================================
@@ -184,7 +181,9 @@ local function update_threat(self, event, unit)
 	healthbar:SetMinMaxValues(0, max)
 	healthbar:SetValue(cur)
 
-	if (((cur / max) * 100) <= config.executerange and not self.tapDenied) then
+	if (self.tapDenied) then
+		healthbar:SetStatusBarColor(unpack(self.smartColors))
+	elseif (((cur / max) * 100) <= config.executerange) then
 		healthbar:SetStatusBarColor(unpack(config.executecolor))
 	elseif (config.specialunits[UnitName(unit)]) then
 		healthbar:SetStatusBarColor(unpack(config.specialcolor))

@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 
-local function has_value (tab, val)
+local function has_value(tab, val)
     for index, value in ipairs(tab) do
         if value == val then
             return true
@@ -23,6 +23,10 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:RegisterEvent("PLAYER_XP_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("PLAYER_LEVEL_UP")
 	Minimap.buttonFrame:RegisterEvent("UPDATE_FACTION")
+	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
+	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")
+	Minimap.buttonFrame:RegisterEvent("MAIL_CLOSED")
+
 	Minimap.buttonFrame:SetSize(Minimap.background:GetWidth() - (bdUI.border * 2), config.buttonsize)
 	Minimap.buttonFrame:SetPoint("TOP", Minimap.background, "BOTTOM", bdUI.border, -bdUI.border)
 
@@ -63,20 +67,18 @@ function mod:create_button_frame()
 	local manualTarget = {}
 	local hideButtons = {}
 	local frames = {}
-	local numChildren = 0
+	local last_number = 0
 
 	MiniMapTracking:SetParent(Minimap)
 	MiniMapTrackingButtonBorder:Hide()
 	MiniMapTrackingButtonShine:Hide()
 	MiniMapTrackingButtonShine.Show = noop
-	-- GarrisonLandingPageMinimapButton:SetParent(Minimap)
-	-- QueueStatusMinimapButton:DisableDrawLayer("BACKGROUND")
 	QueueStatusMinimapButtonIcon:SetFrameLevel(50)
+
+	-- target these buttons no matter where they're parented
 	manualTarget['CodexBrowserIcon'] = true
 	manualTarget['MiniMapTracking'] = true
 	manualTarget['HelpOpenWebTicketButton'] = true
-	-- manualTarget['GarrisonLandingPageMinimapButton'] = true
-	-- manualTarget['MiniMapTrackingFrame'] = true
 	manualTarget['MiniMapMailFrame'] = true
 	manualTarget['COHCMinimapButton'] = true
 	manualTarget['ZygorGuidesViewerMapIcon'] = true
@@ -84,12 +86,14 @@ function mod:create_button_frame()
 	manualTarget['PeggledMinimapIcon'] = true
 	manualTarget['QueueStatusMinimapButton'] = true
 
+	-- don't touch these
 	ignoreFrames['bdButtonFrame'] = true
 	ignoreFrames['MinimapBackdrop'] = true
 	ignoreFrames['GameTimeFrame'] = true
 	ignoreFrames['MinimapVoiceChatFrame'] = true
 	ignoreFrames['TimeManagerClockButton'] = true
 
+	-- remove these textures
 	hideTextures['Interface\\Minimap\\MiniMap-TrackingBorder'] = true
 	hideTextures['Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight'] = true
 	hideTextures['Interface\\Minimap\\UI-Minimap-Background'] = true 
@@ -97,30 +101,19 @@ function mod:create_button_frame()
 	hideTextures[136467] = true 
 
 	--===================================
-	-- Position buttons
+	-- Position button frames
 	--===================================
-	local function size_move()
-		local last = nil
+	-- reposition frames, whenever there are more or less
+	local function position()
 		if (config.buttonpos == "Disabled") then return end
+		if (#frames == last_number) then return end
+		last_number = #frames
 
-		hideButtons = {}
-
-		if (not config.showconfig) then
-			hideButtons['bdButtonFrame'] = true
-		end
-		if (config.hideclasshall) then
-			hideButtons['GarrisonLandingPageMinimapButton'] = true
-		end
-
+		-- start loop
+		local last = nil
 		for k, f in pairs(frames) do
-			f:SetWidth(config.buttonsize)
-			f:SetHeight(config.buttonsize)
 			f:ClearAllPoints()
 
-			if (hideButtons[f:GetName()]) then
-				f:Hide()
-				f:SetAlpha(0)
-			end
 			if (config.buttonpos == "Top" or config.buttonpos == "Bottom") then
 				if (last) then
 					f:SetPoint("LEFT", last, "RIGHT", bdUI.border*3, 0)		
@@ -141,13 +134,16 @@ function mod:create_button_frame()
 
 	--===================================
 	-- Skin button
+	-- skin unskinned buttons
 	--===================================
 	local function skin(f)
-		if (f.skinned) then return end
 		if (config.buttonpos == "Disabled") then return end
+		if (f.skinned) then return end
 
 		f:SetScale(1)
 		f:SetFrameStrata("MEDIUM")
+		f:SetWidth(config.buttonsize)
+		f:SetHeight(config.buttonsize)
 
 		-- Skin textures
 		local r = {f:GetRegions()}
@@ -175,75 +171,60 @@ function mod:create_button_frame()
 		f.skinned = true
 	end
 
-	
-	local function move_buttons()
-		-- if (InCombatLockdown()) then return end
+	-- find minimap frames
+	local function find_frames()
 		if (config.buttonpos == "Disabled") then return end
-		
-		local c = {Minimap.buttonFrame:GetChildren()}
-		local d = {Minimap:GetChildren()}
+		if (InCombatLockdown()) then return end
 
-		for k, v in pairs(d) do table.insert(c,v) end
+		bdUI:profile_start("Minimap", "find_frames", 3)
 
-		for i = 1, #c do
-			if (f:IsShown()) then
-				numChildren = #d
-			end
-		end
-
-		if (#d ~= numChildren) then
-			print("run")
-			numChildren = #d
-			frames = {}
-
-			for k, v in pairs(d) do table.insert(c,v) end
-			local last = nil
-			for i = 1, #c do
-				local f = c[i]
-				local n = f:GetName() or i;
-				f.buttonindex = i
-				f.name = n
-
-				if (f:IsShown() and not ignoreFrames[n] and (
-						(manualTarget[n])
-						or
-						(f:GetName() and (strfind(n, "LibDB") or strfind(n, "Button") or strfind(n, "Btn")))
-					)
-				) then
-					skin(f)
-					if (not has_value(frames, f)) then
-						table.insert(frames, f)
-					end
-				end
-			end
+		if (not config.showconfig) then
+			hideButtons['bdUI_configButton'] = true
 		else
-			for f, v in pairs(manualTarget) do
-				local f = _G[f]
-				if (f) then
-					local n = f:GetName() or i;
-					f.name = n
-					if (f:IsShown()) then
-						skin(f)
-						if (not has_value(frames, f)) then
-							table.insert(frames, f)
-						end
+			hideButtons['bdUI_configButton'] = false
+			bdUI_configButton:Show()
+		end
+		if (config.hideclasshall) then
+			hideButtons['GarrisonLandingPageMinimapButton'] = true
+		else
+			hideButtons['GarrisonLandingPageMinimapButton'] = false
+		end
+
+		-- start loop
+		frames = {}
+		local children = {Minimap:GetChildren()}
+		for k, v in pairs(manualTarget) do table.insert(children, k) end
+
+		for i = 1, #children do
+			local frame = _G[children[i]] or children[i]
+			local name = (frame.GetName and frame:GetName()) or _G[frame];
+
+			if (name and not ignoreFrames[name]) then -- don't touch these
+				local isLibBtn = name and (strfind(name, "LibDB") or strfind(name, "Button") or strfind(name, "Btn")) -- lib buttons should be handled
+				if (hideButtons[name]) then -- move on from these
+					frame:Hide()
+				elseif (frame:IsShown() and (manualTarget[n] or isLibBtn)) then -- needs to be handled
+					skin(frame)
+					if (not has_value(frames, frame)) then
+						table.insert(frames, frame)
 					end
 				end
-
 			end
 		end
 
-		size_move()
+		bdUI:profile_stop("Minimap", "find_frames", 3)
+
+		position()
 	end
 
 	-- Updater script
 	local total = 0
-	Minimap.buttonFrame:SetScript("OnEvent",moveMinimapButtons)
+	Minimap.buttonFrame:SetScript("OnEvent", find_frames)
 	Minimap.buttonFrame:SetScript("OnUpdate", function(self, elapsed)
 		total = total + elapsed
-		if (total > 1) then
+		if (total > 5) then
 			total = 0
-			move_buttons()
+			find_frames()
 		end
 	end)
 end
