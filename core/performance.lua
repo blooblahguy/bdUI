@@ -1,13 +1,13 @@
 local bdUI, c, l = unpack(select(2, ...))
 bdUI.profile_data = {}
-local debug_performance = 0
+
 local developer_names = {}
 developer_names["Padder"] = true
 developer_names["Nodis"] = true
 developer_names["Bloo"] = true
 developer_names["Redh"] = true
-
 local developer = developer_names[UnitName("player")]
+local debug_performance = 0
 -- 3 = granular level functions
 -- 2 = mid level functions
 -- 1 = high level functions

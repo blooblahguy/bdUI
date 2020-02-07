@@ -8,8 +8,8 @@ local config = {}
 -- default variables
 mod.containers = {}
 mod.bag_frames = {}
-mod.font = CreateFont("BDN_FONT")
-mod.font:SetFont(bdUI.media.font, 14)
+
+
 local filter_table = {}
 filter_table[12] = "Quest"
 
@@ -62,8 +62,29 @@ end
 --===============================================
 -- Create Container
 --===============================================
+function create_button(parent)
+	local button = CreateFrame("Button", nil, parent)
+	button:SetSize(20, 20)
+	button.text = button:CreateFontString(nil, "OVERLAY")
+	button.text:SetFont(bdUI.media.font, 11, "OUTLINE")
+	button.text:SetAllPoints()
+	button.text:SetJustifyH("CENTER")
+	button.text:SetTextColor(.4, .4, .4)
+
+	button:SetScript("OnEnter", function(self)
+		self.text:SetTextColor(1, 1, 1)
+	end)
+	button:SetScript("OnLeave", function(self)
+		self.text:SetTextColor(.4, .4, .4)
+	end)
+
+	button:SetScript("OnClick", button.callback)
+
+	return button
+end
 function mod:create_container(name, start_id, end_id)
 	local bags = CreateFrame("Frame", "bd"..name, UIParent)
+	mod.border = bdUI:get_border(bags)
 	bags:SetSize(500, 300)
 	bags:EnableMouse(true)
 	bags:SetMovable(true)
@@ -71,12 +92,60 @@ function mod:create_container(name, start_id, end_id)
 	bags:SetClampedToScreen(true)
 	bags:SetFrameStrata("HIGH")
 	bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
-	bdUI:set_backdrop(bags)
-
 	bags:RegisterForDrag("LeftButton","RightButton")
 	bags:RegisterForDrag("LeftButton","RightButton")
 	bags:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	bags:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+	bdUI:set_backdrop(bags)
+
+	-- header
+	local header = CreateFrame("frame", nil, bags)
+	header:SetPoint("BOTTOMLEFT", bags, "TOPLEFT", 0, mod.border)
+	header:SetPoint("TOPRIGHT", bags, "TOPRIGHT", 0, 30)
+	header:EnableMouse(true)
+	header:RegisterForDrag("LeftButton","RightButton")
+	header:RegisterForDrag("LeftButton","RightButton")
+	header:SetScript("OnDragStart", function(self) self:GetParent():StartMoving() end)
+	header:SetScript("OnDragStop", function(self) self:GetParent():StopMovingOrSizing() end)
+	bdUI:set_backdrop(header)
+
+	-- close
+	local close_button = create_button(header)
+	close_button.text:SetText("X")
+	close_button:SetPoint("RIGHT", header, "RIGHT", -4, 0)
+
+	-- sort
+	local sort_bags = create_button(header)
+	sort_bags.text:SetText("S")
+	sort_bags:SetPoint("RIGHT", close_button, "LEFT", -4, 0)
+
+	-- bags
+	local bags_button = create_button(header)
+	bags_button.text:SetText("B")
+	bags_button:SetPoint("RIGHT", sort_bags, "LEFT", -4, 0)
+
+	-- money
+	local money = CreateFrame("frame", "bd"..name.."Money", bags, "SmallMoneyFrameTemplate")
+	money:SetPoint("LEFT", header, "LEFT", 4, 0)
+	for k, v in pairs({"Gold","Silver","Copper"}) do
+		_G[money:GetName()..v.."ButtonText"]:SetFont(bdUI.media.font, 12)
+		_G[money:GetName()..v.."Button"]:EnableMouse(false)
+		_G[money:GetName()..v.."Button"]:SetFrameLevel(8)
+	end
+	-- money:Show()
+	-- money:SetParent(mod.bags)
+	-- money:SetFrameLevel(10)
+	-- money:RegisterEvent("PLAYER_ENTERING_WORLD")
+	-- money:RegisterEvent("PLAYER_MONEY")
+	-- money:HookScript("OnEvent", ContainerFrame1MoneyFrame.Update)
+
+	-- search
+	local searchBox = CreateFrame("EditBox", "bd"..name.."SearchBox", bags, "BagSearchBoxTemplate")
+	searchBox:SetHeight(20)
+	searchBox:SetPoint("RIGHT", bags_button, "LEFT", -4, 0)
+	searchBox:SetFrameLevel(27)
+	-- headerRightRegion:AddWidget(searchBox, -10, 130, 0, -1)
+	tinsert(_G.ITEM_SEARCHBAR_LIST, searchBox:GetName())
 
 	-- callback for sizing
 	function bags.update_size(width, height)
@@ -91,118 +160,11 @@ function mod:create_container(name, start_id, end_id)
 	end
 
 	mod.containers[name:lower()] = bags
+	
 	return bags
 end
 
---===============================================
--- CATEGORY FUNCTIONS
---===============================================
-mod.category_create = function(self)
-	local frame = CreateFrame("frame", nil, mod.current_parent)
-	frame:SetHeight(100)
-	frame:SetWidth(200)
-	-- bdUI:set_backdrop(frame)
 
-	frame.dragger = CreateFrame("Button", nil, frame, "ContainerFrameItemButtonTemplate")
-	frame.dragger:SetPoint("TOPLEFT", frame, "TOPLEFT")
-	frame.dragger:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", 0, -30)
-	frame.dragger:SetHeight(30)
-	frame.dragger:SetWidth(30)
-	bdUI:set_backdrop(frame.dragger)
-
-	frame.container = CreateFrame("frame", nil, frame)
-	frame.container:SetPoint("TOPLEFT", frame.dragger, "BOTTOMLEFT")
-	frame.container:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT")
-
-	frame.text = frame:CreateFontString(nil, "OVERLAY")
-	frame.text:SetFontObject(mod.font)
-	frame.text:SetPoint("LEFT", frame.dragger, "LEFT", 6, 0)
-
-	function frame.update_size(width, height)
-		frame:SetSize(width + 20, height + 40)
-	end
-
-	return frame
-end
-mod.category_reset = function(self, frame)
-	frame:ClearAllPoints()
-	frame:SetParent(mod.current_parent)
-	frame.text:SetText("")
-	frame:Hide()
-end
-
---===============================================
--- CATEGORY FUNCTIONS
---===============================================
-local item_num = 0
-mod.item_create = function(self)
-	local button = CreateFrame("ItemButton", "bdBags_Item_"..item_num, mod.current_parent, "ContainerFrameItemButtonTemplate")
-	button:SetHeight(30)
-	button:SetWidth(30)
-	bdUI:set_backdrop(button)
-	Mixin(button, ItemButtonMixin )
-	button:RegisterForDrag("LeftButton")
-	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
-	button:SetScript('OnShow', button.OnShow)
-	button:SetScript('OnHide', button.OnHide)
-	if button.NewItemTexture then
-		button.NewItemTexture:Hide()
-	end
-	button.SplitStack = nil -- Remove the function set up by the template
-
-	-- functions
-	function button:update()
-		self.BattlepayItemTexture:SetShown(IsBattlePayItem(self.bag, self.slot))
-		self.UpgradeIcon:SetShown(IsContainerItemAnUpgrade(self.bag, self.slot) or false)
-		if self.count > 1 then
-			self.Count:SetText(self.count)
-			self.Count:Show()
-		else
-			self.Count:Hide()
-		end
-	end
-
-	function button:update_cooldown()
-		return ContainerFrame_UpdateCooldown(self.bag, self)
-	end
-
-	item_num = item_num + 1
-	return button
-end
-mod.item_reset = function(self, frame)
-	frame:ClearAllPoints()
-	frame:SetParent(mod.current_parent)
-	frame:Hide()
-end
-
-function mod:delete_category(name)
-
-end
-function mod:create_category(name, custom_conditions, order)
-	-- if (mod.categories[name]) then return end
-	order = order or #mod.categories + 1
-	mod.categories[name] = mod.categories[name] or {}
-	local category = mod.categories[name]
-
-	-- default condition fillers
-	local conditions = {}
-	conditions['type'] = {}
-	conditions['subtype'] = {}
-	conditions['ilvl'] = 0
-	conditions['expacID'] = 0
-	conditions['rarity'] = 0
-	conditions['minlevel'] = 0
-	conditions['itemids'] = {}
-	for k, v in pairs(custom_conditions) do conditions[k] = v end
-
-	category.conditions = conditions
-	category.name = name
-	category.order = order
-end
-
-function mod:category_add_filter()
-
-end
 
 --===============================================
 -- Stop Blizzard bags from rendering

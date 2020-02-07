@@ -5,6 +5,21 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("New Bags")
 
 --===============================================
+-- Events
+--===============================================
+function mod:register_events(frame, events)
+	for event, fn in pairs(events) do
+		frame:RegisterEvent(event)
+	end
+
+	frame:SetScript("OnEvent", function(self, event, ...)
+		if (self[events[event]]) then
+			self[events[event]](self, ...)
+		end
+	end)
+end
+
+--===============================================
 -- Measurement
 --===============================================
 local measure = CreateFrame("frame", nil, UIParent)
@@ -33,12 +48,12 @@ function mod:position_objects(options)
 			frame:SetPoint("TOPLEFT", options.parent, "TOPLEFT", 0, 0)
 			lastrow = frame
 		elseif (index > options.columns) then
-			frame:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -2)
+			frame:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -mod.border)
 			lastrow = frame
 			lastcol = last
 			index = 1
 		else
-			frame:SetPoint("TOPLEFT", last, "TOPRIGHT", 2, 0)
+			frame:SetPoint("TOPLEFT", last, "TOPRIGHT", mod.border, 0)
 		end
 		last = frame
 		index = index + 1

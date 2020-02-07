@@ -3,8 +3,53 @@ local mod = bdUI:get_module("New Bags")
 
 function mod:create_bags()
 	mod.bags = mod:create_container("Bags", 0, 4)
-	mod.bags.cat_pool = CreateObjectPool(mod.category_create, mod.category_reset)
-	mod.bags.item_pool = CreateObjectPool(mod.item_create, mod.item_reset)
+	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
+	mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
+	mod.bags.category_items = {}
+	-- mod.bags:Hide()
+
+	mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
+	mod.bags:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
+	mod.bags:RegisterEvent('AUCTION_MULTISELL_START')
+	mod.bags:RegisterEvent('AUCTION_MULTISELL_UPDATE')
+	mod.bags:RegisterEvent('AUCTION_MULTISELL_FAILURE')
+	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
+
+	mod.bags.open = function(self)
+		mod.bags:Show()
+	end
+	mod.bags.close = function(self)
+		mod.bags:Hide()
+	end
+	mod.bags.toggle = function(self)
+		mod.bags:SetShown(not mod.bags:IsShown())
+	end
+
+	-- hooksecurefunc("OpenAllBags", mod.bags.open)
+	-- hooksecurefunc("OpenBag", mod.bags.open)
+	-- hooksecurefunc("OpenBackpack", mod.bags.open)
+
+	-- hooksecurefunc("ToggleBackpack", mod.bags.toggle)
+	-- hooksecurefunc("ToggleAllBags", mod.bags.toggle)
+	-- hooksecurefunc("ToggleBag", mod.bags.toggle)
+
+	-- hooksecurefunc("CloseAllBags", mod.bags.close)
+	-- hooksecurefunc('CloseSpecialWindows', mod.bags.close)
+	-- hooksecurefunc("CloseBag", mod.bags.close)
+	-- hooksecurefunc("CloseBackpack", mod.bags.close)
+	
+
+	mod.bags:SetScript("OnEvent", function(self, event, arg1)
+		if (event == "EQUIPMENT_SWAP_PENDING" or event == "AUCTION_MULTISELL_START") then
+			self.paused = true
+		elseif (event == "EQUIPMENT_SWAP_FINISHED" or event == "AUCTION_MULTISELL_FAILURE") then
+			self.paused = false
+			mod:update_bags()
+		else
+			if (self.paused) then return end
+			mod:update_bags()
+		end
+	end)
 
 	-- create shortcut category bar
 end
@@ -19,12 +64,12 @@ function mod:update_bags()
 	mod.bags.category_items = {}
 
 	-- first gather all items up
-	for bag_id = 0, 4 do
-		for slot = 1, GetContainerNumSlots(bag_id) do
-			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag_id, slot);
+	for bag = 0, 4 do
+		for slot = 1, GetContainerNumSlots(bag) do
+			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot);
 			if (texture) then 
 				-- print(itemLink, slot)
-				table.insert(items, {itemLink, bag_id, slot})
+				table.insert(items, {itemLink, bag, slot})
 			else
 				open_slots = open_slots + 1
 			end
@@ -36,7 +81,7 @@ function mod:update_bags()
 		local conditions = category.conditions
 		for i = 1, #items do
 			if (items[i]) then
-				local itemLink, bag_id, slot = unpack(items[i])
+				local itemLink, bag, slot = unpack(items[i])
 				local include = false
 				local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 				local itemid = mod:item_id(itemLink)
@@ -56,7 +101,7 @@ function mod:update_bags()
 				if (include) then
 					items[i] = nil
 					mod.bags.category_items[category.name] = mod.bags.category_items[category.name] or {}
-					table.insert(mod.bags.category_items[category.name], {itemLink, bag_id, slot, itemID})
+					table.insert(mod.bags.category_items[category.name], {itemLink, bag, slot, itemID})
 				end
 			end
 		end
@@ -79,15 +124,22 @@ function mod:draw_bags()
 	local categoryCols = math.floor(mod:table_count(mod.categories) / 2)
 	local categoryIndex = 1
 
+	local loop_cats = {}
+	for k, category in pairs(mod.categories) do
+		if (mod.bags.category_items[category.name]) then
+			loop_cats[k] = category
+		end
+	end
+
 	-- loop through categories and position them
 	mod:position_objects({
-		["table"] = mod.categories,
+		["table"] = loop_cats,
 		["pool"] = mod.bags.cat_pool,
 		["columns"] = 2,
 		["parent"] = mod.bags,
 		["loop"] = function(frame, i, category)
-			if (not mod.bags.category_items[category.name]) then return end
-			frame.text:SetText(category.name)
+			if (not mod.bags.category_items[category.name]) then return false end
+			frame.text:SetText(category.name:upper())
 
 			-- now loop through items
 			mod:position_objects({
@@ -96,25 +148,16 @@ function mod:draw_bags()
 				["columns"] = 6,
 				["parent"] = frame.container,
 				["loop"] = function(button, i, itemInfo)
-					local itemLink, bag_id, slot, itemID = unpack(itemInfo)
-					local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+					local itemLink, bag, slot, itemID = unpack(itemInfo)
 
-					button:SetParent(mod.bag_frames[bag_id])
+					button:SetParent(mod.bag_frames[bag])
 					button:SetID(slot)
-					button.bag = bag_id
+					button.bag = bag
 					button.slot = slot
-					button.count = count
-					button.itemId = itemID
 					button.itemLink = itemLink
-					button.hasItem = not not self.itemId
-					button.texture = icon
-					button.bagFamily = select(2, GetContainerNumFreeSlots(bag_id))
+					button.itemID = itemID
 
-					SetItemButtonTexture(button, icon)
-					SetItemButtonQuality(button, rarity, itemLink)
-					SetItemButtonCount(button, count)
-
-					button:update()
+					button:full_update()
 				end,
 				["callback"] = frame.update_size
 			})
