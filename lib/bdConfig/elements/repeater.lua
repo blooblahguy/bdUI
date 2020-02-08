@@ -1,5 +1,6 @@
 local parent, ns = ...
 local lib = ns.bdConfig
+-- local repeater_frames = CreateFramePool()
 
 --========================================
 -- Methods Here
@@ -51,20 +52,24 @@ local methods = {
 	
 	['populate'] = function(self)
 		self:release_frames()
-
 		for k, entry in pairs(self.save[self.key]) do
-			local row = self:get_frame()
-
-			for i, arg in pairs(entry) do
-				dump(arg)
-				if (not row[arg.key]) then
-					row[arg.key] = lib.elements[arg.type](arg, row)
-				end
-			end
-
-			-- append to parent for sizing
-			table.insert(self.children, row)
+			-- print(k, entry)
 		end
+
+		-- for k, entry in pairs(self.save[self.key]) do
+		-- 	local row = self:get_frame()
+		-- 	print(row, entry)
+
+		-- 	for i, arg in pairs(entry) do
+		-- 		-- dump(arg)
+		-- 		if (not row[arg.key]) then
+		-- 			row[arg.key] = lib.elements[arg.type](arg, row)
+		-- 		end
+		-- 	end
+
+		-- 	-- append to parent for sizing
+		-- 	table.insert(self.children, row)
+		-- end
 	end
 }
 
@@ -108,7 +113,7 @@ local function create(options, parent)
 	button.parent = repeater
 	button.OnClick = repeater.add_row
 
-	-- repeater:populate()
+	repeater:populate()
 
 	return repeater
 

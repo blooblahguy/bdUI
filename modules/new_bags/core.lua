@@ -9,6 +9,20 @@ local config = {}
 mod.containers = {}
 mod.bag_frames = {}
 
+-- filter groups
+local types = {}
+types["Consumable"] = {0}
+types["Bags"] = {1}
+types["Weapon"] = {2, 6, 11}
+types["Gem"] = {3}
+types["Armor"] = {4}
+types["Tradeskill"] = {5, 7, 9}
+types["Enchantment"] = {8, 16}
+types["Quest"] = {12}
+types["Tokens"] = {10, 14, 17, 18}
+types["Miscellaneous"] = {15, 13}
+mod.types = types
+
 local filter_table = {}
 filter_table[12] = "Quest"
 
@@ -22,33 +36,51 @@ function mod:initialize()
 	mod.initialized = true
 
 	-- store saved variable for messing with
-	-- bdUI.persistent.categories = bdUI.persistent.categories or {}
-	bdUI.persistent.categories = {}
-	bdUI.persistent.shortcuts = bdUI.persistent.shortcuts or {}
-	mod.categories = bdUI.persistent.categories
-	mod.shortcuts = bdUI.persistent.shortcuts
+	-- config.categories = config.categories or {}
+	config.categories = {}
+	config.shortcuts = config.shortcuts or {}
+	mod.categories = config.categories
+	mod.shortcuts = config.shortcuts
 
 	if (not mod.categories.first_run_complete) then
+		mod:create_category("New Items", {
+			["new_items"] = true,
+			["default"] = true,
+			["duplicate"] = true,
+			["locked"] = true,
+		})
 		mod:create_category("Quest", {
-			["type"] = {12}
+			["type"] = mod.types["Quest"],
+			["default"] = true,
 		})
 		mod:create_category("Armor & Weapons", {
-			["type"] = {2, 4}
+			["type"] = mod:merge(mod.types["Armor"], mod.types["Weapon"]),
+			["default"] = true,
 		})
 		mod:create_category("Consumables", {
-			["type"] = {0, 8, 9, 16, 18}
+			["type"] = mod:merge(mod.types["Consumable"], mod.types["Enchantment"], mod.types["Tokens"]),
+			["default"] = true,
 		})
 		mod:create_category("Tradeskill", {
-			["type"] = {3, 7, 5},
+			["type"] = mod:merge(mod.types["Tradeskill"], mod.types["Gem"]),
+			["default"] = true,
 		})
 		mod:create_category("Miscellaneous", {
-			['type'] = {15, 13}
+			['type'] = mod:merge(mod.types["Bags"], mod.types["Miscellaneous"]),
+			["default"] = true,
+		})
+		mod:create_category("Uncategorized", {
+			["catch_all"] = true,
+			["default"] = true,
+			["locked"] = true,
 		})
 	end
 
 	-- Create Frames
 	mod:create_bags()
 	mod:update_bags()
+
+	-- mod:create_bank()
 end
 
 function mod:config_callback()
@@ -77,7 +109,9 @@ function create_button(parent)
 		self.text:SetTextColor(.4, .4, .4)
 	end)
 
-	button:SetScript("OnClick", button.callback)
+	button:SetScript("OnClick", function(self)
+		button:callback()
+	end)
 
 	return button
 end
@@ -98,19 +132,39 @@ function mod:create_container(name, start_id, end_id)
 
 	-- header
 	local header = CreateFrame("frame", nil, bags)
-	header:SetPoint("BOTTOMLEFT", bags, "TOPLEFT", 0, mod.border)
-	header:SetPoint("TOPRIGHT", bags, "TOPRIGHT", 0, 30)
-	header:EnableMouse(true)
-	header:RegisterForDrag("LeftButton","RightButton")
-	header:RegisterForDrag("LeftButton","RightButton")
-	header:SetScript("OnDragStart", function(self) self:GetParent():StartMoving() end)
-	header:SetScript("OnDragStop", function(self) self:GetParent():StopMovingOrSizing() end)
-	bdUI:set_backdrop(header)
+	header:SetPoint("TOPLEFT", bags, "TOPLEFT", 0, 0)
+	header:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, -30)
+
+	-- footer
+	local footer = CreateFrame("frame", nil, bags)
+	footer:SetPoint("TOPLEFT", bags, "BOTTOMLEFT", 0, 30)
+	footer:SetPoint("BOTTOMRIGHT", bags, "BOTTOMRIGHT", 0, 0)
+
+	-- add category
+	local add_category = create_button(footer)
+	add_category.text:SetText("+")
+	add_category:SetPoint("RIGHT", footer, "RIGHT", -4, 0)
+	add_category.text:SetFont(bdUI.media.font, 14, "OUTLINE")
+	add_category.callback = function(self)
+		mod:create_category("New Category", {
+			["brand_new"] = true
+		})
+		mod:update_bags()
+	end
+
+	-- category container
+	local container = CreateFrame("frame", nil, bags)
+	container:SetPoint("TOPLEFT", bags, "TOPLEFT", 0, -30)
+	container:SetPoint("BOTTOMRIGHT", bags, "BOTTOMRIGHT", 0, 30)
+	bags.container = container
 
 	-- close
 	local close_button = create_button(header)
 	close_button.text:SetText("X")
 	close_button:SetPoint("RIGHT", header, "RIGHT", -4, 0)
+	close_button.callback = function(self)
+		bags:Hide()
+	end
 
 	-- sort
 	local sort_bags = create_button(header)
@@ -124,15 +178,12 @@ function mod:create_container(name, start_id, end_id)
 
 	-- money
 	local money = CreateFrame("frame", "bd"..name.."Money", bags, "SmallMoneyFrameTemplate")
-	money:SetPoint("LEFT", header, "LEFT", 4, 0)
+	money:SetPoint("LEFT", header, "LEFT", 6, -1)
 	for k, v in pairs({"Gold","Silver","Copper"}) do
 		_G[money:GetName()..v.."ButtonText"]:SetFont(bdUI.media.font, 12)
 		_G[money:GetName()..v.."Button"]:EnableMouse(false)
 		_G[money:GetName()..v.."Button"]:SetFrameLevel(8)
 	end
-	-- money:Show()
-	-- money:SetParent(mod.bags)
-	-- money:SetFrameLevel(10)
 	-- money:RegisterEvent("PLAYER_ENTERING_WORLD")
 	-- money:RegisterEvent("PLAYER_MONEY")
 	-- money:HookScript("OnEvent", ContainerFrame1MoneyFrame.Update)
@@ -140,8 +191,16 @@ function mod:create_container(name, start_id, end_id)
 	-- search
 	local searchBox = CreateFrame("EditBox", "bd"..name.."SearchBox", bags, "BagSearchBoxTemplate")
 	searchBox:SetHeight(20)
-	searchBox:SetPoint("RIGHT", bags_button, "LEFT", -4, 0)
+	searchBox:SetPoint("RIGHT", bags_button, "LEFT", -8, 2)
+	searchBox:SetPoint("LEFT", money, "RIGHT", 4, 2)
 	searchBox:SetFrameLevel(27)
+	searchBox.Left:Hide()
+	searchBox.Right:Hide()
+	searchBox.Middle:Hide()
+	local icon = _G[searchBox:GetName().."SearchIcon"]
+	icon:ClearAllPoints()
+	icon:SetPoint("LEFT", searchBox,"LEFT", 4, -1)
+	bdUI:set_backdrop(searchBox)	
 	tinsert(_G.ITEM_SEARCHBAR_LIST, searchBox:GetName())
 
 	-- callback for sizing

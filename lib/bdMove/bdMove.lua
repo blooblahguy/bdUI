@@ -308,6 +308,7 @@ local function create_nudge_button(moveX, moveY, callback)
 	button.tex:SetPoint("CENTER")
 	button.tex:SetSize(8, 8)
 	button.tex:SetDesaturated(1)
+	button.tex:SetBlendMode("MOD")
 
 	button.tex2 = button:CreateTexture(nil, "OVERLAY")
 	button.tex2:SetTexture(lib.media.arrow)

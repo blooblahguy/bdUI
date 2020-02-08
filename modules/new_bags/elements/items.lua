@@ -26,11 +26,18 @@ local methods = {
 	-- update border information
 	["update_border"] = function(self)
 		local count = _G[self:GetName().."Count"]
+		-- local quest = _G[self:GetName().."IconQuestTexture"] or self.IconQuestTexture
+		local isQuestItem, questId, isActive = GetContainerItemQuestInfo(self.bag, self.slot)
 
 		self.IconBorder:SetTexture(bdUI.media.flat)
 		self.IconBorder:ClearAllPoints()
 		self.IconBorder:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 0, 0)
 		self.IconBorder:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, mod.border*3)
+
+		-- quest
+		if (isQuestItem) then
+			self.IconBorder:SetVertexColor(1, 1, 0.2, 1)
+		end
 
 		count:ClearAllPoints()
 		local r, g, b = self.IconBorder:GetVertexColor()
@@ -106,6 +113,7 @@ local methods = {
 		local normal = _G[self:GetName().."NormalTexture"]
 		local count = _G[self:GetName().."Count"]
 		local icon = _G[self:GetName().."IconTexture"]
+		local quest = _G[self:GetName().."IconQuestTexture"]
 
 		-- overlay for testing
 		self.overlay = self:CreateTexture(nil, "OVERLAY")
@@ -126,11 +134,14 @@ local methods = {
 		self:SetPushedTexture("")
 		icon:SetAllPoints(self)
 		icon:SetTexCoord(.07, .93, .07, .93)
+		self.flash:SetAllPoints()
+		normal:SetAllPoints()
+		quest:SetAllPoints()
 
 		-- hover
 		local hover = self:CreateTexture()
 		hover:SetTexture(bdUI.media.flat)
-		hover:SetVertexColor(1, 1, 1, 0.3)
+		hover:SetVertexColor(1, 1, 1, 0.1)
 		hover:SetAllPoints(self)
 		self:SetHighlightTexture(hover)
 
@@ -143,6 +154,8 @@ local methods = {
 		if self.NewItemTexture then
 			self.NewItemTexture:Hide()
 		end
+
+		self.skinned = true
 	end
 }
 
