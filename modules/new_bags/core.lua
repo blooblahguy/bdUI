@@ -19,8 +19,9 @@ types["Armor"] = {4}
 types["Tradeskill"] = {5, 7, 9}
 types["Enchantment"] = {8, 16}
 types["Quest"] = {12}
+types["Keys"] = {13}
 types["Tokens"] = {10, 14, 17, 18}
-types["Miscellaneous"] = {15, 13}
+types["Miscellaneous"] = {15}
 mod.types = types
 
 local filter_table = {}
@@ -49,9 +50,10 @@ function mod:initialize()
 			["duplicate"] = true,
 			["locked"] = true,
 		})
-		mod:create_category("Quest", {
-			["type"] = mod.types["Quest"],
+		mod:create_category("Quest & Keys", {
+			["type"] = mod:merge(mod.types["Quest"], mod.types["Keys"]),
 			["default"] = true,
+			["itemids"] = {138019}
 		})
 		mod:create_category("Armor & Weapons", {
 			["type"] = mod:merge(mod.types["Armor"], mod.types["Weapon"]),

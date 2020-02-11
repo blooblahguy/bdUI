@@ -113,6 +113,7 @@ function mod:create_button_frame()
 		local last = nil
 		for k, f in pairs(frames) do
 			f:ClearAllPoints()
+			f:SetSize(config.buttonsize, config.buttonsize)
 
 			if (config.buttonpos == "Top" or config.buttonpos == "Bottom") then
 				if (last) then

@@ -62,7 +62,11 @@ end
 -- update item tables
 --==================================
 function mod:update_bags()
+	bdUI:profile_start("bags", "update bags", 2)
 	local items = {}
+	local remove = {}
+	local new_items = {}
+	local item_weights = {}
 	local open_slots = 0
 	mod.bags.category_items = {}
 
@@ -70,10 +74,16 @@ function mod:update_bags()
 	for bag = 0, 4 do
 		for slot = 1, GetContainerNumSlots(bag) do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot);
-			local itemID = GetContainerItemID(bag, slot)
+			local itemID = mod:item_id(itemLink)
 			if (texture) then 
-				-- print(itemLink, slot)
-				table.insert(items, {itemLink, bag, slot, itemID})
+				items[#items + 1] = {itemLink, bag, slot, itemID}
+
+				-- add to new items category
+				if (C_NewItems.IsNewItem(bag, slot)) then
+					if (quality > 0) then
+						new_items[#new_items + 1] = {itemLink, bag, slot, itemID}
+					end
+				end
 			else
 				open_slots = open_slots + 1
 			end
@@ -81,59 +91,75 @@ function mod:update_bags()
 	end
 
 	-- build item category weight table
-	local item_weights = {}
 	for category_name, category in pairs(mod.categories) do
+		mod.bags.category_items[category_name] = {}
 		local conditions = category.conditions
-		for k, v in pairs(items) do
+		for k = 1, #items do
+			v = items[k]
+
 			-- item information
 			local itemLink, bag, slot, itemID = unpack(v)
 			local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 
-			-- print(link, itemID, itemtype..":"..itemTypeID, subtype..":"..itemSubClassID)
+			if (rarity == nil or rarity > 0) then
+				item_weights[k] = item_weights[k] or {0, nil}
+				local current_weight, parent_category = unpack(item_weights[k])
+				local new_weight = 0
 
-			-- assign a weight to each item
-			item_weights[k] = item_weights[k] or {0, ""}
-			local current_weight, parent_category = unpack(item_weights[k])
-			local new_weight = 0
+				-- evaluate conditions
+				if (mod:has_value(conditions['type'], itemTypeID)) then new_weight = new_weight + 1 end -- weight: 1
+				if (mod:has_value(conditions['subtype'], itemSubClassID)) then new_weight = new_weight + 1 end -- weight: 1
+				if (mod:has_value(conditions['itemids'], itemID)) then new_weight = new_weight + 10 end -- weight: 10
 
-			-- evaluate conditions
-			if (mod:has_value(conditions['type'], itemTypeID)) then new_weight = new_weight + 1 end -- weight: 1
-			if (mod:has_value(conditions['subtype'], itemSubClassID)) then new_weight = new_weight + 1 end -- weight: 1
-			if (mod:has_value(conditions['itemids'], itemID)) then new_weight = new_weight + 10 end -- weight: 10
-
-			-- overwrite this entry if we scored a higher weight
-			if (current_weight < new_weight) then
-				item_weights[k] = {new_weight, category_name}
+				if (current_weight < new_weight) then
+					item_weights[k] = {new_weight, category_name}
+				end
+			else
+				remove[#remove + 1] = k
 			end
 		end
 	end
 
+	-- now loop through categories items that we've weighted out, assign them to their categories
+	for k, v in pairs(item_weights) do
+		local weight, parent_category = unpack(v)
 
-	-- now loop through categories items that we've weighted out
-	for category_name, category in pairs(mod.categories) do
-		mod.bags.category_items[category_name] = {}
-		local conditions = category.conditions
-		for k, v in pairs(item_weights) do
-			local weight, parent_category = unpack(v)
-
-			if (parent_category == category_name) then
-				local itemLink, bag, slot, itemID = unpack(items[k])
-				items[k] = nil
-				table.insert(mod.bags.category_items[category_name], {itemLink, bag, slot, itemID})
-			end
+		if (weight > 0) then
+			local itemLink, bag, slot, itemID = unpack(items[k])
+			local count = #mod.bags.category_items[parent_category]
+			mod.bags.category_items[parent_category][count + 1] = {itemLink, bag, slot, itemID}
+			remove[#remove + 1] = k
 		end
+	end
+
+	--=====================
+	-- remove what we've used
+	--=====================
+	for k = 1, #remove do
+		items[remove[k]] = nil
 	end
 
 	--=====================
 	-- didn't find these items
 	--=====================
 	for k, v in pairs(items) do
-		local itemLink, bag, slot, itemID = unpack(items[k])
-		local include = false
-		local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
-
-		table.insert(mod.bags.category_items["Uncategorized"], {itemLink, bag, slot, itemID})
+		-- local itemLink, bag, slot, itemID = unpack(items[k])
+		-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+		local count = #mod.bags.category_items["Uncategorized"]
+		mod.bags.category_items["Uncategorized"][count + 1] = items[k]
 	end
+
+	--=====================
+	-- Add New Items to New Category
+	--=====================
+	for k, v in ipairs(new_items) do
+		-- local itemLink, bag, slot, itemID = unpack(new_items[k])
+		-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+		local count = #mod.bags.category_items["New Items"]
+		mod.bags.category_items["New Items"][count + 1] = items[k]
+	end
+
+	bdUI:profile_stop("bags", "update bags", 2)
 
 	mod:draw_bags()
 end
@@ -143,6 +169,8 @@ end
 -- draw the bags and categories
 --==================================
 function mod:draw_bags()
+	bdUI:profile_start("bags", "draw bags", 2)
+
 	mod.bags.cat_pool:ReleaseAll() -- release frame pool
 	mod.bags.item_pool:ReleaseAll() -- release frame pool
 	mod.current_parent = mod.containers["bags"] -- set this to parent the category frames correctly
@@ -199,4 +227,6 @@ function mod:draw_bags()
 			mod.bags:update_size(width, height)
 		end
 	})
+
+	bdUI:profile_stop("bags", "draw bags", 2)
 end

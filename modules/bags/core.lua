@@ -289,7 +289,7 @@ end
 
 -- Calls when each bag is opened
 function mod:Draw(frame, size, id)
-	bdUI:profile_start("Bags", "draw", 3)
+	-- bdUI:profile_start("Bags", "draw", 3)
 
 	BagItemSearchBox:ClearAllPoints()
 	frame.size = size;
@@ -378,7 +378,7 @@ function mod:Draw(frame, size, id)
 	BankSlotsFrame:EnableMouse(false)
 	mod:killShowable(BagHelpBox)
 
-	bdUI:profile_stop("Bags", "draw", 3)
+	-- bdUI:profile_stop("Bags", "draw", 3)
 end
 
 

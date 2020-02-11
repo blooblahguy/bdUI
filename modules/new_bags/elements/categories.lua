@@ -11,13 +11,14 @@ local dragger_methods = {
 	['click'] = function(self, ...)
 		local type, id, info = GetCursorInfo()
 		ClearCursor()
+		local itemID = mod:item_id(info)
 		local cat_name = self:GetParent().name
 
-		local index = mod:has_value(mod.categories[cat_name].conditions.itemids, id)
+		local index = mod:has_value(mod.categories[cat_name].conditions.itemids, itemID)
 		if (index) then
-			mod.categories[cat_name].conditions.itemids[index] = nil
+			table.remove(mod.categories[cat_name].conditions.itemids, index)
 		else
-			table.insert(mod.categories[cat_name].conditions.itemids, id)
+			table.insert(mod.categories[cat_name].conditions.itemids, itemID)
 		end
 
 
@@ -65,8 +66,9 @@ local category_methods = {
 		SetItemButtonTexture(dragger, [[Interface\BUTTONS\UI-EmptySlot]])
 
 		dragger:RegisterEvent("ITEM_LOCK_CHANGED")
-		dragger:SetScript("OnEvent", function(self, ...)
+		dragger:SetScript("OnEvent", function(self, event, ...)
 			local type, id, info = GetCursorInfo()
+			local itemID = mod:item_id(info)
 			
 			if (type == "item") then
 				dragger:RegisterEvent("CURSOR_UPDATE")
@@ -74,10 +76,9 @@ local category_methods = {
 				self:Show()
 				overlay:Show()
 				mod.show_all = true
-				mod:draw_bags()
 
 				local cat_name = self:GetParent().name
-				local index = mod:has_value(mod.categories[cat_name].conditions.itemids, id)
+				local index = mod:has_value(mod.categories[cat_name].conditions.itemids, itemID)
 				if (index) then
 					self.overlay:SetVertexColor(1, 0, 0, 0.3)
 				else
@@ -89,7 +90,6 @@ local category_methods = {
 				self:Hide()
 				overlay:Hide()
 				mod.show_all = false
-				mod:draw_bags()
 			end
 		end)
 
@@ -133,22 +133,6 @@ local category_methods = {
 	["create_dropdown"] = function(self)
 		local name = "bdBagsCategoryDropdown"..mod.dropdowns
 		mod.dropdowns = mod.dropdowns + 1
-
-		-- local arrow = CreateFrame("button", nil, self)
-		-- arrow:SetPoint("TOPRIGHT", self, "TOPRIGHT", -4, -10)
-		-- arrow:SetSize(16, 16)
-		-- arrow:SetBackdrop({bgFile = bdUI.media.flat})
-		-- arrow:SetBackdropColor(0, 0, 0, 1)
-		-- arrow.texture = arrow:CreateTexture()
-		-- arrow.texture:SetPoint("CENTER", arrow, 0, -1)
-		-- arrow.texture:SetSize(12, 7)
-		-- arrow.texture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up", 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
-		-- arrow.texture:SetTexCoord(.25, 0.72, 0.45, 0.68)
-		-- arrow.texture:SetDesaturated(true)
-		-- arrow.texture:SetBlendMode("BLEND")
-		-- arrow:SetScript("OnEnter", function(self) self.texture:SetDesaturated(false) end)
-		-- arrow:SetScript("OnLeave", function(self) self.texture:SetDesaturated(true) end)
-		-- self.arrow = arrow
 
 		local dropdown = CreateFrame("Button", name, self, "UIDropDownMenuTemplate")
 		dropdown:SetPoint("TOPRIGHT", arrow, "TOPRIGHT")
@@ -235,7 +219,11 @@ end
 -- CATEGORY FUNCTIONS
 --===============================================
 function mod:position_categories(options)
+	local heights, widths, rows = { 0 }, {}, {}
 
+	while (mod.categories) do
+
+	end
 end
 function mod:delete_category(name)
 
@@ -246,6 +234,9 @@ function mod:create_category(name, options)
 
 	mod.categories[name] = {}
 	local category = mod.categories[name]
+	category.frame = mod.bags.cat_pool:Acquire()
+	category.frame.name = name
+	category.frame.category = category
 
 	-- default condition fillers
 	local conditions = {}

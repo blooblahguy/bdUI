@@ -5,11 +5,11 @@ local events = {}
 events["BAG_UPDATE_COOLDOWN"] = "update_cooldown"
 events["ITEM_LOCK_CHANGED"] = "update_lock"
 events["ITEM_UNLOCKED"] = "update_lock"
-events["QUEST_ACCEPTED"] = "update_border"
-events["BAG_NEW_ITEMS_UPDATED"] = "update"
-events["PLAYER_EQUIPMENT_CHANGED"] = "update"
+-- events["QUEST_ACCEPTED"] = "update_border"
+events["BAG_NEW_ITEMS_UPDATED"] = "update_new"
+-- events["PLAYER_EQUIPMENT_CHANGED"] = "update"
 events["INVENTORY_SEARCH_UPDATE"] = "update_search"
-events["UNIT_QUEST_LOG_CHANGED"] = "update"
+-- events["UNIT_QUEST_LOG_CHANGED"] = "update"
 
 -- Actionbar Methods
 local methods = {
@@ -55,16 +55,20 @@ local methods = {
 
 	-- lock item if its in transit
 	["update_lock"] = function(self, bag, slot)
-		if (not slot) or (bag == self.bag and slot == self.slot) then
-			local locked = select(3, GetContainerItemInfo(self.bag, self.slot))
+		if (not slot and self.locked) or (bag == self.bag and slot == self.slot) then
+			self.locked = select(3, GetContainerItemInfo(self.bag, self.slot))
 			self:Enable()
-			SetItemButtonDesaturated(self, locked)
+			SetItemButtonDesaturated(self, self.locked)
 		end
 	end,
 
 	-- return cooldown information
 	["update_cooldown"] = function(self)
 		return ContainerFrame_UpdateCooldown(self.bag, self)
+	end,
+
+	["update_new"] = function(self)
+		self.BattlepayItemTexture:SetShown(IsBattlePayItem(self.bag, self.slot))
 	end,
 
 	-- update basic button traits
@@ -77,7 +81,6 @@ local methods = {
 		self.itemCount = count
 		self.quality = quality
 	
-		self.BattlepayItemTexture:SetShown(IsBattlePayItem(self.bag, self.slot))
 		self.UpgradeIcon:SetShown(IsContainerItemAnUpgrade(self.bag, self.slot) or false)
 		if self.itemCount > 1 then
 			_G[self:GetName().."Count"]:SetText(self.itemCount)
@@ -91,6 +94,7 @@ local methods = {
 		SetItemButtonCount(self, self.itemCount)
 
 		self:skin()
+		self:update_new()
 		self:update_border()
 	end,
 

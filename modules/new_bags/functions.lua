@@ -42,6 +42,8 @@ function mod:position_objects(options)
 	local spacing = mod.border
 
 	if (options.table) then
+		-- for k = 1, #options.table do
+		-- 	v = options.table
 		for k, v in pairs(options.table) do
 			local frame = options.pool:Acquire()
 			frame:Show()
@@ -91,9 +93,14 @@ function mod:create_button()
 end
 
 function mod:item_id(itemLink)
-	local itemString = string.match(itemLink, "item[%-?%d:]+")
-	-- local itemType, itemID, enchant, gem1, gem2, gem3, gem4, suffixID, uniqueID, level, specializationID, upgradeId, instanceDifficultyID, numBonusIDs, bonusID1, bonusID2, upgradeValue = strsplit(":", itemString)
-	return select(2, strsplit(":", itemString))
+	if type(itemLink) == "string" and strmatch(itemLink, "battlepet:") then
+		return 82800
+	elseif type(itemLink) == "string" and strmatch(itemLink, "keystone:") then
+		return 138019
+	elseif itemLink then
+		local itemString = string.match(itemLink, "item[%-?%d:]+")
+		return select(2, strsplit(":", itemString))
+	end
 end
 
 function mod:table_count(tab)
@@ -131,6 +138,7 @@ end
 
 function mod:has_value(tab, val)
 	values = {}
+	if (not val) then return false end
 	-- print(val)
 	if (type(val) == "table") then
 		for k, v in pairs(val) do
