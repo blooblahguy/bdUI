@@ -16,7 +16,9 @@ function mod:create_objective_tracker()
 		local tracker = ObjectiveTrackerFrame
 		tracker:ClearAllPoints()
 		ignore_point = true
-		tracker:SetPoint("TOP", quest_anchor, "TOP", 0, 0)
+		tracker:SetPoint("TOPLEFT", quest_anchor, "TOPLEFT", 0, 0)
+		local bottom = quest_anchor:GetBottom() * bdUI.scale
+		tracker:SetHeight(bottom - 100)
 		ignore_point = false
 
 		DurabilityFrame:ClearAllPoints()
@@ -31,6 +33,9 @@ function mod:create_objective_tracker()
 			ObjectiveTracker_Expand()
 		else
 			if (IsAddOnLoaded("Blizzard_ObjectiveTracker") or bdUI:get_game_version() == "vanilla") then
+				-- bdUI:set_backdrop(ObjectiveTrackerFrame)
+				-- ObjectiveTrackerFrame:ClearAllPoints()
+				-- print(ObjectiveTrackerFrame:GetPoint())
 				move_objective_tracker()
 				hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
 					if (not ignore_point) then
