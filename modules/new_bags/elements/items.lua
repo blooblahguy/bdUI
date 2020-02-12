@@ -80,14 +80,15 @@ local methods = {
 		self.texture = texture
 		self.itemCount = count
 		self.quality = quality
+		self.bagFamily = select(2, GetContainerNumFreeSlots(self.bag))
 	
-		self.UpgradeIcon:SetShown(IsContainerItemAnUpgrade(self.bag, self.slot) or false)
-		if self.itemCount > 1 then
-			_G[self:GetName().."Count"]:SetText(self.itemCount)
-			_G[self:GetName().."Count"]:Show()
-		else
-			_G[self:GetName().."Count"]:Hide()
-		end
+		-- self.UpgradeIcon:SetShown(IsContainerItemAnUpgrade(self.bag, self.slot) or false)
+		-- if self.itemCount > 1 then
+		-- 	_G[self:GetName().."Count"]:SetText(self.itemCount)
+		-- 	_G[self:GetName().."Count"]:Show()
+		-- else
+		-- 	_G[self:GetName().."Count"]:Hide()
+		-- end
 
 		SetItemButtonTexture(self, self.texture)
 		SetItemButtonQuality(self, self.quality, self.itemLink)
@@ -101,11 +102,11 @@ local methods = {
 	-- return cooldown information
 	["full_update"] = function(self)
 		local bag, slot = self.bag, self.slot
-		self.itemID = GetContainerItemID(bag, slot)
-		self.itemLink = GetContainerItemLink(bag, slot)
-		self.hasItem = not not self.itemID
-		self.texture = GetContainerItemInfo(bag, slot)
-		self.bagFamily = select(2, GetContainerNumFreeSlots(bag))
+		-- self.itemID = GetContainerItemID(bag, slot)
+		-- self.itemLink = GetContainerItemLink(bag, slot)
+		-- self.hasItem = not not self.itemID
+		-- self.texture = GetContainerItemInfo(bag, slot)
+		
 		self:update()
 	end,
 
@@ -120,18 +121,19 @@ local methods = {
 		local quest = _G[self:GetName().."IconQuestTexture"]
 
 		-- overlay for testing
-		self.overlay = self:CreateTexture(nil, "OVERLAY")
-		self.overlay:SetAllPoints()
-		self.overlay:SetTexture(bdUI.media.flat)
-		self.overlay:SetVertexColor(0, 0, 0, 0)
+		-- self.overlay = self:CreateTexture(nil, "OVERLAY")
+		-- self.overlay:SetAllPoints()
+		-- self.overlay:SetTexture(bdUI.media.flat)
+		-- self.overlay:SetVertexColor(0, 0, 0, 0)
 
 		-- border
-		self.quality_border = self:CreateTexture(nil, "OVERLAY")
-		self.quality_border:SetPoint("BOTTOMLEFT", self.IconBorder, "TOPLEFT", 0, 0)
-		self.quality_border:SetPoint("TOPRIGHT", self.IconBorder, "TOPRIGHT", 0, 1)
-		self.quality_border:SetTexture(bdUI.media.flat)
-		self.quality_border:SetVertexColor(0, 0, 0, 1)
-		self.quality_border:Hide()
+		local quality_border = self:CreateTexture(self:GetName().."QualityBorder", "OVERLAY")
+		quality_border:SetPoint("BOTTOMLEFT", self.IconBorder, "TOPLEFT", 0, 0)
+		quality_border:SetPoint("TOPRIGHT", self.IconBorder, "TOPRIGHT", 0, 1)
+		quality_border:SetTexture(bdUI.media.flat)
+		quality_border:SetVertexColor(0, 0, 0, 1)
+		quality_border:Hide()
+		self.quality_border = quality_border
 
 		-- icon
 		self:SetNormalTexture("")
@@ -154,7 +156,7 @@ local methods = {
 		count:SetJustifyH("RIGHT")
 		count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
 		
-		self.SplitStack = nil -- Remove the function set up by the template
+		-- self.SplitStack = nil -- Remove the function set up by the template
 		if self.NewItemTexture then
 			self.NewItemTexture:Hide()
 		end
@@ -171,8 +173,8 @@ mod.item_pool_create = function(self)
 	button:SetWidth(30)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
-	button:SetScript('OnShow', button.OnShow)
-	button:SetScript('OnHide', button.OnHide)
+	-- button:SetScript('OnShow', button.OnShow)
+	-- button:SetScript('OnHide', button.OnHide)
 
 	bdUI:set_backdrop(button)
 	Mixin(button, methods)
@@ -184,4 +186,58 @@ mod.item_pool_reset = function(self, frame)
 	frame:ClearAllPoints()
 	frame:SetParent(mod.current_parent)
 	frame:Hide()
+end
+
+--========================================
+-- POSITION ITEMS
+--========================================
+function mod:position_items(options)
+	-- loop through items now
+	local last, lastrow, first, lastcol
+	local index = 1
+	local rows, columns = 1, 1
+	local spacing = mod.border
+
+	if (options.table) then
+		-- for k = 1, #options.table do
+		-- 	v = options.table
+		for k, v in pairs(options.table) do
+			local frame = options.pool:Acquire()
+			frame:Show()
+			frame:SetParent(mod.current_parent)
+
+			if (not first) then first = frame end
+			if (not lastrow) then
+				frame:SetPoint("TOPLEFT", options.parent, "TOPLEFT", 0, 0)
+				lastrow = frame
+			elseif (index > options.columns) then
+				frame:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -spacing)
+				lastrow = frame
+				lastcol = last
+				index = 1
+				rows = rows + 1
+			else
+				frame:SetPoint("TOPLEFT", last, "TOPRIGHT", spacing, 0)
+				if (not lastcol) then
+					columns = columns + 1
+				end
+			end
+			last = frame
+			index = index + 1
+
+			-- print(frame, frame:GetPoint())
+
+			if (options.loop) then 
+				options.loop(frame, k, v) 
+			end
+		end
+	else
+		first = _G["bdBags_Item_1"]
+	end
+
+	if (options.callback and first) then
+		local height = ((first:GetHeight()+spacing) * rows) - spacing
+		local width = ((first:GetWidth()+spacing) * columns) - spacing
+		options.callback(width, height)
+	end
 end

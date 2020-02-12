@@ -213,10 +213,8 @@ function mod:draw_bags()
 					button:SetID(slot)
 					button.bag = bag
 					button.slot = slot
-					button.itemLink = itemLink
-					button.itemID = itemID
 
-					button:full_update()
+					button:update()
 				end,
 				["callback"] = function(width, height)
 					frame:update_size(width, height)

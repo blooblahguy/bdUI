@@ -99,6 +99,7 @@ modules\actionbars\elements\hotkeys.lua
 modules\new_bags\init.lua
 modules\new_bags\functions.lua
 modules\new_bags\core.lua
+modules\new_bags\elements\filters.lua
 modules\new_bags\elements\categories.lua
 modules\new_bags\elements\items.lua
 modules\new_bags\elements\bags.lua

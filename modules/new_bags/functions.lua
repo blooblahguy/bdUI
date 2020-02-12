@@ -11,8 +11,7 @@ function mod:register_events(frame, events)
 	for event, fn in pairs(events) do
 		frame:RegisterEvent(event)
 	end
-
-	frame:SetScript("OnEvent", function(self, event, ...)
+	frame:HookScript("OnEvent", function(self, event, ...)
 		if (self[events[event]]) then
 			self[events[event]](self, ...)
 		end
