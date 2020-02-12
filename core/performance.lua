@@ -22,7 +22,7 @@ end
 function bdUI:profile_stop(category, name, level)
 	local complete = debugprofilestop() - bdUI.profile_data[category][level][name]
 	bdUI.profile_data[category][level][name] = nil
-	if (debug_performance >= level or complete > 5) then
+	if (debug_performance >= level or (complete > 10 and developer)) then
 		if (complete > 10 and developer) then
 			print("WARNING", category, name, "completed in", complete)
 		else
