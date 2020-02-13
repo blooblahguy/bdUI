@@ -120,12 +120,6 @@ local methods = {
 		local icon = _G[self:GetName().."IconTexture"]
 		local quest = _G[self:GetName().."IconQuestTexture"]
 
-		-- overlay for testing
-		-- self.overlay = self:CreateTexture(nil, "OVERLAY")
-		-- self.overlay:SetAllPoints()
-		-- self.overlay:SetTexture(bdUI.media.flat)
-		-- self.overlay:SetVertexColor(0, 0, 0, 0)
-
 		-- border
 		local quality_border = self:CreateTexture(self:GetName().."QualityBorder", "OVERLAY")
 		quality_border:SetPoint("BOTTOMLEFT", self.IconBorder, "TOPLEFT", 0, 0)
@@ -198,11 +192,20 @@ function mod:position_items(parent, items, pool)
 	local spacing = mod.border
 	local cat_spacing = 20
 	local config = mod:get_save()
+	local num = #items
+	if (num == 0) then num = 1 end
 
-	local rows = math.ceil(#items / config.bag_max_column)
-	local columns = math.min(#items, config.bag_max_column)
-	local height = (config.bag_size + spacing) * rows - spacing
-	local width = (config.bag_size + spacing) * columns - spacing
+	local columns = math.min(num, config.bag_max_column)
+	-- if (#items < config.bag_max_column and #items > config.bag_max_column / 2) then
+	-- 	columns = math.ceil(#items / 2)
+	-- end
+	local rows = math.ceil(num / columns)
+
+	-- print(parent.name, columns, rows)
+	
+	local height = ((config.bag_size + spacing) * rows) - spacing
+	local width = ((config.bag_size + spacing) * columns) - spacing
+	width = math.max(width, parent.dragger:GetWidth() + parent.text:GetWidth())
 
 	for i = 1, #items do
 		local itemLink, bag, slot, itemID = unpack(items[i])

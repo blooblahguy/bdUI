@@ -7,8 +7,6 @@ for i = 3, MAX_WATCHED_TOKENS do
 	BackpackTokenFrame.Tokens[i] = frame
 end
 
-local ICON_STRING = "|T%s:0:0:0:0:64:64:5:59:5:59t|t "
-
 function mod:create_currencies(name, parent)
 	-- local name, isHeader, isExpanded, isUnused, isWatched, count, extraCurrencyType, icon, itemID = GetCurrencyListInfo(i)
 
@@ -26,7 +24,7 @@ function mod:create_currencies(name, parent)
 		local currency = CreateFrame("button", nil, currencies)
 		currency:SetHeight(20)
 		currency.text = currency:CreateFontString(nil, "OVERLAY")
-		currency.text:SetFont(bdUI.media.font, 14, "OUTLINE")
+		currency.text:SetFont(bdUI.media.font, 12, "OUTLINE")
 		currency.text:SetPoint("LEFT")
 
 		currency.icon = currency:CreateTexture(nil, "OVERLAY")
@@ -86,7 +84,6 @@ function mod:create_currencies(name, parent)
 		end
 	end
 
-	hooksecurefunc("BackpackTokenFrame_Update", currencies.update)
 	hooksecurefunc("BackpackTokenFrame_Update", currencies.update)
 
 	currencies:update()

@@ -4,6 +4,17 @@ mod.dropdowns = 1
 mod.draggers = 1
 
 --===============================
+-- Category Delete
+--===============================
+local function category_delete(self, arg1, arg2)
+	-- mod.categories[arg1].frame:Hide()
+	mod.bags.cat_pool:Release(frame)
+	-- mod.bank.cat_pool:Release()
+	mod.categories[arg1] = nil
+
+	mod:update_bags()
+end
+--===============================
 -- Category Rename Box
 --===============================
 StaticPopupDialogs["BDBAGS_POPUP"] = {
@@ -96,19 +107,53 @@ local dragger_methods = {
 		local itemID = mod:item_id(info)
 		local cat_name = self:GetParent().name
 
-		local has = mod.categories[cat_name].conditions.itemids[itemID]
+		-- local has = mod.categories[cat_name].conditions.itemids[itemID]
+		local index = tIndexOf(mod.categories[cat_name].conditions.itemids, itemID)
 
 		for name, category in pairs(mod.categories) do
-			category.conditions.itemids[itemID] = nil
+			tDeleteItem(category.conditions.itemids, itemID)
 		end
 
-		if (not has) then
-			mod.categories[cat_name].conditions.itemids[itemID] = true
+		if (not index) then
+			tinsert(mod.categories[cat_name].conditions.itemids, itemID)
 		end
 
 		ClearCursor()
 		mod:update_bags()
 	end,
+	["update"] = function(self)
+		local type, id, info = GetCursorInfo()
+		local itemID = mod:item_id(info)
+		
+		if (type == "item") then
+			self:RegisterEvent("CURSOR_UPDATE")
+			self:Show()
+			
+			local cat_name = self:GetParent().name
+			if (cat_name) then
+				local index = tIndexOf(mod.categories[cat_name].conditions.itemids, itemID)
+
+				if (index) then
+					self.overlay:SetVertexColor(1, 0, 0, 0.3)
+				else
+					self.overlay:SetVertexColor(0, 1, 0, 0.3)
+				end
+
+				if (not mod.show_all) then
+					mod.show_all = true
+					mod:draw_bags()					
+				end
+			end
+		else
+			self:UnregisterEvent("CURSOR_UPDATE")
+			self:Hide()
+
+			if (mod.show_all) then
+				mod.show_all = false
+				mod:draw_bags()
+			end
+		end
+	end
 }
 
 local category_methods = {
@@ -123,12 +168,15 @@ local category_methods = {
 		dragger:SetFrameLevel(27)
 		dragger:SetScript('OnReceiveDrag', function(self) self:click() end)
 		dragger:SetScript('OnClick', function(self) self:click() end)
+		dragger:Hide()
 		dragger.BattlepayItemTexture:Hide()
 		dragger.UpgradeIcon:Hide()
 		dragger.IconBorder:Hide()
 		dragger:SetNormalTexture("")
 		dragger:SetPushedTexture("")
 		dragger.flash:SetAllPoints()
+		bdUI:set_backdrop(dragger)
+		Mixin(dragger, dragger_methods)
 
 		local icon = _G[dragger:GetName().."IconTexture"]
 		icon:SetAllPoints(dragger)
@@ -143,65 +191,24 @@ local category_methods = {
 		local overlay = dragger:CreateTexture()
 		overlay:SetTexture(bdUI.media.flat)
 		overlay:SetAllPoints(dragger)
-		overlay:Hide()
 		dragger.overlay = overlay
 		
 		SetItemButtonTexture(dragger, [[Interface\BUTTONS\UI-EmptySlot]])
 
 		dragger:RegisterEvent("ITEM_LOCK_CHANGED")
-		dragger:SetScript("OnEvent", function(self, event, ...)
-			local type, id, info = GetCursorInfo()
-			local itemID = mod:item_id(info)
-			
-			if (type == "item") then
-				dragger:RegisterEvent("CURSOR_UPDATE")
-				dragger:UnregisterEvent("ITEM_LOCK_CHANGED")
-				self:Show()
-				overlay:Show()
-				
-				local cat_name = self:GetParent().name
-				local index = mod.categories[cat_name].conditions.itemids[itemID]
-				if (index) then
-					self.overlay:SetVertexColor(1, 0, 0, 0.3)
-				else
-					self.overlay:SetVertexColor(0, 1, 0, 0.3)
-				end
-
-				if (not mod.show_all) then
-					mod.show_all = true
-					mod:draw_bags()
-				end
-			else
-				dragger:UnregisterEvent("CURSOR_UPDATE")
-				dragger:RegisterEvent("ITEM_LOCK_CHANGED")
-				self:Hide()
-				overlay:Hide()
-
-				if (mod.show_all) then
-					mod.show_all = false
-					mod:draw_bags()
-				end
-			end
-		end)
-
-		bdUI:set_backdrop(dragger)
-		Mixin(dragger, dragger_methods)
+		dragger:SetScript("OnEvent", dragger.update)
+		-- self:SetScript("OnShow", dragger.update)
 
 		self.dragger = dragger
 	end,
 	['create_text'] = function(self)
 		local header = CreateFrame("button", nil, self)
 		header:SetPoint("TOPLEFT", self, "TOPLEFT")
-		header:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, -28)
-		-- header:EnableMouse(true)
-		-- header:RegisterForDrag("LeftButton","RightButton")
-		-- header:RegisterForDrag("LeftButton","RightButton")
-		-- header:SetScript("OnDragStart", function(self) self:GetParent():GetParent():StartMoving() end)
-		-- header:SetScript("OnDragStop", function(self) self:GetParent():GetParent():StopMovingOrSizing() end)
+		header:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, -26)
 
 		local text = header:CreateFontString(nil, "OVERLAY")
 		text:SetFont(bdUI.media.font, 13, "OUTLINE")
-		text:SetPoint("TOPLEFT", header, "TOPLEFT", 8, -10)
+		text:SetPoint("LEFT", header, "LEFT", self.spacing, 0)
 		text:SetAlpha(0.7)
 
 		header:SetScript("OnEnter", function()
@@ -211,10 +218,10 @@ local category_methods = {
 			text:SetAlpha(0.7)
 		end)
 		header:SetScript("OnMouseDown", function()
-			text:SetPoint("TOPLEFT", header, "TOPLEFT", 8, -11)
+			text:SetPoint("LEFT", header, "LEFT", self.spacing, -1)
 		end)
 		header:SetScript("OnMouseUp", function()
-			text:SetPoint("TOPLEFT", header, "TOPLEFT", 8, -10)
+			text:SetPoint("LEFT", header, "LEFT", self.spacing, 0)
 		end)
 
 		self.header = header
@@ -222,7 +229,7 @@ local category_methods = {
 	end,
 	['create_container'] = function(self)
 		local container = CreateFrame("frame", nil, self)
-		container:SetPoint("TOPLEFT", self.header, "BOTTOMLEFT", 10, -4)
+		container:SetPoint("TOPLEFT", self.header, "BOTTOMLEFT", self.spacing+4, 0)
 
 		self.container = container
 	end,
@@ -268,13 +275,16 @@ local category_methods = {
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "Filters", isTitle = true, notCheckable = true }
 				, { text = "Item Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
+				, { text = " ", notCheckable = true, notClickable = true }
+				, { text = "|cffff5555Delete|r", notCheckable = true, func = category_delete, arg1 = cat_name }
 			}
 
 			return menu
 		end
 
 		-- hook to header click
-		self.header:SetScript("OnClick", function()
+		self.header:SetScript("OnClick", function(...)
+			-- print(...)
 			if (dropdown.is_shown) then
 				dropdown.is_shown = false
 				HideDropDownMenu(1, nil, dropdown, self.header, 0, 0);
@@ -289,7 +299,7 @@ local category_methods = {
 		local config = mod:get_save()
 		if (width < config.bag_size) then width = config.bag_size end
 		self.container:SetSize(width, height)
-		self:SetSize(width + 20, height + self.dragger:GetHeight() + 10)
+		self:SetSize(width + (self.spacing * 3), height + self.dragger:GetHeight() + self.spacing)
 	end
 }
 
@@ -299,6 +309,7 @@ local category_methods = {
 mod.category_pool_create = function(self)
 	local frame = CreateFrame("frame", nil, mod.current_parent)
 	frame:SetSize(124, 30)
+	frame.spacing = 8
 	-- bdUI:set_backdrop(frame)
 	Mixin(frame, category_methods)
 
@@ -313,6 +324,7 @@ mod.category_pool_reset = function(self, frame)
 	frame:ClearAllPoints()
 	frame:SetParent(mod.current_parent)
 	frame.text:SetText("")
+	frame.name = false
 	frame:Hide()
 end
 
@@ -322,8 +334,11 @@ end
 function mod:delete_category(name)
 
 end
+local ordermax = 0
 function mod:create_category(name, options)
-	order = options.order or #mod.categories + 1
+	ordermax = math.max(options.order or 0, ordermax) + 1
+	order = options.order or ordermax
+
 	if (mod.categories[name]) then return end
 
 	mod.categories[name] = {}
@@ -377,57 +392,64 @@ end
 -- POSITION CATEGORIES
 --===============================================
 function mod:position_categories(parent, categories, pool)
-	local last, lastcol
-
-	local colheight, colwidth, columns = 0, 0, 1
-	local spacing = mod.border
 	local config = mod:get_save()
-	local catspacing = (config.bag_size + spacing) / 3
 
-	local max_width = (config.bag_size + spacing) * config.bag_max_column
+	local spacing = mod.border
+	local max_width = ((config.bag_size + spacing) * config.bag_max_column) + 20
+	for i = 1, #categories do
+		max_width = math.max(categories[i].frame:GetWidth(), max_width)
+	end
 
-	local width, height = 0, 0
-
-	-- sort categories first
-	table.sort(categories, function(a, b)
-		return a.order < b.order
-	end)
-
+	local columns = {}
+	local column = {}
+	local last
 	-- loop and position
 	for i = 1, #categories do	
 		local category = categories[i]
 		local frame = category.frame
-		frame:Show()
-		frame:SetParent(parent)
-		frame.text:SetText(category.name:upper())
-		frame.name = category.name
 
-		if (not last) then -- first item
-			frame:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, 0)
-			colheight = frame:GetHeight() + catspacing
-			lastcol = frame
-		elseif (colheight + frame:GetHeight() + catspacing > config.bag_height) then -- new column
-			frame:SetPoint("TOPLEFT", parent, "TOPLEFT", (colwidth + catspacing) * columns, 0)
-			lastcol = frame
-			columns = columns + 1
-			if (colheight > height) then
-				height = colheight
-			end
-			width = (colwidth + catspacing) * columns
-			colheight = frame:GetHeight() + catspacing
-			colwidth = frame:GetWidth()
-		elseif (last:GetWidth() + frame:GetWidth() < max_width + catspacing) then -- try and fit in the same row
-			frame:SetPoint("TOPLEFT", last, "TOPRIGHT", catspacing, 0)
-		else -- position below
-			frame:SetPoint("TOPLEFT", lastcol, "BOTTOMLEFT", 0, -catspacing)
-			colheight = colheight + frame:GetHeight() + catspacing
-			lastcol = frame
+		if (not last) then
+			frame:SetPoint("TOPLEFT", parent)
+
+			column.header = frame
+			column.left = frame
+			column.row_width = frame:GetWidth()
+			column.width = frame:GetWidth()
+			column.height = frame:GetHeight()
+		elseif (frame:GetWidth() + column.row_width < max_width) then
+			frame:SetPoint("TOPLEFT", last, "TOPRIGHT")
+
+			column.row_width = column.row_width + frame:GetWidth()
+		elseif (column.height + frame:GetHeight() > config.bag_height) then
+			frame:SetPoint("TOPLEFT", column.header, column.width + mod.border, 0)
+
+			tinsert(columns, column)
+
+			column = {}
+			column.header = frame
+			column.left = frame
+			column.width = frame:GetWidth()
+			column.row_width = frame:GetWidth()
+			column.height = frame:GetHeight()
+		else
+			frame:SetPoint("TOPLEFT", column.left, "BOTTOMLEFT")
+
+			column.left = frame
+			column.row_width = frame:GetWidth()
+			column.height = column.height + frame:GetHeight()
 		end
 
+		column.width = math.max(column.width, column.row_width)
 		last = frame
-		if (frame:GetWidth() > colwidth) then
-			colwidth = frame:GetWidth()
-		end
+	end
+
+	-- now calculate bag dimensions
+	local width, height = 0, 0
+	tinsert(columns, column)
+	for i = 1, #columns do
+		local column = columns[i]
+		width = width + column.width
+		height = math.max(height, column.height)
 	end
 
 	return width, height

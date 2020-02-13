@@ -97,8 +97,10 @@ function mod:item_id(itemLink)
 	elseif type(itemLink) == "string" and strmatch(itemLink, "keystone:") then
 		return 138019
 	elseif itemLink then
-		local itemString = string.match(itemLink, "item[%-?%d:]+")
-		return select(2, strsplit(":", itemString))
+		-- local itemString = string.match(itemLink, "item[%-?%d:]+")
+		-- return tonumber(select(2, strsplit(":", itemString)))
+		-- local link = select(2, GetItemInfo(str))
+		return itemLink and tonumber(itemLink:match("item:(%d+)"))
 	end
 end
 
@@ -110,30 +112,16 @@ function mod:table_count(tab)
 	return num
 end
 
-function mod:merge(...)
+function tMerge(...)
 	local tbl = {}
 	for i = 1, select("#", ...) do
-		local second_table = select(i, ...)
-		for k, v in pairs(second_table) do table.insert(tbl, v) end
+		local added = select(i, ...)
+		for k, v in pairs(added) do
+			tinsert(tbl, v) 
+		end
 	end
-
 	return tbl
 end
-
--- function array_concat(...) 
---     local t = {}
---     for n = 1, select("#",...) do
---         local arg = select(n,...)
---         if type(arg)=="table" then
---             for _,v in ipairs(arg) do
---                 t[#t+1] = v
---             end
---         else
---             t[#t+1] = arg
---         end
---     end
---     return t
--- end
 
 function mod:remove_value(tab, val)
 	if (not val) then return false end

@@ -1,6 +1,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("New Bags")
-mod.bank = mod:create_container("Bank", 6, 12)
+mod.bank = mod:create_container("Bank", 5, 11)
 
 function mod:create_bank()
 	mod.bank:Show()

@@ -99,6 +99,7 @@ modules\actionbars\elements\hotkeys.lua
 modules\new_bags\init.lua
 modules\new_bags\functions.lua
 modules\new_bags\core.lua
+modules\new_bags\elements\containers.lua
 modules\new_bags\elements\currencies.lua
 modules\new_bags\elements\money.lua
 modules\new_bags\elements\filters.lua

@@ -12,12 +12,36 @@ ace_hook:Embed(mod)
 mod.containers = {}
 mod.bag_frames = {}
 
+
+-- Backpack and bags
+local BAGS = { [BACKPACK_CONTAINER] = BACKPACK_CONTAINER }
+for i = 1, NUM_BAG_SLOTS do BAGS[i] = i end
+
+-- Base nank bags
+local BANK_ONLY = { [BANK_CONTAINER] = BANK_CONTAINER }
+for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do BANK_ONLY[i] = i end
+
+--- Reagent bank bags
+local REAGENTBANK_ONLY = { [REAGENTBANK_CONTAINER] = REAGENTBANK_CONTAINER }
+
+-- All bank bags
+local BANK = {}
+for _, bags in ipairs { BANK_ONLY, REAGENTBANK_ONLY } do
+	for id in pairs(bags) do BANK[id] = id end
+end
+
+-- All bags
+local ALL = {}
+for _, bags in ipairs { BAGS, BANK } do
+	for id in pairs(bags) do ALL[id] = id end
+end
+
 -- filter groups
 local types = {}
 types["Consumable"] = {0}
 types["Bags"] = {1}
 types["Weapon"] = {2, 6, 11}
-types["Gem"] = {3}
+types["Gems"] = {3}
 types["Armor"] = {4}
 types["Tradeskill"] = {5, 7, 9}
 types["Enchantment"] = {8, 16}
@@ -26,6 +50,12 @@ types["Keys"] = {13}
 types["Tokens"] = {10, 14, 17, 18}
 types["Miscellaneous"] = {15}
 mod.types = types
+
+local subtypes = {}
+subtypes[0] = {}
+subtypes[0]["Food"] = {5}
+subtypes[0]["Potions"] = {1, 2, 3}
+mod.subtypes = subtypes
 
 local filter_table = {}
 filter_table[12] = "Quest"
@@ -54,25 +84,40 @@ function mod:initialize()
 			["locked"] = true,
 			["order"] = -1,
 		})
+		mod:create_category("Weapons", {
+			["type"] = types["Weapon"],
+			["default"] = true,
+			["order"] = 1,
+		})
+		mod:create_category("Armor", {
+			["type"] = types["Armor"],
+			["default"] = true,
+			["order"] = 2,
+		})
 		mod:create_category("Quest & Keys", {
-			["type"] = mod:merge(mod.types["Quest"], mod.types["Keys"]),
+			["type"] = tMerge(types["Quest"], types["Keys"]),
 			["default"] = true,
-			["itemids"] = {[138019] = true}
+			["itemids"] = {138019}
 		})
-		mod:create_category("Armor & Weapons", {
-			["type"] = mod:merge(mod.types["Armor"], mod.types["Weapon"]),
+		
+		mod:create_category("Tools", {
+			["type"] = tMerge(types["Consumable"], types["Enchantment"], types["Tokens"]),
 			["default"] = true,
 		})
-		mod:create_category("Consumables", {
-			["type"] = mod:merge(mod.types["Consumable"], mod.types["Enchantment"], mod.types["Tokens"]),
+		mod:create_category("Food & Potion", {
+			["subtype"] = {{0, tMerge(subtypes[0].Food, subtypes[0].Potions)}},
 			["default"] = true,
 		})
 		mod:create_category("Tradeskill", {
-			["type"] = mod:merge(mod.types["Tradeskill"], mod.types["Gem"]),
+			["type"] = tMerge(types["Tradeskill"], types["Gems"]),
 			["default"] = true,
 		})
 		mod:create_category("Miscellaneous", {
-			['type'] = mod:merge(mod.types["Bags"], mod.types["Miscellaneous"]),
+			['type'] = tMerge(types["Bags"], types["Miscellaneous"]),
+			["default"] = true,
+		})
+		mod:create_category("Hearths", {
+			["itemids"] = {6948, 140192, 141605, 110560},
 			["default"] = true,
 		})
 		mod:create_category("Uncategorized", {
@@ -91,6 +136,7 @@ function mod:initialize()
 end
 
 function mod:config_callback()
+	config = mod:get_save()
 	if (not config.enabled) then return end
 	mod:initialize()
 
@@ -126,6 +172,7 @@ function mod:create_container(name, start_id, end_id)
 	local bags = CreateFrame("Frame", "bd"..name, UIParent)
 	mod.border = bdUI:get_border(bags)
 	bags:SetSize(500, 400)
+	bags:SetFrameStrata("HIGH")
 	bags:EnableMouse(true)
 	bags:SetMovable(true)
 	bags:SetUserPlaced(true)
@@ -143,6 +190,10 @@ function mod:create_container(name, start_id, end_id)
 	header:SetPoint("TOPLEFT", bags, "TOPLEFT", 0, 0)
 	header:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, -30)
 	bags.header = header
+
+	-- bag replacements
+	local containers = mod:create_containers(bags, start_id, end_id)
+	containers:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, mod.border)
 
 	-- footer
 	local footer = CreateFrame("frame", nil, bags)
@@ -186,6 +237,9 @@ function mod:create_container(name, start_id, end_id)
 	local bags_button = create_button(header)
 	bags_button.text:SetText("B")
 	bags_button:SetPoint("RIGHT", sort_bags, "LEFT", -4, 0)
+	bags_button.callback = function()
+		containers:SetShown(not containers:IsShown())
+	end
 
 	-- money
 	local money = mod:create_money(name, bags)
@@ -209,6 +263,7 @@ function mod:create_container(name, start_id, end_id)
 
 	-- callback for sizing
 	function bags:update_size(width, height)
+		-- print(height)
 		bags:SetSize(width, height + header:GetHeight() + footer:GetHeight())
 	end
 

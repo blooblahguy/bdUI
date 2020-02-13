@@ -119,10 +119,22 @@ function mod:update_bags()
 				local new_weight = 0
 
 				-- evaluate conditions
-				if (mod:has_value(conditions['type'], itemTypeID)) then new_weight = new_weight + 1 end -- weight: 1
-				if (mod:has_value(conditions['subtype'], itemSubClassID)) then new_weight = new_weight + 1 end -- weight: 1
-				if (conditions['itemids'][itemID]) then new_weight = new_weight + 10 end
-				-- if (mod:has_value(conditions['itemids'], itemID)) then new_weight = new_weight + 10 end -- weight: 10
+				if (tContains(conditions['type'], itemTypeID)) then new_weight = new_weight + 1 end -- weight: 1
+
+				-- subtype needs to match parent type too
+				if (#conditions['subtype'] > 0) then
+					for i = 1, #conditions['subtype'] do
+						local typeid, subtypes = unpack(conditions['subtype'][i])
+						if (typeid == itemTypeID and tContains(subtypes, itemSubClassID)) then
+							new_weight = new_weight + 2.5
+						end
+					end
+				end
+
+				-- item ids
+				if (tContains(conditions['itemids'], itemID)) then 
+					new_weight = new_weight + 10 
+				end
 
 				if (current_weight < new_weight) then
 					item_weights[k] = {new_weight, category_name}
@@ -203,6 +215,12 @@ function mod:draw_bags()
 		local category = loop_cats[i]
 		category.frame = mod.bags.cat_pool:Acquire()
 		category.frame.name = category.name
+		category.frame:ClearAllPoints()
+		category.frame:Show()
+		category.frame:SetParent(mod.bags.container)
+		category.frame.text:SetText(category.name:upper())
+		category.frame.name = category.name
+		category.frame.dragger:update()
 
 		-- position items in categories
 		local width, height = mod:position_items(category.frame, category.items, mod.bags.item_pool)
