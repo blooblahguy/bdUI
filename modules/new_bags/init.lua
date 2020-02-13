@@ -35,7 +35,7 @@ local config = {
 		min = 200,
 		max = 800,
 		step = 5,
-		value = 330,
+		value = 280,
 		label = "Bag Max Height"
 	},
 

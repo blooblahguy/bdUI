@@ -6,59 +6,10 @@ local mod = bdUI:get_module("New Bags")
 local config = {}
 
 -- default variables
-local ace_hook = LibStub("AceHook-3.0")
-ace_hook:Embed(mod)
-
 mod.containers = {}
 mod.bag_frames = {}
-
-
--- Backpack and bags
-local BAGS = { [BACKPACK_CONTAINER] = BACKPACK_CONTAINER }
-for i = 1, NUM_BAG_SLOTS do BAGS[i] = i end
-
--- Base nank bags
-local BANK_ONLY = { [BANK_CONTAINER] = BANK_CONTAINER }
-for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do BANK_ONLY[i] = i end
-
---- Reagent bank bags
-local REAGENTBANK_ONLY = { [REAGENTBANK_CONTAINER] = REAGENTBANK_CONTAINER }
-
--- All bank bags
-local BANK = {}
-for _, bags in ipairs { BANK_ONLY, REAGENTBANK_ONLY } do
-	for id in pairs(bags) do BANK[id] = id end
-end
-
--- All bags
-local ALL = {}
-for _, bags in ipairs { BAGS, BANK } do
-	for id in pairs(bags) do ALL[id] = id end
-end
-
--- filter groups
-local types = {}
-types["Consumable"] = {0}
-types["Bags"] = {1}
-types["Weapon"] = {2, 6, 11}
-types["Gems"] = {3}
-types["Armor"] = {4}
-types["Tradeskill"] = {5, 7, 9}
-types["Enchantment"] = {8, 16}
-types["Quest"] = {12}
-types["Keys"] = {13}
-types["Tokens"] = {10, 14, 17, 18}
-types["Miscellaneous"] = {15}
-mod.types = types
-
-local subtypes = {}
-subtypes[0] = {}
-subtypes[0]["Food"] = {5}
-subtypes[0]["Potions"] = {1, 2, 3}
-mod.subtypes = subtypes
-
-local filter_table = {}
-filter_table[12] = "Quest"
+local ace_hook = LibStub("AceHook-3.0")
+ace_hook:Embed(mod)
 
 --===============================================
 -- Core functionality
@@ -70,11 +21,9 @@ function mod:initialize()
 	mod.initialized = true
 
 	-- store saved variable for messing with
-	config.categories = config.categories or {}
-	-- config.categories = {}
-	config.shortcuts = config.shortcuts or {}
+	-- config.categories = config.categories or {}
+	config.categories = {}
 	mod.categories = config.categories
-	mod.shortcuts = config.shortcuts
 
 	if (not mod.categories.first_run_complete) then
 		mod:create_category("New Items", {
@@ -85,41 +34,41 @@ function mod:initialize()
 			["order"] = -1,
 		})
 		mod:create_category("Weapons", {
-			["type"] = types["Weapon"],
+			["type"] = mod.types["Weapon"],
 			["default"] = true,
 			["order"] = 1,
 		})
 		mod:create_category("Armor", {
-			["type"] = types["Armor"],
+			["type"] = mod.types["Armor"],
 			["default"] = true,
 			["order"] = 2,
 		})
 		mod:create_category("Quest & Keys", {
-			["type"] = tMerge(types["Quest"], types["Keys"]),
+			["type"] = tMerge(mod.types["Quest"], mod.types["Keys"]),
 			["default"] = true,
 			["itemids"] = {138019}
-		})
-		
-		mod:create_category("Tools", {
-			["type"] = tMerge(types["Consumable"], types["Enchantment"], types["Tokens"]),
-			["default"] = true,
-		})
-		mod:create_category("Food & Potion", {
-			["subtype"] = {{0, tMerge(subtypes[0].Food, subtypes[0].Potions)}},
-			["default"] = true,
-		})
-		mod:create_category("Tradeskill", {
-			["type"] = tMerge(types["Tradeskill"], types["Gems"]),
-			["default"] = true,
-		})
-		mod:create_category("Miscellaneous", {
-			['type'] = tMerge(types["Bags"], types["Miscellaneous"]),
-			["default"] = true,
 		})
 		mod:create_category("Hearths", {
 			["itemids"] = {6948, 140192, 141605, 110560},
 			["default"] = true,
 		})
+		mod:create_category("Tools", {
+			["type"] = tMerge(mod.types["Consumable"], mod.types["Enchantment"], mod.types["Tokens"]),
+			["default"] = true,
+		})
+		mod:create_category("Food & Potion", {
+			["subtype"] = tMerge(mod.subtypes.Food, mod.subtypes.Potions),
+			["default"] = true,
+		})
+		mod:create_category("Tradeskill", {
+			["type"] = tMerge(mod.types["Tradeskill"], mod.types["Gems"], mod.types["Recipes"]),
+			["default"] = true,
+		})
+		mod:create_category("Miscellaneous", {
+			['type'] = tMerge(mod.types["Bags"], mod.types["Miscellaneous"]),
+			["default"] = true,
+		})
+		
 		mod:create_category("Uncategorized", {
 			["catch_all"] = true,
 			["default"] = true,
@@ -146,7 +95,7 @@ end
 --===============================================
 -- Create Container
 --===============================================
-function create_button(parent)
+local function create_button(parent)
 	local button = CreateFrame("Button", nil, parent)
 	button:SetSize(20, 20)
 	button.text = button:CreateFontString(nil, "OVERLAY")
@@ -276,13 +225,4 @@ function mod:create_container(name, start_id, end_id)
 
 	mod.containers[name:lower()] = bags
 	return bags
-end
-
-
-
---===============================================
--- Stop Blizzard bags from rendering
---===============================================
-function mod:hide_blizzard()
-
 end

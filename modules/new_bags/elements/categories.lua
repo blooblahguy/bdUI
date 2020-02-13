@@ -267,6 +267,9 @@ local category_methods = {
 				table.insert(types_menu, entry)
 			end
 
+			local subtypes = {}
+
+
 			local menu = {
 				{ text = cat_name, isTitle = true, notCheckable = true }
 				, { text = "Rename", notCheckable = true, func = category_rename, arg1 = cat_name }
@@ -274,7 +277,8 @@ local category_methods = {
 				, { text = "Move Down", notCheckable = true, func = move_down, arg1 = cat_name, keepShownOnClick = false }
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "Filters", isTitle = true, notCheckable = true }
-				, { text = "Item Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
+				, { text = "Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
+				, { text = "Sub Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = {}}
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "|cffff5555Delete|r", notCheckable = true, func = category_delete, arg1 = cat_name }
 			}
@@ -349,11 +353,13 @@ function mod:create_category(name, options)
 	conditions['type'] = {}
 	conditions['subtype'] = {}
 	conditions['ilvl'] = 0
-	conditions['expacID'] = 0
+	-- conditions['expacID'] = 0
 	conditions['rarity'] = 0
+	conditions['itemlvl'] = 0
 	conditions['minlevel'] = 0
-	conditions['duplicate'] = false
-	conditions['autohide'] = true
+	-- conditions['duplicate'] = false
+	-- conditions['autohide'] = true
+	conditions['bindType'] = true
 	conditions['itemids'] = {}
 	for k, v in pairs(options) do conditions[k] = v end
 

@@ -113,28 +113,14 @@ function mod:update_bags()
 			local itemLink, bag, slot, itemID = unpack(v)
 			local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 
+			-- print(GetItemInfo(itemLink))
+
 			if (rarity == nil or rarity > 0) then
 				item_weights[k] = item_weights[k] or {0, nil}
 				local current_weight, parent_category = unpack(item_weights[k])
-				local new_weight = 0
+				-- local new_weight = 0
 
-				-- evaluate conditions
-				if (tContains(conditions['type'], itemTypeID)) then new_weight = new_weight + 1 end -- weight: 1
-
-				-- subtype needs to match parent type too
-				if (#conditions['subtype'] > 0) then
-					for i = 1, #conditions['subtype'] do
-						local typeid, subtypes = unpack(conditions['subtype'][i])
-						if (typeid == itemTypeID and tContains(subtypes, itemSubClassID)) then
-							new_weight = new_weight + 2.5
-						end
-					end
-				end
-
-				-- item ids
-				if (tContains(conditions['itemids'], itemID)) then 
-					new_weight = new_weight + 10 
-				end
+				local new_weight = mod:filter_item(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
 
 				if (current_weight < new_weight) then
 					item_weights[k] = {new_weight, category_name}
