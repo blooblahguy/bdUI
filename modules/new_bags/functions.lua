@@ -136,9 +136,8 @@ end
 -- end
 
 function mod:has_value(tab, val)
-	values = {}
 	if (not val) then return false end
-	-- print(val)
+	values = {}
 	if (type(val) == "table") then
 		for k, v in pairs(val) do
 			values[v] = true

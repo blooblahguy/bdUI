@@ -3,6 +3,89 @@ local mod = bdUI:get_module("New Bags")
 mod.dropdowns = 1
 mod.draggers = 1
 
+--===============================
+-- Category Rename Box
+--===============================
+StaticPopupDialogs["BDBAGS_POPUP"] = {
+	button1 = "Change",
+	button2 = "Cancel",
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+	onCancel = function() end
+}
+
+local function category_rename(self, arg1, arg2, checked)
+	StaticPopupDialogs["BDBAGS_POPUP"]["text"] = "Rename "..arg1
+	StaticPopupDialogs["BDBAGS_POPUP"]["hasEditBox"] = true
+
+	StaticPopupDialogs["BDBAGS_POPUP"]["OnShow"] = function(self, data)
+		self.editBox:SetText(arg1)
+	end
+	StaticPopupDialogs["BDBAGS_POPUP"]["OnAccept"] = function(self, data, data2)
+		local new_name = self.editBox:GetText()
+
+		mod.categories[new_name] = mod.categories[arg1]
+		mod.categories[new_name].name = new_name
+		mod.categories[new_name].frame.name = new_name
+		mod.categories[arg1] = nil
+
+		mod:draw_bags()
+	end
+
+	StaticPopup_Show("BDBAGS_POPUP")
+end
+
+--===============================
+-- Category Ordering
+--===============================
+local function move_up(self, arg1, arg2, checked)
+	-- sort categories
+	local categories = mod:get_visible_categories()
+
+	for i = 1, #categories do
+		local category = categories[i]
+		-- swap position with the previous element
+		if (category.name == arg1) then
+			if (not categories[i - 1]) then return end
+			local prev_order = categories[i - 1].order
+			local order = category.order
+
+			category.order = prev_order
+			categories[i - 1].order = order
+
+			break
+		end
+	end
+
+	mod:draw_bags()
+end
+local function move_down(self, arg1, arg2, checked)
+	-- sort categories
+	local categories = mod:get_visible_categories()
+
+	for i = 1, #categories do
+		local category = categories[i]
+		-- swap position with the previous element
+		if (category.name == arg1) then
+			if (not categories[i + 1]) then return end
+			local prev_order = categories[i + 1].order
+			local order = category.order
+
+			category.order = prev_order
+			categories[i + 1].order = order
+
+			break
+		end
+	end
+
+	mod:draw_bags()
+end
+
+--===============================
+-- Category Filter Changing
+--===============================
 local function dropdown_click(self, arg1, arg2, checked)
 	print(self, arg1, arg2, checked)
 end
@@ -10,7 +93,6 @@ end
 local dragger_methods = {
 	['click'] = function(self, ...)
 		local type, id, info = GetCursorInfo()
-		ClearCursor()
 		local itemID = mod:item_id(info)
 		local cat_name = self:GetParent().name
 
@@ -18,12 +100,20 @@ local dragger_methods = {
 		if (index) then
 			table.remove(mod.categories[cat_name].conditions.itemids, index)
 		else
+			for name, category in pairs(mod.categories) do
+				local index = mod:has_value(category.conditions.itemids, itemID)
+				if (index) then
+					category.conditions.itemids[index] = nil
+				end
+			end
+			
 			table.insert(mod.categories[cat_name].conditions.itemids, itemID)
 		end
 
+		ClearCursor()
 
-		mod.show_all = false
 		mod:update_bags()
+
 	end,
 }
 
@@ -37,15 +127,14 @@ local category_methods = {
 		dragger:SetPoint("LEFT", self.text, "RIGHT", 4, 0)
 		dragger:SetSize(22, 22)
 		dragger:SetFrameLevel(27)
-		dragger:HookScript('OnReceiveDrag', function(self) self:click() end)
-		dragger:HookScript('OnClick', function(self) self:click() end)
+		dragger:SetScript('OnReceiveDrag', function(self) self:click() end)
+		dragger:SetScript('OnClick', function(self) self:click() end)
 		dragger.BattlepayItemTexture:Hide()
 		dragger.UpgradeIcon:Hide()
 		dragger.IconBorder:Hide()
 		dragger:SetNormalTexture("")
 		dragger:SetPushedTexture("")
 		dragger.flash:SetAllPoints()
-		-- dragger:Show()
 
 		local icon = _G[dragger:GetName().."IconTexture"]
 		icon:SetAllPoints(dragger)
@@ -91,6 +180,10 @@ local category_methods = {
 				overlay:Hide()
 				mod.show_all = false
 			end
+
+			if (event == "CURSOR_UPDATE" and type == "item") then
+				mod:draw_bags()
+			end
 		end)
 
 		bdUI:set_backdrop(dragger)
@@ -126,7 +219,7 @@ local category_methods = {
 	end,
 	['create_container'] = function(self)
 		local container = CreateFrame("frame", nil, self)
-		container:SetPoint("TOPLEFT", self.header, "BOTTOMLEFT", 12, -4)
+		container:SetPoint("TOPLEFT", self.header, "BOTTOMLEFT", 10, -4)
 
 		self.container = container
 	end,
@@ -166,9 +259,12 @@ local category_methods = {
 
 			local menu = {
 				{ text = cat_name, isTitle = true, notCheckable = true }
-				, { text = "Rename", notCheckable = true }
+				, { text = "Rename", notCheckable = true, func = category_rename, arg1 = cat_name }
+				, { text = "Move Up", notCheckable = true, func = move_up, arg1 = cat_name, keepShownOnClick = false }
+				, { text = "Move Down", notCheckable = true, func = move_down, arg1 = cat_name, keepShownOnClick = false }
+				, { text = " ", notCheckable = true, notClickable = true }
+				, { text = "Filters", isTitle = true, notCheckable = true }
 				, { text = "Item Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
-				-- , { text = "Item Quality", notCheckable = false, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
 			}
 
 			return menu
@@ -187,9 +283,10 @@ local category_methods = {
 		end)
 	end,
 	['update_size'] = function(self, width, height)
-		if (width < 124) then width = 124 end
+		local config = mod:get_save()
+		if (width < config.bag_size) then width = config.bag_size end
 		self.container:SetSize(width, height)
-		self:SetSize(width + 20, height + self.dragger:GetHeight() + 20)
+		self:SetSize(width + 20, height + self.dragger:GetHeight() + 10)
 	end
 }
 
@@ -199,6 +296,7 @@ local category_methods = {
 mod.category_pool_create = function(self)
 	local frame = CreateFrame("frame", nil, mod.current_parent)
 	frame:SetSize(124, 30)
+	-- bdUI:set_backdrop(frame)
 	Mixin(frame, category_methods)
 
 	frame:create_text()
@@ -218,13 +316,6 @@ end
 --===============================================
 -- CATEGORY FUNCTIONS
 --===============================================
-function mod:position_categories(options)
-	local heights, widths, rows = { 0 }, {}, {}
-
-	while (mod.categories) do
-
-	end
-end
 function mod:delete_category(name)
 
 end
@@ -234,9 +325,6 @@ function mod:create_category(name, options)
 
 	mod.categories[name] = {}
 	local category = mod.categories[name]
-	category.frame = mod.bags.cat_pool:Acquire()
-	category.frame.name = name
-	category.frame.category = category
 
 	-- default condition fillers
 	local conditions = {}
@@ -256,4 +344,88 @@ function mod:create_category(name, options)
 	category.order = order
 	category.locked = options.locked
 	category.brand_new = not options.default
+end
+
+function mod:get_visible_categories()
+	local loop_cats = {}
+	
+	-- find visible only
+	for k, category in pairs(mod.categories) do
+		if ((mod.show_all and not category.locked) or category.brand_new or #category.items > 0) then
+			loop_cats[#loop_cats + 1] = category
+			category.brand_new = false
+		end
+	end
+
+	-- sort and reset index
+	table.sort(loop_cats, function(a, b)
+		return a.order < b.order
+	end)
+
+	for i = 1, #loop_cats do
+		local category = loop_cats[i]
+		category.order = i
+	end
+
+	return loop_cats
+end
+
+--===============================================
+-- POSITION CATEGORIES
+--===============================================
+function mod:position_categories(parent, categories, pool)
+	local last, lastcol
+
+	local colheight, colwidth, columns = 0, 0, 1
+	local spacing = mod.border
+	local config = mod:get_save()
+	local catspacing = (config.bag_size + spacing) / 3
+
+	local max_width = (config.bag_size + spacing) * config.bag_max_column
+
+	local width, height = 0, 0
+
+	-- sort categories first
+	table.sort(categories, function(a, b)
+		return a.order < b.order
+	end)
+
+	-- loop and position
+	for i = 1, #categories do	
+		local category = categories[i]
+		local frame = category.frame
+		frame:Show()
+		frame:SetParent(parent)
+		frame.text:SetText(category.name:upper())
+		frame.name = category.name
+
+		if (not last) then -- first item
+			frame:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, 0)
+			colheight = frame:GetHeight() + catspacing
+			lastcol = frame
+		elseif (colheight + frame:GetHeight() + catspacing > config.bag_height) then -- new column
+			frame:SetPoint("TOPLEFT", parent, "TOPLEFT", (colwidth + catspacing) * columns, 0)
+			lastcol = frame
+			columns = columns + 1
+			if (colheight > height) then
+				height = colheight
+			end
+			width = (colwidth + catspacing) * columns
+			colheight = frame:GetHeight() + catspacing
+			colwidth = frame:GetWidth()
+		elseif (last:GetWidth() + frame:GetWidth() < max_width + catspacing) then -- try and fit in the same row
+			frame:SetPoint("TOPLEFT", last, "TOPRIGHT", catspacing, 0)
+		else -- position below
+			frame:SetPoint("TOPLEFT", lastcol, "BOTTOMLEFT", 0, -catspacing)
+			colheight = colheight + frame:GetHeight() + catspacing
+			lastcol = frame
+		end
+
+		last = frame
+		if (frame:GetWidth() > colwidth) then
+			colwidth = frame:GetWidth()
+		end
+	end
+
+	return width, height
 end

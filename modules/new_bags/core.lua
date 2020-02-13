@@ -6,6 +6,9 @@ local mod = bdUI:get_module("New Bags")
 local config = {}
 
 -- default variables
+local ace_hook = LibStub("AceHook-3.0")
+ace_hook:Embed(mod)
+
 mod.containers = {}
 mod.bag_frames = {}
 
@@ -37,8 +40,8 @@ function mod:initialize()
 	mod.initialized = true
 
 	-- store saved variable for messing with
-	-- config.categories = config.categories or {}
-	config.categories = {}
+	config.categories = config.categories or {}
+	-- config.categories = {}
 	config.shortcuts = config.shortcuts or {}
 	mod.categories = config.categories
 	mod.shortcuts = config.shortcuts
@@ -89,7 +92,7 @@ function mod:config_callback()
 	if (not config.enabled) then return end
 	mod:initialize()
 
-
+	mod:update_bags()
 end
 
 --===============================================
@@ -120,7 +123,7 @@ end
 function mod:create_container(name, start_id, end_id)
 	local bags = CreateFrame("Frame", "bd"..name, UIParent)
 	mod.border = bdUI:get_border(bags)
-	bags:SetSize(500, 300)
+	bags:SetSize(500, 400)
 	bags:EnableMouse(true)
 	bags:SetMovable(true)
 	bags:SetUserPlaced(true)
@@ -131,11 +134,13 @@ function mod:create_container(name, start_id, end_id)
 	bags:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 	bags:Hide()
 	bdUI:set_backdrop(bags)
+	bags.bd_background:SetVertexColor(.08, .09, .11, 1)
 
 	-- header
 	local header = CreateFrame("frame", nil, bags)
 	header:SetPoint("TOPLEFT", bags, "TOPLEFT", 0, 0)
 	header:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, -30)
+	self.header = header
 
 	-- footer
 	local footer = CreateFrame("frame", nil, bags)
@@ -202,12 +207,13 @@ function mod:create_container(name, start_id, end_id)
 	local icon = _G[searchBox:GetName().."SearchIcon"]
 	icon:ClearAllPoints()
 	icon:SetPoint("LEFT", searchBox,"LEFT", 4, -1)
-	bdUI:set_backdrop(searchBox)	
+	bdUI:set_backdrop(searchBox)
+	searchBox.bd_background:SetVertexColor(.06, .07, .09, 1)
 	tinsert(_G.ITEM_SEARCHBAR_LIST, searchBox:GetName())
 
 	-- callback for sizing
 	function bags:update_size(width, height)
-		bags:SetSize(width + 20, height + 40)
+		bags:SetSize(width, height + header:GetHeight())
 	end
 
 	-- create parent bags for id searching

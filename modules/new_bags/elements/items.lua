@@ -191,53 +191,45 @@ end
 --========================================
 -- POSITION ITEMS
 --========================================
-function mod:position_items(options)
+function mod:position_items(parent, items, pool)
 	-- loop through items now
-	local last, lastrow, first, lastcol
-	local index = 1
-	local rows, columns = 1, 1
+	local last, lastrow, index = nil, nil, 1
+
 	local spacing = mod.border
+	local cat_spacing = 20
+	local config = mod:get_save()
 
-	if (options.table) then
-		-- for k = 1, #options.table do
-		-- 	v = options.table
-		for k, v in pairs(options.table) do
-			local frame = options.pool:Acquire()
-			frame:Show()
-			frame:SetParent(mod.current_parent)
+	local rows = math.ceil(#items / config.bag_max_column)
+	local columns = math.min(#items, config.bag_max_column)
+	local height = (config.bag_size + spacing) * rows - spacing
+	local width = (config.bag_size + spacing) * columns - spacing
 
-			if (not first) then first = frame end
-			if (not lastrow) then
-				frame:SetPoint("TOPLEFT", options.parent, "TOPLEFT", 0, 0)
-				lastrow = frame
-			elseif (index > options.columns) then
-				frame:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -spacing)
-				lastrow = frame
-				lastcol = last
-				index = 1
-				rows = rows + 1
-			else
-				frame:SetPoint("TOPLEFT", last, "TOPRIGHT", spacing, 0)
-				if (not lastcol) then
-					columns = columns + 1
-				end
-			end
-			last = frame
-			index = index + 1
+	for i = 1, #items do
+		local itemLink, bag, slot, itemID = unpack(items[i])
+		local button = pool:Acquire()
+		button:Show()
+		button:SetParent(mod.bag_frames[bag])
+		button:SetID(slot)
+		button:SetSize(config.bag_size, config.bag_size)
+		button.bag = bag
+		button.slot = slot
 
-			-- print(frame, frame:GetPoint())
+		button:update()
 
-			if (options.loop) then 
-				options.loop(frame, k, v) 
-			end
+		if (not lastrow) then
+			button:SetPoint("TOPLEFT", parent.container, "TOPLEFT", 0, 0)
+			lastrow = button
+		elseif (index > columns) then
+			button:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -spacing)
+			lastrow = button
+			index = 1
+		else
+			button:SetPoint("TOPLEFT", last, "TOPRIGHT", spacing, 0)
 		end
-	else
-		first = _G["bdBags_Item_1"]
+
+		last = button
+		index = index + 1
 	end
 
-	if (options.callback and first) then
-		local height = ((first:GetHeight()+spacing) * rows) - spacing
-		local width = ((first:GetWidth()+spacing) * columns) - spacing
-		options.callback(width, height)
-	end
+	return width, height
 end

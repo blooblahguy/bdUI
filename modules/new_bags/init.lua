@@ -25,9 +25,30 @@ local config = {
 		min = 10,
 		max = 50,
 		step = 2,
-		value = 28,
+		value = 30,
 		label = "Bag Button Size"
 	},
+
+	{
+		key = "bag_height",
+		type = "range",
+		min = 200,
+		max = 800,
+		step = 5,
+		value = 330,
+		label = "Bag Max Height"
+	},
+
+	{
+		key = "bag_max_column",
+		type = "range",
+		min = 2,
+		max = 20,
+		step = 1,
+		value = 10,
+		label = "Category Max Columns"
+	},
+
 
 	-- {
 	-- 	key = "categories",
