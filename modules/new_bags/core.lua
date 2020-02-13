@@ -52,6 +52,7 @@ function mod:initialize()
 			["default"] = true,
 			["duplicate"] = true,
 			["locked"] = true,
+			["order"] = -1,
 		})
 		mod:create_category("Quest & Keys", {
 			["type"] = mod:merge(mod.types["Quest"], mod.types["Keys"]),
@@ -78,6 +79,7 @@ function mod:initialize()
 			["catch_all"] = true,
 			["default"] = true,
 			["locked"] = true,
+			["order"] = 100
 		})
 	end
 
@@ -140,12 +142,13 @@ function mod:create_container(name, start_id, end_id)
 	local header = CreateFrame("frame", nil, bags)
 	header:SetPoint("TOPLEFT", bags, "TOPLEFT", 0, 0)
 	header:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, -30)
-	self.header = header
+	bags.header = header
 
 	-- footer
 	local footer = CreateFrame("frame", nil, bags)
 	footer:SetPoint("TOPLEFT", bags, "BOTTOMLEFT", 0, 30)
 	footer:SetPoint("BOTTOMRIGHT", bags, "BOTTOMRIGHT", 0, 0)
+	bags.footer = footer
 
 	-- add category
 	local add_category = create_button(footer)
@@ -177,6 +180,7 @@ function mod:create_container(name, start_id, end_id)
 	local sort_bags = create_button(header)
 	sort_bags.text:SetText("S")
 	sort_bags:SetPoint("RIGHT", close_button, "LEFT", -4, 0)
+	bags.sorter = sort_bags
 
 	-- bags
 	local bags_button = create_button(header)
@@ -184,16 +188,8 @@ function mod:create_container(name, start_id, end_id)
 	bags_button:SetPoint("RIGHT", sort_bags, "LEFT", -4, 0)
 
 	-- money
-	local money = CreateFrame("frame", "bd"..name.."Money", bags, "SmallMoneyFrameTemplate")
+	local money = mod:create_money(name, bags)
 	money:SetPoint("LEFT", header, "LEFT", 6, -1)
-	for k, v in pairs({"Gold","Silver","Copper"}) do
-		_G[money:GetName()..v.."ButtonText"]:SetFont(bdUI.media.font, 12)
-		_G[money:GetName()..v.."Button"]:EnableMouse(false)
-		_G[money:GetName()..v.."Button"]:SetFrameLevel(8)
-	end
-	-- money:RegisterEvent("PLAYER_ENTERING_WORLD")
-	-- money:RegisterEvent("PLAYER_MONEY")
-	-- money:HookScript("OnEvent", ContainerFrame1MoneyFrame.Update)
 
 	-- search
 	local searchBox = CreateFrame("EditBox", "bd"..name.."SearchBox", bags, "BagSearchBoxTemplate")
@@ -213,7 +209,7 @@ function mod:create_container(name, start_id, end_id)
 
 	-- callback for sizing
 	function bags:update_size(width, height)
-		bags:SetSize(width, height + header:GetHeight())
+		bags:SetSize(width, height + header:GetHeight() + footer:GetHeight())
 	end
 
 	-- create parent bags for id searching
@@ -224,7 +220,6 @@ function mod:create_container(name, start_id, end_id)
 	end
 
 	mod.containers[name:lower()] = bags
-	
 	return bags
 end
 

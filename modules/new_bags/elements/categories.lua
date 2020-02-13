@@ -193,6 +193,11 @@ local category_methods = {
 		local header = CreateFrame("button", nil, self)
 		header:SetPoint("TOPLEFT", self, "TOPLEFT")
 		header:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, -28)
+		-- header:EnableMouse(true)
+		-- header:RegisterForDrag("LeftButton","RightButton")
+		-- header:RegisterForDrag("LeftButton","RightButton")
+		-- header:SetScript("OnDragStart", function(self) self:GetParent():GetParent():StartMoving() end)
+		-- header:SetScript("OnDragStop", function(self) self:GetParent():GetParent():StopMovingOrSizing() end)
 
 		local text = header:CreateFontString(nil, "OVERLAY")
 		text:SetFont(bdUI.media.font, 13, "OUTLINE")

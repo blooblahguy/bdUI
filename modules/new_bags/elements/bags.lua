@@ -30,15 +30,12 @@ function mod:create_bags()
 	mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
 	mod.bags.container:SetHeight(config.bag_height)
 
-	mod.bags.category_items = {}
-
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
 	mod.bags:RegisterEvent('AUCTION_MULTISELL_START')
 	mod.bags:RegisterEvent('AUCTION_MULTISELL_UPDATE')
 	mod.bags:RegisterEvent('AUCTION_MULTISELL_FAILURE')
 	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
-
 
 	mod:RawHook("ToggleBackpack", toggle_bag, true)
 	mod:RawHook("ToggleAllBags", toggle_bag, true)
@@ -63,7 +60,14 @@ function mod:create_bags()
 		end
 	end)
 
-	-- create shortcut category bar
+	-- hook buttons
+	function mod.bags.sorter:callback()
+		SortBags()
+	end
+
+	-- currencies
+	local currencies = mod:create_currencies("bags", mod.bags.footer)
+	currencies:SetPoint("LEFT", mod.bags.footer, "LEFT", 8, 0)
 end
 
 
@@ -77,7 +81,6 @@ function mod:update_bags()
 	local new_items = {}
 	local item_weights = {}
 	local open_slots = 0
-	mod.bags.category_items = {}
 
 	-- first gather all items up
 	for bag = 0, 4 do
@@ -101,7 +104,6 @@ function mod:update_bags()
 
 	-- build item category weight table
 	for category_name, category in pairs(mod.categories) do
-		-- mod.bags.category_items[category_name] = {}
 		category.items = {}
 		local conditions = category.conditions
 		for k = 1, #items do
