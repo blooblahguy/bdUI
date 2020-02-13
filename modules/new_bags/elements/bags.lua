@@ -27,7 +27,6 @@ end
 
 function mod:create_bags()
 	local config = mod:get_save()
-	mod.bags:Show()
 	mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
 	mod.bags.container:SetHeight(config.bag_height)
 
@@ -40,40 +39,17 @@ function mod:create_bags()
 	mod.bags:RegisterEvent('AUCTION_MULTISELL_FAILURE')
 	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
 
-	-- track when we call vs blizzard ui
-	local from_blizzard = true
-	-- mod.bags.open = function(self)
-	-- 	mod.bags:Show()
-	-- end
-	-- mod.bags.close = function(self)
-	-- 	mod.bags:Hide()
-	-- end
-	-- mod.bags.toggle = function(self)
-	-- 	mod.bags:SetShown(not mod.bags:IsShown())
-	-- end
-
-	CloseAllBags()
-	CloseSpecialWindows()
 
 	mod:RawHook("ToggleBackpack", toggle_bag, true)
 	mod:RawHook("ToggleAllBags", toggle_bag, true)
 	mod:RawHook("ToggleBag", toggle_bag, true)
-
 	mod:RawHook("OpenAllBags", open_all, true)
-
 	mod:RawHook("OpenBackpack", open_bag, true)
 	mod:RawHook("OpenBag", open_bag, true)
-
 	mod:RawHook("CloseBag", close_bag, true)
 	mod:RawHook("CloseBackpack", close_bag, true)
-
 	mod:RawHook("CloseAllBags", close_all, true)
 	hooksecurefunc("CloseSpecialWindows", close_all)
-	
-	-- hooksecurefunc("ToggleAllBags", mod.bags.toggle)
-	-- hooksecurefunc("ToggleBag", mod.bags.toggle)
-
-
 
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "EQUIPMENT_SWAP_PENDING" or event == "AUCTION_MULTISELL_START") then
@@ -143,7 +119,8 @@ function mod:update_bags()
 				-- evaluate conditions
 				if (mod:has_value(conditions['type'], itemTypeID)) then new_weight = new_weight + 1 end -- weight: 1
 				if (mod:has_value(conditions['subtype'], itemSubClassID)) then new_weight = new_weight + 1 end -- weight: 1
-				if (mod:has_value(conditions['itemids'], itemID)) then new_weight = new_weight + 10 end -- weight: 10
+				if (conditions['itemids'][itemID]) then new_weight = new_weight + 10 end
+				-- if (mod:has_value(conditions['itemids'], itemID)) then new_weight = new_weight + 10 end -- weight: 10
 
 				if (current_weight < new_weight) then
 					item_weights[k] = {new_weight, category_name}
@@ -197,7 +174,7 @@ function mod:update_bags()
 		-- local count = #mod.bags.category_items["New Items"]
 		-- mod.bags.category_items["New Items"][count + 1] = items[k]
 		local count = #mod.categories["New Items"].items
-		mod.catecategoriesgory["New Items"].items[count + 1] = items[k]
+		mod.categories["New Items"].items[count + 1] = items[k]
 	end
 
 	bdUI:profile_stop("bags", "update bags", 2)

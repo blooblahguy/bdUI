@@ -135,6 +135,25 @@ end
 --     return t
 -- end
 
+function mod:remove_value(tab, val)
+	if (not val) then return false end
+	values = {}
+	if (type(val) == "table") then
+		for k, v in pairs(val) do
+			values[v] = true
+		end
+	else
+		values[val] = true
+	end
+
+	for i = 1, #tab do
+		value = tab[i]
+		if values[value] then
+            tab[i] = nil
+        end
+	end
+end
+
 function mod:has_value(tab, val)
 	if (not val) then return false end
 	values = {}
@@ -145,11 +164,13 @@ function mod:has_value(tab, val)
 	else
 		values[val] = true
 	end
-    for index, value in ipairs(tab) do
-        if values[value] then
-            return index
+
+	for i = 1, #tab do
+		value = tab[i]
+		if values[value] then
+            return i
         end
-    end
+	end
 
     return false
 end

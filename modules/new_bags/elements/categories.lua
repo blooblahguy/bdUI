@@ -96,24 +96,18 @@ local dragger_methods = {
 		local itemID = mod:item_id(info)
 		local cat_name = self:GetParent().name
 
-		local index = mod:has_value(mod.categories[cat_name].conditions.itemids, itemID)
-		if (index) then
-			table.remove(mod.categories[cat_name].conditions.itemids, index)
-		else
-			for name, category in pairs(mod.categories) do
-				local index = mod:has_value(category.conditions.itemids, itemID)
-				if (index) then
-					category.conditions.itemids[index] = nil
-				end
-			end
-			
-			table.insert(mod.categories[cat_name].conditions.itemids, itemID)
+		local has = mod.categories[cat_name].conditions.itemids[itemID]
+
+		for name, category in pairs(mod.categories) do
+			category.conditions.itemids[itemID] = nil
+		end
+
+		if (not has) then
+			mod.categories[cat_name].conditions.itemids[itemID] = true
 		end
 
 		ClearCursor()
-
 		mod:update_bags()
-
 	end,
 }
 
@@ -164,25 +158,29 @@ local category_methods = {
 				dragger:UnregisterEvent("ITEM_LOCK_CHANGED")
 				self:Show()
 				overlay:Show()
-				mod.show_all = true
-
+				
 				local cat_name = self:GetParent().name
-				local index = mod:has_value(mod.categories[cat_name].conditions.itemids, itemID)
+				local index = mod.categories[cat_name].conditions.itemids[itemID]
 				if (index) then
 					self.overlay:SetVertexColor(1, 0, 0, 0.3)
 				else
 					self.overlay:SetVertexColor(0, 1, 0, 0.3)
+				end
+
+				if (not mod.show_all) then
+					mod.show_all = true
+					mod:draw_bags()
 				end
 			else
 				dragger:UnregisterEvent("CURSOR_UPDATE")
 				dragger:RegisterEvent("ITEM_LOCK_CHANGED")
 				self:Hide()
 				overlay:Hide()
-				mod.show_all = false
-			end
 
-			if (event == "CURSOR_UPDATE" and type == "item") then
-				mod:draw_bags()
+				if (mod.show_all) then
+					mod.show_all = false
+					mod:draw_bags()
+				end
 			end
 		end)
 

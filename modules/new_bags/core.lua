@@ -56,7 +56,7 @@ function mod:initialize()
 		mod:create_category("Quest & Keys", {
 			["type"] = mod:merge(mod.types["Quest"], mod.types["Keys"]),
 			["default"] = true,
-			["itemids"] = {138019}
+			["itemids"] = {[138019] = true}
 		})
 		mod:create_category("Armor & Weapons", {
 			["type"] = mod:merge(mod.types["Armor"], mod.types["Weapon"]),
