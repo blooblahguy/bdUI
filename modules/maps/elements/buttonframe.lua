@@ -87,6 +87,7 @@ function mod:create_button_frame()
 	manualTarget['QueueStatusMinimapButton'] = true
 
 	-- don't touch these
+	ignoreFrames['bdMinimap'] = true
 	ignoreFrames['bdButtonFrame'] = true
 	ignoreFrames['MinimapBackdrop'] = true
 	ignoreFrames['GameTimeFrame'] = true
@@ -143,8 +144,6 @@ function mod:create_button_frame()
 
 		f:SetScale(1)
 		f:SetFrameStrata("MEDIUM")
-		f:SetWidth(config.buttonsize)
-		f:SetHeight(config.buttonsize)
 
 		-- Skin textures
 		local r = {f:GetRegions()}
@@ -177,8 +176,6 @@ function mod:create_button_frame()
 		if (config.buttonpos == "Disabled") then return end
 		if (InCombatLockdown()) then return end
 
-		bdUI:profile_start("Minimap", "find_frames", 3)
-
 		if (not config.showconfig) then
 			hideButtons['bdUI_configButton'] = true
 		else
@@ -204,7 +201,7 @@ function mod:create_button_frame()
 				local isLibBtn = name and (strfind(name, "LibDB") or strfind(name, "Button") or strfind(name, "Btn")) -- lib buttons should be handled
 				if (hideButtons[name]) then -- move on from these
 					frame:Hide()
-				elseif (frame:IsShown() and (manualTarget[n] or isLibBtn)) then -- needs to be handled
+				elseif (frame:IsShown() and (manualTarget[name] or isLibBtn)) then -- needs to be handled
 					skin(frame)
 					if (not has_value(frames, frame)) then
 						table.insert(frames, frame)
@@ -212,8 +209,6 @@ function mod:create_button_frame()
 				end
 			end
 		end
-
-		bdUI:profile_stop("Minimap", "find_frames", 3)
 
 		position()
 	end
