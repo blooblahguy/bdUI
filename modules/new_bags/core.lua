@@ -18,7 +18,7 @@ ace_hook:Embed(mod)
 function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
-
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 	if (not config.enabled or mod.initialized) then return end
 	mod.initialized = true
 

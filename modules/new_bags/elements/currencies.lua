@@ -1,6 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("New Bags")
 
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
+
 MAX_WATCHED_TOKENS = 10
 for i = 3, MAX_WATCHED_TOKENS do
 	local frame = CreateFrame("button", "BackpackTokenFrameToken"..i, BackpackTokenFrame, "BackpackTokenTemplate")

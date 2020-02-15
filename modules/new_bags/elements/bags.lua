@@ -1,6 +1,9 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("New Bags")
 
+
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
+
 mod.bags = mod:create_container("Bags", 0, 4)
 mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)

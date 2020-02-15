@@ -50,6 +50,13 @@ local config = {
 	},
 }
 
+local hide = false
+if (not developer) then 
+	hide = true
+elseif (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then
+	hide = true
+end
+
 local mod = bdUI:register_module("New Bags", config, {
-	hide_ui = not developer
+	hide_ui = hide
 })
