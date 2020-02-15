@@ -11,14 +11,16 @@ local config
 --===============================================
 local azerite, honor, rep, xp, altpower, container
 function mod:initialize()
-	config = mod:get_save()
-
-
-	-- framestack bars
-	container = CreateFrame("frame", "bdDatabars", UIParent)
+	mod.config = mod:get_save()
+	config = mod.config
 	
 	-- create the bars
 	altpower = mod:create_altpower()
+
+	if (not config.databars) then return end
+
+	-- framestack bars
+	container = CreateFrame("frame", "bdDatabars", UIParent)
 	xp = mod:create_xp()
 	rep = mod:create_reputation()
 	honor = mod:create_honor()
@@ -33,6 +35,11 @@ end
 
 -- config callback
 function mod:config_callback()
+	mod.config = mod:get_save()
+	config = mod.config
+
+	if (not config.databars) then return end
+
 	if (xp) then
 		xp:SetSize(config.databars_width, config.databars_height)
 		for i = 1, 19 do

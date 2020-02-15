@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Databars")
 
 function mod:create_azerite()
-	local config = mod:get_save()
+	local config = mod.config
 
 	if (not C_AzeriteItem) then return end
 

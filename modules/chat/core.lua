@@ -11,7 +11,9 @@ local gsub = string.gsub
 -- place core functionality here
 --===============================================
 function mod:initialize()
-	config = mod:get_save()
+	mod.config = mod:get_save()
+	config = mod.config
+	if (not config.enabled) then return end
 
 	-- defaults
 	mod:set_defaults()
@@ -138,6 +140,10 @@ end
 -- CONFIG CALLBACK
 --=========================================================
 function mod:config_callback()
+	mod.config = mod:get_save()
+	config = mod.config
+	if (not config.enabled) then return end
+	
 	if (not ChatFrame1.bd_backdrop) then
 		bdUI:set_backdrop(ChatFrame1)
 	end

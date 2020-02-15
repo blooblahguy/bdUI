@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 
 function mod:enemy_style(self, event, unit)
-	local config = mod:get_save()
+	local config = mod.config
 
 	-- names
 	self.Name:Show()

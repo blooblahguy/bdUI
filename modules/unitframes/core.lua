@@ -13,7 +13,9 @@ mod.custom_layout = {}
 -- Config callback
 --===============================================
 function mod:config_callback()
-	config = mod:get_save()
+	mod.config = mod:get_save()
+	config = mod.config
+	if (not config.enabled) then return false end
 
 	for unit, self in pairs(mod.units) do
 		local func = unit
@@ -446,8 +448,7 @@ local function layout(self, unit)
 end
 
 function mod:create_unitframes()
-	config = mod:get_save()
-
+	config = mod.config
 	oUF:RegisterStyle("bdUnitFrames", layout)
 	oUF:SetActiveStyle("bdUnitFrames")
 

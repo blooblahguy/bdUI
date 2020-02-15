@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 
 function mod:friendly_style(self, event, unit)
-	local config = mod:get_save()
+	local config = mod.config
 	
 	self.Name:SetTextColor(unpack(self.smartColors))
 	self.Name:SetAlpha(config.friendnamealpha)

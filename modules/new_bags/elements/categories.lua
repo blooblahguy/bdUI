@@ -300,7 +300,7 @@ local category_methods = {
 		end)
 	end,
 	['update_size'] = function(self, width, height)
-		local config = mod:get_save()
+		local config = mod.config
 		if (width < config.bag_size) then width = config.bag_size end
 		self.container:SetSize(width, height)
 		self:SetSize(width + (self.spacing * 3), height + self.dragger:GetHeight() + self.spacing)
@@ -398,7 +398,7 @@ end
 -- POSITION CATEGORIES
 --===============================================
 function mod:position_categories(parent, categories, pool)
-	local config = mod:get_save()
+	local config = mod.config
 
 	local spacing = mod.border
 	local max_width = ((config.bag_size + spacing) * config.bag_max_column) + 20

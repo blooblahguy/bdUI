@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
 mod.custom_layout["focus"] = function(self, unit)
-	local config = mod:get_save()
+	local config = mod.save
 
 	self:SetSize(config.focuswidth, config.focusheight)
 	self.Curhp:Hide()

@@ -4,7 +4,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 local oUF = bdUI.oUF
-local config = {}
+local config
 local nameplates = {}
 
 -- Fonts we use
@@ -29,6 +29,10 @@ function mod:nameplate_size()
 end
 
 function mod:config_callback()
+	mod.config = mod:get_save()
+	config = mod.config
+	if (not config.enabled) then return false end
+	
 	-- Update nameplate sizing
 	mod:nameplate_size()
 
@@ -241,7 +245,6 @@ local function nameplate_create(self, unit)
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
 	self.Health:SetAllPoints(self)
-	self.Health.frequentUpdates = true
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
 	self.Health.colorClass = true
@@ -527,16 +530,23 @@ local function nameplate_create(self, unit)
 		bdUI:set_backdrop(self.Health)
 		bdUI:set_backdrop(self.Castbar)
 	end)
-
-	mod:config_callback()
 end
 
 
 function mod:initialize()
-	config = mod:get_save()
+	mod.config = mod:get_save()
+	config = mod.config
+
 	if (not config.enabled) then return end
 
-	mod:RegisterEvent("PLAYER_ENTERING_WORLD", mod.nameplate_size)
+	local forced = false
+	hooksecurefunc(C_NamePlate, "SetNamePlateEnemySize", function()
+		if (not forced) then
+			forced = true
+			mod:nameplate_size()
+			forced = false
+		end
+	end)
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
 	oUF:SetActiveStyle("bdNameplates")

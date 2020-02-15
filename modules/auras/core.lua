@@ -9,9 +9,10 @@ local mod = bdUI:get_module("Auras")
 -- place core functionality here
 --===============================================
 function mod:initialize()
-
+	mod.config = mod:get_save()
 end
 
 function mod:config_callback()
+	mod.config = mod:get_save()
 	bdUI.caches.auras = {}
 end

@@ -21,7 +21,7 @@ local lib_glow = bdButtonGlow
 -- DISPEL / GLOWING
 --===========================================
 mod.dispel_glow = function(self, event, unit)
-	local config = mod:get_save()
+	local config = mod.config
 	if (unit ~= self.unit) then return end
 
 	local foundGlow = false

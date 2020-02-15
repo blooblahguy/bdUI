@@ -167,7 +167,7 @@ end
 -- MicroMenu
 --===============================================================
 function mod:create_micromenu()
-	c = mod:get_save()
+	c = mod.config
 	if (not c.showMicro) then return end
 	cfg = {}
 	cfg.cfg = "microbar"

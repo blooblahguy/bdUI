@@ -36,7 +36,7 @@ end
 -- Mega resource display
 mod.create_resources = function(self, unit)
 	if (unit ~= "player") then return end
-	config = mod:get_save()
+	config = mod.save
 
 	-- if we've created this already, just update it
 	if (self.Resources) then

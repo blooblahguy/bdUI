@@ -12,7 +12,7 @@ local mod = bdUI:get_module("Tooltips")
 -- Skinning default tooltips
 -----------------------------------
 function mod:skin(tooltip)
-	bdUI:set_backdrop(tooltip)
+	bdUI:set_backdrop_basic(tooltip)
 	
 	mod:strip(tooltip)
 	tooltip:SetScale(1)

@@ -44,6 +44,12 @@ local config = {
 		heading = "Databars",
 		args = {
 			{
+				key = "databars",
+				type = "toggle",
+				value = true,
+				label = "Enable Databars"
+			},
+			{
 				key = "databars_width",
 				type = "range",
 				label = "Databars Width",

@@ -9,10 +9,14 @@ local mod = bdUI:get_module("General")
 -- place core functionality here
 --===============================================
 function mod:config_callback()
+	mod.config = mod:get_save()
+	
 	mod:create_viewports()
 	
 end
 function mod:initialize()
+	mod.config = mod:get_save()
+
 	mod:create_viewports()
 	mod:create_dcbo()
 	mod:create_errorblock()

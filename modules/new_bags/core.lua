@@ -16,13 +16,15 @@ ace_hook:Embed(mod)
 -- place core functionality here
 --===============================================
 function mod:initialize()
-	config = mod:get_save()
+	mod.config = mod:get_save()
+	config = mod.config
+
 	if (not config.enabled or mod.initialized) then return end
 	mod.initialized = true
 
 	-- store saved variable for messing with
-	-- config.categories = config.categories or {}
-	config.categories = {}
+	config.categories = config.categories or {}
+	-- config.categories = {}
 	mod.categories = config.categories
 
 	if (not mod.categories.first_run_complete) then
@@ -79,17 +81,15 @@ function mod:initialize()
 
 	-- Create Frames
 	mod:create_bags()
-	mod:update_bags()
 
 	-- mod:create_bank()
 end
 
 function mod:config_callback()
-	config = mod:get_save()
+	mod.config = mod:get_save()
+	config = mod.config
 	if (not config.enabled) then return end
 	mod:initialize()
-
-	mod:update_bags()
 end
 
 --===============================================

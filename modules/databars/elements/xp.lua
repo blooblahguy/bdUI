@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Databars")
 
 function mod:create_xp()
-	local config = mod:get_save()
+	local config = mod.config
 
 	local bar = mod:create_databar("bdXP")
 	bar:SetSize(config.databars_width, config.databars_height)

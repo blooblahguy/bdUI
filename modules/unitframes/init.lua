@@ -290,8 +290,9 @@ local mod = bdUI:register_module("Unitframes", config)
 --=============================================
 -- Initialize function
 --=============================================
-function mod:initialize(config)
-	if (not config.enabled) then return false end
+function mod:initialize()
+	mod.config = mod:get_save()
+	if (not mod.config.enabled) then return false end
 
 	bdUI.oUF.colors.power[0] = {46/255, 130/255, 215/255}
 	bdUI.oUF.colors.power["MANA"] = {46/255, 130/255, 215/255}

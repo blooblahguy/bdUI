@@ -12,7 +12,7 @@ local function has_value(tab, val)
 end
 
 function mod:create_button_frame()
-	local config = mod:get_save()
+	local config = mod.config
 
 	-- Button frame
 	Minimap.buttonFrame = CreateFrame("frame", "bdButtonFrame", Minimap)

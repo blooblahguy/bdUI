@@ -14,8 +14,8 @@ local mod = bdUI:get_module("Maps")
 -- Initialize function
 --=============================================
 function mod:initialize()
-	config = mod:get_save()
-	if (not config.enabled) then return false end
+	mod.config = mod:get_save()
+	if (not mod.config.enabled) then return false end
 
 	mod:create_minimap()
 	mod:create_button_frame()

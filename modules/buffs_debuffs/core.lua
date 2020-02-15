@@ -25,18 +25,18 @@ local function UpdateTime(self, elapsed)
 	if (self.total > 0.1) then
 		if(self.expiration) then
 			self.expiration = math.max(self.expiration - self.total, 0)
-			local seconds = self.expiration
+			-- local seconds = 
 
 			if(self.expiration <= 0) then
 				self.duration:SetText('')
 			else
-				if (seconds < 10 or not config.decimalprec) then
-					seconds = bdUI:round(seconds, 1)
-				else
-					seconds = math.floor(seconds)
-				end
-				local mins = math.floor(seconds/60);
-				local hours = bdUI:round(mins/60, 1);
+				-- if (seconds < 10 or not config.decimalprec) then
+				-- 	seconds = bdUI:round(seconds, 1)
+				-- else
+				-- end
+				local seconds = Round(self.expiration)
+				local mins = Round(seconds/60);
+				local hours = Round(mins/60, 1);
 
 				if (hours and hours > 1) then
 					self.duration:SetText(hours.."h")
@@ -192,6 +192,7 @@ end
 --===============================================
 function mod:config_callback()
 	config = mod:get_save()
+	if (not config.enabled) then return end
 	if (InCombatLockdown()) then return end
 
 	-- font sizes
@@ -283,8 +284,7 @@ end
 --===============================================
 function mod:initialize()
 	config = mod:get_save()
-	
-	
+	if (not config.enabled) then return end
 
 	setHeaderAttributes(bdBuffs,"bdBuffsTemplate",true)
 	setHeaderAttributes(bdDebuffs,"bdDebuffsTemplate",false)

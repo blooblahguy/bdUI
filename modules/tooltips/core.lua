@@ -131,7 +131,7 @@ local function setUnit(self)
 		GameTooltipStatusBar.text:SetJustifyV("MIDDLE")
 	end
 	GameTooltipStatusBar:SetStatusBarTexture(bdUI.media.smooth)
-	bdUI:set_backdrop(GameTooltipStatusBar)
+	bdUI:set_backdrop_basic(GameTooltipStatusBar)
 
 	-- this sucks at updating while you are hovering
 	GameTooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
@@ -156,7 +156,7 @@ local function setUnit(self)
 end
 
 function mod:create_tooltips()
-	config = mod:get_save()
+	config = mod.config
 
 	---------------------------------------------
 	--	Modify default position

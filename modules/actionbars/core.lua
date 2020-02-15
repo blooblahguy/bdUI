@@ -14,6 +14,7 @@ local c = {}
 --===============================================
 function mod:initialize()
 	c = mod:get_save()
+	mod.config = c
 	if (not c.enabled) then mod.disabled = true; return end
 	
 	mod:remove_blizzard()
@@ -46,6 +47,8 @@ end
 --=======================================
 function mod:config_callback()
 	c = mod:get_save()
+	mod.config = c
+	if (not c.enabled) then mod.disabled = true; return end
 	if (InCombatLockdown()) then
 		mod:RegisterEvent("PLAYER_REGEN_DISABLED")
 		return
@@ -122,7 +125,6 @@ end
 --=======================================
 function mod:LayoutBar(frame, buttonList, cfg)
 	local border = bdUI:get_border(frame)
-	c = mod:get_save()
 
 	-- config
 	frame.limit = c[cfg.cfg.."_buttons"] or 12

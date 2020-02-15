@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("General")
 
 function mod:create_gmotd()
-	local config = mod:get_save()
+	local config = mod.config
 	bdUI.persistent.gmotd = bdUI.persistent.gmotd or {}
 	
 	local gmotd = CreateFrame("frame", nil, UIParent)

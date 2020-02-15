@@ -45,9 +45,9 @@ function bdUI:load_module(module)
 	local save = module:load()
 
 	-- initalize and callback
-	if (module:initialize(save) ~= false) then
+	if (module:initialize() ~= false) then
 		-- run callback
-		module:callback(save)
+		module:callback()
 		return module
 	end	
 end

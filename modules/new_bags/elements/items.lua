@@ -191,7 +191,7 @@ function mod:position_items(parent, items, pool)
 
 	local spacing = mod.border
 	local cat_spacing = 20
-	local config = mod:get_save()
+	local config = mod.config
 	local num = #items
 	if (num == 0) then num = 1 end
 

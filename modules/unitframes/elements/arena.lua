@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Unitframes")
 
 
 mod.custom_layout["arena"] = function(self, unit)
-	local config = mod:get_save()
+	local config = mod.save
 
 	self:SetSize(config.bosswidth, config.bossheight)
 	self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)

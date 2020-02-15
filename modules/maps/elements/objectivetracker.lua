@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Maps")
 local config
 
 function mod:create_objective_tracker()
-	config = mod:get_save()
+	config = mod.config
 
 	local ignore_point
 

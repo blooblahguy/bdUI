@@ -35,7 +35,7 @@ local filter = {
 }
 
 function mod:create_errorblock()
-	local config = mod:get_save()
+	local config = mod.config
 	
 	UIErrorsFrame:SetScript("OnEvent", function(self, event, msg, ...)
 		if (event ~= "UI_ERROR_MESSAGE") then 

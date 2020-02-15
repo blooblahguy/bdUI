@@ -12,7 +12,7 @@ local function createViewport()
 end
 
 function mod:create_viewports()
-	local config = mod:get_save()
+	local config = mod.config
 
 	local top = 0
 	local bottom = 0

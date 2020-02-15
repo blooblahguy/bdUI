@@ -23,8 +23,6 @@ mod.frames = {}
 -- Callback on creation and configuration change
 --======================================================
 local function update_frame(self)
-	config = mod:get_save()
-
 	self:SetSize(config.width, config.height)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.ReadyCheckIndicator:SetSize(12, 12)
@@ -71,6 +69,9 @@ local function update_frame(self)
 	end
 end
 function mod:config_callback()
+	mod.config = mod:get_save()
+	config = mod.config
+	if (not config.enabled) then return false end
 	if (InCombatLockdown()) then return end
 
 	for k, self in pairs(mod.frames) do
@@ -443,7 +444,6 @@ end
 -- Build positioning and attributes
 --============================================================
 function mod:get_attributes()
-	local config = mod:get_save()
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 	
 	-- sorting options
@@ -558,7 +558,8 @@ end
 -- Initialize
 --======================================================
 function mod:initialize()
-	config = mod:get_save()
+	mod.config = mod:get_save()
+	config = mod.config
 
 	if (not config.enabled) then return false end
 

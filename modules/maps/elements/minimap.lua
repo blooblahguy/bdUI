@@ -3,7 +3,8 @@ local mod = bdUI:get_module("Maps")
 local config
 
 function mod:config_callback()
-	config = mod:get_save()
+	config = mod.config
+	if (not config.enabled) then return false end
 
 	-- show/hide time
 	if not IsAddOnLoaded("Blizzard_TimeManager") then
