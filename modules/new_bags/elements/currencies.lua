@@ -72,7 +72,7 @@ function mod:create_currencies(name, parent)
 		for i = 1, GetCurrencyListSize() do
 			local name, isHeader, isExpanded, isUnused, isWatched, count, icon, itemID = GetCurrencyListInfo(i)
 
-			if (isWatched) then
+			if (isWatched and count) then
 				local frame = currencies.watchers[index]
 
 				frame:Show()

@@ -85,7 +85,6 @@ end
 local index = 0;
 local function layout(self, unit)
 	self:RegisterForClicks('AnyDown')
-	self:RegisterEvent('PLAYER_REGEN_ENABLED', update_frame, true)
 	index = index + 1
 	self.index = index
 
@@ -162,9 +161,9 @@ local function layout(self, unit)
 	oUF.Tags.Methods["self.Short"] = function(unit)
 		local name = UnitName(unit)
 		if (not name) then return end
-		if (bdUI.persistent.GridAliases[name]) then
-			name = bdUI.persistent.GridAliases[name];
-		end
+		-- if (bdUI.persistent.GridAliases[name]) then
+		-- 	name = bdUI.persistent.GridAliases[name];
+		-- end
 		return string.utf8sub(name, 1, config.namewidth)
 	end
 
@@ -567,7 +566,7 @@ function mod:initialize()
 	
 	local function enable(self)
 		mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
-		mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
+		-- mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
 		mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
 		mod.raidpartyholder:RegisterEvent("LOADING_SCREEN_DISABLED")
 		mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
@@ -598,13 +597,11 @@ function mod:initialize()
 			"point", new_player_anchor,
 			"groupBy", group_by
 		);
-
-		mod:config_callback()
 	end
 
 	mod:create_container()
-	mod:disable_blizzard()
-	mod:create_alias()
+	-- mod:disable_blizzard()
+	-- mod:create_alias()
 
 	oUF:RegisterStyle("bdGrid", layout)
 	oUF:Factory(enable)

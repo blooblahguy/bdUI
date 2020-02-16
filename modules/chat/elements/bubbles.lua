@@ -56,7 +56,7 @@ function mod:create_chat_bubbles()
 				frame.defaultfont, frame.defaultsize = frame.text:GetFont()
 			end
 		end
-		local border = bdUI:get_border(frame)
+		local border = bdUI.border
 		skin_bubble_text(frame)
 		frame:HookScript("OnShow", skin_bubble_text)
 		

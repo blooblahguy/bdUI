@@ -186,7 +186,7 @@ function mod:icon_border(border)
 	local r, g, b = border:GetVertexColor()
 	r, g, b = bdUI:round(r, 1), bdUI:round(g, 1), bdUI:round(b, 1)
 
-	local bordersize = bdUI:get_border(border)
+	local bordersize = bdUI.border
 	
 	-- set everything to the bottom of the frame
 	border:SetTexture(bdUI.media.flat)
@@ -249,7 +249,7 @@ function mod:skin(frame)
 	frame:SetFrameLevel(3)
 
 	if (frame.skinned) then return end
-	local border = bdUI:get_border(frame)
+	local border = bdUI.border
 	frame:SetNormalTexture("")
 	frame:SetPushedTexture("")
 	frame:SetAlpha(1)

@@ -24,7 +24,7 @@ end
 local function setUnit(self)
 	if (self:IsForbidden()) then return end -- don't mess with forbidden frames, which sometimes randomly happens
 
-	local border = bdUI:get_border(self)
+	local border = bdUI.border
 
 	local name, unit = self:GetUnit()
 	if not unit then
@@ -131,7 +131,7 @@ local function setUnit(self)
 		GameTooltipStatusBar.text:SetJustifyV("MIDDLE")
 	end
 	GameTooltipStatusBar:SetStatusBarTexture(bdUI.media.smooth)
-	bdUI:set_backdrop_basic(GameTooltipStatusBar)
+	bdUI:set_backdrop(GameTooltipStatusBar)
 
 	-- this sucks at updating while you are hovering
 	GameTooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")

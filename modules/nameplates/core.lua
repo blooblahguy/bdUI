@@ -44,10 +44,6 @@ function mod:config_callback()
 		self.Health._shadow:SetBackdropColor(unpack(config.glowcolor))
 		self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
 
-		-- update backdrop positioning
-		bdUI:set_backdrop(self.Health)
-		bdUI:set_backdrop(self.Castbar)
-
 		-- castbar
 		local cbi_size = (config.height+config.castbarheight) * config.castbariconscale
 		self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)
@@ -171,7 +167,7 @@ end
 -- THREAT
 --==============================================
 local function update_threat(self, event, unit)
-	if(not unit or not UnitIsUnit(self.unit, unit)) then return false end
+	if(not unit or not self.unit == unit) then return false end
 	
 	if (event == "NAME_PLATE_UNIT_REMOVED") then return false end
 	if (event == "OnShow") then return false end
@@ -250,7 +246,6 @@ local function nameplate_create(self, unit)
 	self.Health.colorClass = true
 	self.Health.colorReaction = true
 	bdUI:create_shadow(self.Health, 10)
-	bdUI:set_backdrop(self.Health)
 	self.Health._shadow:SetBackdropColor(unpack(config.glowcolor))
 	self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
 
@@ -419,7 +414,7 @@ local function nameplate_create(self, unit)
 	end
 	
 	self.Auras.PostCreateIcon = function(self, button)
-		bdUI:set_backdrop(button)
+		bdUI:set_backdrop(button, true)
 
 		local cdtext = button.cd:GetRegions()
 		cdtext:SetFontObject("BDN_FONT_SMALL") 
@@ -462,7 +457,6 @@ local function nameplate_create(self, unit)
 	self.Castbar:SetStatusBarColor(unpack(config.kickable))
 	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -border)
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -config.castbarheight)
-	bdUI:set_backdrop(self.Castbar)
 	
 	-- text
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY", "BDN_FONT_CASTBAR")
@@ -527,8 +521,8 @@ local function nameplate_create(self, unit)
 
 	-- Pixel Perfect
 	self:SetScript("OnSizeChanged", function(self, elapsed)
-		bdUI:set_backdrop(self.Health)
-		bdUI:set_backdrop(self.Castbar)
+		bdUI:set_backdrop(self.Health, true)
+		bdUI:set_backdrop(self.Castbar, true)
 	end)
 end
 

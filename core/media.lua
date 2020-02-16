@@ -127,16 +127,18 @@ end
 		return frame
 	end
 
-	function bdUI:set_backdrop(frame, alpha)
-		local border = bdUI:get_border(frame)
-		alpha = alpha or 0.9
+	function bdUI:set_backdrop(frame, force_border)
+		local border = bdUI.border
+		if (force_border) then
+			border = bdUI:get_border(frame)
+		end
 		local r, g, b, a = unpack(bdUI.media.backdrop)
 
 		if (not frame.bd_background) then
 			frame.bd_background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
 			frame.bd_background:SetTexture(bdUI.media.flat)
 			frame.bd_background:SetAllPoints()
-			frame.bd_background:SetVertexColor(r, g, b, alpha)
+			frame.bd_background:SetVertexColor(r, g, b, a)
 			frame.bd_background.protected = true
 
 			frame.t = border_gen(frame)

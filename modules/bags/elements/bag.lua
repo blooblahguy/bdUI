@@ -195,7 +195,7 @@ end
 
 function mod:bag_generation(...)
 	if (mod.disabled) then return end
-	local bordersize = bdUI:get_border(_G["ContainerFrame1Item1"])
+	local bordersize = bdUI.border
 
 	local numrows, lastrowitem, numitems, lastitem = 0, nil, 0, nil
 	for bagID = 0, 4 do

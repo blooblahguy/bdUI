@@ -119,7 +119,7 @@ local function create_button(parent)
 end
 function mod:create_container(name, start_id, end_id)
 	local bags = CreateFrame("Frame", "bd"..name, UIParent)
-	mod.border = bdUI:get_border(bags)
+	mod.border = bdUI.border
 	bags:SetSize(500, 400)
 	bags:SetFrameStrata("HIGH")
 	bags:EnableMouse(true)

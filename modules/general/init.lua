@@ -90,6 +90,12 @@ local config = {
 				value = true,
 				label = "Skin WeakAuras"
 			},
+			{
+				key = "change_fonts",
+				type = "toggle",
+				value = true,
+				label = "Change Fonts"
+			},
 		}
 	}
 
