@@ -1,9 +1,10 @@
-
 local _, ns = ...
 local oUF = ns.oUF
 
-if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then return end
- 
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return end
+
+local healcomm = LibStub("LibHealComm-4.0")
+
 local function Update(self, event, unit)
 	if(self.unit ~= unit) then return end
 
@@ -19,9 +20,13 @@ local function Update(self, event, unit)
 		element:PreUpdate(unit)
 	end
 
-	local incomingHeals = UnitGetIncomingHeals(unit) or 0
-	local absorb = UnitGetTotalAbsorbs(unit) or 0
-	local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
+	local guid = UnitGUID(unit)
+
+	local incomingHeals = healcomm:GetHealAmount(guid, element.healType) or 0
+	-- local myIncomingHeal = (HealComm:GetHealAmount(guid, element.healType, nil, myGUID) or 0) * (HealComm:GetHealModifier(myGUID) or 1)
+	-- local incomingHeals = UnitGetIncomingHeals(unit) or 0
+	local absorb = 0 --UnitGetTotalAbsorbs(unit) or 0
+	local healAbsorb = 0 --UnitGetTotalHealAbsorbs(unit) or 0
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 	local overA = 0
 	local overH = 0
@@ -119,18 +124,15 @@ end
 local function ForceUpdate(element)
 	return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
- 
+
 local function Enable(self)
 	local element = self.bdHealthPrediction
 	if not element then return end
+	if (not healcomm) then return end
 
 	element.__owner = self
 	element.ForceUpdate = ForceUpdate
-	self:RegisterEvent('UNIT_HEALTH', Path)
-	self:RegisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
-	self:RegisterEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', Path)
-	self:RegisterEvent('UNIT_MAXHEALTH', Path)
-	self:RegisterEvent('UNIT_HEAL_PREDICTION', Path)
+	element.healType = element.healType or healcomm.ALL_HEALS
 
 	element.colors = element.colors or {}
 	element.colors.heals = {0.6, 1, 0.6, .2}
@@ -156,18 +158,37 @@ local function Enable(self)
 		element.overHealAbsorb:SetAllPoints()
 	end
 
-	return true
+	self:RegisterEvent('UNIT_MAXHEALTH', Path)
+
+	local function HealCommUpdate(...)
+		if element and self:IsVisible() then
+			for i = 1, select('#', ...) do
+				if self.unit and UnitGUID(self.unit) == select(i, ...) then
+					Path(self, nil, self.unit)
+				end
+			end
+		end
+	end
+
+	local function HealComm_Heal_Update(event, casterGUID, spellID, healType, _, ...)
+		HealCommUpdate(...)
+	end
+
+	local function HealComm_Modified(event, guid)
+		HealCommUpdate(guid)
+	end
+
+	healcomm.RegisterCallback(element, 'HealComm_HealStarted', HealComm_Heal_Update)
+	healcomm.RegisterCallback(element, 'HealComm_HealUpdated', HealComm_Heal_Update)
+	healcomm.RegisterCallback(element, 'HealComm_HealDelayed', HealComm_Heal_Update)
+	healcomm.RegisterCallback(element, 'HealComm_HealStopped', HealComm_Heal_Update)
+	healcomm.RegisterCallback(element, 'HealComm_ModifierChanged', HealComm_Modified)
+	healcomm.RegisterCallback(element, 'HealComm_GUIDDisappeared', HealComm_Modified)
 end
- 
+
 local function Disable(self)
 	local element = self.bdHealthPrediction
 	if not element then return end
-
-	self:UnregisterEvent('UNIT_HEALTH', Path)
-	self:UnregisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
-	self:UnregisterEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', Path)
-	self:UnregisterEvent('UNIT_MAXHEALTH', Path)
-	self:UnregisterEvent('UNIT_HEAL_PREDICTION', Path)
 
 	if(element.incomingHeals) then
 		element.incomingHeals:Hide()
@@ -184,6 +205,15 @@ local function Disable(self)
 	if(element.overHealAbsorb) then
 		element.overHealAbsorb:Hide()
 	end
+	
+	healcomm.UnregisterCallback(element, 'HealComm_HealStarted')
+	healcomm.UnregisterCallback(element, 'HealComm_HealUpdated')
+	healcomm.UnregisterCallback(element, 'HealComm_HealDelayed')
+	healcomm.UnregisterCallback(element, 'HealComm_HealStopped')
+	healcomm.UnregisterCallback(element, 'HealComm_ModifierChanged')
+	healcomm.UnregisterCallback(element, 'HealComm_GUIDDisappeared')
+
+	self:UnregisterEvent('UNIT_MAXHEALTH', Path)
 end
- 
-oUF:AddElement('TotalAbsorb', Path, Enable, Disable)
+
+oUF:AddElement('bdClassicHealthPrediction', Update, Enable, Disable)

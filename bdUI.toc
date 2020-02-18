@@ -25,6 +25,7 @@ lib\ace\LibSimpleSticky.lua
 lib\classic\LibClassicCasterino\LibClassicCasterino.lua
 lib\classic\LibClassicDurations\LibClassicDurations.xml
 lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
+lib\classic\LibHealComm\LibHealComm-4.0.lua
 
 # oUF
 lib\oUF\oUF.xml
@@ -38,6 +39,7 @@ lib\oUF_Plugins\oUF_Smooth.lua
 # lib\oUF_Plugins\oUF_NecroStrike.lua
 lib\oUF_Plugins\oUF_TotemBar.lua
 lib\oUF_Plugins\oUF_bdHealthPredict.lua
+lib\oUF_Plugins\oUF_bdClassicHealthPredict.lua
 
 # Custom
 lib\memoize.lua
