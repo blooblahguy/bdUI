@@ -225,7 +225,6 @@ end
 -- Nameplate first time creation
 --==============================================
 local function nameplate_create(self, unit)
-	self.unit = unit
 	nameplates[self] = self
 	self:SetPoint("BOTTOMLEFT", 0, math.floor(config.targetingBottomPadding))
 	self:SetPoint("BOTTOMRIGHT", 0, math.floor(config.targetingBottomPadding))
@@ -245,6 +244,7 @@ local function nameplate_create(self, unit)
 	self.Health.colorDisconnected = true
 	self.Health.colorClass = true
 	self.Health.colorReaction = true
+	self.Health.frequentUpdates = true
 	bdUI:create_shadow(self.Health, 10)
 	self.Health._shadow:SetBackdropColor(unpack(config.glowcolor))
 	self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
