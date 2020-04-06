@@ -27,6 +27,7 @@ specialMobs["Fel-Infused Destructor"] = true
 specialMobs["Fel-Charged Obfuscator"] = true
 specialMobs["Ember of Taeshalach"] = true
 specialMobs["Screaming Shrike"] = true
+specialMobs["Explosives"] = true
 
 local specialSpells = {}
 specialSpells["Decaying Flesh"] = true
@@ -327,7 +328,7 @@ local config = {
 			{
 				key = "specialcolor",
 				type = "color",
-				value = {.8, .4, .7, 1},
+				value = {.8, .4, 1, 1},
 				label = "Special Unit Color"
 			},
 			{
