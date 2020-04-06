@@ -169,7 +169,7 @@ local function setHeaderAttributes(header, template, isBuff)
 	bdMove:set_moveable(header)
 	s('unit', 'player')
 	s("filter", header.filter)
-	s("separateOwn", 0)
+	s("separateOwn", 1)
 	s('sortMethod', 'TIME')
     header:HookScript("OnAttributeChanged", InitiateAura)
 

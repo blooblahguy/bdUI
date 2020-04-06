@@ -14,26 +14,30 @@ local function skin_wa_frame(frame)
 	bdUI:set_backdrop(frame)
 
 	if frame.stacks then
-		local fontHeight = select(3, frame.stacks:GetFont())
-		if (not tonumber(fontHeight) or not fontHeight >0) then fontHeight = 14 end
-		frame.stacks:SetFont(bdUI.media.font, fontHeight, "OUTLINE")
+		local font, fontHeight, outline = frame.stacks:GetFont()
+		fontHeight = fontHeight > 0 and fontHeight or 14;
+		-- print("stacks", fontHeight)
+		frame.stacks:SetFont(bdUI.media.font, fontHeight)
 	end
-
+	
 	if frame.timer then
-		local fontHeight = select(3, frame.timer:GetFont())
-		if (not tonumber(fontHeight) or not fontHeight >0) then fontHeight = 14 end
-		frame.timer:SetFont(bdUI.media.font, fontHeight, "OUTLINE")
+		local font, fontHeight, outline = frame.timer:GetFont()
+		fontHeight = fontHeight > 0 and fontHeight or 14;
+		-- print("timer", fontHeight)
+		frame.timer:SetFont(bdUI.media.font, fontHeight)
 	end
-
+	
 	if frame.text then
-		local fontHeight = select(3, frame.text:GetFont())
-		if (not tonumber(fontHeight) or not fontHeight >0) then fontHeight = 18 end
-		frame.text:SetFont(bdUI.media.font, fontHeight, "OUTLINE")
+		local font, fontHeight, outline = frame.text:GetFont()
+		fontHeight = fontHeight > 0 and fontHeight or 18;
+		-- print("text", fontHeight)
+		frame.text:SetFont(bdUI.media.font, fontHeight)
 	end
 	if frame.cooldown then
-		local fontHeight = select(3, frame.cooldown:GetRegions():GetFont())
-		if (not tonumber(fontHeight) or not fontHeight >0) then fontHeight = 14 end
-		frame.cooldown:GetRegions():SetFont(bdUI.media.font, fontHeight, "OUTLINE")
+		local font, fontHeight, outline = frame.cooldown:GetRegions():GetFont()
+		fontHeight = fontHeight > 0 and fontHeight or 14;
+		-- print("cooldown", fontHeight)
+		frame.cooldown:GetRegions():SetFont(bdUI.media.font, fontHeight)
 	end
 end
 

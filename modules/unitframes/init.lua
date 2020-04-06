@@ -114,6 +114,12 @@ local config = {
 		label = "Player & Target",
 		args = {
 			{
+				key = "enableplayertarget",
+				value = true,
+				type = "toggle",
+				label = "Enable Player, Target, ToT, & Pet"
+			},
+			{
 				key = "playertargetwidth",
 				value = 180,
 				min = 100,
@@ -174,6 +180,12 @@ local config = {
 		type = "tab",
 		label = "Focus",
 		args = {
+			{
+				key = "enablefocus",
+				value = true,
+				type = "toggle",
+				label = "Enable Focus"
+			},
 			{
 				key = "focuswidth",
 				type = "range",
