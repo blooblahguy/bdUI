@@ -58,16 +58,16 @@ mod.create_resources = function(self, unit)
 	self.Resources.power:RegisterEvent('UNIT_POWER_FREQUENT')
 	self.Resources.power:RegisterEvent('UNIT_DISPLAYPOWER')
 	self.Resources.power:RegisterEvent('UNIT_MAXPOWER')
-	self.Resources.power:RegisterEvent('UNIT_POWER_BAR_SHOW')
-	self.Resources.power:RegisterEvent('UNIT_POWER_BAR_HIDE')
+	-- self.Resources.power:RegisterEvent('UNIT_POWER_BAR_SHOW')
+	-- self.Resources.power:RegisterEvent('UNIT_POWER_BAR_HIDE')
 	self.Resources.power:EnableMouse(false)
 	self.Resources.power:RegisterEvent('UNIT_FLAGS') -- For selection
 
 	function self.Resources.power:Update(event)
-		local displayType, min = getDisplayPower("player")
+		-- local displayType, min = getDisplayPower("player")
 
-		local cur, max = UnitPower("player", displayType), UnitPowerMax("player", displayType)
-		self:SetMinMaxValues(min or 0, max)
+		local cur, max = UnitPower("player"), UnitPowerMax("player")
+		self:SetMinMaxValues(0, max)
 		self:SetValue(cur)
 		self.text:SetText(bdUI:numberize(cur))
 

@@ -36,9 +36,9 @@ bdUI.media = {
 	backgrounds = {},
 	border = {.03, .04, .05, 1},
 	backdrop = {.08, .09, .11, 0.9},
-	red = {['r'] = .62, ['g'] = .17, ['b'] = .18, ['a'] = 1},
-	blue = {['r'] = .2, ['b'] = .4, ['g'] = 0.8, ['a'] = 1},
-	green = {['r'] = .1, ['b'] = .7, ['g'] = 0.3, ['a'] = 1},
+	red = {.62, .17, .18, 1},
+	blue = {.2, .4, 0.8, 1},
+	green = {.1, .7, 0.3, 1},
 }
 
 -- set better fonts for libraries

@@ -8,3 +8,64 @@ local function prefill_text(box)
 end
 
 hooksecurefunc(delete_panel, "OnShow", prefill_text)
+
+-- auto sell
+local sell = CreateFrame("frame")
+sell:RegisterEvent('MERCHANT_SHOW')
+-- sell:SetScript()
+sell:SetScript("OnEvent", function()
+	if (mod.config.autosell) then
+		
+		local profit = 0
+		for bagID = 0, 4 do
+			for slot = 0, GetContainerNumSlots(bagID) do
+				local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bagID, slot);
+
+				if (texture and quality == 0) then
+					local price = select(11, GetItemInfo(itemLink))
+					profit = profit + price
+					if (not locked) then
+						UseContainerItem(bagID, slot)
+					else
+						C_Timer.After(0.3, function()
+							UseContainerItem(bagID, slot)
+						end)
+					end
+				end
+			end
+		end
+		if (profit > 0) then
+			print(("Sold all trash for %d|cFFF0D440"..GOLD_AMOUNT_SYMBOL.."|r %d|cFFC0C0C0"..SILVER_AMOUNT_SYMBOL.."|r %d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r"):format(profit / 100 / 100, (profit / 100) % 100, profit % 100));
+		end
+	end
+end)
+
+-- auto repair
+local repair = CreateFrame("frame")
+repair:RegisterEvent('MERCHANT_SHOW')
+repair:SetScript("OnEvent", function()
+	if (mod.config.autorepair) then
+		if CanMerchantRepair() then
+			local cost = GetRepairAllCost()
+			if GetGuildBankWithdrawMoney() >= cost then
+				RepairAllItems(1)
+			elseif GetMoney() >= cost then
+				RepairAllItems()
+			end
+		end
+	end
+end)
+
+
+local fastloot = CreateFrame("frame",nil)
+fastloot:RegisterEvent("LOOT_OPENED")
+fastloot:SetScript("OnEvent",function()
+	local autoLoot = GetCVar("autoLootDefault") == "0" or true
+
+	if ((IsShiftKeyDown() == autoLoot)) then
+		local numitems = GetNumLootItems()
+		for i = 1, numitems do
+			LootSlot(i)
+		end
+	end
+end)

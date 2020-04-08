@@ -48,6 +48,18 @@ local config = {
 		label = "Quality of Life",
 		args = {
 			{
+				key = "autosell",
+				type = "toggle",
+				value = true,
+				label = "Auto Sell Greys"
+			},
+			{
+				key = "autorepair",
+				type = "toggle",
+				value = true,
+				label = "Auto Repair"
+			},
+			{
 				key = "autodismount",
 				type = "toggle",
 				value = true,

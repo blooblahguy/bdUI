@@ -155,47 +155,5 @@ function mod:skin_loot()
 end
 
 function mod:create_qol()
-	mod:RegisterEvent('MERCHANT_SHOW')
-	mod:SetScript("OnEvent", function()
-		if (config.autorepair) then
-			if CanMerchantRepair() then
-				local cost = GetRepairAllCost()
-				if GetGuildBankWithdrawMoney() >= cost then
-					RepairAllItems(1)
-				elseif GetMoney() >= cost then
-					RepairAllItems()
-				end
-			end
-		end
 
-		if (config.sellgreys) then
-			local profit = 0
-			for bag=0, 4 do
-				for slot=0,GetContainerNumSlots(bag) do
-					local link = GetContainerItemLink(bag, slot)
-					if link and select(3, GetItemInfo(link)) == 0 then
-						local price = select(11,GetItemInfo(link))
-						profit = profit + price
-						UseContainerItem(bag, slot)
-					end
-				end
-			end
-			if (profit > 0) then
-				print(("Sold all trash for %d|cFFF0D440"..GOLD_AMOUNT_SYMBOL.."|r %d|cFFC0C0C0"..SILVER_AMOUNT_SYMBOL.."|r %d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r"):format(profit / 100 / 100, (profit / 100) % 100, profit % 100));
-			end
-		end
-	end)
-
-	local fastloot = CreateFrame("frame",nil)
-	fastloot:RegisterEvent("LOOT_OPENED")
-	fastloot:SetScript("OnEvent",function()
-		local autoLoot = GetCVar("autoLootDefault") == "0" or true
-
-		if (config.fastloot and not  (IsShiftKeyDown() == autoLoot)) then
-			local numitems = GetNumLootItems()
-			for i = 1, numitems do
-				LootSlot(i)
-			end
-		end
-	end)
 end
