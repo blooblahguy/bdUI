@@ -10,13 +10,15 @@ bdUI.caches = {}
 bdUI.name = addonName
 bdUI.class = select(2, UnitClass("player"))
 bdUI.colorString = '|cffA02C2Fbd|r'
-bdUI.Base64 = LibStub("LibBase64-1.0")
-bdUI.SharedMedia = LibStub("LibSharedMedia-3.0")
+bdUI.base64 = LibStub("LibBase64-1.0")
+bdUI.shared = LibStub("LibSharedMedia-3.0")
 LibStub("bdCallbacks-1.0"):New(bdUI)
+LibStub("CallbackHandler-1.0"):New(bdUI)
 bdMove = LibStub("bdMove-1.0")
 
 -- Load bdConfig
 ns.bdConfig.media.font = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf"
+ns.bdConfig.media.font_bold = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf"
 bdUI.bdConfig = ns.bdConfig:new("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
 
 --===================================================================
@@ -43,6 +45,7 @@ bdUI.media = {
 
 -- set better fonts for libraries
 bdMove.media.font = bdUI.media.font
+bdUI.shared:Register("font", "PTSansNarrow", bdUI.media.font)
 
 --===================================================================
 -- Scale & Alt-UIParent 

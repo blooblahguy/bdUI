@@ -2,12 +2,63 @@
 -- INIT
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
+local fonts = bdUI:get_fonts()
 
 -- Config Table
 local config = {
 	{
 		key = "tab",
-		type = "group",
+		type = "tab",
+		label = "Style",
+		args = {
+			{
+				key = "font",
+				type = "select",
+				value = bdUI.media.font,
+				options = fonts,
+				label = "Font",
+				size = "full",
+				action = "bdUI/fonts",
+				lookup = bdUI.get_fonts
+			},
+			{
+				key = "background_color",
+				type = "color",
+				label = "Background Color",
+				value = bdUI.media.backdrop
+			},
+			{
+				type = "color",
+				key = "border_color",
+				label = "Border Color",
+				value = bdUI.media.border
+			},
+			{
+				type = "range",
+				key = "border_size",
+				label = "Border Thickness",
+				value = 2,
+				min = 0,
+				max = 6,
+				step = 1
+			},
+			{
+				key = "skin_was",
+				type = "toggle",
+				value = true,
+				label = "Skin WeakAuras"
+			},
+			{
+				key = "change_fonts",
+				type = "toggle",
+				value = true,
+				label = "Change Fonts"
+			},
+		}
+	},
+	{
+		key = "tab",
+		type = "tab",
 		label = "Viewports",
 		args = {
 			{
@@ -44,7 +95,7 @@ local config = {
 	},
 	{
 		key = "tab",
-		type = "group",
+		type = "tab",
 		label = "Quality of Life",
 		args = {
 			{
@@ -91,25 +142,7 @@ local config = {
 			},
 		}
 	},
-	{
-		key = "tab",
-		type = "tab",
-		label = "Skinning",
-		args = {
-			{
-				key = "skin_was",
-				type = "toggle",
-				value = true,
-				label = "Skin WeakAuras"
-			},
-			{
-				key = "change_fonts",
-				type = "toggle",
-				value = true,
-				label = "Change Fonts"
-			},
-		}
-	}
+	
 
 }
 

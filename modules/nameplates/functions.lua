@@ -57,11 +57,13 @@ end
 local function unitColor(self, tapDenied, isPlayer, reaction, status)
 	config = mod:get_save()
 
+	if (tapDenied) then
+		return colors.tapped
+	end
+
 	if (isPlayer or status == false) then
 		if isPlayer then
 			return colors.class[isPlayer]
-		elseif (tapDenied) then
-			return colors.tapped
 		else
 			return colors.reaction[reaction]
 		end

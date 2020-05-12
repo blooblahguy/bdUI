@@ -140,7 +140,7 @@ local function filter_emojis(msg)
 		-- mod:alert_message(mod:rawText(pattern))
 		if emoji and strmatch(msg, '[%s%p]-'..pattern..'[%s%p]*') then
 			emoji = "|T"..emoji..":12|t"
-			local base64 = bdUI.Base64:Encode(word)
+			local base64 = bdUI.base64:Encode(word)
 			msg = gsub(msg, '([%s%p]-)'..pattern..'([%s%p]*)', (base64 and ('%1|Helvmoji:%%'..base64..'|h|cFFffffff|r|h') or '%1')..emoji..'%2');
 		end
 	end

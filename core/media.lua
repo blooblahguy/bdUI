@@ -1,6 +1,55 @@
 local bdUI, c, l = unpack(select(2, ...))
 
 --========================================================
+-- Themes
+--========================================================
+function bdUI:register_theme(name, callback)
+	
+	
+	-- callback()
+end
+
+bdUI:register_theme("bdUI", {
+	["primaryFont"] = 2,
+	["secondaryFont"] = 2,
+	["primaryColor"] = 2,
+	["secondaryColor"] = 2,
+	["borderSize"] = 2,
+	["backgroundColor"] = 2,
+	["borderColor"] = 2,
+})
+
+--========================================================
+-- Fonts
+--========================================================
+
+function bdUI:new_font(name)
+	size = size or 15
+	outline = outline or "OUTLINE"
+
+	local font = CreateFont(name, size, outline)
+	font:SetFont(bdUI.media.font, size, outline)
+	font:SetShadowColor(0, 0, 0)
+	font:SetShadowOffset(0, 0)
+
+	bdUI.fonts[name] = font
+	
+	return font
+end
+
+function bdUI:get_font_path(font)
+	return bdUI.shared:Fetch("font", font)
+end
+
+function bdUI:get_fonts()
+	local fonts = {}
+	local shared_fonts = bdUI.shared:List("font")
+
+	return shared_fonts
+end
+
+
+--========================================================
 -- Frames Groups
 -- automatically positions frames in given direction, and
 -- returns dimensions of the "stack"
@@ -185,6 +234,19 @@ end
 		frame.b:SetHeight(border)
 		frame.l:SetWidth(border)
 		frame.r:SetWidth(border)
+
+
+		frame.t:SetPoint("BOTTOMLEFT", frame.bd_background, "TOPLEFT", -border, 0)
+		frame.t:SetPoint("BOTTOMRIGHT", frame.bd_background, "TOPRIGHT", border, 0)
+
+		frame.l:SetPoint("TOPRIGHT", frame.bd_background, "TOPLEFT", 0, border)
+		frame.l:SetPoint("BOTTOMRIGHT", frame.bd_background, "BOTTOMLEFT", 0, -border)
+
+		frame.r:SetPoint("TOPLEFT", frame.bd_background, "TOPRIGHT", 0, border)
+		frame.r:SetPoint("BOTTOMLEFT", frame.bd_background, "BOTTOMRIGHT", 0, -border)
+
+		frame.b:SetPoint("TOPLEFT", frame.bd_background, "BOTTOMLEFT", -border, 0)
+		frame.b:SetPoint("TOPRIGHT", frame.bd_background, "BOTTOMRIGHT", border, 0)
 	end
 
 	function bdUI:create_shadow(frame, offset)

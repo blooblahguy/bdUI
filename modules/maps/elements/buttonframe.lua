@@ -30,6 +30,8 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:SetSize(Minimap.background:GetWidth() - (bdUI.border * 2), config.buttonsize)
 	Minimap.buttonFrame:SetPoint("TOP", Minimap.background, "BOTTOM", bdUI.border, -bdUI.border)
 
+	bdUI:create_fader(Minimap.buttonFrame, {}, 1, 0, .1, 0)
+
 	local bdConfigButton = CreateFrame("button","bdUI_configButton", Minimap)
 	bdConfigButton.text = bdConfigButton:CreateFontString(nil,"OVERLAY")
 	bdConfigButton.text:SetFontObject("BDUI_SMALL")
@@ -215,6 +217,7 @@ function mod:create_button_frame()
 
 	-- Updater script
 	local total = 0
+
 	Minimap.buttonFrame:SetScript("OnEvent", find_frames)
 	Minimap.buttonFrame:SetScript("OnUpdate", function(self, elapsed)
 		total = total + elapsed

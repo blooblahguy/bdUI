@@ -82,25 +82,29 @@ function mod:config_callback()
 		, ['nameplateShowAll'] = 1
 		, ['nameplateMinAlpha'] = 1
 		, ['nameplateMaxAlpha'] = 1
-		, ['nameplateMotionSpeed'] = 0.5
+		-- , ['nameplateMotionSpeed'] = "default"
 		, ['nameplateOccludedAlphaMult'] = 1
 		, ['nameplateMaxAlphaDistance'] = 1
 		, ['nameplateMaxDistance'] = config.nameplatedistance+6 -- for some reason there is a 6yd diff
-		, ["nameplateOverlapV"] = config.verticalspacing --0.8
 		, ['nameplateShowOnlyNames'] = 0
 		, ['nameplateShowDebuffsOnFriendly'] = 0
 		, ['nameplateSelectedScale'] = 1
 		, ['nameplateMinScale'] = 1
 		, ['nameplateMaxScale'] = 1
-		, ['nameplateMaxScaleDistance'] = 0
-		, ['nameplateMinScaleDistance'] = 0
+		-- , ['nameplateMaxScaleDistance'] = 80
+		-- , ['nameplateMinScaleDistance'] = 5
 		, ['nameplateLargerScale'] = 1 -- for bosses
 		, ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
+		, ['showQuestTrackingTooltips'] = 1
 	}
 
 	-- loop through and set CVARS
 	for k, v in pairs(cvars) do
-		SetCVar(k, v)
+		-- if (v == "default") then
+		-- 	SetCVar(k, GetCVarDefault(k))	
+		-- else
+			SetCVar(k, v)
+		-- end
 	end
 end
 
@@ -212,6 +216,7 @@ local function nameplate_callback(self, event, unit)
 	--==========================================
 	if (UnitCanAttack("player", unit)) then
 		mod:enemy_style(self, event, unit)
+		mod:update_quest_marker(self, event, unit)
 	elseif (UnitIsUnit(unit, "player")) then
 		mod:personal_style(self, event, unit)
 	elseif (self.isPlayer) then
@@ -233,6 +238,7 @@ local function nameplate_create(self, unit)
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", find_target, true)
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback, true)
 	self:RegisterEvent("PLAYER_LOGIN", mod.config_callback, true)
+	self:RegisterEvent("VARIABLES_LOADED", mod.config_callback, true)
 
 	--==========================================
 	-- HEALTHBAR
@@ -248,6 +254,16 @@ local function nameplate_create(self, unit)
 	bdUI:create_shadow(self.Health, 10)
 	self.Health._shadow:SetBackdropColor(unpack(config.glowcolor))
 	self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
+
+	--==========================================
+	-- QUEST ICON
+	--==========================================
+	-- self.QuestIcon = self:CreateTexture("nil", "OVERLAY")
+	-- self.QuestIcon:SetPoint("LEFT", self, "RIGHT", 10, 0)
+	-- self.QuestIcon:SetSize(20, 20)
+	-- self.QuestIcon:SetTexture(237608)
+	-- self.QuestIcon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1)
+	-- self.QuestIcon:SetVertexColor(1, 1, 0)
 
 	--==========================================
 	-- DAMAGE ABSORBS

@@ -32,3 +32,16 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- end
 	end
 end)
+
+local sharedmedia = CreateFrame("frame", nil, bdParent)
+sharedmedia:RegisterEvent("LOADING_SCREEN_DISABLED")
+sharedmedia:SetScript("OnEvent", function()
+	bdUI:do_action("bdUI/fonts")
+	-- local fonts = bdUI.shared:List("font")
+	-- for k, v in pairs(fonts) do
+	-- 	print(k, v)
+	-- 	local font = bdUI.shared:Fetch("font", v)
+	-- 	print(font)
+	-- end
+	-- print(fonts)
+end)

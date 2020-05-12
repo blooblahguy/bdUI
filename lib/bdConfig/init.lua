@@ -16,13 +16,14 @@ lib.dimensions = {
 	right_column = 600,
 	height = 450,
 	header = 30,
-	padding = 10,
+	padding = 8,
 }
 
 lib.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
 	arrow = "Interface\\Buttons\\Arrow-Down-Down.PNG",
 	font = "fonts\\ARIALN.ttf",
+	font_bold = "fonts\\ARIALN.ttf",
 	fontSize = 13,
 	fontHeaderScale = 1.1,
 	padding = 10,

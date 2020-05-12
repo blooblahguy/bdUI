@@ -78,7 +78,6 @@ end
 -- update item tables
 --==================================
 function mod:update_bags()
-	bdUI:profile_start("bags", "update bags", 2)
 	local items = {}
 	local remove = {}
 	local new_items = {}
@@ -180,8 +179,6 @@ function mod:update_bags()
 		mod.categories["New Items"].items[count + 1] = items[k]
 	end
 
-	bdUI:profile_stop("bags", "update bags", 2)
-
 	mod:draw_bags()
 end
 
@@ -190,8 +187,6 @@ end
 -- draw the bags and categories
 --==================================
 function mod:draw_bags()
-	bdUI:profile_start("bags", "draw bags", 3)
-
 	mod.bags.cat_pool:ReleaseAll() -- release frame pool
 	mod.bags.item_pool:ReleaseAll() -- release frame pool
 	mod.current_parent = mod.containers["bags"] -- set this to parent the category frames correctly
@@ -219,6 +214,4 @@ function mod:draw_bags()
 	-- now position the categories since we have dimensions
 	local width, height = mod:position_categories(mod.bags.container, loop_cats, mod.bags.cat_pool)
 	mod.bags:update_size(width, height)
-
-	bdUI:profile_stop("bags", "draw bags", 3)	
 end

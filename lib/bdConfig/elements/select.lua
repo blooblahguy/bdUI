@@ -107,6 +107,7 @@ local function create(options, parent)
 			local selected = 0
 			local default_id = 1
 			for i, item in pairs(items) do
+				-- print(i, item)
 				if (type(item) == "string") then
 					opt = UIDropDownMenu_CreateInfo()
 					opt.text = item:gsub("^%l", string.upper)
@@ -132,7 +133,7 @@ local function create(options, parent)
 				end
 			end
 
-			if (selected > 0) then
+			if (selected and selected ~= 0) then
 				UIDropDownMenu_SetSelectedID(dropdown, selected)
 			else
 				UIDropDownMenu_SetSelectedID(dropdown, default_id)

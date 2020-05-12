@@ -47,15 +47,18 @@ local function create(options, parent)
 	if (not parent.tabContainer) then
 		local tabContainer = lib:create_container(options, parent)
 		table.insert(parent.children, tabContainer)
-		tabContainer:SetHeight(lib.dimensions.header)
+		tabContainer:SetHeight(lib.dimensions.header + 8)
+		tabContainer:SetBackdrop({bgFile = lib.media.flat})
+		tabContainer:SetBackdropColor(0.06, 0.07, 0.09)
+
 		parent.tabContainer = tabContainer
 		parent.tabs = {}
-		tabContainer.border = tabContainer:CreateTexture(nil, "OVERLAY")
-		tabContainer.border:SetTexture(lib.media.flat)
-		tabContainer.border:SetVertexColor(1, 1, 1, 0.2)
-		tabContainer.border:SetHeight(lib.border)
-		tabContainer.border:SetPoint("BOTTOMLEFT", tabContainer, "BOTTOMLEFT", 0, 0)
-		tabContainer.border:SetPoint("BOTTOMRIGHT", tabContainer, "BOTTOMRIGHT", 0, 0)
+		-- tabContainer.border = tabContainer:CreateTexture(nil, "OVERLAY")
+		-- tabContainer.border:SetTexture(lib.media.flat)
+		-- tabContainer.border:SetVertexColor(1, 1, 1, 0.2)
+		-- tabContainer.border:SetHeight(lib.border)
+		-- tabContainer.border:SetPoint("BOTTOMLEFT", tabContainer, "BOTTOMLEFT", 0, 0)
+		-- tabContainer.border:SetPoint("BOTTOMRIGHT", tabContainer, "BOTTOMRIGHT", 0, 0)
 	end
 
 	-- create tab page
@@ -72,19 +75,30 @@ local function create(options, parent)
 	-- create tab to link to this page
 	local index = #parent.tabs + 1
 	local tab = lib.elements['button']({solo = true}, parent.tabContainer)
+	local text = ((options.value or options.label):gsub("^%l", string.upper))
 
 	tab.inactiveColor = {1, 1, 1, 0}
 	tab.hoverColor = {1, 1, 1, 0}
 	tab.activeColor = {1, 1, 1, 0}
 	tab:OnLeave()
-	tab:SetText(string.upper(options.value or options.label))
+	tab:SetText(text)
+	tab:SetHeight(parent.tabContainer:GetHeight() - 3)
 	tab.page = page
 	tab.page:Hide()
+	tab.border = tab:CreateTexture(nil, "OVERLAY")
+	tab.border:SetTexture(lib.media.flat)
+	tab.border:SetVertexColor(unpack(lib.media.blue))
+	tab.border:SetPoint("BOTTOMLEFT", tab, "BOTTOMLEFT")
+	tab.border:SetPoint("TOPRIGHT", tab, "BOTTOMRIGHT", 0, 3)
+	tab.border:Hide()
 	parent.tabs[index] = tab
+	tab.text:SetFontObject("bdConfig_font")
 
 	-- show page on select
 	function tab:select()
 		tab.page:Show()
+		tab.border:Show()
+		tab.text:SetFontObject("bdConfig_font_bold")
 		UIFrameFadeIn(tab.page, 0.2, 0, 1)
 		tab.active = true
 		tab.page.active = true
@@ -99,9 +113,11 @@ local function create(options, parent)
 	-- hide page on tab unselect
 	function tab:unselect()
 		UIFrameFadeOut(tab.page, 0.2, tab.page:GetAlpha(), 0)
+		tab.text:SetFontObject("bdConfig_font")
 		tab.page.fadeInfo.finishedFunc = function()
 			tab.page:Hide()
 		end
+		tab.border:Hide()
 		tab.active = false
 		tab.page.active = false
 		tab:OnLeave()
@@ -111,6 +127,7 @@ local function create(options, parent)
 
 	-- unselect / hide other tabs
 	tab.OnClick = function()
+		if (tab.active) then return end
 		for i, t in pairs(parent.tabs) do
 			t:unselect()
 		end

@@ -169,6 +169,7 @@ modules\nameplates\elements\npc.lua
 modules\nameplates\elements\personal.lua
 modules\nameplates\elements\enemy.lua
 modules\nameplates\elements\resources.lua
+modules\nameplates\elements\quests.lua
 
 # Tooltips
 modules\tooltips\init.lua
