@@ -95,7 +95,7 @@ function mod:config_callback()
 		-- , ['nameplateMinScaleDistance'] = 5
 		, ['nameplateLargerScale'] = 1 -- for bosses
 		, ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
-		, ['showQuestTrackingTooltips'] = 1
+		-- , ['showQuestTrackingTooltips'] = 1
 	}
 
 	-- loop through and set CVARS
