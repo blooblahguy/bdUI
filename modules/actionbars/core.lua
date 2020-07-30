@@ -8,6 +8,10 @@ mod.bars = {}
 local v = mod.variables
 local c = {}
 
+-- ACTION_BUTTON_SHOW_GRID_REASON_CVAR = 2;
+-- ACTION_BUTTON_SHOW_GRID_REASON_EVENT = 4;
+-- ACTION_BUTTON_SHOW_GRID_REASON_SPELLBOOK = 4;
+
 --===============================================
 -- Core functionality
 -- place core functionality here

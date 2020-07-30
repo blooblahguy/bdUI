@@ -27,8 +27,14 @@ function mod:create_actionbar1()
 	local function ToggleButtonGrid()
 		if InCombatLockdown() then return end
 		local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
+		-- print(showgrid)
+		-- if (showgrid) then
+		-- 	ACTION_BUTTON_SHOW_GRID_REASON_CVAR = 4
+		-- else
+		-- 	ACTION_BUTTON_SHOW_GRID_REASON_CVAR = 1
+		-- end
 		for i, button in next, buttonList do
-			button:SetAttribute("showgrid", showgrid)
+			button:SetAttribute("showgrid", showgrid, 4)
 			-- ActionButton_ShowGrid(button, ACTION_BUTTON_SHOW_GRID_REASON_EVENT)
 		end
 	end
