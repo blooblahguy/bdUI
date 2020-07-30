@@ -90,10 +90,10 @@ modules\auras\functions.lua
 modules\auras\core.lua
 
 # Actionbars
-# modules\actionbars\init.lua
-# modules\actionbars\functions.lua
-# modules\actionbars\core.lua
-# modules\actionbars\elements\bars.lua
+modules\actionbars\init.lua
+modules\actionbars\functions.lua
+modules\actionbars\core.lua
+modules\actionbars\elements\bars.lua
 # modules\actionbars\elements\range.lua
 # modules\actionbars\elements\hoverbind.lua
 # modules\actionbars\elements\hotkeys.lua

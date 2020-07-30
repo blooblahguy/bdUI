@@ -29,7 +29,7 @@ function mod:create_actionbar1()
 		local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
 		for i, button in next, buttonList do
 			button:SetAttribute("showgrid", showgrid)
-			ActionButton_ShowGrid(button, ACTION_BUTTON_SHOW_GRID_REASON_EVENT)
+			-- ActionButton_ShowGrid(button, ACTION_BUTTON_SHOW_GRID_REASON_EVENT)
 		end
 	end
 	hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
@@ -295,13 +295,13 @@ end
 function mod:create_extra()
 	cfg = {}
 	cfg.cfg = "extrabar"
-	cfg.blizzardBar = ExtraActionBarFrame
+	cfg.blizzardBar = ZoneAbilityFrame
 	cfg.frameName = "bdActionbars_ExtraBar"
 	cfg.moveName = "Extra Button"
 	cfg.frameVisibility = "[extrabar] show; hide"
 	cfg.frameSpawn = { "LEFT", UIParent, "LEFT", 440, 0 }
 
-	local buttonList = mod:GetButtonList("ExtraActionButton", NUM_ACTIONBAR_BUTTONS)
+	local buttonList = mod:GetButtonList("ZoneAbilityFrame", 1)
 	table.insert(buttonList, ZoneAbilityFrame)
 	local extra = mod:CreateBar(buttonList, cfg)
 end

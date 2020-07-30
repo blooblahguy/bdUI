@@ -33,7 +33,7 @@ function mod:initialize()
 	mod:create_bagbar()
 	mod:create_vehicle()
 	mod:create_possess()
-	mod:create_extra()
+	-- mod:create_extra()
 
 	-- Flyout
 	mod:hook_flyout()
