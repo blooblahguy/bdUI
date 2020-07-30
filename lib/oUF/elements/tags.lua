@@ -537,11 +537,6 @@ local tagEvents = {
 	['threatcolor']         = 'UNIT_THREAT_SITUATION_UPDATE',
 }
 
-if (oUF.classic) then
-	tagEvents['threat'] = nil
-	tagEvents['threatcolor'] = nil
-end
-
 local unitlessEvents = {
 	ARENA_PREP_OPPONENT_SPECIALIZATIONS = true,
 	GROUP_ROSTER_UPDATE = true,
@@ -611,9 +606,8 @@ local funcPool = {}
 local tmp = {}
 
 local function getTagName(tag)
-	local tagStart = (tag:match('>+()') or 2)
-	local tagEnd = tag:match('.*()<+')
-	tagEnd = (tagEnd and tagEnd - 1) or -2
+	local tagStart = tag:match('>+()') or 2
+	local tagEnd = (tag:match('.-()<') or -1) - 1
 
 	return tag:sub(tagStart, tagEnd), tagStart, tagEnd
 end

@@ -53,7 +53,7 @@ function lib:create_container(options, parent, height)
 	parent._row = parent._row or 0
 	parent._row = parent._row + size
 
-	local container = CreateFrame("frame", nil, parent)
+	local container = CreateFrame("frame", nil, parent, "BackdropTemplate")
 	container:SetSize((parent:GetWidth() * size) - (padding * 2), height)
 	-- TESTING : shows a background around each container for debugging
 	-- container:SetBackdrop({bgFile = lib.media.flat})

@@ -25,7 +25,7 @@ A default texture will be applied to the Texture widgets if they don't have a te
 
 .maxOverflow     - The maximum amount of overflow past the end of the health bar. Set this to 1 to disable the overflow.
                    Defaults to 1.05 (number)
-.frequentUpdates - Indicates whether to use UNIT_HEALTH_FREQUENT instead of UNIT_HEALTH. Use this if .frequentUpdates is
+.frequentUpdates - Indicates whether to use UNIT_HEALTH instead of UNIT_HEALTH. Use this if .frequentUpdates is
                    also set on the Health element (boolean)
 
 ## Examples
@@ -83,8 +83,6 @@ A default texture will be applied to the Texture widgets if they don't have a te
 
 local _, ns = ...
 local oUF = ns.oUF
-
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 
 local function Update(self, event, unit)
 	if(self.unit ~= unit) then return end
@@ -221,7 +219,7 @@ local function Enable(self)
 		element.ForceUpdate = ForceUpdate
 
 		if(element.frequentUpdates) then
-			self:RegisterEvent('UNIT_HEALTH_FREQUENT', Path)
+			self:RegisterEvent('UNIT_HEALTH', Path)
 		else
 			self:RegisterEvent('UNIT_HEALTH', Path)
 		end
@@ -306,7 +304,7 @@ local function Disable(self)
 
 		self:UnregisterEvent('UNIT_HEALTH', Path)
 		self:UnregisterEvent('UNIT_MAXHEALTH', Path)
-		self:UnregisterEvent('UNIT_HEALTH_FREQUENT', Path)
+		self:UnregisterEvent('UNIT_HEALTH', Path)
 		self:UnregisterEvent('UNIT_HEAL_PREDICTION', Path)
 		self:UnregisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
 		self:UnregisterEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', Path)

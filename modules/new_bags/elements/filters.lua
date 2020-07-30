@@ -64,22 +64,22 @@ end)
 --===============================
 -- Item Subtype
 --===============================
-mod:add_filter("itemSubType", 2.5, function(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
-	if (#conditions['subtype'] == 0) then return false end
+-- mod:add_filter("itemSubType", 2.5, function(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
+-- 	if (#conditions['subtype'] == 0) then return false end
 
-	-- print(itemLink)
-	for i = 1, #conditions['subtype'] do
-		local val = conditions['subtype'][i]
-		local typeid, subtypeid = strsplit(".", val)
-		subtypeid = subtypeid or typeid
+-- 	-- print(itemLink)
+-- 	for i = 1, #conditions['subtype'] do
+-- 		local val = conditions['subtype'][i]
+-- 		local typeid, subtypeid = strsplit(".", val)
+-- 		subtypeid = subtypeid or typeid
 
-		-- print(typeid, itemTypeID, subtypeid, itemSubClassID)
-		-- -- local typeid, subtypes = unpack()
-		if (tonumber(typeid) == itemTypeID and tonumber(subtypeid) == itemSubClassID) then
-			return true
-		end
-	end
-end)
+-- 		-- print(typeid, itemTypeID, subtypeid, itemSubClassID)
+-- 		-- -- local typeid, subtypes = unpack()
+-- 		if (tonumber(typeid) == itemTypeID and tonumber(subtypeid) == itemSubClassID) then
+-- 			return true
+-- 		end
+-- 	end
+-- end)
 
 --===============================
 -- Item ID

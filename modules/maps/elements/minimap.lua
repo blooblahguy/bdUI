@@ -66,7 +66,7 @@ end
 function mod:create_minimap()
 	config = mod:get_save()
 
-	Minimap.background = CreateFrame("frame", "bdMinimap", Minimap)
+	Minimap.background = CreateFrame("frame", "bdMinimap", Minimap, "BackdropTemplate")
 	local inset = ((config.size * .25) / 2)
 	Minimap.background:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -inset, -inset)
 	Minimap.background:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})

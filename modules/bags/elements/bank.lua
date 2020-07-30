@@ -187,7 +187,7 @@ function mod:create_bank_tabs()
 		tab:Hide()
 	end
 
-	local unlock = CreateFrame("frame",nil,mod.bank)
+	local unlock = CreateFrame("frame",nil,mod.bank, "BackdropTemplate")
 	unlock:SetAllPoints(mod.bank)
 	unlock:SetSize(300,300)
 	unlock:SetFrameLevel(20)

@@ -151,6 +151,7 @@ end
 	function bdUI:set_backdrop_basic(frame)
 		if (frame.background) then return end
 
+		Mixin(frame, BackdropTemplateMixin)
 		frame:SetBackdrop({bgFile = bdUI.media.flat, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
 		frame:SetBackdropColor(unpack(bdUI.media.border))
 
@@ -252,7 +253,7 @@ end
 	function bdUI:create_shadow(frame, offset)
 		if frame._shadow then return end
 		
-		local shadow = CreateFrame("Frame", nil, frame)
+		local shadow = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 		shadow:SetFrameLevel(1)
 		shadow:SetFrameStrata(frame:GetFrameStrata())
 		shadow:SetAlpha(0.7)
@@ -381,6 +382,7 @@ end
 			colors = bdUI.media.backdrop
 			hovercolors = {.1,.1,.1,1}
 		end
+		Mixin(f, BackdropTemplateMixin)
 		f:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 2, insets = {left=2,top=2,right=2,bottom=2}})
 		f:SetBackdropColor(unpack(colors)) 
 		f:SetBackdropBorderColor(unpack(bdUI.media.border))
