@@ -602,6 +602,34 @@ local auras = {
 	["Anguish"] = true,
 	["Evoke Anguish"] = true,
 	["Corrupted Mind"] = true,
+
+-- Shadowlands
+	-- Castle
+
+	-- Shriekwing
+	["Exsanguinated"] = true,
+	["Dark Descent"] = true,
+	["Reverbating Pain"] = true,
+	["Snaguine Ichor"] = true,
+	["Echo Screech"] = true,
+	["Dark Sonar"] = true,
+
+	-- Huntsman Altimor
+	-- Hungering Destroyer
+	-- Sun King's Salvation
+	-- Artificer Xy'mox
+	-- Lady Inerva Darkvein
+	-- The council of Blood
+	-- Sludgefist
+	-- Stone Legion Generals
+	["Wicked Laceration"] = true,
+	["Stone Shatter"] = true,
+	["Unstable Ground"] = true,
+	["Curse of Petrification"] = true,
+	["Stone Breaker's Combo"] = true,
+	["Breath of Corruption"] = true,
+
+	-- Sire Denathrius
 }
 
 bdUI.aura_lists.raid = auras
