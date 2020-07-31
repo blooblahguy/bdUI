@@ -207,8 +207,8 @@ function mod:create_micromenu()
 	local micromenu = mod:CreateBar(buttonList, cfg)
 
 	-- lose the alert boxex
-	bdUI:hide_protected(CharacterMicroButtonAlert)
-	bdUI:hide_protected(TalentMicroButtonAlert)
+	-- bdUI:hide_protected(CharacterMicroButtonAlert)
+	-- bdUI:hide_protected(TalentMicroButtonAlert)
 	-- CharacterMicroButtonAlert:Hide()
 	-- CharacterMicroButtonAlert.Show = noop
 end
