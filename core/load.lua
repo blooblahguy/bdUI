@@ -30,6 +30,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- 	BDUI_SAVE.first_run = true
 		-- 	bdUI:do_action("setup")
 		-- end
+
 	end
 end)
 

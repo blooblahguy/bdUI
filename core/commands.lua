@@ -73,7 +73,6 @@ SlashCmdList["BDUI"] = function(msg, editbox)
 	end
 end
 
-
 --======================================
 -- World Marker Buttons
 --======================================

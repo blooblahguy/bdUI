@@ -30,9 +30,10 @@ bdUI.media = {
 	smooth = "Interface\\Addons\\"..addonName.."\\media\\smooth.tga",
 	font = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf",
 	myriad = "Interface\\Addons\\"..addonName.."\\media\\Myriad.ttf",
-	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.blp",
-	arrowup = "Interface\\Addons\\"..addonName.."\\media\\arrowup.blp",
-	arrowdown = "Interface\\Addons\\"..addonName.."\\media\\arrowdown.blp",
+	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.tga",
+	align = "Interface\\Addons\\"..addonName.."\\media\\align.tga",
+	-- arrowup = "Interface\\Addons\\"..addonName.."\\media\\arrowup.blp",
+	-- arrowdown = "Interface\\Addons\\"..addonName.."\\media\\arrowdown.blp",
 	shadow = "Interface\\Addons\\"..addonName.."\\media\\shadow.blp",
 	fonts = {},
 	backgrounds = {},
@@ -42,6 +43,18 @@ bdUI.media = {
 	blue = {.2, .4, 0.8, 1},
 	green = {.1, .7, 0.3, 1},
 }
+
+
+-- local button = CreateFrame("frame", nil, UIParent, "BackdropTemplate")
+-- button:SetSize(40, 40)
+-- button:SetPoint("CENTER", UIParent)
+-- -- button:SetBackdrop({edgeFile = bdUI.media.flat, edgeSize = 2})
+-- -- button:SetBackdropBorderColor(1, 1, 1, 1)
+
+-- button.tex = button:CreateTexture(nil, "OVERLAY")
+-- button.tex:SetAllPoints()
+-- button.tex:SetTexture(bdUI.media.arrow)
+-- button.tex:SetVertexColor(unpack(bdUI.media.red))
 
 -- set better fonts for libraries
 bdMove.media.font = bdUI.media.font
