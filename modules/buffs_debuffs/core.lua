@@ -85,7 +85,7 @@ local function UpdateAura(self, index, filter)
 
 			local r, g, b = unpack(color)
 
-			self.border:SetVertexColor(r, g, b)
+			self._border:SetVertexColor(r, g, b)
 		end
 
 	end
@@ -120,7 +120,7 @@ local function InitiateAura(self, name, button)
 	bdUI:set_backdrop(button)
 	
 	if (filter == "HARMFUL") then
-		button.border:SetVertexColor(.7,0,0,1)
+		button._border:SetVertexColor(.7,0,0,1)
 	end
 	
 	if (not button.texture) then

@@ -40,7 +40,8 @@ local config = {
 				value = 2,
 				min = 0,
 				max = 6,
-				step = 1
+				step = 1,
+				callback = function() bdUI:do_action("bdUI/border_size") end,
 			},
 			{
 				key = "skin_was",

@@ -30,6 +30,8 @@ function mod:initialize()
 
 	-- finally
 	mod:skin_chats()
+
+	mod:config_callback()
 end
 
 --=============================================
@@ -147,10 +149,10 @@ function mod:config_callback()
 	if (not ChatFrame1.bd_backdrop) then
 		bdUI:set_backdrop(ChatFrame1)
 	end
-	ChatFrame1.bd_background:SetAlpha(config.bgalpha)
-	ChatFrame1.bd_background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
-	ChatFrame1.bd_background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
-	ChatFrame1.border:SetAlpha(config.bgalpha)
+	ChatFrame1._background:SetAlpha(config.bgalpha)
+	ChatFrame1._background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
+	ChatFrame1._background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
+	ChatFrame1._border:SetAlpha(config.bgalpha)
 end
 
 --=========================================================

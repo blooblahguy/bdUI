@@ -280,7 +280,7 @@ local category_methods = {
 				, { text = "Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
 				, { text = "Sub Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = {}}
 				, { text = " ", notCheckable = true, notClickable = true }
-				, { text = "|cffff5555Delete|r", notCheckable = true, func = category_delete, arg1 = cat_name }
+				, { text = "|cffff5555Delete|r", notCheckable = true, func = function(self, name) mod.categories[name] = nil mod:update_bags() end, arg1 = cat_name }
 			}
 
 			return menu
@@ -336,8 +336,9 @@ end
 -- CATEGORY FUNCTIONS
 --===============================================
 function mod:delete_category(name)
-
+	-- print(name)
 end
+
 local ordermax = 0
 function mod:create_category(name, options)
 	ordermax = math.max(options.order or 0, ordermax) + 1
@@ -454,7 +455,7 @@ function mod:position_categories(parent, categories, pool)
 	tinsert(columns, column)
 	for i = 1, #columns do
 		local column = columns[i]
-		width = width + column.width
+		width = width + (column.width or 0)
 		height = math.max(height, column.height)
 	end
 

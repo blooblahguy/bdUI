@@ -27,7 +27,9 @@ function mod:initialize()
 	-- config.categories = {}
 	mod.categories = config.categories
 
-	if (not mod.categories.first_run_complete) then
+	-- mod.categories.first_run_complete = nil
+
+	if (not config.first_run_complete) then
 		mod:create_category("New Items", {
 			["new_items"] = true,
 			["default"] = true,
@@ -77,6 +79,8 @@ function mod:initialize()
 			["locked"] = true,
 			["order"] = 100
 		})
+
+		config.first_run_complete = true
 	end
 
 	-- Create Frames
@@ -86,10 +90,12 @@ function mod:initialize()
 end
 
 function mod:config_callback()
+	assert(false, "test")
 	mod.config = mod:get_save()
 	config = mod.config
 	if (not config.enabled) then return end
-	mod:initialize()
+
+	mod:update_bags()
 end
 
 --===============================================
@@ -132,7 +138,7 @@ function mod:create_container(name, start_id, end_id)
 	bags:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 	bags:Hide()
 	bdUI:set_backdrop(bags)
-	bags.bd_background:SetVertexColor(.08, .09, .11, 1)
+	bags._background:SetVertexColor(.08, .09, .11, 1)
 
 	-- header
 	local header = CreateFrame("frame", nil, bags)
@@ -207,7 +213,7 @@ function mod:create_container(name, start_id, end_id)
 	icon:ClearAllPoints()
 	icon:SetPoint("LEFT", searchBox,"LEFT", 4, -1)
 	bdUI:set_backdrop(searchBox)
-	searchBox.bd_background:SetVertexColor(.06, .07, .09, 1)
+	searchBox._background:SetVertexColor(.06, .07, .09, 1)
 	tinsert(_G.ITEM_SEARCHBAR_LIST, searchBox:GetName())
 
 	-- callback for sizing

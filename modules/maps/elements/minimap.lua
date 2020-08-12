@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 local config
 --easier to change in the future if more minimap types want to be supported
-local rectangleFileLocation = "Interface\\Addons\\bdUI\\modules\\maps\\rectangle.tga"
+local rectangleFileLocation = "Interface\\Addons\\bdUI\\media\\rectangle.tga"
 
 function mod:config_callback()
 	config = mod.config

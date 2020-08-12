@@ -157,12 +157,19 @@ end
 		frame.background = true
 	end
 
+	function bdUI:get_border_size()
+		return bdUI:get_module("General"):get_save().border_size
+	end
+
 	function bdUI:get_border(frame)
+		-- local general = 
+		-- print(general.border_size)
+
 		local screenheight = select(2, GetPhysicalScreenSize())
 		local scale = 768 / screenheight
 		local frame_scale = frame:GetEffectiveScale()
 		local pixel = scale / frame_scale
-		local border = pixel * 2
+		local border = pixel * bdUI:get_border_size()
 
 		return border
 	end
@@ -177,76 +184,85 @@ end
 	end
 
 	function bdUI:set_backdrop(frame, force_border)
-		local border = bdUI.border
+		if (frame._background) then return end
+
+		local border = bdUI.border or 2
 		if (force_border) then
 			border = bdUI:get_border(frame)
 		end
 		local r, g, b, a = unpack(bdUI.media.backdrop)
 
-		if (not frame.bd_background) then
-			frame.bd_background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
-			frame.bd_background:SetTexture(bdUI.media.flat)
-			frame.bd_background:SetAllPoints()
-			frame.bd_background:SetVertexColor(r, g, b, a)
-			frame.bd_background.protected = true
+		frame._background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
+		frame._background:SetTexture(bdUI.media.flat)
+		frame._background:SetAllPoints()
+		frame._background:SetVertexColor(r, g, b, a)
+		frame._background.protected = true
 
-			frame.t = border_gen(frame)
-			frame.t:SetPoint("BOTTOMLEFT", frame.bd_background, "TOPLEFT", -border, 0)
-			frame.t:SetPoint("BOTTOMRIGHT", frame.bd_background, "TOPRIGHT", border, 0)
+		frame.t = border_gen(frame)
+		frame.l = border_gen(frame)
+		frame.r = border_gen(frame)
+		frame.b = border_gen(frame)
 
-			frame.l = border_gen(frame)
-			frame.l:SetPoint("TOPRIGHT", frame.bd_background, "TOPLEFT", 0, border)
-			frame.l:SetPoint("BOTTOMRIGHT", frame.bd_background, "BOTTOMLEFT", 0, -border)
-
-			frame.r = border_gen(frame)
-			frame.r:SetPoint("TOPLEFT", frame.bd_background, "TOPRIGHT", 0, border)
-			frame.r:SetPoint("BOTTOMLEFT", frame.bd_background, "BOTTOMRIGHT", 0, -border)
-
-			frame.b = border_gen(frame)
-			frame.b:SetPoint("TOPLEFT", frame.bd_background, "BOTTOMLEFT", -border, 0)
-			frame.b:SetPoint("TOPRIGHT", frame.bd_background, "BOTTOMRIGHT", border, 0)
-
-			frame.border = frame:CreateTexture(nil, "BACKGROUND")
-			frame.border:Hide()
-			frame.border.protected = true
-			frame.border.SetAlpha = function(self, alpha)
-				frame.t:SetAlpha(alpha)
-				frame.b:SetAlpha(alpha)
-				frame.l:SetAlpha(alpha)
-				frame.r:SetAlpha(alpha)
-			end
-			frame.border.SetVertexColor = function(self, r, g, b, a)
-				frame.t:SetVertexColor(r, g, b, a)
-				frame.b:SetVertexColor(r, g, b, a)
-				frame.l:SetVertexColor(r, g, b, a)
-				frame.r:SetVertexColor(r, g, b, a)
-			end
-
-			frame.set_border_color = function(self, r, g, b, a)
-				frame.border:SetVertexColor(r, g, b, a)
-			end
-			frame.reset_border_color = function(self, r, g, b, a)
-				frame.border:SetVertexColor(unpack(bdUI.media.border))
-			end
+		frame._border = frame:CreateTexture(nil, "BACKGROUND")
+		frame._border:Hide()
+		frame._border.protected = true
+		frame._border.SetAlpha = function(self, alpha)
+			frame.t:SetAlpha(alpha)
+			frame.b:SetAlpha(alpha)
+			frame.l:SetAlpha(alpha)
+			frame.r:SetAlpha(alpha)
+		end
+		frame._border.SetVertexColor = function(self, r, g, b, a)
+			frame.t:SetVertexColor(r, g, b, a)
+			frame.b:SetVertexColor(r, g, b, a)
+			frame.l:SetVertexColor(r, g, b, a)
+			frame.r:SetVertexColor(r, g, b, a)
 		end
 
-		frame.t:SetHeight(border)
-		frame.b:SetHeight(border)
-		frame.l:SetWidth(border)
-		frame.r:SetWidth(border)
+		frame.set_border_color = function(self, r, g, b, a)
+			frame._border:SetVertexColor(r, g, b, a)
+		end
+		frame.reset_border_color = function(self, r, g, b, a)
+			frame._border:SetVertexColor(unpack(bdUI.media.border))
+		end
+		frame.set_border_size = function(self, size)
+			frame.t:SetHeight(size)
+			frame.b:SetHeight(size)
+			frame.l:SetWidth(size)
+			frame.r:SetWidth(size)
 
+			frame.t:SetPoint("BOTTOMLEFT", frame._background, "TOPLEFT", -size, 0)
+			frame.t:SetPoint("BOTTOMRIGHT", frame._background, "TOPRIGHT", size, 0)
 
-		frame.t:SetPoint("BOTTOMLEFT", frame.bd_background, "TOPLEFT", -border, 0)
-		frame.t:SetPoint("BOTTOMRIGHT", frame.bd_background, "TOPRIGHT", border, 0)
+			frame.l:SetPoint("TOPRIGHT", frame._background, "TOPLEFT", 0, size)
+			frame.l:SetPoint("BOTTOMRIGHT", frame._background, "BOTTOMLEFT", 0, -size)
 
-		frame.l:SetPoint("TOPRIGHT", frame.bd_background, "TOPLEFT", 0, border)
-		frame.l:SetPoint("BOTTOMRIGHT", frame.bd_background, "BOTTOMLEFT", 0, -border)
+			frame.r:SetPoint("TOPLEFT", frame._background, "TOPRIGHT", 0, size)
+			frame.r:SetPoint("BOTTOMLEFT", frame._background, "BOTTOMRIGHT", 0, -size)
+			
+			frame.b:SetPoint("TOPLEFT", frame._background, "BOTTOMLEFT", -size, 0)
+			frame.b:SetPoint("TOPRIGHT", frame._background, "BOTTOMRIGHT", size, 0)
 
-		frame.r:SetPoint("TOPLEFT", frame.bd_background, "TOPRIGHT", 0, border)
-		frame.r:SetPoint("BOTTOMLEFT", frame.bd_background, "BOTTOMRIGHT", 0, -border)
+			if (size == 0) then
+				frame.t:Hide()
+				frame.l:Hide()
+				frame.r:Hide()
+				frame.b:Hide()
+			else
+				frame.t:Show()
+				frame.l:Show()
+				frame.r:Show()
+				frame.b:Show()
+			end
+		end 
 
-		frame.b:SetPoint("TOPLEFT", frame.bd_background, "BOTTOMLEFT", -border, 0)
-		frame.b:SetPoint("TOPRIGHT", frame.bd_background, "BOTTOMRIGHT", border, 0)
+		frame:set_border_size(border)
+
+		bdUI:add_action("bdUI/border_size, loaded", function()
+			local border = bdUI:get_border(frame)
+
+			frame:set_border_size(border)
+		end)
 	end
 
 	function bdUI:create_shadow(frame, offset)

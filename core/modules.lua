@@ -25,7 +25,7 @@ function bdUI:register_module(name, config, options)
 	-- register module frame with bdConfig
 	bdUI[name] = bdConfig:register_module(name, config, "config_callback", options)
 	local module = bdUI[name]
-	table.insert(bdUI.modules, module)
+	bdUI.modules[name] = module
 	return module
 end
 
@@ -47,7 +47,7 @@ function bdUI:load_module(module)
 	-- initalize and callback
 	if (module:initialize() ~= false) then
 		-- run callback
-		module:callback()
+		-- module:callback()
 		return module
 	end	
 end
@@ -59,4 +59,4 @@ function bdUI:load_modules()
 	end
 end
 
-bdUI:add_action("loaded", bdUI.load_modules)
+bdUI:add_action("loaded", bdUI.load_modules, 1)

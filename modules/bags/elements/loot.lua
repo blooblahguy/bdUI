@@ -59,9 +59,9 @@ function mod:create_loot()
 			_G["LootButton"..index.."NameFrame"]:SetAlpha(0) -- hide sucky drops :D
 		end
 		if isQuestItem then
-			frame.border:SetVertexColor(1.0, 0.82, 0)
+			frame._border:SetVertexColor(1.0, 0.82, 0)
 		else
-			frame.border:SetVertexColor(unpack(bdUI.media.backdrop))
+			frame._border:SetVertexColor(unpack(bdUI.media.backdrop))
 		end	
 	end)
 

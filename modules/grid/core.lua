@@ -121,12 +121,12 @@ local function layout(self, unit)
 		
 		if (config.invert) then
 			self.Health:SetStatusBarColor(unpack(bdUI.media.backdrop))
-			self.Health.border:SetVertexColor(r/2, g/2, b/2)
+			self.Health._border:SetVertexColor(r/2, g/2, b/2)
 			self.Short:SetTextColor(r*1.1, g*1.1, b*1.1)
 			--self.TotalAbsorb:SetStatusBarColor(1,1,1,.07)
 		else
 			self.Health:SetStatusBarColor(r/2, g/2, b/2)
-			self.Health.border:SetVertexColor(unpack(bdUI.media.backdrop))
+			self.Health._border:SetVertexColor(unpack(bdUI.media.backdrop))
 			self.Short:SetTextColor(1,1,1)
 			--self.TotalAbsorb:SetStatusBarColor(.1,.1,.1,.5)
 		end
@@ -257,9 +257,9 @@ local function layout(self, unit)
 	self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT",0, config.powerheight)
 	self.Power:SetAlpha(0.8)
 	self.Power.colorPower = true
-	self.Power.border = self.Health:CreateTexture(nil, "OVERLAY")
-	self.Power.border:SetPoint("BOTTOMLEFT", self.Power, "TOPLEFT", 0, 0)
-	self.Power.border:SetPoint("TOPRIGHT", self.Power, "TOPRIGHT", 0, 2)
+	self.Power._border = self.Health:CreateTexture(nil, "OVERLAY")
+	self.Power._border:SetPoint("BOTTOMLEFT", self.Power, "TOPLEFT", 0, 0)
+	self.Power._border:SetPoint("TOPRIGHT", self.Power, "TOPRIGHT", 0, 2)
 	
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)

@@ -455,11 +455,11 @@ local function nameplate_create(self, unit)
 
 		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
 		if (config.highlightPurge and isStealable) then -- purge alert
-			button.border:SetVertexColor(unpack(config.purgeColor))
+			button._border:SetVertexColor(unpack(config.purgeColor))
 		elseif (config.highlightEnrage and debuffType == "") then -- enrage alert
-			button.border:SetVertexColor(unpack(config.enrageColor))
+			button._border:SetVertexColor(unpack(config.enrageColor))
 		else -- neither
-			button.border:SetVertexColor(unpack(bdUI.media.border))
+			button._border:SetVertexColor(unpack(bdUI.media.border))
 		end
 	end
 

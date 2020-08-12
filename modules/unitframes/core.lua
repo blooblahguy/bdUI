@@ -205,15 +205,20 @@ mod.additional_elements = {
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetStatusBarTexture(bdUI.media.flat)
 		self.Power:ClearAllPoints()
-		self.Power:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
-		self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, -bdUI.border)
+		
 		self.Power:SetHeight(config.playertargetpowerheight)
 		self.Power.frequentUpdates = true
 		self.Power.colorPower = true
 		self.Power.Smooth = true
 		bdUI:set_backdrop(self.Power)
+
+		bdUI:add_action("bdUI/border_size, post_loaded", function()
+			local border = bdUI:get_border(self)
+			self.Power:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -border)
+			self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, -border)
+			self.Border:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", border, -border)
+		end)
 		
-		self.Border:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
 	end,
 
 	buffs = function(self, unit)

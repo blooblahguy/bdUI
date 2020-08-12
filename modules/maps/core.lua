@@ -21,4 +21,6 @@ function mod:initialize()
 	mod:create_button_frame()
 	mod:worldmap_coords()
 	mod:create_objective_tracker()
+
+	mod:config_callback()
 end
