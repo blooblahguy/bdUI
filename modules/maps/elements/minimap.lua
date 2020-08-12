@@ -1,6 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 local config
+--easier to change in the future if more minimap types want to be supported
+local rectangleFileLocation = "Interface\\Addons\\bdUI\\modules\\maps\\rectangle.tga"
 
 function mod:config_callback()
 	config = mod.config
@@ -21,7 +23,7 @@ function mod:config_callback()
 	-- Minimap Shape
 	function GetMinimapShape() return "SQUARE" end
 	if (config.shape == "Rectangle") then
-		Minimap:SetMaskTexture("Interface\\Addons\\bdMinimap\\rectangle.tga")
+		Minimap:SetMaskTexture(rectangleFileLocation)
 		Minimap.background:SetSize(config.size, config.size*.75)
 
 		local inset = ((config.size * .25) / 2)
@@ -73,7 +75,7 @@ function mod:create_minimap()
 	Minimap.background:SetBackdropColor(0,0,0,0)
 	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
 	Minimap:EnableMouse(true)
-	Minimap:SetMaskTexture("Interface\\Addons\\bdMinimap\\rectangle.tga")
+	Minimap:SetMaskTexture(rectangleFileLocation)
 	Minimap.SetArchBlobRingScalar = Minimap.SetArchBlobRingScalar or noop
 	Minimap.SetQuestBlobRingScalar = Minimap.SetQuestBlobRingScalar or noop
 	Minimap:SetArchBlobRingScalar(0);
