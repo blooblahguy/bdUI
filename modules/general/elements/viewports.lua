@@ -44,4 +44,7 @@ function mod:create_viewports()
 	WorldFrame:ClearAllPoints()
 	WorldFrame:SetPoint("TOPLEFT", 0, -( top ) )
 	WorldFrame:SetPoint("BOTTOMRIGHT", 0, ( bottom ) )
+	
+	CinematicFrame:SetScript("OnShow", nil) 
+	CinematicFrame:SetScript("OnHide", nil)
 end

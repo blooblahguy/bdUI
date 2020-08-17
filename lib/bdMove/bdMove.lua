@@ -1,3 +1,4 @@
+local addonName, addon = ...
 local MAJOR, MINOR = "bdMove-1.0", 1
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end -- No upgrade needed
@@ -45,7 +46,8 @@ lib.media = {
 	font = "fonts\\ARIALN.ttf",
 	border = {.62, .17, .18, 0.6},
 	backdrop = {.1, .1, .1, 0.6},
-	arrow = "Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up",
+	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.blp",
+	align = "Interface\\Addons\\"..addonName.."\\media\\align.blp",
 }
 
 -- set savedvariable
@@ -301,30 +303,18 @@ local function create_nudge_button(moveX, moveY, callback)
 	button.controls = controls
 
 	-- l, r, t, b
-	local texcoord = {.25, 0.72, 0.32, 0.68}
 	button.tex = button:CreateTexture(nil, "OVERLAY")
 	button.tex:SetTexture(lib.media.arrow)
-	button.tex:SetTexCoord(unpack(texcoord))
 	button.tex:SetPoint("CENTER")
 	button.tex:SetSize(8, 8)
 	button.tex:SetDesaturated(1)
-	button.tex:SetBlendMode("MOD")
 
-	button.tex2 = button:CreateTexture(nil, "OVERLAY")
-	button.tex2:SetTexture(lib.media.arrow)
-	button.tex2:SetTexCoord(unpack(texcoord))
-	button.tex2:SetPoint("CENTER")
-	button.tex2:SetSize(8, 8)
-	button.tex2:SetDesaturated(1)
-	button.tex2:Hide()
 
 	button:SetScript("OnEnter", function(self)
 		self.tex:SetDesaturated(false)
-		self.tex2:SetDesaturated(false)
 	end)
 	button:SetScript("OnLeave", function(self)
 		self.tex:SetDesaturated(1)
-		self.tex2:SetDesaturated(1)
 	end)
 
 	-- default callback
@@ -358,19 +348,19 @@ end
 
 -- left
 lib.controls.left = create_nudge_button(-1, 0)
-lib.controls.left.tex:SetRotation(-1.5708)
+lib.controls.left.tex:SetRotation(3.14159)
 
 -- up
 lib.controls.up = create_nudge_button(0, 1)
-lib.controls.up.tex:SetRotation(3.14159)
+lib.controls.up.tex:SetRotation(1.5708)
 
 -- down
 lib.controls.down = create_nudge_button(0, -1)
-lib.controls.down.tex:SetRotation(0)
+lib.controls.down.tex:SetRotation(-1.5708)
 
 -- right
 lib.controls.right = create_nudge_button(1, 0)
-lib.controls.right.tex:SetRotation(1.5708)
+lib.controls.right.tex:SetRotation(0)
 
 -- center horizontal
 lib.controls.center_h = create_nudge_button(nil, nil, function(self)
@@ -392,16 +382,9 @@ lib.controls.center_h = create_nudge_button(nil, nil, function(self)
 	frame:save()
 end)
 
-lib.controls.center_h.tex2:ClearAllPoints()
-lib.controls.center_h.tex2:SetPoint("LEFT", lib.controls.center_h, "CENTER", -2, 0)
-lib.controls.center_h.tex2:SetHeight(4)
-lib.controls.center_h.tex2:SetRotation(-1.5708)
-lib.controls.center_h.tex2:Show()
-
-lib.controls.center_h.tex:ClearAllPoints()
-lib.controls.center_h.tex:SetPoint("RIGHT", lib.controls.center_h, "CENTER", 2, 0)
-lib.controls.center_h.tex:SetHeight(4)
+lib.controls.center_h.tex:SetTexture(lib.media.align)
 lib.controls.center_h.tex:SetRotation(1.5708)
+lib.controls.center_h.tex:SetSize(10, 10)
 
 -- center vertically
 lib.controls.center_v = create_nudge_button(nil, nil, function(self)
@@ -425,15 +408,8 @@ lib.controls.center_v = create_nudge_button(nil, nil, function(self)
 	frame:save()
 end)
 
-lib.controls.center_v.tex2:SetPoint("TOP", lib.controls.center_v, "CENTER", 0, 0)
-lib.controls.center_v.tex2:SetHeight(4)
-lib.controls.center_v.tex2:SetRotation(3.14159)
-lib.controls.center_v.tex2:Show()
-
-lib.controls.center_v.tex:SetHeight(4)
-lib.controls.center_v.tex:ClearAllPoints()
-lib.controls.center_v.tex:SetPoint("BOTTOM", lib.controls.center_v, "CENTER", 0, 0)
-lib.controls.center_v.tex:SetRotation(0)
+lib.controls.center_v.tex:SetTexture(lib.media.align)
+lib.controls.center_v.tex:SetSize(10, 10)
 
 function lib:attach_controls(frame)
 	if (frame.locked) then 

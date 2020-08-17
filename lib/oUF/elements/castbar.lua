@@ -86,17 +86,17 @@ A default texture will be applied to the StatusBar and Texture widgets if they d
 local _, ns = ...
 local oUF = ns.oUF
 
-if (oUF.classic) then return end
-
 local GetNetStats = GetNetStats
 local GetTime = GetTime
-local UnitCastingInfo = UnitCastingInfo or CastingInfo
-local UnitChannelInfo = UnitChannelInfo or ChannelInfo
-local EventFunctions = {}
+local UnitCastingInfo = UnitCastingInfo
+local UnitChannelInfo = UnitChannelInfo
+
+local FALLBACK_ICON = 136243
 
 local function updateSafeZone(self)
-	local safeZone = self.SafeZone
-	local width = self:GetWidth()
+	local sz = self.SafeZone
+	local horiz = self.horizontal
+	local width = horiz and self:GetWidth() or self:GetHeight()
 	local _, _, _, ms = GetNetStats()
 
 	local safeZoneRatio = (ms / 1e3) / self.max
@@ -104,7 +104,31 @@ local function updateSafeZone(self)
 		safeZoneRatio = 1
 	end
 
-	safeZone:SetWidth(width * safeZoneRatio)
+	sz[horiz and 'SetWidth' or 'SetHeight'](sz, width * safeZoneRatio)
+end
+
+local function positionSafeZone(self, isChanneling)
+	local sz = self.SafeZone
+	local horiz = self.horizontal
+
+	sz:ClearAllPoints()
+
+	if(not isChanneling) then
+		sz:SetPoint(
+			self:GetReverseFill()
+			and (horiz and 'LEFT' or 'BOTTOM')
+			or (horiz and 'RIGHT' or 'TOP')
+		)
+	else
+		sz:SetPoint(
+			self:GetReverseFill()
+			and (horiz and 'RIGHT' or 'TOP')
+			or (horiz and 'LEFT' or 'BOTTOM')
+		)
+	end
+
+	sz:SetPoint(horiz and 'TOP' or 'LEFT')
+	sz:SetPoint(horiz and 'BOTTOM' or 'RIGHT')
 end
 
 local function UNIT_SPELLCAST_START(self, event, unit)
@@ -133,7 +157,7 @@ local function UNIT_SPELLCAST_START(self, event, unit)
 	element:SetValue(0)
 
 	if(element.Text) then element.Text:SetText(text) end
-	if(element.Icon) then element.Icon:SetTexture(texture) end
+	if(element.Icon) then element.Icon:SetTexture(texture or FALLBACK_ICON) end
 	if(element.Time) then element.Time:SetText() end
 
 	local shield = element.Shield
@@ -143,12 +167,8 @@ local function UNIT_SPELLCAST_START(self, event, unit)
 		shield:Hide()
 	end
 
-	local sf = element.SafeZone
-	if(sf) then
-		sf:ClearAllPoints()
-		sf:SetPoint(element:GetReverseFill() and 'LEFT' or 'RIGHT')
-		sf:SetPoint('TOP')
-		sf:SetPoint('BOTTOM')
+	if(element.SafeZone) then
+		positionSafeZone(element)
 		updateSafeZone(element)
 	end
 
@@ -218,6 +238,50 @@ local function UNIT_SPELLCAST_INTERRUPTED(self, event, unit, castID)
 	--]]
 	if(element.PostCastInterrupted) then
 		return element:PostCastInterrupted(unit)
+	end
+end
+
+local function UNIT_SPELLCAST_INTERRUPTIBLE(self, event, unit)
+	if(self.unit ~= unit and self.realUnit ~= unit) then return end
+
+	local element = self.Castbar
+	local shield = element.Shield
+	if(shield) then
+		shield:Hide()
+	end
+
+	element.notInterruptible = nil
+
+	--[[ Callback: Castbar:PostCastInterruptible(unit)
+	Called after the element has been updated when a spell cast has become interruptible.
+
+	* self - the Castbar widget
+	* unit - unit for which the update has been triggered (string)
+	--]]
+	if(element.PostCastInterruptible) then
+		return element:PostCastInterruptible(unit)
+	end
+end
+
+local function UNIT_SPELLCAST_NOT_INTERRUPTIBLE(self, event, unit)
+	if(self.unit ~= unit and self.realUnit ~= unit) then return end
+
+	local element = self.Castbar
+	local shield = element.Shield
+	if(shield) then
+		shield:Show()
+	end
+
+	element.notInterruptible = true
+
+	--[[ Callback: Castbar:PostCastNotInterruptible(unit)
+	Called after the element has been updated when a spell cast has become non-interruptible.
+
+	* self - the Castbar widget
+	* unit - unit for which the update has been triggered (string)
+	--]]
+	if(element.PostCastNotInterruptible) then
+		return element:PostCastNotInterruptible(unit)
 	end
 end
 
@@ -302,7 +366,7 @@ local function UNIT_SPELLCAST_CHANNEL_START(self, event, unit, _, spellID)
 	element:SetValue(duration)
 
 	if(element.Text) then element.Text:SetText(name) end
-	if(element.Icon) then element.Icon:SetTexture(texture) end
+	if(element.Icon) then element.Icon:SetTexture(texture or FALLBACK_ICON) end
 	if(element.Time) then element.Time:SetText() end
 
 	local shield = element.Shield
@@ -312,12 +376,8 @@ local function UNIT_SPELLCAST_CHANNEL_START(self, event, unit, _, spellID)
 		shield:Hide()
 	end
 
-	local sf = element.SafeZone
-	if(sf) then
-		sf:ClearAllPoints()
-		sf:SetPoint(element:GetReverseFill() and 'RIGHT' or 'LEFT')
-		sf:SetPoint('TOP')
-		sf:SetPoint('BOTTOM')
+	if(element.SafeZone) then
+		positionSafeZone(element, true)
 		updateSafeZone(element)
 	end
 
@@ -492,29 +552,16 @@ local function Enable(self, unit)
 		element.ForceUpdate = ForceUpdate
 
 		if(not (unit and unit:match'%wtarget$')) then
-			if LibClassicCasterino then
-				local CastbarEventHandler = function(event, ...)
-					return EventFunctions[event](self, event, ...)
-				end
-				
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_START', CastbarEventHandler)
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_DELAYED', CastbarEventHandler)
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_STOP', CastbarEventHandler)
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_FAILED', CastbarEventHandler)
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_INTERRUPTED', CastbarEventHandler)
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_CHANNEL_START', CastbarEventHandler)
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_CHANNEL_UPDATE', CastbarEventHandler)
-				LibClassicCasterino.RegisterCallback(self, 'UNIT_SPELLCAST_CHANNEL_STOP', CastbarEventHandler)
-			else
-				self:RegisterEvent('UNIT_SPELLCAST_START', UNIT_SPELLCAST_START)
-				self:RegisterEvent('UNIT_SPELLCAST_FAILED', UNIT_SPELLCAST_FAILED)
-				self:RegisterEvent('UNIT_SPELLCAST_STOP', UNIT_SPELLCAST_STOP)
-				self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', UNIT_SPELLCAST_INTERRUPTED)
-				self:RegisterEvent('UNIT_SPELLCAST_DELAYED', UNIT_SPELLCAST_DELAYED)
-				self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_START', UNIT_SPELLCAST_CHANNEL_START)
-				self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', UNIT_SPELLCAST_CHANNEL_UPDATE)
-				self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', UNIT_SPELLCAST_CHANNEL_STOP)
-			end
+			self:RegisterEvent('UNIT_SPELLCAST_START', UNIT_SPELLCAST_START)
+			self:RegisterEvent('UNIT_SPELLCAST_FAILED', UNIT_SPELLCAST_FAILED)
+			self:RegisterEvent('UNIT_SPELLCAST_STOP', UNIT_SPELLCAST_STOP)
+			self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', UNIT_SPELLCAST_INTERRUPTED)
+			self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', UNIT_SPELLCAST_INTERRUPTIBLE)
+			self:RegisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', UNIT_SPELLCAST_NOT_INTERRUPTIBLE)
+			self:RegisterEvent('UNIT_SPELLCAST_DELAYED', UNIT_SPELLCAST_DELAYED)
+			self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_START', UNIT_SPELLCAST_CHANNEL_START)
+			self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', UNIT_SPELLCAST_CHANNEL_UPDATE)
+			self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', UNIT_SPELLCAST_CHANNEL_STOP)
 		end
 
 		element.horizontal = element:GetOrientation() == 'HORIZONTAL'
@@ -558,48 +605,20 @@ local function Disable(self)
 	local element = self.Castbar
 	if(element) then
 		element:Hide()
-		
-		if LibClassicCasterino then
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_START')
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_DELAYED')
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_STOP')
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_FAILED')
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_INTERRUPTED')
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_CHANNEL_START')
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_CHANNEL_UPDATE')
-			LibClassicCasterino.UnregisterCallback(self, 'UNIT_SPELLCAST_CHANNEL_STOP')
-		else
-			self:UnregisterEvent('UNIT_SPELLCAST_START', UNIT_SPELLCAST_START)
-			self:UnregisterEvent('UNIT_SPELLCAST_FAILED', UNIT_SPELLCAST_FAILED)
-			self:UnregisterEvent('UNIT_SPELLCAST_STOP', UNIT_SPELLCAST_STOP)
-			self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', UNIT_SPELLCAST_INTERRUPTED)
-			self:UnregisterEvent('UNIT_SPELLCAST_DELAYED', UNIT_SPELLCAST_DELAYED)
-			self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_START', UNIT_SPELLCAST_CHANNEL_START)
-			self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', UNIT_SPELLCAST_CHANNEL_UPDATE)
-			self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', UNIT_SPELLCAST_CHANNEL_STOP)
-		end
+
+		self:UnregisterEvent('UNIT_SPELLCAST_START', UNIT_SPELLCAST_START)
+		self:UnregisterEvent('UNIT_SPELLCAST_FAILED', UNIT_SPELLCAST_FAILED)
+		self:UnregisterEvent('UNIT_SPELLCAST_STOP', UNIT_SPELLCAST_STOP)
+		self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', UNIT_SPELLCAST_INTERRUPTED)
+		self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', UNIT_SPELLCAST_INTERRUPTIBLE)
+		self:UnregisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', UNIT_SPELLCAST_NOT_INTERRUPTIBLE)
+		self:UnregisterEvent('UNIT_SPELLCAST_DELAYED', UNIT_SPELLCAST_DELAYED)
+		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_START', UNIT_SPELLCAST_CHANNEL_START)
+		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', UNIT_SPELLCAST_CHANNEL_UPDATE)
+		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', UNIT_SPELLCAST_CHANNEL_STOP)
 
 		element:SetScript('OnUpdate', nil)
 	end
-end
-
-if LibClassicCasterino then
-	UnitCastingInfo = function(unit)
-		return LibClassicCasterino:UnitCastingInfo(unit)
-	end
-
-	UnitChannelInfo = function(unit)
-		return LibClassicCasterino:UnitChannelInfo(unit)
-	end
-	
-	EventFunctions["UNIT_SPELLCAST_START"] = UNIT_SPELLCAST_START
-	EventFunctions["UNIT_SPELLCAST_FAILED"] = UNIT_SPELLCAST_FAILED
-	EventFunctions["UNIT_SPELLCAST_INTERRUPTED"] = UNIT_SPELLCAST_INTERRUPTED
-	EventFunctions["UNIT_SPELLCAST_DELAYED"] = UNIT_SPELLCAST_DELAYED
-	EventFunctions["UNIT_SPELLCAST_STOP"] = UNIT_SPELLCAST_STOP
-	EventFunctions["UNIT_SPELLCAST_CHANNEL_START"] = UNIT_SPELLCAST_CHANNEL_START
-	EventFunctions["UNIT_SPELLCAST_CHANNEL_UPDATE"] = UNIT_SPELLCAST_CHANNEL_UPDATE
-	EventFunctions["UNIT_SPELLCAST_CHANNEL_STOP"] = UNIT_SPELLCAST_CHANNEL_STOP
 end
 
 oUF:AddElement('Castbar', Update, Enable, Disable)

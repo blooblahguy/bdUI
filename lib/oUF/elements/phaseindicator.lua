@@ -74,7 +74,7 @@ end
 
 local function Enable(self)
 	local element = self.PhaseIndicator
-	if(element and not oUF.classic) then
+	if(element) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
