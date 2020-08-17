@@ -461,7 +461,6 @@ function mod:create_unitframes()
 	local yoff = 178
 
 	if (config.enableplayertarget) then
-	print(bdParent:GetHeight())
 		-- player
 		local player = oUF:Spawn("player")
 		player:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff)

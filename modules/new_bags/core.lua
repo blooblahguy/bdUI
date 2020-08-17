@@ -29,14 +29,10 @@ function mod:initialize()
 
 	-- mod.categories.first_run_complete = nil
 
-	if (not config.first_run_complete) then
-		mod:create_category("New Items", {
-			["new_items"] = true,
-			["default"] = true,
-			["duplicate"] = true,
-			["locked"] = true,
-			["order"] = -1,
-		})
+	
+
+	-- if (not config.first_run_complete) then
+		
 		mod:create_category("Weapons", {
 			["type"] = mod.types["Weapon"],
 			["default"] = true,
@@ -56,8 +52,12 @@ function mod:initialize()
 			["itemids"] = {6948, 140192, 141605, 110560},
 			["default"] = true,
 		})
+		mod:create_category("Enchants", {
+			["type"] = tMerge(mod.types["Enchantment"]),
+			["default"] = true,
+		})
 		mod:create_category("Tools", {
-			["type"] = tMerge(mod.types["Consumable"], mod.types["Enchantment"], mod.types["Tokens"]),
+			["type"] = tMerge(mod.types["Consumable"], mod.types["Tokens"]),
 			["default"] = true,
 		})
 		mod:create_category("Food & Potion", {
@@ -72,16 +72,16 @@ function mod:initialize()
 			['type'] = tMerge(mod.types["Bags"], mod.types["Miscellaneous"]),
 			["default"] = true,
 		})
-		
-		mod:create_category("Uncategorized", {
-			["catch_all"] = true,
+
+		mod:create_category("Bags", {
 			["default"] = true,
+			["duplicate"] = true,
 			["locked"] = true,
-			["order"] = 100
+			["order"] = -1,
 		})
 
 		config.first_run_complete = true
-	end
+	-- end
 
 	-- Create Frames
 	mod:create_bags()
@@ -90,7 +90,7 @@ function mod:initialize()
 end
 
 function mod:config_callback()
-	assert(false, "test")
+	-- assert(false, "test")
 	mod.config = mod:get_save()
 	config = mod.config
 	if (not config.enabled) then return end

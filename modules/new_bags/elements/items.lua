@@ -29,6 +29,12 @@ local methods = {
 		-- local quest = _G[self:GetName().."IconQuestTexture"] or self.IconQuestTexture
 		local isQuestItem, questId, isActive = GetContainerItemQuestInfo(self.bag, self.slot)
 
+		if (not self.texture) then
+			self.IconBorder:Hide()
+			self.quality_border:Hide()
+			return
+		end
+
 		self.IconBorder:SetTexture(bdUI.media.flat)
 		self.IconBorder:ClearAllPoints()
 		self.IconBorder:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 0, 0)

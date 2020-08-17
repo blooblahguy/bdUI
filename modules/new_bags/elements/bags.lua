@@ -77,27 +77,34 @@ end
 --==================================
 -- update item tables
 --==================================
+SetSortBagsRightToLeft(false)
+SetInsertItemsLeftToRight(false)
 function mod:update_bags()
 	local items = {}
 	local remove = {}
 	local new_items = {}
 	local item_weights = {}
 	local open_slots = 0
+	local lastfull = false
 
 	-- first gather all items up
 	for bag = 0, 4 do
-		for slot = 1, GetContainerNumSlots(bag) do
+		local min, max, step = GetContainerNumSlots(bag), 1, -1
+		local freeslots, bagtype = GetContainerNumFreeSlots(bag)
+		lastfull = freeslots == 0
+
+		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot);
 			local itemID = mod:item_id(itemLink)
 			if (texture) then 
 				items[#items + 1] = {itemLink, bag, slot, itemID}
 
 				-- add to new items category
-				if (C_NewItems.IsNewItem(bag, slot)) then
-					if (quality > 0) then
-						new_items[#new_items + 1] = {itemLink, bag, slot, itemID}
-					end
-				end
+				-- if (C_NewItems.IsNewItem(bag, slot)) then
+				-- 	if (quality > 0) then
+				-- 		new_items[#new_items + 1] = {itemLink, bag, slot, itemID}
+				-- 	end
+				-- end
 			else
 				open_slots = open_slots + 1
 			end
@@ -113,22 +120,24 @@ function mod:update_bags()
 
 			-- item information
 			local itemLink, bag, slot, itemID = unpack(v)
-			local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+			if (itemLink) then
+				local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 
-			-- print(GetItemInfo(itemLink))
+				-- print(GetItemInfo(itemLink))
 
-			if (rarity == nil or rarity > 0) then
-				item_weights[k] = item_weights[k] or {0, nil}
-				local current_weight, parent_category = unpack(item_weights[k])
-				-- local new_weight = 0
+				if (rarity == nil or rarity > 0) then
+					item_weights[k] = item_weights[k] or {0, nil}
+					local current_weight, parent_category = unpack(item_weights[k])
+					-- local new_weight = 0
 
-				local new_weight = mod:filter_item(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
+					local new_weight = mod:filter_item(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
 
-				if (current_weight < new_weight) then
-					item_weights[k] = {new_weight, category_name}
+					if (current_weight < new_weight) then
+						item_weights[k] = {new_weight, category_name}
+					end
+				else
+					remove[#remove + 1] = k
 				end
-			else
-				remove[#remove + 1] = k
 			end
 		end
 	end
@@ -157,27 +166,29 @@ function mod:update_bags()
 	--=====================
 	-- didn't find these items
 	--=====================
+	-- local bag_items = {}
 	for k, v in pairs(items) do
 		-- local itemLink, bag, slot, itemID = unpack(items[k])
 		-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 		-- local count = #mod.bags.category_items["Uncategorized"]
 		-- mod.bags.category_items["Uncategorized"][count + 1] = items[k]
-		local count = #mod.categories["Uncategorized"].items
-		mod.categories["Uncategorized"].items[count + 1] = items[k]
+		-- tinsert(bag_items, k)
+		local count = #mod.categories["Bags"].items
+		mod.categories["Bags"].items[count + 1] = items[k]
 	end
-
+	
 	--=====================
 	-- Add New Items to New Category
 	--=====================
-	for k = 1, #new_items do
-		local v = new_items[k]
-		-- local itemLink, bag, slot, itemID = unpack(new_items[k])
-		-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
-		-- local count = #mod.bags.category_items["New Items"]
-		-- mod.bags.category_items["New Items"][count + 1] = items[k]
-		local count = #mod.categories["New Items"].items
-		mod.categories["New Items"].items[count + 1] = items[k]
-	end
+	-- for k = 1, #new_items do
+	-- 	local v = new_items[k]
+	-- 	-- local itemLink, bag, slot, itemID = unpack(new_items[k])
+	-- 	-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+	-- 	-- local count = #mod.bags.category_items["New Items"]
+	-- 	-- mod.bags.category_items["New Items"][count + 1] = items[k]
+	-- 	local count = #mod.categories["New Items"].items
+	-- 	mod.categories["New Items"].items[count + 1] = items[k]
+	-- end
 
 	mod:draw_bags()
 end
