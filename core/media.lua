@@ -175,7 +175,7 @@ end
 	end
 
 	local function border_gen(parent)
-		local frame = parent:CreateTexture(nil, "BACKGROUND", nil, -8)
+		local frame = parent:CreateTexture(nil, "BACKGROUND", nil, -5)
 		frame:SetTexture(bdUI.media.flat)
 		frame:SetVertexColor(unpack(bdUI.media.border))
 		frame.protected = true
@@ -192,7 +192,7 @@ end
 		end
 		local r, g, b, a = unpack(bdUI.media.backdrop)
 
-		frame._background = frame:CreateTexture(nil, "BACKGROUND", nil, -7)
+		frame._background = frame:CreateTexture(nil, "BACKGROUND", nil, -6)
 		frame._background:SetTexture(bdUI.media.flat)
 		frame._background:SetAllPoints()
 		frame._background:SetVertexColor(r, g, b, a)
@@ -274,6 +274,7 @@ end
 		shadow:SetAlpha(0.7)
 		shadow:SetBackdropColor(0, 0, 0, 0)
 		shadow:SetBackdropBorderColor(0, 0, 0, 0.8)
+		shadow.offset = offset
 
 		shadow.set_size = function(self, offset)
 			shadow:SetPoint("TOPLEFT", -offset, offset)
@@ -289,6 +290,12 @@ end
 
 		shadow:set_size(offset)
 		frame._shadow = shadow
+
+		bdUI:add_action("bdUI/border_size, loaded", function()
+			local border = bdUI:get_border(frame)
+
+			shadow:set_size(border * shadow.offset)
+		end)
 	end
 
 	function bdUI:set_highlight(frame, icon)

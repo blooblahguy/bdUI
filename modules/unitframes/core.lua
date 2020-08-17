@@ -351,7 +351,7 @@ local function layout(self, unit)
 	self.Border = CreateFrame("Frame", nil, self.Health)
 	self.Border:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border)
 	self.Border:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
-	bdUI:create_shadow(self.Border, bdUI.border)
+	bdUI:create_shadow(self.Border, 1)
 	self.Border._shadow:Hide()
 
 	--===============================================

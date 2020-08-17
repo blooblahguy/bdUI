@@ -549,6 +549,8 @@ function mod:initialize()
 
 	if (not config.enabled) then return end
 
+	mod:config_callback()
+
 	local forced = false
 	hooksecurefunc(C_NamePlate, "SetNamePlateEnemySize", function()
 		if (not forced) then
