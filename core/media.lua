@@ -276,6 +276,12 @@ end
 		shadow:SetBackdropBorderColor(0, 0, 0, 0.8)
 		shadow.offset = offset
 
+		shadow.SetColor = function(self, r, g, b, a)
+			a = a or 1
+			self:SetBackdropColor(r, g, b, a)
+			self:SetBackdropBorderColor(r, g, b, a)
+		end
+
 		shadow.set_size = function(self, offset)
 			shadow:SetPoint("TOPLEFT", -offset, offset)
 			shadow:SetPoint("BOTTOMLEFT", -offset, -offset)

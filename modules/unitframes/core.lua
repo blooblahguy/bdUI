@@ -47,13 +47,13 @@ local function update_borders(self, event)
 	if (UnitIsUnit(self.unit, "target")) then
 		self.Border._shadow:Show()
 		self.Border._shadow:SetAlpha(1)
-		self.Border._shadow:SetBackdropColor(self.Health:GetStatusBarColor())
-		self.Border._shadow:SetBackdropBorderColor(self.Health:GetStatusBarColor())
+		self.Border._shadow:SetColor(self.Health:GetStatusBarColor())
+		-- self.Border._shadow:SetBackdropBorderColor(self.Health:GetStatusBarColor())
 	elseif ((type(event) == "string") and (UnitIsUnit(self.unit, "mouseover") or MouseIsOver(self))) then
 		self.Border._shadow:Show()
 		self.Border._shadow:SetAlpha(0.6)
-		self.Border._shadow:SetBackdropColor(1, 1, 1, 1)
-		self.Border._shadow:SetBackdropBorderColor(1, 1, 1, 1)
+		self.Border._shadow:SetColor(1, 1, 1, 1)
+		-- self.Border._shadow:SetBackdropBorderColor(1, 1, 1, 1)
 	else
 		self.Border._shadow:Hide()
 	end
@@ -461,6 +461,7 @@ function mod:create_unitframes()
 	local yoff = 178
 
 	if (config.enableplayertarget) then
+	print(bdParent:GetHeight())
 		-- player
 		local player = oUF:Spawn("player")
 		player:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff)

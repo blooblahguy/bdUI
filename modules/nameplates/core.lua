@@ -41,8 +41,8 @@ function mod:config_callback()
 		local border = bdUI:get_border(self)
 
 		-- health
-		self.Health._shadow:SetBackdropColor(unpack(config.glowcolor))
-		self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
+		self.Health._shadow:SetColor(unpack(config.glowcolor))
+		-- self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
 
 		-- castbar
 		local cbi_size = (config.height+config.castbarheight) * config.castbariconscale
@@ -252,8 +252,8 @@ local function nameplate_create(self, unit)
 	self.Health.colorReaction = true
 	self.Health.frequentUpdates = true
 	bdUI:create_shadow(self.Health, 10)
-	self.Health._shadow:SetBackdropColor(unpack(config.glowcolor))
-	self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
+	self.Health._shadow:SetColor(unpack(config.glowcolor))
+	-- self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
 
 	--==========================================
 	-- QUEST ICON
