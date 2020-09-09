@@ -17,19 +17,22 @@ mod.custom_layout["boss"] = function(self, unit)
 	self.Name:SetFont(bdUI.media.font, 12, "OUTLINE")
 	self.Name:SetWidth(config.bosswidth - self.Perpp:GetWidth() - self.Perhp:GetWidth() - 16)
 
-	self.Debuffs.initialAnchor = "TOPLEFT"
-	self.Debuffs['growth-x'] = "RIGHT"
+	self.Debuffs.initialAnchor = "TOPRIGHT"
+	self.Debuffs['growth-x'] = "LEFT"
+	self.Debuffs['growth-y'] = "DOWN"
 	self.Debuffs.size = config.bossheight - 10
+	self.Debuffs.spacing = bdUI.border * 2
 	self.Debuffs:ClearAllPoints()
-	self.Debuffs:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, -2)
+	self.Debuffs:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -bdUI.border*3, -bdUI.border)
 
-	self.Auras.initialAnchor = "TOPRIGHT"
-	self.Auras['growth-x'] = "LEFT"
+	self.Auras.initialAnchor = "TOPLEFT"
+	self.Auras['growth-x'] = "RIGHT"
 	self.Auras['growth-y'] = "DOWN"
 	self.Auras.size = (config.bossheight - 10) / 2
+	self.Auras.spacing = bdUI.border * 2
 	self.Auras:SetSize((config.bossheight - 10) / 2, config.bossheight)
 	self.Auras:ClearAllPoints()
-	self.Auras:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -bdUI.border*3, -bdUI.border)
+	self.Auras:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", bdUI.border*3, -bdUI.border)
 
 	self.Power:SetHeight(config.bosspower)
 	self.Power:Show()

@@ -74,6 +74,8 @@ function mod:config_callback()
 	if (not config.enabled) then return false end
 	if (InCombatLockdown()) then return end
 
+	mod:update_header()
+	
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
 	end
@@ -570,7 +572,6 @@ function mod:initialize()
 		mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
 		mod.raidpartyholder:RegisterEvent("LOADING_SCREEN_DISABLED")
 		mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
-			mod:update_header()
 			mod:config_callback()
 		end)
 
