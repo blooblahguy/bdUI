@@ -63,7 +63,7 @@ local function changeFonts()
 	SetFont(SystemFont_Shadow_Large, 			NORMAL, 17 * fontScale);
 	SetFont(SystemFont_Shadow_Med1, 			NORMAL, 14 * fontScale);
 	SetFont(SystemFont_Shadow_Med3, 			NORMAL, 15 * fontScale);
-	SetFont(SystemFont_Shadow_Outline_Huge2,	NORMAL, 22 * fontScale, "OUTLINE");
+	-- SetFont(SystemFont_Shadow_Outline_Huge2,	NORMAL, 22 * fontScale, "OUTLINE");
 	SetFont(SystemFont_Shadow_Small, 			NORMAL, 13 * fontScale);
 	SetFont(SystemFont_Small, 					NORMAL, 14 * fontScale);
 	SetFont(SystemFont_Tiny, 					NORMAL, 14 * fontScale);
