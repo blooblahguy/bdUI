@@ -110,7 +110,7 @@ local function create(options, parent)
 	button:SetText("Add/Remove")
 	button:SetHeight(26)
 
-	local insertbox = CreateFrame("EditBox", nil, container, "BackdropTemplate")
+	local insertbox = CreateFrame("EditBox", nil, container, BackdropTemplateMixin and "BackdropTemplate")
 	insertbox:SetFontObject("bdConfig_font")
 	insertbox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -6)
 	insertbox:SetTextInsets(6, 2, 2, 2)
@@ -130,7 +130,7 @@ local function create(options, parent)
 	button:SetPoint("TOPLEFT", insertbox, "TOPRIGHT", 0, -2)
 	insertbox:SetSize(container:GetWidth() - button:GetWidth() + 2, 30)
 
-	local list = CreateFrame("frame", nil, container, "BackdropTemplate")
+	local list = CreateFrame("frame", nil, container, BackdropTemplateMixin and "BackdropTemplate")
 	list:SetPoint("TOPLEFT", insertbox, "BOTTOMLEFT", 0, -2)
 	list:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT")
 	list.save = options.save

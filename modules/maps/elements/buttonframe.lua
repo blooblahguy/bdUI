@@ -26,7 +26,9 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
 	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("MAIL_CLOSED")
-	Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
+	if (bdUI:get_game_version() == "shadowlands") then
+		Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
+	end
 	Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_LIST_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
 

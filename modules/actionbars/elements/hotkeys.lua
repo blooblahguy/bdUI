@@ -2,6 +2,8 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Actionbars")
 local v = mod.variables
 
+
+
 --===================================================
 -- Hotkey Improvements
 --===================================================
@@ -73,5 +75,7 @@ end
 -- Main Hooks
 -- Dequeue this button's updater, and use our own queue
 --=====================================================
-hooksecurefunc(ActionButton1, "UpdateHotkeys", mod.UpdateHotkeys)
+if (bdUI:get_game_version() == "shadowlands") then
+	hooksecurefunc(ActionButton1, "UpdateHotkeys", mod.UpdateHotkeys)
+end
 -- hooksecurefunc("PetActionButton_SetHotkeys", mod.UpdateHotkeys)

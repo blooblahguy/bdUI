@@ -26,7 +26,7 @@ function mod:create_altpower()
 		else
 			PlayerPowerBarAlt:Hide()
 
-			if UnitPower("player", ALTERNATE_POWER_INDEX) or UnitPower("player", ALTERNATE_POWER_INDEX) then
+			if UnitPowerMax("player", ALTERNATE_POWER_INDEX) > 0 or UnitPowerMax("player", ALTERNATE_POWER_INDEX) > 0 then
 				local power = UnitPower("player", ALTERNATE_POWER_INDEX)
 				local mpower = UnitPowerMax("player", ALTERNATE_POWER_INDEX)
 				local info = PowerBarColor[ADDITIONAL_POWER_BAR_NAME];

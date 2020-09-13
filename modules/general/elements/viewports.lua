@@ -3,7 +3,7 @@ local mod = bdUI:get_module("General")
 
 -- viewports
 local function createViewport() 
-	local frame = CreateFrame("frame", "bdCore Top Viewport", nil, "BackdropTemplate")
+	local frame = CreateFrame("frame", "bdCore Top Viewport", nil, BackdropTemplateMixin and "BackdropTemplate")
 	frame:SetBackdrop({bgFile = bdUI.media.flat})
 	frame:SetBackdropBorderColor(0, 0, 0, 0)
 	frame:SetFrameStrata("BACKGROUND")

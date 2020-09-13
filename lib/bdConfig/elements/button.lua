@@ -30,10 +30,10 @@ local function create(options, parent)
 	local container
 
 	if (options.solo) then
-		button = CreateFrame("Button", nil, parent, "BackdropTemplate")
+		button = CreateFrame("Button", nil, parent, BackdropTemplateMixin and "BackdropTemplate")
 	else
 		container = lib:create_container(options, parent, 28)
-		button = CreateFrame("Button", nil, container, "BackdropTemplate")
+		button = CreateFrame("Button", nil, container, BackdropTemplateMixin and "BackdropTemplate")
 		button:SetPoint("LEFT", container, "LEFT")
 	end
 

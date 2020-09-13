@@ -96,6 +96,7 @@ bdUI.font_small:SetShadowOffset(0, 0)
 --Return game version, so that we can have cross version compatibility when possible
 --===================================================================
 local versions = {}
+versions[99999] = "shadowlands"
 versions[89999] = "bfa"
 versions[79999] = "legion"
 versions[69999] = "wod"

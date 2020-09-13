@@ -159,7 +159,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	-- frame:SetBackdropColor(0,0.2,0,.4)
 
 	-- Create Mover Parent
-	local mover = CreateFrame("frame", rename, UIParent, "BackdropTemplate")
+	local mover = CreateFrame("frame", rename, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	mover:EnableMouse(false)
 	mover:SetSize(width + (right + left), height + (top + bottom))
 	mover:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})
@@ -296,7 +296,7 @@ local function create_nudge_button(moveX, moveY, callback)
 	moveX = moveX or 0
 	moveY = moveY or 0
 
-	local button = CreateFrame("button", nil, controls, "BackdropTemplate")
+	local button = CreateFrame("button", nil, controls, BackdropTemplateMixin and "BackdropTemplate")
 	button:SetSize(16, 16)
 	button:SetBackdrop({bgFile = lib.media.flat})
 	button:SetBackdropColor(0,0,0,1)
