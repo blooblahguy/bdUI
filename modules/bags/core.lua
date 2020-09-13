@@ -253,7 +253,9 @@ function mod:skin(frame)
 	frame:SetNormalTexture("")
 	frame:SetPushedTexture("")
 	frame:SetAlpha(1)
-	Mixin(frame, BackdropTemplateMixin)
+	if (not frame.SetBackdrop) then
+		Mixin(frame, BackdropTemplateMixin)
+	end
 	frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
 	local r, g, b, a = unpack(bdUI.media.backdrop)
 	frame:SetBackdropColor(r, g, b, 0.8)

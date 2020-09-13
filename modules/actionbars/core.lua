@@ -20,10 +20,7 @@ function mod:initialize()
 	c = mod:get_save()
 	mod.config = c
 	if (not c.enabled) then mod.disabled = true; return end
-
-	-- Range hooks
-	mod:register_range_hooks()
-
+	
 	mod:remove_blizzard()
 
 	-- Main bars
