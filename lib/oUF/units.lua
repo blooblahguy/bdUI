@@ -165,7 +165,7 @@ end
 -- Handles unit specific actions.
 function oUF:HandleUnit(object, unit)
 	local unit = object.unit or unit
-	if(unit == 'target') then
+	if(unit == 'target' or unit == 'targettarget') then
 		object:RegisterEvent('PLAYER_TARGET_CHANGED', object.UpdateAllElements, true)
 	elseif(unit == 'mouseover') then
 		object:RegisterEvent('UPDATE_MOUSEOVER_UNIT', object.UpdateAllElements, true)

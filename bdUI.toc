@@ -55,6 +55,7 @@ core\locales\enUS.lua
 core\locales\deDE.lua
 
 # Core
+core\api.lua
 core\performance.lua
 core\commands.lua
 core\compatibility.lua

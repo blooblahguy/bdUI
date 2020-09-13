@@ -5,7 +5,7 @@ function mod:create_gmotd()
 	local config = mod.config
 	bdUI.persistent.gmotd = bdUI.persistent.gmotd or {}
 	
-	local gmotd = CreateFrame("frame", nil, UIParent)
+	local gmotd = CreateFrame("frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	gmotd:SetSize(350, 150)
 	gmotd:Hide()
 	gmotd:SetPoint("TOP", UIParent, "TOP", 0, -140)
@@ -24,7 +24,7 @@ function mod:create_gmotd()
 	gmotd.text:CanWordWrap(true)
 	gmotd.text:SetWordWrap(true)
 
-	gmotd.button = CreateFrame("Button", nil, gmotd)
+	gmotd.button = CreateFrame("Button", nil, gmotd, BackdropTemplateMixin and "BackdropTemplate")
 	gmotd.button:SetText("Got it");
 	gmotd.button:SetPoint("TOP", gmotd, "BOTTOM", 0, -4)
 	bdUI:skin_button(gmotd.button, false)

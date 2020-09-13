@@ -30,9 +30,8 @@ bdUI.media = {
 	smooth = "Interface\\Addons\\"..addonName.."\\media\\smooth.tga",
 	font = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf",
 	myriad = "Interface\\Addons\\"..addonName.."\\media\\Myriad.ttf",
-	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.blp",
-	arrowup = "Interface\\Addons\\"..addonName.."\\media\\arrowup.blp",
-	arrowdown = "Interface\\Addons\\"..addonName.."\\media\\arrowdown.blp",
+	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.tga",
+	align = "Interface\\Addons\\"..addonName.."\\media\\align.tga",
 	shadow = "Interface\\Addons\\"..addonName.."\\media\\shadow.blp",
 	fonts = {},
 	backgrounds = {},
@@ -98,6 +97,7 @@ bdUI.font_small:SetShadowOffset(0, 0)
 --Return game version, so that we can have cross version compatibility when possible
 --===================================================================
 local versions = {}
+versions[99999] = "shadowlands"
 versions[89999] = "bfa"
 versions[79999] = "legion"
 versions[69999] = "wod"

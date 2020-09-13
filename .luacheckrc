@@ -34,6 +34,7 @@ globals = {
 
 	-- BDUI Variables
 	"bdMove",
+	"bdUI",
 	"BDUI_SAVE",
 
 	-- Third Party Addons/Libs

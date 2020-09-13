@@ -26,6 +26,11 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
 	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("MAIL_CLOSED")
+	if (bdUI:get_game_version() == "shadowlands") then
+		Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
+	end
+	Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_LIST_UPDATE")
+	Minimap.buttonFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
 
 	Minimap.buttonFrame:SetSize(Minimap.background:GetWidth() - (bdUI.border * 2), config.buttonsize)
 	Minimap.buttonFrame:SetPoint("TOP", Minimap.background, "BOTTOM", bdUI.border, -bdUI.border)
@@ -109,7 +114,7 @@ function mod:create_button_frame()
 	-- reposition frames, whenever there are more or less
 	local function position()
 		if (config.buttonpos == "Disabled") then return end
-		if (#frames == last_number) then return end
+		-- if (#frames == last_number) then return end
 		last_number = #frames
 
 		-- start loop

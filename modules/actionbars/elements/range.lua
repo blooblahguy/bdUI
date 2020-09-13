@@ -110,29 +110,30 @@ end
 -- Init
 -- Register all hooks and event handlers
 --=====================================================
-function mod:register_range_hooks()
-	-- Throttled Updater
-	-- Automatically hides when not in use, reducing onupdate calls
-	updater:SetScript("OnUpdate", function(self, elapsed)
-		total = total + elapsed
-		if (total >= throttle) then
-			total = 0
-			if not UpdateButtons(elapsed) then
-				self:Hide()
-			end
+hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange, inRange)
+	if (not checksRange) then 
+		return 
+	end
+	local action = button.action
+	local isUsable, notEnoughMana = IsUsableAction(action)
+	local colorkey = "normal"
+	if (isUsable) then
+		if (not inRange) then
+			colorkey = "outrange"
 		end
-	end)
+	else
+		colorkey = "unusable"
+		if (notEnoughMana) then
+			colorkey = "outmana"
+		end
+	end
 
-	--=====================================================
-	-- Main Hooks
-	-- Dequeue this button's updater, and use our own queue
-	--=====================================================
-	hooksecurefunc('ActionButton_OnUpdate', function(button)
-		button:HookScript('OnShow', UpdateButtonStatus)
-		button:HookScript('OnHide', UpdateButtonStatus)
-		button:SetScript('OnUpdate', nil)
-		UpdateButtonStatus(button)
-	end)
-	hooksecurefunc('ActionButton_Update', UpdateButtonStatus)
-	hooksecurefunc('ActionButton_UpdateUsable', function(button) UpdateButtonUsable(button, true) end)
-end
+	-- cache results, because SetVertexColor is expensive, we don't want to recall it if unecessary
+	if buttonColors[action] == colorkey then return end
+	buttonColors[action] = colorkey
+
+	local r, g, b = unpack(colors[colorkey])
+	button.icon:SetVertexColor(r, g, b)
+end)
+-- hooksecurefunc('ActionButton_Update', UpdateButtonStatus)
+-- hooksecurefunc('ActionButton_UpdateUsable', function(button) UpdateButtonUsable(button, true) end)

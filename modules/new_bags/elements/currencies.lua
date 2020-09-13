@@ -69,8 +69,8 @@ function mod:create_currencies(name, parent)
 		end
 
 		local index = 1
-		for i = 1, GetCurrencyListSize() do
-			local name, isHeader, isExpanded, isUnused, isWatched, count, icon, itemID = GetCurrencyListInfo(i)
+		for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
+			local name, isHeader, isExpanded, isUnused, isWatched, count, icon, itemID = C_CurrencyInfo.GetCurrencyListInfo(i)
 
 			if (isWatched and count) then
 				local frame = currencies.watchers[index]

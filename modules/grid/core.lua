@@ -320,7 +320,7 @@ local function layout(self, unit)
 	self.ResurrectIndicator:SetPoint('CENTER', self, "CENTER", 0,0)
 	
 	-- Threat
-	self.ThreatLite = CreateFrame('frame', nil, self)
+	self.ThreatLite = CreateFrame('frame', nil, self, BackdropTemplateMixin and "BackdropTemplate")
 	self.ThreatLite:SetFrameLevel(95)
 	self.ThreatLite:SetPoint('TOPRIGHT', self, "TOPRIGHT", 1, 1)
 	self.ThreatLite:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -1, -1)
@@ -379,7 +379,7 @@ local function layout(self, unit)
 	self.Glow:SetFrameLevel(3)
 
 	-- Dispels
-	self.Dispel = CreateFrame('frame', nil, self.Health)
+	self.Dispel = CreateFrame('frame', nil, self.Health, BackdropTemplateMixin and "BackdropTemplate")
 	self.Dispel:SetFrameLevel(100)
 	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", 1, 1)
 	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -1, -1)
