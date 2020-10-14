@@ -64,6 +64,10 @@ mod:add_filter("itemType", 1, function(conditions, itemLink, itemID, name, rarit
 		return false
 	end
 
+	if (itemTypeID == nil or itemSubClassID == nil) then
+		return false
+	end
+
 	local found_type = tContains(conditions['type'], itemTypeID)
 	local found_subtype = tContains(conditions['subtype'], tonumber(itemTypeID.."."..itemSubClassID))
 

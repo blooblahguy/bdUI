@@ -165,6 +165,8 @@ local function setHeaderAttributes(header, template, isBuff)
 		header:SetAttribute('includeWeapons', 1)
 		header:SetAttribute('weaponTemplate', "bdBuffsTemplate")
 	end
+
+	-- header:SetSize()
 	
 	bdMove:set_moveable(header)
 	s('unit', 'player')
@@ -310,4 +312,6 @@ function mod:initialize()
 		BuffFrame:UnregisterAllEvents("UNIT_AURA")
 		BuffFrame:Hide()
 	end)
+
+	mod:config_callback()
 end

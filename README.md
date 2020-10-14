@@ -1,7 +1,7 @@
-# bdUI [beta]
-An all-in-one UI that aims to be compatible with all official versions of WoW. It currently supports live WoW, and will support classic, as well as other releases (if they happen).
+# bdUI
+An all-in-one UI with a focus on high end raiding and performance. bdUI is fully modular, meaning you can freely disable any aspect of it and only use what you want. Its high performance, unobtrusive, and progression raiding-oriented. Its less feature-rich (by design) than other full suites, and aims to be streamlined and extentable in the features it does offer.
 
-bdUI is fully modular. You can install the full UI and only use certain portions of it. Its high performance, unobtrusive, and progression raiding-oriented. Its less feature-rich than other addons, but aims to be streamlined and extentable in the features it does offer.
+Bug reports and discussion on [our discord server](https://discord.gg/2SK3bEw).
 
 # FAQ
 > I only use bd"X", I don't want to use the whole UI!
@@ -33,7 +33,7 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Nameplates
 - Buffs & Debuffs
 - Aura configuration
-- Bags
+- Bags (with adibags-style atlernative)
 - Grid
 - Tooltips
 - Viewports
