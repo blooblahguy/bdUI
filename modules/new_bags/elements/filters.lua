@@ -6,11 +6,10 @@ local mod = bdUI:get_module("Bags (beta)")
 --===============================
 local types = {}
 types["Consumable"] = {0}
-types["Bags"] = {1}
 types["Weapon"] = {2, 6, 11}
 types["Gems"] = {3}
 types["Armor"] = {4}
-types["Tradeskill"] = {5, 7, 9}
+types["Tradeskill"] = {1, 5, 7, 9}
 types["Recipes"] = {9}
 types["Enchantment"] = {8, 16}
 types["Quest"] = {12}
@@ -18,6 +17,7 @@ types["Keys"] = {13}
 types["Tokens"] = {10, 14, 18}
 types["Battle Pets"] = {17}
 types["Miscellaneous"] = {15}
+
 mod.types = types
 
 local subtypes = {}
@@ -27,6 +27,8 @@ subtypes["Explosives"] = {0.0, 7.2, 7.17}
 subtypes["Archaeology"] = {5.1}
 subtypes["Mount"] = {15.5, 15.6}
 subtypes["Holiday"] = {15.3}
+subtypes["Generic Weapons"] = {2.14}
+
 mod.subtypes = subtypes
 
 --===============================
@@ -39,6 +41,7 @@ mod.filters = {}
 function mod:add_filter(name, value, func)
 	mod.filters[#mod.filters + 1] = {name, value, func}
 end
+
 function mod:filter_item(conditions, ...)
 	local weight = 0
 	for i = 1, #mod.filters do
@@ -53,11 +56,27 @@ end
 --===============================
 -- Item Type
 --===============================
-mod:add_filter("itemType", 1, function(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
-	if (#conditions['type'] == 0) then return false end
+mod:add_filter("itemType", 1, function(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent, category)
+	if (category.locked) then 
+		return false 
+	end
+	if (#conditions['type'] == 0 and #conditions['subtype'] == 0) then
+		return false
+	end
 
-	if (tContains(conditions['type'], itemTypeID)) then 
-		return true
+	local found_type = tContains(conditions['type'], itemTypeID)
+	local found_subtype = tContains(conditions['subtype'], tonumber(itemTypeID.."."..itemSubClassID))
+
+	-- print(name, itemSubClassID)
+
+	-- if (tContains(conditions['subtype'], itemSubClassID)) then
+	-- 	return true
+	-- else
+	-- end
+	if (found_subtype) then 
+		return 3
+	elseif (found_type) then
+		return 1
 	end
 end)
 

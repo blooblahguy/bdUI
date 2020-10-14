@@ -31,15 +31,14 @@ function mod:initialize()
 
 	
 
-	-- if (not config.first_run_complete) then
-		
-		mod:create_category("Weapons", {
-			["type"] = mod.types["Weapon"],
+	if (not config.first_run_complete) then
+		mod:create_category("Armor", {
+			["type"] = mod.types["Armor"],
 			["default"] = true,
 			["order"] = 1,
 		})
-		mod:create_category("Armor", {
-			["type"] = mod.types["Armor"],
+		mod:create_category("Weapons", {
+			["type"] = mod.types["Weapon"],
 			["default"] = true,
 			["order"] = 2,
 		})
@@ -61,16 +60,23 @@ function mod:initialize()
 			["default"] = true,
 		})
 		mod:create_category("Food & Potion", {
-			["subtype"] = tMerge(mod.subtypes.Food, mod.subtypes.Potions),
+			["subtype"] = tMerge(mod.subtypes['Food'], mod.subtypes['Potions']),
 			["default"] = true,
 		})
 		mod:create_category("Tradeskill", {
 			["type"] = tMerge(mod.types["Tradeskill"], mod.types["Gems"], mod.types["Recipes"]),
+			["subtype"] = tMerge(mod.subtypes["Generic Weapons"]),
 			["default"] = true,
 		})
 		mod:create_category("Miscellaneous", {
-			['type'] = tMerge(mod.types["Bags"], mod.types["Miscellaneous"]),
+			['type'] = tMerge(mod.types["Miscellaneous"]),
 			["default"] = true,
+		})
+
+		mod:create_category("Free", {
+			["default"] = true,
+			["locked"] = true,
+			["order"] = -2,
 		})
 
 		mod:create_category("Bags", {
@@ -81,7 +87,7 @@ function mod:initialize()
 		})
 
 		config.first_run_complete = true
-	-- end
+	end
 
 	-- Create Frames
 	mod:create_bags()

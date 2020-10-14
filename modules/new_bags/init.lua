@@ -45,7 +45,7 @@ local config = {
 		min = 2,
 		max = 20,
 		step = 1,
-		value = 10,
+		value = 11,
 		label = "Category Max Columns"
 	},
 }

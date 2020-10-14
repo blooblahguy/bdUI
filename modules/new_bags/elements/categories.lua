@@ -61,6 +61,7 @@ local function move_up(self, arg1, arg2, checked)
 		if (category.name == arg1) then
 			if (not categories[i - 1]) then return end
 			local prev_order = categories[i - 1].order
+			if (prev_order <= 1) then return end
 			local order = category.order
 
 			category.order = prev_order
@@ -97,7 +98,7 @@ end
 --===============================
 -- Category Filter Changing
 --===============================
-local function dropdown_click(self, name, button, checked)
+local function dropdown_type_click(self, name, button, checked)
 	-- print(self, name, arg2, checked)
 	local filter_ids = mod.types[name]
 	local category = mod.categories[self.arg2].conditions.type
@@ -112,12 +113,30 @@ local function dropdown_click(self, name, button, checked)
 		if (checked) then
 			tinsert(category, id)
 		elseif (mod:has_value(category, id)) then
-			mod:remove_value(category, id)
+			tDeleteItem(category, id)
 		end
 			
 	end
 
 	-- dump(category)
+
+	mod:update_bags()
+end
+
+local function dropdown_subtype_click(self, name, button, checked)
+	local filter_ids = mod.subtypes[name]
+	local category = mod.categories[self.arg2].conditions.subtype
+
+	for i = 1, #filter_ids do
+		local id = filter_ids[i]
+
+		if (checked) then
+			tinsert(category, id)
+		elseif (mod:has_value(category, id)) then
+			tDeleteItem(category, id)
+		end
+			
+	end
 
 	mod:update_bags()
 end
@@ -145,12 +164,18 @@ local dragger_methods = {
 	["update"] = function(self)
 		local type, id, info = GetCursorInfo()
 		local itemID = mod:item_id(info)
+		local parent = self:GetParent()
+
+		if (parent.locked) then 
+			self:Hide() 
+			return 
+		end
 		
 		if (type == "item") then
 			self:RegisterEvent("CURSOR_UPDATE")
 			self:Show()
 			
-			local cat_name = self:GetParent().name
+			local cat_name = parent.name
 			if (cat_name) then
 				local index = tIndexOf(mod.categories[cat_name].conditions.itemids, itemID)
 
@@ -236,15 +261,27 @@ local category_methods = {
 		text:SetAlpha(0.7)
 
 		self.header:SetScript("OnEnter", function()
+			if (mod.categories[self.name].locked) then
+				return
+			end
 			text:SetAlpha(0.9)
 		end)
 		self.header:SetScript("OnLeave", function()
+			if (mod.categories[self.name].locked) then
+				return
+			end
 			text:SetAlpha(0.7)
 		end)
 		self.header:SetScript("OnMouseDown", function()
+			if (mod.categories[self.name].locked) then
+				return
+			end
 			text:SetPoint("LEFT", self.header, "LEFT", self.spacing, -1)
 		end)
 		self.header:SetScript("OnMouseUp", function()
+			if (mod.categories[self.name].locked) then
+				return
+			end
 			text:SetPoint("LEFT", self.header, "LEFT", self.spacing, 0)
 		end)
 
@@ -259,6 +296,7 @@ local category_methods = {
 	["create_dropdown"] = function(self)
 		local name = "bdBagsCategoryDropdown"..mod.dropdowns
 		mod.dropdowns = mod.dropdowns + 1
+		local parent = self
 
 		local dropdown = CreateFrame("Button", name, self, "UIDropDownMenuTemplate")
 		dropdown:SetPoint("TOPRIGHT", arrow, "TOPRIGHT")
@@ -268,6 +306,7 @@ local category_methods = {
 		function dropdown:get_options(self)
 			local cat_name = dropdown:GetParent().name
 			local conditions = mod.categories[cat_name].conditions
+			parent.name = cat_name
 
 			local types_menu = {}
 			for name, ids in pairs(mod.types) do
@@ -275,8 +314,6 @@ local category_methods = {
 				if (mod:has_value(conditions.type, ids)) then
 					checked = true
 				end
-
-				dropdown.test = "Hello"
 
 				local entry = {
 					text = name
@@ -286,13 +323,33 @@ local category_methods = {
 					, checked = checked
 					, arg1 = name
 					, arg2 = cat_name
-					, func = dropdown_click
+					, func = dropdown_type_click
 				}
 
 				table.insert(types_menu, entry)
 			end
 
-			local subtypes = {}
+			local subtypes_menu = {}
+			for name, ids in pairs(mod.subtypes) do
+				local checked = false
+				if (mod:has_value(conditions.subtype, ids)) then
+					checked = true
+				end
+
+				local entry = {
+					text = name
+					, notCheckable = false
+					, keepShownOnClick = true
+					, value = ids
+					, checked = checked
+					, arg1 = name
+					, arg2 = cat_name
+					, func = dropdown_subtype_click
+				}
+
+				table.insert(subtypes_menu, entry)
+			end
+
 
 			local menu = {
 				{ text = cat_name, isTitle = true, notCheckable = true }
@@ -302,7 +359,7 @@ local category_methods = {
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "Filters", isTitle = true, notCheckable = true }
 				, { text = "Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
-				-- , { text = "Sub Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = {}}
+				, { text = "Sub Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = subtypes_menu}
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "|cffff5555Delete|r", notCheckable = true, func = function(self, name) mod.categories[name] = nil mod:update_bags() end, arg1 = cat_name }
 			}
@@ -312,7 +369,10 @@ local category_methods = {
 
 		-- hook to header click
 		self.header:SetScript("OnClick", function(...)
-			-- print(...)
+			if (mod.categories[self.name].locked) then
+				return
+			end
+
 			if (dropdown.is_shown) then
 				dropdown.is_shown = false
 				HideDropDownMenu(1, nil, dropdown, self.header, 0, 0);
@@ -329,7 +389,7 @@ local category_methods = {
 		local config = mod.config
 		if (width < config.bag_size) then width = config.bag_size end
 		self.container:SetSize(width, height)
-		self:SetSize(width + (self.spacing * 3), height + self.dragger:GetHeight() + self.spacing)
+		self:SetSize(width + (self.spacing * 2), height + self.dragger:GetHeight() + self.spacing)
 	end
 }
 
@@ -348,6 +408,9 @@ mod.category_pool_create = function(self)
 	frame.dropdown = frame:create_dropdown()
 	frame.dragger = frame:create_dragger()
 	frame.container = frame:create_container()
+
+	-- frame:SetBackdrop({bgFile = bdUI.media.flat})
+	-- frame:SetBackdropColor(1, 0, 0, .2)
 
 	return frame
 end
@@ -429,7 +492,7 @@ function mod:position_categories(parent, categories, pool)
 	local config = mod.config
 
 	local spacing = mod.border
-	local max_width = ((config.bag_size + spacing) * config.bag_max_column) + 20
+	local max_width = ((config.bag_size + (spacing)) * (config.bag_max_column + 3)) - spacing
 	for i = 1, #categories do
 		max_width = math.max(categories[i].frame:GetWidth(), max_width)
 	end
@@ -437,10 +500,13 @@ function mod:position_categories(parent, categories, pool)
 	local columns = {}
 	local column = {}
 	local last
+
 	-- loop and position
 	for i = 1, #categories do	
 		local category = categories[i]
 		local frame = category.frame
+
+		-- print(category.name, column.row_width, frame:GetWidth())
 
 		if (not last) then
 			frame:SetPoint("TOPLEFT", parent)

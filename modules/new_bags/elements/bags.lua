@@ -83,6 +83,7 @@ SetSortBagsRightToLeft(false)
 SetInsertItemsLeftToRight(false)
 function mod:update_bags()
 	local items = {}
+	local free_slot = {}
 	local remove = {}
 	local new_items = {}
 	local item_weights = {}
@@ -111,6 +112,7 @@ function mod:update_bags()
 				-- 	end
 				-- end
 			else
+				free_slot = {false, bag, slot, itemID}
 				open_slots = open_slots + 1
 			end
 		end
@@ -119,6 +121,8 @@ function mod:update_bags()
 	-- build item category weight table
 	for category_name, category in pairs(mod.categories) do
 		category.items = {}
+		category.count = nil
+
 		local conditions = category.conditions
 		for k = 1, #items do
 			v = items[k]
@@ -128,14 +132,12 @@ function mod:update_bags()
 			if (itemLink) then
 				local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 
-				-- print(GetItemInfo(itemLink))
-
 				if (rarity == nil or rarity > 0) then
 					item_weights[k] = item_weights[k] or {0, nil}
 					local current_weight, parent_category = unpack(item_weights[k])
 					-- local new_weight = 0
 
-					local new_weight = mod:filter_item(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
+					local new_weight = mod:filter_item(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent, category)
 
 					if (current_weight < new_weight) then
 						item_weights[k] = {new_weight, category_name}
@@ -181,6 +183,18 @@ function mod:update_bags()
 		local count = #mod.categories["Bags"].items
 		mod.categories["Bags"].items[count + 1] = items[k]
 	end
+
+	-- for k, v in pairs(free) do
+	-- 	-- local itemLink, bag, slot, itemID = unpack(items[k])
+	-- 	-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+	-- 	-- local count = #mod.bags.category_items["Bags"]
+	-- 	-- mod.bags.category_items["Bags"][count + 1] = items[k]
+	-- 	-- tinsert(bag_items, k)
+	-- 	local count = #mod.categories["Free"].items
+	-- 	mod.categories["Free"].items[count + 1] = items[k]
+	-- end
+	mod.categories["Free"].items[1] = free_slot
+	mod.categories["Free"].count = open_slots
 	
 	--=====================
 	-- Add New Items to New Category
@@ -220,11 +234,12 @@ function mod:draw_bags()
 		category.frame:SetParent(mod.bags.container)
 		category.frame.text:SetText(category.name:upper())
 		category.frame.name = category.name
+		category.frame.locked = category.locked
 		category.frame.dragger:update()
 		category.frame.dropdown:SetParent(category.frame)
 
 		-- position items in categories
-		local width, height = mod:position_items(category.frame, category.items, mod.bags.item_pool)
+		local width, height = mod:position_items(category.frame, category.items, mod.bags.item_pool, category.count)
 		category.frame:update_size(width, height)
 	end
 
