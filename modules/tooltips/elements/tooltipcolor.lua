@@ -20,7 +20,7 @@ function mod:color_tooltips()
 	MELEE_RANGE = "|CFF00FF00Melee Range|r"
 	SPELL_RANGE = "%s |CFF00FF00yd range|r"
 	SPELL_ON_NEXT_SWING = "|CFFFF66CCNext melee|r"
-	-- ITEM_SOULBOUND = "|CFFFF6633Soulbound|r"
+	ITEM_SOULBOUND = "|CFFFF6633Soulbound|r"
 	ITEM_ACCOUNTBOUND = "|CFFCC66FFAccount Bound|r";
 	ITEM_BIND_ON_EQUIP = "|CFFCC66FFBinds when|r |CFFFF66CCequipped|r"
 	ITEM_BIND_ON_PICKUP = "|CFFCC66FFBinds when|r |CFFFF66CCpicked up|r"
@@ -48,4 +48,14 @@ function mod:color_tooltips()
 	SPELL_USE_ALL_RAGE = "Consumed 100% |CFFCC3333Rage|r."
 	SPELL_CAST_TIME_INSTANT = "|CFFCC66FFInstant cast|r"
 	SPELL_CAST_TIME_INSTANT_NO_MANA = "|CFFCC66FFInstant|r"
+
+	-- ITEM_MOD_SPIRIT = "%c%s Spirit";
+	-- ITEM_MOD_SPIRIT_SHORT = "Spirit";
+	-- ITEM_MOD_STAMINA = "%c%s |CFF00FF00Stamina|r";
+	-- ITEM_MOD_STAMINA_SHORT = "|CFF00FF00Stamina|r";
+	-- ITEM_MOD_STRENGTH = "%c%s |CFFba6418Strength|r";
+	-- ITEM_MOD_STRENGTH_OR_INTELLECT_SHORT = "|CFFba6418Strength|r or Intellect";
+	-- ITEM_MOD_VERSATILITY = "|CFFf6ff00Versatility|r";
+	-- ITEM_MOD_CRIT_RATING_SHORT = "|CFFf6ff00Critical Strike|r";
+	-- ITEM_MOD_STRENGTH_SHORT = "Strength";
 end

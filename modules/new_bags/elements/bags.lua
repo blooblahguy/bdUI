@@ -170,9 +170,9 @@ function mod:update_bags()
 	for k, v in pairs(items) do
 		-- local itemLink, bag, slot, itemID = unpack(items[k])
 		-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
-		-- local count = #mod.bags.category_items["Uncategorized"]
-		-- mod.bags.category_items["Uncategorized"][count + 1] = items[k]
-		-- tinsert(bag_items, k)
+		local count = #mod.bags.category_items["Uncategorized"]
+		mod.bags.category_items["Uncategorized"][count + 1] = items[k]
+		tinsert(bag_items, k)
 		local count = #mod.categories["Bags"].items
 		mod.categories["Bags"].items[count + 1] = items[k]
 	end

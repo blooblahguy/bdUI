@@ -44,7 +44,7 @@ bdUI.media = {
 
 -- set better fonts for libraries
 bdMove.media.font = bdUI.media.font
-bdUI.shared:Register("font", "PTSansNarrow", bdUI.media.font)
+bdUI.shared:Register("font", "PTSansNarrow (bdUI)", bdUI.media.font)
 
 --===================================================================
 -- Scale & Alt-UIParent 

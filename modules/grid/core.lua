@@ -108,7 +108,7 @@ local function layout(self, unit)
 	-- Health
 	--===============================================
 	self.Health = CreateFrame("StatusBar", nil, self)
-	self.Health:SetStatusBarTexture(bdUI.media.flat)
+	self.Health:SetStatusBarTexture(bdUI.media.smooth)
 	self.Health:SetPoint("TOPLEFT", self)
 	self.Health:SetPoint("BOTTOMRIGHT", self)
 	self.Health.frequentUpdates = true

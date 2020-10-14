@@ -188,10 +188,10 @@ function mod:create_tooltips()
 	-- Override blizzard defaults so
 	-- we don't fight them on everything
 	--=================================
-	hooksecurefunc("GameTooltip_SetBackdropStyle", function(self, style)
-		self:SetBackdropBorderColor(0, 0, 0, 0)
-		self:SetBackdropColor(0, 0, 0, 0)
-	end)
+	-- hooksecurefunc("GameTooltip_SetBackdropStyle", function(self, style)
+	-- 	self:SetBackdropBorderColor(0, 0, 0, 0)
+	-- 	self:SetBackdropColor(0, 0, 0, 0)
+	-- end)
 
 	for i = 1, #tooltips do
 		local frame = _G[tooltips[i]]

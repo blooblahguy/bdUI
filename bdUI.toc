@@ -1,4 +1,4 @@
-## Interface: 80400
+## Interface: 90001
 ## Title: |cffA02C2Fbd|rUI
 ## Author: Blooblahguy
 ## SavedVariables: BDUI_SAVE
