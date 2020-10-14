@@ -267,7 +267,7 @@ local category_methods = {
 			text:SetAlpha(0.9)
 		end)
 		self.header:SetScript("OnLeave", function()
-			if (mod.categories[self.name].locked) then
+			if (not self.name or mod.categories[self.name].locked) then
 				return
 			end
 			text:SetAlpha(0.7)
@@ -401,7 +401,7 @@ mod.category_pool_create = function(self)
 	-- local frame = CreateFrame("frame", nil, mod.current_parent, "BackdropTemplate")
 	-- frame:SetBackdrop({bgFile = bdUI.media.flat})
 	-- frame:SetBackdropColor(1, 0, 0, .2)
-	
+
 	frame:SetSize(124, 30)
 	frame.spacing = 8
 	-- bdUI:set_backdrop(frame)

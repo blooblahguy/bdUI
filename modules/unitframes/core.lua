@@ -43,32 +43,6 @@ local function castbar_kickable(self)
 	end
 end
 
-local function update_borders(self, event)
-	if (UnitIsUnit(self.unit, "target")) then
-		self.Border._shadow:Show()
-		self.Border._shadow:SetAlpha(1)
-		self.Border._shadow:SetColor(self.Health:GetStatusBarColor())
-		-- self.Border._shadow:SetBackdropBorderColor(self.Health:GetStatusBarColor())
-	elseif ((type(event) == "string") and (UnitIsUnit(self.unit, "mouseover") or MouseIsOver(self))) then
-		self.Border._shadow:Show()
-		self.Border._shadow:SetAlpha(0.6)
-		self.Border._shadow:SetColor(1, 1, 1, 1)
-		-- self.Border._shadow:SetBackdropBorderColor(1, 1, 1, 1)
-	else
-		self.Border._shadow:Hide()
-	end
-end
-
-local function update_borders_pre(self, event)
-	if (self.unit) then -- unit event
-		update_borders(self, event)
-	else -- unitless event
-		for unit, self in pairs(mod.units) do
-			update_borders(self, event)
-		end
-	end
-end
-
 mod.additional_elements = {
 	castbar = function(self, unit, align, icon)
 		if (not config.enablecastbars) then 
@@ -304,8 +278,6 @@ local function layout(self, unit)
 	self:RegisterForClicks('AnyDown')
 	self:SetScript('OnEnter', UnitFrame_OnEnter)
 	self:SetScript('OnLeave', UnitFrame_OnLeave)
-	self.PostUpdate = update_borders_pre 
-	self:HookScript("OnLeave", update_borders_pre)
 
 	-- Health
 	self.Health = CreateFrame("StatusBar", nil, self)
@@ -351,8 +323,6 @@ local function layout(self, unit)
 	self.Border = CreateFrame("Frame", nil, self.Health)
 	self.Border:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border)
 	self.Border:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
-	bdUI:create_shadow(self.Border, 1)
-	self.Border._shadow:Hide()
 
 	--===============================================
 	-- Healing & Damage Absorbs
@@ -522,8 +492,8 @@ function mod:create_unitframes()
 		end
 	end
 
-	mod:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-	mod:RegisterEvent("PLAYER_TARGET_CHANGED")
-	mod:SetScript("OnEvent", update_borders_pre)
+	-- mod:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+	-- mod:RegisterEvent("PLAYER_TARGET_CHANGED")
+	-- mod:SetScript("OnEvent", update_borders_pre)
 
 end

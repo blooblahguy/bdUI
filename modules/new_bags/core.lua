@@ -29,7 +29,20 @@ function mod:initialize()
 
 	-- mod.categories.first_run_complete = nil
 
-	
+	if (not mod.categories["Free"]) then
+		mod:create_category("Free", {
+			["default"] = true,
+			["locked"] = true,
+			["order"] = -2,
+		})
+
+		mod:create_category("Bags", {
+			["default"] = true,
+			["duplicate"] = true,
+			["locked"] = true,
+			["order"] = -1,
+		})
+	end
 
 	if (not config.first_run_complete) then
 		mod:create_category("Armor", {
@@ -71,19 +84,6 @@ function mod:initialize()
 		mod:create_category("Miscellaneous", {
 			['type'] = tMerge(mod.types["Miscellaneous"]),
 			["default"] = true,
-		})
-
-		mod:create_category("Free", {
-			["default"] = true,
-			["locked"] = true,
-			["order"] = -2,
-		})
-
-		mod:create_category("Bags", {
-			["default"] = true,
-			["duplicate"] = true,
-			["locked"] = true,
-			["order"] = -1,
 		})
 
 		config.first_run_complete = true

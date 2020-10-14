@@ -147,7 +147,7 @@ local config = {
 			{
 				key = "showMicro",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Show Micro Menu",
 			},
 			{
