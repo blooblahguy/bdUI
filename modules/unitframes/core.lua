@@ -276,14 +276,17 @@ mod.additional_elements = {
 local function layout(self, unit)
 	mod.units[unit] = self
 	self:RegisterForClicks('AnyDown')
-	self:SetScript('OnEnter', UnitFrame_OnEnter)
-	self:SetScript('OnLeave', UnitFrame_OnLeave)
+	self:SetScript('OnEnter', function()
+		self.Health.highlight:Show()
+	end)
+	self:SetScript('OnLeave', function()
+		self.Health.highlight:Hide()
+	end)
 
 	-- Health
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
-	self.Health:SetPoint("TOPLEFT", self)
-	self.Health:SetPoint("BOTTOMRIGHT", self)
+	self.Health:SetAllPoints()
 	self.Health.Smooth = true
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
@@ -312,6 +315,13 @@ local function layout(self, unit)
 		end
 	end
 	bdUI:set_backdrop(self.Health)
+
+	-- Health highlight
+	self.Health.highlight = self.Health:CreateTexture(nil, "OVERLAY")
+	self.Health.highlight:SetTexture(bdUI.media.flat)
+	self.Health.highlight:SetAllPoints()
+	self.Health.highlight:SetVertexColor(1,1,1,.05)
+	self.Health.highlight:Hide()
 
 	-- Range
 	self.Range = {
