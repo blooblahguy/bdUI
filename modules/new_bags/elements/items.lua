@@ -217,9 +217,7 @@ function mod:position_items(parent, items, pool, count)
 	
 	local height = ((config.bag_size + spacing) * rows) - spacing
 	local width = ((config.bag_size + spacing) * columns) - spacing
-	-- print(width)
 	width = math.max(width, parent.dragger:GetWidth() + parent.text:GetWidth())
-	-- print(width)
 
 	for i = 1, #items do
 		local itemLink, bag, slot, itemID = unpack(items[i])
@@ -235,10 +233,7 @@ function mod:position_items(parent, items, pool, count)
 
 		if (count ~= nil) then
 			button.blank:Show()
-			-- SetItemButtonTexture(button, [[Interface\BUTTONS\UI-EmptySlot]])
 			SetItemButtonCount(button, count)
-			-- print("blank")
-			-- SetItemButtonTexture(button, [[Interface\BUTTONS\UI-EmptySlot]])
 		end
 
 		if (not lastrow) then

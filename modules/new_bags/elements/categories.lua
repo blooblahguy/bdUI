@@ -388,7 +388,7 @@ local category_methods = {
 	['update_size'] = function(self, width, height)
 		local config = mod.config
 		if (width < config.bag_size) then width = config.bag_size end
-		self.container:SetSize(width, height)
+		self.container:SetSize(width + self.spacing, height)
 		self:SetSize(width + (self.spacing * 2), height + self.dragger:GetHeight() + self.spacing)
 	end
 }
@@ -398,6 +398,10 @@ local category_methods = {
 --===============================================
 mod.category_pool_create = function(self)
 	local frame = CreateFrame("frame", nil, mod.current_parent)
+	-- local frame = CreateFrame("frame", nil, mod.current_parent, "BackdropTemplate")
+	-- frame:SetBackdrop({bgFile = bdUI.media.flat})
+	-- frame:SetBackdropColor(1, 0, 0, .2)
+	
 	frame:SetSize(124, 30)
 	frame.spacing = 8
 	-- bdUI:set_backdrop(frame)
@@ -409,8 +413,7 @@ mod.category_pool_create = function(self)
 	frame.dragger = frame:create_dragger()
 	frame.container = frame:create_container()
 
-	-- frame:SetBackdrop({bgFile = bdUI.media.flat})
-	-- frame:SetBackdropColor(1, 0, 0, .2)
+	
 
 	return frame
 end
@@ -499,7 +502,11 @@ function mod:position_categories(parent, categories, pool)
 
 	local columns = {}
 	local column = {}
+	local total_height = 0
 	local last
+	local row_height = 0
+
+	-- balance categories equally
 
 	-- loop and position
 	for i = 1, #categories do	
@@ -511,6 +518,8 @@ function mod:position_categories(parent, categories, pool)
 		if (not last) then
 			frame:SetPoint("TOPLEFT", parent)
 
+			row_height = math.max(row_height, frame:GetHeight())
+
 			column.header = frame
 			column.left = frame
 			column.row_width = frame:GetWidth()
@@ -519,11 +528,15 @@ function mod:position_categories(parent, categories, pool)
 		elseif (frame:GetWidth() + column.row_width < max_width) then
 			frame:SetPoint("TOPLEFT", last, "TOPRIGHT")
 
+			row_height = math.max(row_height, frame:GetHeight())
+
 			column.row_width = column.row_width + frame:GetWidth()
 		elseif (column.height + frame:GetHeight() > config.bag_height) then
 			frame:SetPoint("TOPLEFT", column.header, column.width + mod.border, 0)
 
 			tinsert(columns, column)
+
+			row_height = math.max(row_height, frame:GetHeight())
 
 			column = {}
 			column.header = frame
@@ -532,11 +545,13 @@ function mod:position_categories(parent, categories, pool)
 			column.row_width = frame:GetWidth()
 			column.height = frame:GetHeight()
 		else
-			frame:SetPoint("TOPLEFT", column.left, "BOTTOMLEFT")
+			row_height = math.max(0, row_height - column.left:GetHeight())
+			frame:SetPoint("TOPLEFT", column.left, "BOTTOMLEFT", 0, -row_height)
 
 			column.left = frame
 			column.row_width = frame:GetWidth()
-			column.height = column.height + frame:GetHeight()
+			column.height = column.height + row_height + frame:GetHeight()
+			row_height = 0
 		end
 
 		column.width = math.max(column.width, column.row_width)

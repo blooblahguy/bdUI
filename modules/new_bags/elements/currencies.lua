@@ -70,14 +70,14 @@ function mod:create_currencies(name, parent)
 
 		local index = 1
 		for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
-			local name, isHeader, isExpanded, isUnused, isWatched, count, icon, itemID = C_CurrencyInfo.GetCurrencyListInfo(i)
+			local currency = C_CurrencyInfo.GetCurrencyListInfo(i)
 
-			if (isWatched and count) then
+			if (currency.isShowInBackpack) then
 				local frame = currencies.watchers[index]
 
 				frame:Show()
-				frame:SetText(AbbreviateLargeNumbers(count))
-				frame.icon:SetTexture(icon)
+				frame:SetText(AbbreviateLargeNumbers(currency.quantity))
+				frame.icon:SetTexture(currency.iconFileID)
 				frame.currencyID = i
 
 				index = index + 1

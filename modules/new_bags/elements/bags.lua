@@ -31,7 +31,7 @@ end
 function mod:create_bags()
 	local config = mod.config
 	mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
-	mod.bags.container:SetHeight(config.bag_height)
+	mod.bags.container:SetWidth(config.bag_width)
 
 	mod.bags.category_items = {}
 
