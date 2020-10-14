@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("New Bags")
+local mod = bdUI:get_module("Bags (beta)")
 
 
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
@@ -32,6 +32,8 @@ function mod:create_bags()
 	local config = mod.config
 	mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
 	mod.bags.container:SetHeight(config.bag_height)
+
+	mod.bags.category_items = {}
 
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
@@ -86,6 +88,9 @@ function mod:update_bags()
 	local item_weights = {}
 	local open_slots = 0
 	local lastfull = false
+
+	-- mod.bags.category_items = {}
+	-- mod.bags.category_items["Uncategorized"] = {}
 
 	-- first gather all items up
 	for bag = 0, 4 do
@@ -170,9 +175,9 @@ function mod:update_bags()
 	for k, v in pairs(items) do
 		-- local itemLink, bag, slot, itemID = unpack(items[k])
 		-- local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
-		local count = #mod.bags.category_items["Uncategorized"]
-		mod.bags.category_items["Uncategorized"][count + 1] = items[k]
-		tinsert(bag_items, k)
+		-- local count = #mod.bags.category_items["Bags"]
+		-- mod.bags.category_items["Bags"][count + 1] = items[k]
+		-- tinsert(bag_items, k)
 		local count = #mod.categories["Bags"].items
 		mod.categories["Bags"].items[count + 1] = items[k]
 	end
@@ -216,6 +221,7 @@ function mod:draw_bags()
 		category.frame.text:SetText(category.name:upper())
 		category.frame.name = category.name
 		category.frame.dragger:update()
+		category.frame.dropdown:SetParent(category.frame)
 
 		-- position items in categories
 		local width, height = mod:position_items(category.frame, category.items, mod.bags.item_pool)

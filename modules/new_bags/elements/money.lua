@@ -1,6 +1,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local fpmod = mod
-local mod = bdUI:get_module("New Bags")
+local mod = bdUI:get_module("Bags (beta)")
 
 -- format money string
 local function return_money(money)

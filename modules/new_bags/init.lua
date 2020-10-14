@@ -35,7 +35,7 @@ local config = {
 		min = 200,
 		max = 800,
 		step = 20,
-		value = 280,
+		value = 300,
 		label = "Bag Max Height"
 	},
 
@@ -52,11 +52,11 @@ local config = {
 
 local hide = false
 if (not developer) then 
-	hide = true
+	-- hide = true
 elseif (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then
 	hide = true
 end
 
-local mod = bdUI:register_module("New Bags", config, {
+local mod = bdUI:register_module("Bags (beta)", config, {
 	hide_ui = hide
 })

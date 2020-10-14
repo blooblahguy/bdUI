@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("New Bags")
+local mod = bdUI:get_module("Bags (beta)")
 mod.dropdowns = 1
 mod.draggers = 1
 
@@ -97,8 +97,29 @@ end
 --===============================
 -- Category Filter Changing
 --===============================
-local function dropdown_click(self, arg1, arg2, checked)
-	print(self, arg1, arg2, checked)
+local function dropdown_click(self, name, button, checked)
+	-- print(self, name, arg2, checked)
+	local filter_ids = mod.types[name]
+	local category = mod.categories[self.arg2].conditions.type
+
+	-- print(name)
+	-- print(name)
+	-- print(filter_ids)
+	-- dump(category.conditions)
+	for i = 1, #filter_ids do
+		local id = filter_ids[i]
+
+		if (checked) then
+			tinsert(category, id)
+		elseif (mod:has_value(category, id)) then
+			mod:remove_value(category, id)
+		end
+			
+	end
+
+	-- dump(category)
+
+	mod:update_bags()
 end
 
 local dragger_methods = {
@@ -199,39 +220,41 @@ local category_methods = {
 		dragger:SetScript("OnEvent", dragger.update)
 		-- self:SetScript("OnShow", dragger.update)
 
-		self.dragger = dragger
+		return dragger
 	end,
-	['create_text'] = function(self)
+	['create_header'] = function(self)
 		local header = CreateFrame("button", nil, self)
 		header:SetPoint("TOPLEFT", self, "TOPLEFT")
 		header:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, -26)
 
-		local text = header:CreateFontString(nil, "OVERLAY")
+		return header
+	end,
+	['create_text'] = function(self)
+		local text = self.header:CreateFontString(nil, "OVERLAY")
 		text:SetFont(bdUI.media.font, 13, "OUTLINE")
-		text:SetPoint("LEFT", header, "LEFT", self.spacing, 0)
+		text:SetPoint("LEFT", self.header, "LEFT", self.spacing, 0)
 		text:SetAlpha(0.7)
 
-		header:SetScript("OnEnter", function()
+		self.header:SetScript("OnEnter", function()
 			text:SetAlpha(0.9)
 		end)
-		header:SetScript("OnLeave", function()
+		self.header:SetScript("OnLeave", function()
 			text:SetAlpha(0.7)
 		end)
-		header:SetScript("OnMouseDown", function()
-			text:SetPoint("LEFT", header, "LEFT", self.spacing, -1)
+		self.header:SetScript("OnMouseDown", function()
+			text:SetPoint("LEFT", self.header, "LEFT", self.spacing, -1)
 		end)
-		header:SetScript("OnMouseUp", function()
-			text:SetPoint("LEFT", header, "LEFT", self.spacing, 0)
+		self.header:SetScript("OnMouseUp", function()
+			text:SetPoint("LEFT", self.header, "LEFT", self.spacing, 0)
 		end)
 
-		self.header = header
-		self.text = text
+		return text
 	end,
 	['create_container'] = function(self)
 		local container = CreateFrame("frame", nil, self)
 		container:SetPoint("TOPLEFT", self.header, "BOTTOMLEFT", self.spacing+4, 0)
 
-		self.container = container
+		return container
 	end,
 	["create_dropdown"] = function(self)
 		local name = "bdBagsCategoryDropdown"..mod.dropdowns
@@ -253,6 +276,8 @@ local category_methods = {
 					checked = true
 				end
 
+				dropdown.test = "Hello"
+
 				local entry = {
 					text = name
 					, notCheckable = false
@@ -260,7 +285,7 @@ local category_methods = {
 					, value = ids
 					, checked = checked
 					, arg1 = name
-					, arg2 = ids
+					, arg2 = cat_name
 					, func = dropdown_click
 				}
 
@@ -268,7 +293,6 @@ local category_methods = {
 			end
 
 			local subtypes = {}
-
 
 			local menu = {
 				{ text = cat_name, isTitle = true, notCheckable = true }
@@ -278,7 +302,7 @@ local category_methods = {
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "Filters", isTitle = true, notCheckable = true }
 				, { text = "Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
-				, { text = "Sub Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = {}}
+				-- , { text = "Sub Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = {}}
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "|cffff5555Delete|r", notCheckable = true, func = function(self, name) mod.categories[name] = nil mod:update_bags() end, arg1 = cat_name }
 			}
@@ -298,6 +322,8 @@ local category_methods = {
 				EasyMenu(menu, dropdown, self.header, 0 , 0, "MENU");
 			end
 		end)
+
+		return dropdown
 	end,
 	['update_size'] = function(self, width, height)
 		local config = mod.config
@@ -317,10 +343,11 @@ mod.category_pool_create = function(self)
 	-- bdUI:set_backdrop(frame)
 	Mixin(frame, category_methods)
 
-	frame:create_text()
-	frame:create_dropdown()
-	frame:create_dragger()
-	frame:create_container()
+	frame.header = frame:create_header()
+	frame.text = frame:create_text()
+	frame.dropdown = frame:create_dropdown()
+	frame.dragger = frame:create_dragger()
+	frame.container = frame:create_container()
 
 	return frame
 end
