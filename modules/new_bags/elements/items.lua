@@ -5,6 +5,7 @@ local events = {}
 events["BAG_UPDATE_COOLDOWN"] = "update_cooldown"
 events["ITEM_LOCK_CHANGED"] = "update_lock"
 events["ITEM_UNLOCKED"] = "update_lock"
+events["BAG_UPDATE_DELAYED"] = "update_lock"
 -- events["QUEST_ACCEPTED"] = "update_border"
 events["BAG_NEW_ITEMS_UPDATED"] = "update_new"
 -- events["PLAYER_EQUIPMENT_CHANGED"] = "update"
@@ -61,6 +62,7 @@ local methods = {
 
 	-- lock item if its in transit
 	["update_lock"] = function(self, bag, slot)
+		-- self.locked = select(3, GetContainerItemInfo(self.bag, self.slot))
 		if (not slot and self.locked) or (bag == self.bag and slot == self.slot) then
 			self.locked = select(3, GetContainerItemInfo(self.bag, self.slot))
 			self:Enable()

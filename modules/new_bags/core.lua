@@ -30,7 +30,7 @@ function mod:initialize()
 
 	-- mod.categories.first_run_complete = nil
 
-	if (not mod.categories["Free"]) then
+	-- if (not mod.categories["Free"]) then
 		mod:create_category("Free", {
 			["default"] = true,
 			["locked"] = true,
@@ -43,7 +43,7 @@ function mod:initialize()
 			["locked"] = true,
 			["order"] = -1,
 		})
-	end
+	-- end
 
 	if (not config.first_run_complete) then
 		mod:create_category("Armor", {
