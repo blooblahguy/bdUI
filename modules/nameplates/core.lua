@@ -59,6 +59,7 @@ function mod:config_callback()
 		end
 		self.Auras.size = config.raidbefuffs * config.scale
 
+		self.RaidTargetIndicator:ClearAllPoints()
 		if (config.markposition == "LEFT") then
 			self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
 		elseif (config.markposition == "RIGHT") then
@@ -374,6 +375,13 @@ local function nameplate_create(self, unit)
 	--==========================================
 	self.RaidTargetIndicator = self:CreateTexture(nil, "OVERLAY", nil, 7)
 	self.RaidTargetIndicator:SetSize(config.raidmarkersize, config.raidmarkersize)
+	if (config.markposition == "LEFT") then
+		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
+	elseif (config.markposition == "RIGHT") then
+		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", config.raidmarkersize/2, 0)
+	else
+		self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
+	end
 
 	--==========================================
 	-- FIXATES / TARGETS
@@ -549,8 +557,6 @@ function mod:initialize()
 
 	if (not config.enabled) then return end
 
-	mod:config_callback()
-
 	local forced = false
 	hooksecurefunc(C_NamePlate, "SetNamePlateEnemySize", function()
 		if (not forced) then
@@ -563,4 +569,6 @@ function mod:initialize()
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
 	oUF:SetActiveStyle("bdNameplates")
 	oUF:SpawnNamePlates("bdNameplates", nameplate_callback)
+
+	mod:config_callback()
 end
