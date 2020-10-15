@@ -43,6 +43,8 @@ function mod:add_filter(name, value, func)
 end
 
 function mod:filter_item(conditions, ...)
+	mod.myilvl = select(1, GetAverageItemLevel())
+
 	local weight = 0
 	for i = 1, #mod.filters do
 		local name, value, func = unpack(mod.filters[i])
@@ -130,9 +132,13 @@ end)
 -- Item iLVL
 --===============================
 mod:add_filter("itemLvl", 3, function(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent)
-	if (conditions["itemlvl"] == 0 or not ilvl) then return false end
+	-- dump(conditions)
+	if (conditions["ilvl"] == 0 or not ilvl) then return false end
+	if (itemEquipLoc ~= "" and minlevel > 1) then
+
 	
-	if (ilvl >= conditions["itemlvl"]) then
-		return true
+		if (ilvl <= mod.myilvl * 0.8) then
+			return 2
+		end
 	end
 end)

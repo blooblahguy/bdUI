@@ -35,8 +35,9 @@ The following options are listed by priority. The first check that returns true 
 .colorPower        - Use `self.colors.power[token]` to color the bar based on the unit's power type. This method will
                      fall-back to `:GetAlternativeColor()` if it can't find a color matching the token. If this function
                      isn't defined, then it will attempt to color based upon the alternative power colors returned by
-                     [UnitPowerType](http://wowprogramming.com/docs/api/UnitPowerType.html). Finally, if these aren't
-                     defined, then it will attempt to color the bar based upon `self.colors.power[type]` (boolean)
+                     [UnitPowerType](http://wowprogramming.com/docs/api/UnitPowerType.html). If these aren't
+                     defined, then it will attempt to color the bar based upon `self.colors.power[type]`. In case of
+                     failure it'll default to `self.colors.power.MANA` (boolean)
 .colorClass        - Use `self.colors.class[class]` to color the bar based on unit class. `class` is defined by the
                      second return of [UnitClass](http://wowprogramming.com/docs/api/UnitClass.html) (boolean)
 .colorClassNPC     - Use `self.colors.class[class]` to color the bar if the unit is a NPC (boolean)
@@ -55,10 +56,6 @@ The following options are listed by priority. The first check that returns true 
 
 .multiplier - A multiplier used to tint the background based on the main widgets R, G and B values. Defaults to 1
               (number)[0-1]
-
-## Attributes
-
-.disconnected - Indicates whether the unit is disconnected (boolean)
 
 ## Examples
 
@@ -121,10 +118,10 @@ local function UpdateColor(self, event, unit)
 	if(self.unit ~= unit) then return end
 	local element = self.Power
 
-	local ptype, ptoken, altR, altG, altB = UnitPowerType(unit)
+	local pType, pToken, altR, altG, altB = UnitPowerType(unit)
 
 	local r, g, b, t
-	if(element.colorDisconnected and element.disconnected) then
+	if(element.colorDisconnected and not UnitIsConnected(unit)) then
 		t = self.colors.disconnected
 	elseif(element.colorTapping and not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then
 		t = self.colors.tapped
@@ -132,16 +129,18 @@ local function UpdateColor(self, event, unit)
 		t =  self.colors.threat[UnitThreatSituation('player', unit)]
 	elseif(element.colorPower) then
 		if(element.displayType ~= ALTERNATE_POWER_INDEX) then
-			t = self.colors.power[ptoken or ptype]
+			t = self.colors.power[pToken]
 			if(not t) then
 				if(element.GetAlternativeColor) then
-					r, g, b = element:GetAlternativeColor(unit, ptype, ptoken, altR, altG, altB)
+					r, g, b = element:GetAlternativeColor(unit, pType, pToken, altR, altG, altB)
 				elseif(altR) then
 					r, g, b = altR, altG, altB
 					if(r > 1 or g > 1 or b > 1) then
 						-- BUG: As of 7.0.3, altR, altG, altB may be in 0-1 or 0-255 range.
 						r, g, b = r / 255, g / 255, b / 255
 					end
+				else
+					t = self.colors.power[pType] or self.colors.power.MANA
 				end
 			end
 		else
@@ -222,18 +221,16 @@ local function Update(self, event, unit)
 	local cur, max = UnitPower(unit, displayType), UnitPowerMax(unit, displayType)
 	element:SetMinMaxValues(min or 0, max)
 
-	local disconnected = not UnitIsConnected(unit)
-	if(disconnected) then
-		element:SetValue(max)
-	else
+	if(UnitIsConnected(unit)) then
 		element:SetValue(cur)
+	else
+		element:SetValue(max)
 	end
 
 	element.cur = cur
 	element.min = min
 	element.max = max
 	element.displayType = displayType
-	element.disconnected = disconnected
 
 	--[[ Callback: Power:PostUpdate(unit, cur, min, max)
 	Called after the element has been updated.

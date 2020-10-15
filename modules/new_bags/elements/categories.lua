@@ -135,8 +135,16 @@ local function dropdown_subtype_click(self, name, button, checked)
 		elseif (mod:has_value(category, id)) then
 			tDeleteItem(category, id)
 		end
-			
+		
 	end
+
+	mod:update_bags()
+end
+
+local function dropdown_ilvl_click(self, name, button, checked)
+	local category = mod.categories[self.arg2].conditions
+
+	category.ilvl = checked
 
 	mod:update_bags()
 end
@@ -350,6 +358,20 @@ local category_methods = {
 				table.insert(subtypes_menu, entry)
 			end
 
+			local custom_menu = {}
+			local ilvl = {
+				text = "Low iLvl"
+				, notCheckable = false
+				, keepShownOnClick = true
+				, value = 0
+				, checked = checked
+				, arg1 = "Low iLvl"
+				, arg2 = cat_name
+				, func = dropdown_ilvl_click
+			}
+
+			table.insert(custom_menu, ilvl)
+
 
 			local menu = {
 				{ text = cat_name, isTitle = true, notCheckable = true }
@@ -360,6 +382,7 @@ local category_methods = {
 				, { text = "Filters", isTitle = true, notCheckable = true }
 				, { text = "Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = types_menu}
 				, { text = "Sub Types", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = subtypes_menu}
+				, { text = "Custom", notCheckable = true, keepShownOnClick = true, hasArrow = true, menuList = custom_menu}
 				, { text = " ", notCheckable = true, notClickable = true }
 				, { text = "|cffff5555Delete|r", notCheckable = true, func = function(self, name) mod.categories[name] = nil mod:update_bags() end, arg1 = cat_name }
 			}
@@ -449,7 +472,6 @@ function mod:create_category(name, options)
 	conditions['ilvl'] = 0
 	-- conditions['expacID'] = 0
 	conditions['rarity'] = 0
-	conditions['itemlvl'] = 0
 	conditions['minlevel'] = 0
 	-- conditions['duplicate'] = false
 	-- conditions['autohide'] = true

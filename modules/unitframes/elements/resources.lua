@@ -56,6 +56,7 @@ mod.create_resources = function(self, unit)
 	self.Resources.power:SetSize(config.resources_width, config.resources_power_height)
 	self.Resources.power:SetStatusBarTexture(bdUI.media.flat)
 	self.Resources.power:RegisterEvent('UNIT_POWER_FREQUENT')
+	self.Resources.power:RegisterEvent('UNIT_POWER_POINT_CHARGE')
 	self.Resources.power:RegisterEvent('UNIT_DISPLAYPOWER')
 	self.Resources.power:RegisterEvent('UNIT_MAXPOWER')
 	-- self.Resources.power:RegisterEvent('UNIT_POWER_BAR_SHOW')
@@ -197,7 +198,8 @@ mod.create_resources = function(self, unit)
 
 		-- resize available bars
 		function self.ClassPower:PostUpdate(cur, max, changed, powerType)
-			if (not self.isEnabled) then
+			print(powerType, self.__isEnabled)
+			if (not self.__isEnabled) then
 				self.__owner.Resources.primary:Hide()
 				return
 			elseif (changed) then
