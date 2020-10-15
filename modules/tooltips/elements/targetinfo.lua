@@ -5,23 +5,20 @@ function returnUnitItemLevel(unit)
 	local ilvl = 0
 	local mainHandEquipLoc, offHandEquipLoc
 	local numSlots = 0
-	local delay = false
 	
-	for slot = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do -- For every slot,
-		if slot ~= INVSLOT_BODY and slot ~= INVSLOT_TABARD then -- If this isn't the shirt/tabard slot,
-			local itemLink = GetInventoryItemLink(unit, slot) -- Get the ID of the item in this slot
+	for slot = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do
+		if slot ~= INVSLOT_BODY and slot ~= INVSLOT_TABARD then
+			local itemLink = GetInventoryItemLink(unit, slot)
 			if itemLink then -- If we have an item in this slot,
 				local itemLevel = GetDetailedItemLevelInfo(itemLink)
 				ilvl = ilvl + itemLevel -- Add it to the total
 
 				numSlots = numSlots + 1
-			else
-				delay = true
 			end
 		end
 	end
 
-	return math.floor((ilvl / numSlots)+0.5), delay -- Return the average
+	return math.floor((ilvl / numSlots)+0.5)
 end
 
 local function returnUnitSpecialization(unit)
@@ -35,12 +32,12 @@ local inspector = CreateFrame("frame", nil, UIParent)
 inspector:RegisterEvent("INSPECT_READY")
 inspector:SetScript("OnEvent", function(self, event, guid)
 	local inspectUnit = self.inspectUnit
-	if inspectUnit and UnitGUID(inspectUnit) == guid then -- If this is the unit we requested information for,
+	if inspectUnit and UnitGUID(inspectUnit) == guid then
 		
-		local ilvl, delay = returnUnitItemLevel(inspectUnit) -- Calculate the unit's average item level
+		local ilvl = returnUnitItemLevel(inspectUnit) -- Calculate the unit's average item level
 		local spec = returnUnitSpecialization(inspectUnit) -- Get unit spec
 		local numlines = self.tooltip:NumLines()
-		ClearInspectPlayer() -- Tell the game that we're done with this unit's data.
+		ClearInspectPlayer()
 
 		
 		if (self.tooltip.ilvl) then
@@ -70,7 +67,8 @@ end)
 
 -- Request the average item level of a unit to be calculated
 function mod:getAverageItemLevel(tooltip, unit)
-	if (not UnitIsPlayer(unit)) then return end
+	if (not UnitIsPlayer(unit) or not UnitIsFriend("player", unit)) then return end
+
 	inspector.inspectUnit = unit
 	inspector.tooltip = tooltip
 	NotifyInspect(unit)
