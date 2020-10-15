@@ -31,7 +31,7 @@ function mod:currencies_update()
 	local last = nil
 	local lastrow = nil
 	local maxwidth = mod.bags:GetWidth() - 40
-	local newheight = 0
+	local newheight = 10
 	local rowwidth = 0
 	currencies:SetSize(maxwidth, 30)
 
@@ -49,7 +49,7 @@ function mod:currencies_update()
 			rowwidth = rowwidth + frame:GetWidth() + 10
 
 			if (not last) then
-				frame:SetPoint("TOPLEFT", currencies, "TOPLEFT", 0, 0)
+				frame:SetPoint("TOPLEFT", currencies, "TOPLEFT", 5, 0)
 				lastrow = frame
 				newheight = newheight + frame:GetHeight()
 			elseif (rowwidth > maxwidth) then
@@ -69,8 +69,8 @@ function mod:currencies_update()
 	end
 
 	mod.bags.footer:SetHeight(newheight)
-	mod.bags.footer:SetPoint("TOPLEFT", mod.bags, "BOTTOMLEFT", 0, newheight)
-	mod.bags.footer:SetPoint("TOPRIGHT", mod.bags, "BOTTOMRIGHT", 0, newheight)
+	mod.bags.footer:SetPoint("TOPLEFT", mod.bags, "BOTTOMLEFT", 0, newheight - 5)
+	mod.bags.footer:SetPoint("TOPRIGHT", mod.bags, "BOTTOMRIGHT", 0, newheight - 5)
 
 	currencies:SetHeight(newheight)
 end
