@@ -12,24 +12,26 @@ pcolors = RGBPercToHex(pcolors.r, pcolors.g, pcolors.b)
 local pstring = "@|cff"..pcolors..playername.."|r"
 
 -- Search text and find alerts
-local function filter_alerts(text)
+function mod:filter_alerts(event, msg)
 	-- mod:alert_message(text)
 	-- if (not text) then return end
 
 	--Alert players with @playername callouts
-	local callout = text:lower():find("@"..playername:lower()) or text:lower():find(pstring:lower())
-	if (callout) then mod:alert_message(text) end
+	local callout = msg:lower():find("@"..playername:lower()) or msg:lower():find(pstring:lower())
+	if (callout) then
+		mod:alert_message(msg)
+	end
 	
-	local everyonecallout = text:lower():find("@everyone") or text:lower():find("@here")
+	local everyonecallout = msg:lower():find("@everyone") or msg:lower():find("@here")
 	if (everyonecallout) then
-		if (text:find("GUILD")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "GUILD")
-		elseif (text:find("RAID")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "RAID")
-		elseif (text:find("OFFICER")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "OFFICER")
-		elseif (text:find("PARTY")) then
-			C_ChatInfo.SendAddonMessage("bdChat", text, "PARTY")
+		if (msg:find("GUILD")) then
+			C_ChatInfo.SendAddonMessage("bdChat", msg, "GUILD")
+		elseif (msg:find("RAID")) then
+			C_ChatInfo.SendAddonMessage("bdChat", msg, "RAID")
+		elseif (msg:find("OFFICER")) then
+			C_ChatInfo.SendAddonMessage("bdChat", msg, "OFFICER")
+		elseif (msg:find("PARTY")) then
+			C_ChatInfo.SendAddonMessage("bdChat", msg, "PARTY")
 		end
 	end
 end
@@ -45,12 +47,6 @@ end
 function mod:create_alerts()
 	-- Register Addon Message
 	C_ChatInfo.RegisterAddonMessagePrefix("bdChat")
-	mod:RegisterEvent('CHAT_MSG_ADDON');
-	mod:SetScript("OnEvent", function(self, event, arg1)
-		if (event == "CHAT_MSG_ADDON" and arg == "bdChat") then
-			mod:alert_message(arg2)
-		end
-	end);
 
 	-- Alert Frame
 	mod.alert = CreateFrame("Frame");
@@ -68,6 +64,13 @@ function mod:create_alerts()
 			local alpha = mod.alert:GetAlpha();
 			if (alpha ~= 0) then mod.alert:SetAlpha(alpha - .05); end
 			if (alpha == 0) then mod.alert:Hide(); end
+		end
+	end);
+
+	mod.alert:RegisterEvent('CHAT_MSG_ADDON');
+	mod.alert:SetScript("OnEvent", function(self, event, arg1, arg2)
+		if (event == "CHAT_MSG_ADDON" and arg1 == "bdChat") then
+			mod:alert_message(arg2)
 		end
 	end);
 

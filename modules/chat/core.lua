@@ -31,6 +31,22 @@ function mod:initialize()
 	mod:config_callback()
 end
 
+-- credit to tannerng
+-- regex can eat it
+mod.url_patterns = {
+    -- X://Y most urls
+    "^(%a[%w+.-]+://%S+)",
+    "%f[%S](%a[%w+.-]+://%S+)",
+    -- www.X.Y domain and path
+    "^(www%.[-%w_%%]+%.(%a%a+)/%S+)",
+    "%f[%S](www%.[-%w_%%]+%.(%a%a+)/%S+)",
+    -- www.X.Y domain
+    "^(www%.[-%w_%%]+%.(%a%a+))",
+    "%f[%S](www%.[-%w_%%]+%.(%a%a+))",
+    -- email
+    "(%S+@[%w_.-%%]+%.(%a%a+))",
+}
+
 -- shorten and clean chat labels
 function mod:clean_labels(event, msg)
 -- assert(false, msg)
@@ -52,9 +68,6 @@ function mod:clean_labels(event, msg)
 		
 	--channel replace (Trade and custom)
 	msg = msg:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
-	
-	--url search
-	msg = msg:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cffffffff|Hurl:%1|h[%1]|h|r')
 
 	return msg
 end
@@ -367,6 +380,14 @@ mod.message_filter = function(self, event, msg, ...)
 	msg = mod:color_name(event, msg)
 	msg = mod:filter_emojis(event, msg)
 	msg = mod:clean_labels(event, msg)
+
+	-- url
+	for k, p in pairs(mod.url_patterns) do
+		if string.find(msg, p) then
+            msg = msg:gsub(p, '|cffffffff|Hurl:%1|h[%1]|h|r')
+        end
+	end
+	-- msg = msg:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cffffffff|Hurl:%1|h[%1]|h|r')
 	
 	return false, msg, ...
 end
@@ -374,6 +395,7 @@ end
 -- filter the entire message, including the ecoded string
 mod.full_filter = function(self, msg, ...)
 	msg = mod:clean_labels("", msg)
+	mod:filter_alerts("", msg)
 
 	-- filter with plugins
 	-- msg = bdUI:do_filter("chat_message", msg)
