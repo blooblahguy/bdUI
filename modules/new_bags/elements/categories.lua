@@ -61,7 +61,7 @@ local function move_up(self, arg1, arg2, checked)
 		if (category.name == arg1) then
 			if (not categories[i - 1]) then return end
 			local prev_order = categories[i - 1].order
-			if (prev_order <= 1) then return end
+			if (prev_order <= 1 or category.default) then return end
 			local order = category.order
 
 			category.order = prev_order
@@ -504,7 +504,9 @@ function mod:get_visible_categories()
 
 	for i = 1, #loop_cats do
 		local category = loop_cats[i]
-		category.order = i
+		if (not category.locked) then
+			category.order = i
+		end
 	end
 
 	return loop_cats
