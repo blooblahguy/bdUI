@@ -4,7 +4,7 @@ local mod = bdUI:get_module("Bags (beta)")
 
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 
-mod.bank = mod:create_container("Bank", {-1, 5, 6, 7, 8, 9, 10, 11}, {5, 6, 7, 8, 9, 10, 11})
+mod.bank = mod:create_container("Bank")
 -- print(1 - NUM_BANKBAGSLOTS)
 mod.bank.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 mod.bank.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
@@ -31,20 +31,22 @@ function mod:create_bank()
 			self.paused = true
 		elseif (event == "EQUIPMENT_SWAP_FINISHED" or event == "AUCTION_MULTISELL_FAILURE") then
 			self.paused = false
-			mod:update_bank()
 		elseif (event == "BANKFRAME_OPENED") then
 			mod.bank:Show()
-			mod:update_bank()
+			-- BankFrame:SetAlpha(0)
+			-- BankFrame:EnableMouse(0)
+			-- BankFrame:SetParent(bdUI.hidden)
 		elseif (event == "BANKFRAME_CLOSED") then
 			mod.bank:Hide()
-			mod:update_bank()
-		else
-			if (self.paused) then return end
+			-- BankFrame:SetAlpha(0)
+			-- BankFrame:EnableMouse(0)
+			-- BankFrame:SetParent(bdUI.hidden)
+		end
+
+		if (not self.paused) then
 			mod:update_bank()
 		end
 	end)
-
-
 end
 
 
@@ -58,17 +60,17 @@ function mod:update_bank()
 	local new_items = {}
 	local item_weights = {}
 	local open_slots = 0
-	local bank_bags = {-1, 5, 6, 7, 8, 9, 10, 11}
+	local bank_bags = {BANK_CONTAINER, 5, 6, 7, 8, 9, 10, 11}
 
 	for k, bag in pairs(bank_bags) do
-		local min, max, step = 1, GetContainerNumSlots(bag)
 		local freeslots, bagtype = GetContainerNumFreeSlots(bag)
 		lastfull = freeslots == 0
 
-		for slot = min, max, 1 do
+		for slot = 1, GetContainerNumSlots(bag) do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot);
 			local itemID = mod:item_id(itemLink)
 			if (texture) then 
+				-- print(itemLink, bag, slot)
 				items[#items + 1] = {itemLink, bag, slot, itemID}
 			else
 				free_slot = {false, bag, slot, itemID}

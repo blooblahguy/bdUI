@@ -89,6 +89,11 @@ local methods = {
 		self.itemCount = count
 		self.quality = quality
 		self.bagFamily = select(2, GetContainerNumFreeSlots(self.bag))
+
+		-- if (self.bag == -1) then
+		-- 	BankFrameBaseButton_OnLoad (self)
+			
+		-- end
 	
 		-- self.UpgradeIcon:SetShown(IsContainerItemAnUpgrade(self.bag, self.slot) or false)
 		-- if self.itemCount > 1 then
@@ -182,6 +187,16 @@ mod.item_pool_create = function(self)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
 
+	button:HookScript("OnEnter", function(self, ...)
+		if (self.bag == -1) then
+			self.GetInventorySlot = ButtonInventorySlot;
+			self.UpdateTooltip = BankFrameItemButton_OnEnter;
+			BankFrameItemButton_OnEnter(self)
+		else
+			self.UpdateTooltip = ContainerFrameItemButton_OnUpdate;
+		end
+	end)
+
 	bdUI:set_backdrop(button)
 	Mixin(button, methods)
 	mod:register_events(button, events)
@@ -208,9 +223,6 @@ function mod:position_items(category, parent, pool)
 	if (num == 0) then num = 1 end
 
 	local columns = math.min(num, config.bag_max_column)
-	-- if (#items < config.bag_max_column and #items > config.bag_max_column / 2) then
-	-- 	columns = math.ceil(#items / 2)
-	-- end
 	local rows = math.ceil(num / columns)
 
 	local height = ((config.bag_size + spacing) * rows) - spacing
@@ -220,11 +232,9 @@ function mod:position_items(category, parent, pool)
 	for i = 1, #category.items do
 		local itemLink, bag, slot, itemID = unpack(category.items[i])
 		local button = pool:Acquire()
+
 		button:Show()
-		-- print(bag)
 		button:SetParent(mod.bag_frames[bag])
-		-- button:SetParent(parent)
-		-- button:SetFrameLevel(20)
 		button:SetID(slot)
 		button:SetSize(config.bag_size, config.bag_size)
 		button.bag = bag

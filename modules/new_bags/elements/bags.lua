@@ -4,7 +4,7 @@ local mod = bdUI:get_module("Bags (beta)")
 
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 
-mod.bags = mod:create_container("Bags", {0, 1, 2, 3, 4}, {1, 2, 3, 4})
+mod.bags = mod:create_container("Bags")
 mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 
@@ -25,9 +25,9 @@ function mod:create_bags()
 			self.paused = true
 		elseif (event == "EQUIPMENT_SWAP_FINISHED" or event == "AUCTION_MULTISELL_FAILURE") then
 			self.paused = false
-			mod:update_bags()
-		else
-			if (self.paused) then return end
+		end
+
+		if (not self.paused) then
 			mod:update_bags()
 		end
 	end)
@@ -49,13 +49,11 @@ function mod:update_bags()
 	local new_items = {}
 	local item_weights = {}
 	local open_slots = 0
-	local lastfull = false
 
 	-- first gather all items up
 	for bag = 0, 4 do
 		local min, max, step = GetContainerNumSlots(bag), 1, -1
 		local freeslots, bagtype = GetContainerNumFreeSlots(bag)
-		lastfull = freeslots == 0
 
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot);
@@ -76,6 +74,7 @@ function mod:update_bags()
 		end
 	end
 
+
 	-- build item category weight table
 	for category_name, category in pairs(mod.categories) do
 		category.items = {}
@@ -93,8 +92,6 @@ function mod:update_bags()
 				if (rarity == nil or rarity > 0) then
 					item_weights[k] = item_weights[k] or {0, nil}
 					local current_weight, parent_category = unpack(item_weights[k])
-					-- local new_weight = 0
-
 					local new_weight = mod:filter_item(conditions, itemLink, itemID, name, rarity, ilvl, minlevel, itemEquipLoc, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent, category)
 
 					if (current_weight < new_weight) then

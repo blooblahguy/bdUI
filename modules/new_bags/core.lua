@@ -24,30 +24,25 @@ function mod:initialize()
 	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 	if (not config.enabled) then return end
 
-	
-
 	-- store saved variable for messing with
 	config.categories = config.categories or {}
-	-- config.categories = {}
 	mod.categories = config.categories
 
-	-- mod.categories.first_run_complete = nil
+	-- forced categories
+	mod:create_category("Free", {
+		["default"] = true,
+		["locked"] = true,
+		["order"] = -2,
+	})
 
-	-- if (not mod.categories["Free"]) then
-		mod:create_category("Free", {
-			["default"] = true,
-			["locked"] = true,
-			["order"] = -2,
-		})
+	mod:create_category("Bags", {
+		["default"] = true,
+		["duplicate"] = true,
+		["locked"] = true,
+		["order"] = -1,
+	})
 
-		mod:create_category("Bags", {
-			["default"] = true,
-			["duplicate"] = true,
-			["locked"] = true,
-			["order"] = -1,
-		})
-	-- end
-
+	-- default categories
 	if (not config.first_run_complete) then
 		mod:create_category("Armor", {
 			["type"] = mod.types["Armor"],
@@ -98,7 +93,7 @@ function mod:initialize()
 	mod:create_bank()
 	mod:hook_blizzard_functions()
 
-	-- mod:create_bank()
+	mod:create_bag_slots()
 end
 
 function mod:config_callback()
@@ -161,10 +156,6 @@ function mod:create_container(name, ids, bagids)
 	header:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, -30)
 	bags.header = header
 
-	-- bag replacements
-	local bag_slots_containers = mod:create_containers(bags, bagids)
-	bag_slots_containers:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, mod.border)
-
 	-- footer
 	local footer = CreateFrame("frame", nil, bags)
 	footer:SetPoint("TOPLEFT", bags, "BOTTOMLEFT", 0, 0)
@@ -209,7 +200,7 @@ function mod:create_container(name, ids, bagids)
 	bags_button.text:SetText("B")
 	bags_button:SetPoint("RIGHT", sort_bags, "LEFT", -4, 0)
 	bags_button.callback = function()
-		bag_slots_containers:SetShown(not bag_slots_containers:IsShown())
+		self.bag_slots:SetShown(not self.bag_slots:IsShown())
 	end
 
 	-- money
@@ -239,14 +230,92 @@ function mod:create_container(name, ids, bagids)
 	end
 
 	-- create parent bags for id searching
-	for k, bagID in pairs(ids) do
-		local f = CreateFrame("Frame", 'bdBagsItemContainer'..bagID, bags)
-		f:SetID(bagID)
-		mod.bag_frames[bagID] = f
-	end
+	-- for k, bagID in pairs(ids) do
+	-- 	local f = CreateFrame("Frame", 'bdBagsItemContainer'..bagID, bags)
+	-- 	mod.bag_frames[bagID] = f
+	-- 	f:SetID(bagID)
+	-- end
+	-- for k, bagID in pairs(bagids) do
+	-- end
+
+	
 
 	mod.containers[name:lower()] = bags
 	return bags
+end
+
+function mod:create_bag_slots()
+	local bags = {}
+	bags['bags'] = {0, 1, 2, 3, 4}
+	bags['bank'] = {-1, 5, 6, 7, 8, 9, 10, 11}
+
+	local slots = {}
+	slots['bags'] = {1, 2, 3, 4, 5}
+	slots['bank'] = {6, 7, 8, 9, 10, 11, 12}
+
+	for bag, group in pairs(bags) do
+		local bag = mod.containers[bag]
+
+		for k, bagID in pairs(group) do
+			local slot = CreateFrame("frame", 'bdBagsItemContainer'..bagID, bag)
+			slot:SetID(bagID)
+			mod.bag_frames[bagID] = slot
+		end
+	end
+
+	-- 	local containers = CreateFrame("frame", nil, parent)
+	-- 	containers:SetSize(((30 + mod.border) * #bagids) + (mod.border*4) - mod.border, 30 + (mod.border*4))
+	-- 	containers:Hide()
+	-- 	bdUI:set_backdrop(containers)
+
+	-- 	-- local someids 
+
+	-- 	local last = nil
+	-- 	for k, i in pairs(bagids) do
+	-- 		local bag_slot = CreateFrame("ItemButton", "bdBagsBackpack"..i, containers)
+	-- 		bag_slot:SetSize(30, 30)
+	-- 		bag_slot.invSlot = ContainerIDToInventoryID(i)
+	-- 		Mixin(bag_slot, bag_slot_methods)
+
+	-- 		bag_slot:skin()
+	-- 		bag_slot:update()
+
+	-- 		bag_slot:EnableMouse(true)
+	-- 		bag_slot:RegisterForDrag("LeftButton")
+	-- 		bag_slot:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
+	-- 		bag_slot:SetScript('OnShow', bag_slot.onshow)
+	-- 		bag_slot:SetScript('OnHide', bag_slot.onhide)
+	-- 		bag_slot:SetScript('OnEvent', bag_slot.onevent)
+	-- 		bag_slot:SetScript('OnEnter', bag_slot.onenter)
+	-- 		bag_slot:SetScript('OnLeave', bag_slot.onleave)
+	-- 		bag_slot:SetScript('OnDragStart', bag_slot.dragstart)
+	-- 		bag_slot:SetScript('OnReceiveDrag', bag_slot.onclick)
+	-- 		bag_slot:SetScript('OnClick', bag_slot.onclick)
+
+	-- 		if (not last) then
+	-- 			bag_slot:SetPoint("LEFT", containers, "LEFT", mod.border*2, 0)
+	-- 		else
+	-- 			bag_slot:SetPoint("LEFT", last, "RIGHT", mod.border, 0)
+	-- 		end
+
+	-- 		last = bag_slot
+	-- 	end
+
+	-- 	return containers
+
+	-- 	-- bag replacements
+	-- 	local bag_slots = mod:create_containers(bags, bagids)
+	-- 	bag_slots:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, mod.border)
+
+	-- 	for i = 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
+	-- 		local invID = ContainerIDToInventoryID(i)
+	-- 		print(i, invID, GetInventoryItemLink("player", invID))
+	-- 	end
+
+	-- 	self.bag_slots = bag_slots
+	-- end
+	
 end
 
 --===============================================
@@ -255,30 +324,21 @@ end
 function mod:hook_blizzard_functions()
 	local function close_all()
 		mod.bags:Hide()
-		-- print("close_all")
 	end
 	local function open_all()
 		mod.bags:Show()
-		-- if (BankFrame:IsShown()) then
-		-- 	mod.bank:Show()
-		-- 	mod:update_bank()
-		-- end
-		-- print("open_all")
 	end
 
 	local function close_bag()
 		mod.bags:Hide()
-		-- print("close_bag")
 	end
 
 	local function open_bag()
 		mod.bags:Show()
-		-- print("open_bag")
 	end
 
 	local function toggle_bag()
 		mod.bags:SetShown(not mod.bags:IsShown())
-		-- print("toggle_bag")
 	end
 
 	mod:RawHook("ToggleBackpack", toggle_bag, true)
@@ -292,4 +352,10 @@ function mod:hook_blizzard_functions()
 	mod:RawHook("CloseAllBags", close_all, true)
 	hooksecurefunc("CloseSpecialWindows", close_all)
 
+end
+
+
+
+function ContainerFrame_GenerateFrame(frame, size, id)
+	print(size, id)
 end
