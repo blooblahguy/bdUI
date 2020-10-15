@@ -71,6 +71,6 @@ function mod:create_alerts()
 		end
 	end);
 
-	bdUI:add_action("chat_message", filter_alerts)
+	-- bdUI:add_action("chat_message", filter_alerts)
 end
 

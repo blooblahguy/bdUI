@@ -198,7 +198,7 @@ mod.create_resources = function(self, unit)
 
 		-- resize available bars
 		function self.ClassPower:PostUpdate(cur, max, changed, powerType)
-			print(powerType, self.__isEnabled)
+			
 			if (not self.__isEnabled) then
 				self.__owner.Resources.primary:Hide()
 				return

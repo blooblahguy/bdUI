@@ -25,52 +25,78 @@ function mod:initialize()
 	mod:telltarget()
 	-- community mask
 	mod:create_community()
-	-- emojis
-	mod:create_emojis()
-
 	-- finally
 	mod:skin_chats()
 
 	mod:config_callback()
 end
 
+-- shorten and clean chat labels
+function mod:clean_labels(event, msg)
+-- assert(false, msg)
+	-- Remove player brackets
+	msg = msg:gsub("|Hplayer:([^%|]+)|h%[([^%]]+)%]|h", "|Hplayer:%1|h%2|h")
+	
+	-- Abbreviate
+	msg = msg:gsub("<Away>", "<afk>")
+	msg = msg:gsub("<Busy>", "<dnd>")
+
+	-- Strip yells: says: from chat
+	msg = msg:gsub("|Hplayer:([^%|]+)|h(.+)|h says:", "|Hplayer:%1|h%2|h:");
+	msg = msg:gsub("|Hplayer:([^%|]+)|h(.+)|h yells:", "|Hplayer:%1|h%2|h:");
+
+	-- Whispers are now done with globals
+	msg = msg:gsub("Guild Message of the Day:", "GMotD -")
+	msg = msg:gsub("has come online.", "+")
+	msg = msg:gsub("has gone offline.", "-")
+		
+	--channel replace (Trade and custom)
+	msg = msg:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
+	
+	--url search
+	msg = msg:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cffffffff|Hurl:%1|h[%1]|h|r')
+
+	return msg
+end
+
+-- color player names
+function mod:color_name(event, msg)
+	local test = msg:gsub("[^a-zA-Z%s]",'')
+
+	local words = {strsplit(' ',test)}
+	for i = 1, #words do
+		local w = words[i]
+		
+		if (w and not (w == "player" or w == "target") and UnitName(w) and UnitIsPlayer(w)) then
+			local class = select(2, UnitClass(w))
+			local colors = RAID_CLASS_COLORS[class]
+			if (colors) then
+				msg = gsub(msg, w, "|cff"..RGBPercToHex(colors.r,colors.g,colors.b).."%1|r")
+			end
+		end
+	end
+
+	return msg
+end
+
 --=============================================
 -- DEFAULTS
 --=============================================
 function mod:set_defaults()
-	-- class color within text
-	local function color_name(self, event, msg, ...)
-		local test = msg:gsub("[^a-zA-Z%s]",'')
-		
-		local words = {strsplit(' ',test)}
-		for i = 1, #words do
-			local w = words[i]
-			
-			if (w and not (w == "player" or w == "target") and UnitName(w) and UnitIsPlayer(w)) then
-				local class = select(2, UnitClass(w))
-				local colors = RAID_CLASS_COLORS[class]
-				if (colors) then
-					msg = gsub(msg, w, "|cff"..RGBPercToHex(colors.r,colors.g,colors.b).."%1|r")
-				end
-			end
-		end
-		
-		return false, msg, ...
-	end
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", color_name)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", color_name)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", mod.message_filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", mod.message_filter)
 
 	-- currency coloring
 	COPPER_AMOUNT = "%d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r";
@@ -187,7 +213,7 @@ function mod:skin_chats()
 		mod:skin_single_chat(chatframe)
 		if (i ~= 2) then
 			chatframe.DefaultAddMessage = chatframe.AddMessage
-			chatframe.AddMessage = mod.filter_message
+			chatframe.AddMessage = mod.full_filter
 		end
 	end
 
@@ -336,34 +362,24 @@ function mod:skin_single_chat(frame)
 	editbox:SetPoint("RIGHT",frame,8,0)
 end
 
-mod.filter_message = function(self, text, ...)
-	-- Remove player brackets
-	text = text:gsub("|Hplayer:([^%|]+)|h%[([^%]]+)%]|h", "|Hplayer:%1|h%2|h")
+-- filter the message thats sent after the encoded string 
+mod.message_filter = function(self, event, msg, ...)
+	msg = mod:color_name(event, msg)
+	msg = mod:filter_emojis(event, msg)
+	msg = mod:clean_labels(event, msg)
 	
-	-- Abbreviate
-	text = text:gsub("<Away>", "<afk>")
-	text = text:gsub("<Busy>", "<dnd>")
+	return false, msg, ...
+end
 
-	-- Strip yells: says: from chat
-	text = text:gsub("|Hplayer:([^%|]+)|h(.+)|h says:", "|Hplayer:%1|h%2|h:");
-	text = text:gsub("|Hplayer:([^%|]+)|h(.+)|h yells:", "|Hplayer:%1|h%2|h:");
-
-	-- Whispers are now done with globals
-	text = text:gsub("Guild Message of the Day:", "GMotD -")
-	text = text:gsub("has come online.", "+")
-	text = text:gsub("has gone offline.", "-")
-		
-	--channel replace (Trade and custom)
-	text = text:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
-	
-	--url search
-	text = text:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cffffffff|Hurl:%1|h[%1]|h|r')
+-- filter the entire message, including the ecoded string
+mod.full_filter = function(self, msg, ...)
+	msg = mod:clean_labels("", msg)
 
 	-- filter with plugins
-	text = bdUI:do_filter("chat_message", text)
+	-- msg = bdUI:do_filter("chat_message", msg)
 	
-	-- pass to plugins
-	bdUI:do_action("chat_message", text)
+	-- -- pass to plugins
+	-- bdUI:do_action("chat_message", msg)
 	
-	return self.DefaultAddMessage(self, text, ...)
+	return self.DefaultAddMessage(self, msg, ...)
 end
