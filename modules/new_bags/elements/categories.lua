@@ -421,13 +421,8 @@ local category_methods = {
 --===============================================
 mod.category_pool_create = function(self)
 	local frame = CreateFrame("frame", nil, mod.current_parent)
-	-- local frame = CreateFrame("frame", nil, mod.current_parent, "BackdropTemplate")
-	-- frame:SetBackdrop({bgFile = bdUI.media.flat})
-	-- frame:SetBackdropColor(1, 0, 0, .2)
-
 	frame:SetSize(124, 30)
 	frame.spacing = 8
-	-- bdUI:set_backdrop(frame)
 	Mixin(frame, category_methods)
 
 	frame.header = frame:create_header()
@@ -435,8 +430,6 @@ mod.category_pool_create = function(self)
 	frame.dropdown = frame:create_dropdown()
 	frame.dragger = frame:create_dragger()
 	frame.container = frame:create_container()
-
-	
 
 	return frame
 end
@@ -470,11 +463,8 @@ function mod:create_category(name, options)
 	conditions['type'] = {}
 	conditions['subtype'] = {}
 	conditions['ilvl'] = 0
-	-- conditions['expacID'] = 0
 	conditions['rarity'] = 0
 	conditions['minlevel'] = 0
-	-- conditions['duplicate'] = false
-	-- conditions['autohide'] = true
 	conditions['bindType'] = true
 	conditions['itemids'] = {}
 	for k, v in pairs(options) do conditions[k] = v end
@@ -536,8 +526,6 @@ function mod:position_categories(parent, categories, pool)
 	for i = 1, #categories do	
 		local category = categories[i]
 		local frame = category.frame
-
-		-- print(category.name, column.row_width, frame:GetWidth())
 
 		if (not last) then
 			frame:SetPoint("TOPLEFT", parent)

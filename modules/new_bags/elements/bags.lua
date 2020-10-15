@@ -4,36 +4,14 @@ local mod = bdUI:get_module("Bags (beta)")
 
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 
-mod.bags = mod:create_container("Bags", 0, 4)
+mod.bags = mod:create_container("Bags", {0, 1, 2, 3, 4}, {1, 2, 3, 4})
 mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
-
-local function close_all()
-	mod.bags:Hide()
-end
-local function open_all()
-	mod.bags:Show()
-end
-
-local function close_bag()
-	mod.bags:Hide()
-end
-
-local function open_bag()
-	mod.bags:Show()
-end
-
-local function toggle_bag()
-	mod.bags:SetShown(not mod.bags:IsShown())
-end
-
 
 function mod:create_bags()
 	local config = mod.config
 	mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
 	mod.bags.container:SetWidth(config.bag_width)
-
-	mod.bags.category_items = {}
 
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
@@ -41,17 +19,6 @@ function mod:create_bags()
 	mod.bags:RegisterEvent('AUCTION_MULTISELL_UPDATE')
 	mod.bags:RegisterEvent('AUCTION_MULTISELL_FAILURE')
 	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
-
-	mod:RawHook("ToggleBackpack", toggle_bag, true)
-	mod:RawHook("ToggleAllBags", toggle_bag, true)
-	mod:RawHook("ToggleBag", toggle_bag, true)
-	mod:RawHook("OpenAllBags", open_all, true)
-	mod:RawHook("OpenBackpack", open_bag, true)
-	mod:RawHook("OpenBag", open_bag, true)
-	mod:RawHook("CloseBag", close_bag, true)
-	mod:RawHook("CloseBackpack", close_bag, true)
-	mod:RawHook("CloseAllBags", close_all, true)
-	hooksecurefunc("CloseSpecialWindows", close_all)
 
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "EQUIPMENT_SWAP_PENDING" or event == "AUCTION_MULTISELL_START") then
@@ -65,11 +32,6 @@ function mod:create_bags()
 		end
 	end)
 
-	-- hook buttons
-	function mod.bags.sorter:callback()
-		SortBags()
-	end
-
 	-- currencies
 	local currencies = mod:create_currencies("bags", mod.bags.footer)
 	currencies:SetPoint("TOPLEFT", mod.bags.footer, "TOPLEFT", 8, 0)
@@ -79,8 +41,7 @@ end
 --==================================
 -- update item tables
 --==================================
-SetSortBagsRightToLeft(false)
-SetInsertItemsLeftToRight(false)
+
 function mod:update_bags()
 	local items = {}
 	local free_slot = {}
@@ -89,9 +50,6 @@ function mod:update_bags()
 	local item_weights = {}
 	local open_slots = 0
 	local lastfull = false
-
-	-- mod.bags.category_items = {}
-	-- mod.bags.category_items["Uncategorized"] = {}
 
 	-- first gather all items up
 	for bag = 0, 4 do
@@ -239,7 +197,7 @@ function mod:draw_bags()
 		category.frame.dropdown:SetParent(category.frame)
 
 		-- position items in categories
-		local width, height = mod:position_items(category.frame, category.items, mod.bags.item_pool, category.count)
+		local width, height = mod:position_items(category, mod.bags.container, mod.bags.item_pool)
 		category.frame:update_size(width, height)
 	end
 

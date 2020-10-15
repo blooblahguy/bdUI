@@ -16,12 +16,15 @@ ace_hook:Embed(mod)
 -- Core functionality
 -- place core functionality here
 --===============================================
+SetSortBagsRightToLeft(false)
+	SetInsertItemsLeftToRight(false)
 function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
 	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
-	if (not config.enabled or mod.initialized) then return end
-	mod.initialized = true
+	if (not config.enabled) then return end
+
+	
 
 	-- store saved variable for messing with
 	config.categories = config.categories or {}
@@ -92,6 +95,8 @@ function mod:initialize()
 
 	-- Create Frames
 	mod:create_bags()
+	mod:create_bank()
+	mod:hook_blizzard_functions()
 
 	-- mod:create_bank()
 end
@@ -103,6 +108,7 @@ function mod:config_callback()
 	if (not config.enabled) then return end
 
 	mod:update_bags()
+	mod:update_bank()
 end
 
 --===============================================
@@ -130,7 +136,9 @@ local function create_button(parent)
 
 	return button
 end
-function mod:create_container(name, start_id, end_id)
+
+
+function mod:create_container(name, ids, bagids)
 	local bags = CreateFrame("Frame", "bd"..name, UIParent)
 	mod.border = bdUI.border
 	bags:SetSize(500, 400)
@@ -154,8 +162,8 @@ function mod:create_container(name, start_id, end_id)
 	bags.header = header
 
 	-- bag replacements
-	local containers = mod:create_containers(bags, start_id, end_id)
-	containers:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, mod.border)
+	local bag_slots_containers = mod:create_containers(bags, bagids)
+	bag_slots_containers:SetPoint("BOTTOMRIGHT", bags, "TOPRIGHT", 0, mod.border)
 
 	-- footer
 	local footer = CreateFrame("frame", nil, bags)
@@ -193,6 +201,7 @@ function mod:create_container(name, start_id, end_id)
 	local sort_bags = create_button(header)
 	sort_bags.text:SetText("S")
 	sort_bags:SetPoint("RIGHT", close_button, "LEFT", -4, 0)
+	sort_bags.callback = SortBags
 	bags.sorter = sort_bags
 
 	-- bags
@@ -200,7 +209,7 @@ function mod:create_container(name, start_id, end_id)
 	bags_button.text:SetText("B")
 	bags_button:SetPoint("RIGHT", sort_bags, "LEFT", -4, 0)
 	bags_button.callback = function()
-		containers:SetShown(not containers:IsShown())
+		bag_slots_containers:SetShown(not bag_slots_containers:IsShown())
 	end
 
 	-- money
@@ -230,7 +239,7 @@ function mod:create_container(name, start_id, end_id)
 	end
 
 	-- create parent bags for id searching
-	for bagID = start_id, end_id do
+	for k, bagID in pairs(ids) do
 		local f = CreateFrame("Frame", 'bdBagsItemContainer'..bagID, bags)
 		f:SetID(bagID)
 		mod.bag_frames[bagID] = f
@@ -238,4 +247,49 @@ function mod:create_container(name, start_id, end_id)
 
 	mod.containers[name:lower()] = bags
 	return bags
+end
+
+--===============================================
+-- Replace blizzard functions to open our bags
+--===============================================
+function mod:hook_blizzard_functions()
+	local function close_all()
+		mod.bags:Hide()
+		-- print("close_all")
+	end
+	local function open_all()
+		mod.bags:Show()
+		-- if (BankFrame:IsShown()) then
+		-- 	mod.bank:Show()
+		-- 	mod:update_bank()
+		-- end
+		-- print("open_all")
+	end
+
+	local function close_bag()
+		mod.bags:Hide()
+		-- print("close_bag")
+	end
+
+	local function open_bag()
+		mod.bags:Show()
+		-- print("open_bag")
+	end
+
+	local function toggle_bag()
+		mod.bags:SetShown(not mod.bags:IsShown())
+		-- print("toggle_bag")
+	end
+
+	mod:RawHook("ToggleBackpack", toggle_bag, true)
+	mod:RawHook("ToggleAllBags", toggle_bag, true)
+	mod:RawHook("ToggleBag", toggle_bag, true)
+	mod:RawHook("OpenAllBags", open_all, true)
+	mod:RawHook("OpenBackpack", open_bag, true)
+	mod:RawHook("OpenBag", open_bag, true)
+	mod:RawHook("CloseBag", close_bag, true)
+	mod:RawHook("CloseBackpack", close_bag, true)
+	mod:RawHook("CloseAllBags", close_all, true)
+	hooksecurefunc("CloseSpecialWindows", close_all)
+
 end

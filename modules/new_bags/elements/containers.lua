@@ -81,14 +81,16 @@ local bag_slot_methods = {
 	end,
 }
 
-function mod:create_containers(parent, start_id, end_id)
+function mod:create_containers(parent, bagids)
 	local containers = CreateFrame("frame", nil, parent)
-	containers:SetSize(((30 + mod.border) * (end_id - start_id)) + (mod.border*4) - mod.border, 30 + (mod.border*4))
+	containers:SetSize(((30 + mod.border) * #bagids) + (mod.border*4) - mod.border, 30 + (mod.border*4))
 	containers:Hide()
 	bdUI:set_backdrop(containers)
 
+	-- local someids 
+
 	local last = nil
-	for i = start_id + 1, end_id do
+	for k, i in pairs(bagids) do
 		local bag_slot = CreateFrame("ItemButton", "bdBagsBackpack"..i, containers)
 		bag_slot:SetSize(30, 30)
 		bag_slot.invSlot = ContainerIDToInventoryID(i)

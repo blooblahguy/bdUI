@@ -181,8 +181,6 @@ mod.item_pool_create = function(self)
 	button:SetWidth(30)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
-	-- button:SetScript('OnShow', button.OnShow)
-	-- button:SetScript('OnHide', button.OnHide)
 
 	bdUI:set_backdrop(button)
 	Mixin(button, methods)
@@ -199,14 +197,14 @@ end
 --========================================
 -- POSITION ITEMS
 --========================================
-function mod:position_items(parent, items, pool, count)
+function mod:position_items(category, parent, pool)
 	-- loop through items now
 	local last, lastrow, index = nil, nil, 1
 
 	local spacing = mod.border
 	local cat_spacing = 20
 	local config = mod.config
-	local num = #items
+	local num = #category.items
 	if (num == 0) then num = 1 end
 
 	local columns = math.min(num, config.bag_max_column)
@@ -215,17 +213,18 @@ function mod:position_items(parent, items, pool, count)
 	-- end
 	local rows = math.ceil(num / columns)
 
-	-- print(parent.name, columns, rows)
-	
 	local height = ((config.bag_size + spacing) * rows) - spacing
 	local width = ((config.bag_size + spacing) * columns) - spacing
-	width = math.max(width, parent.dragger:GetWidth() + parent.text:GetWidth())
+	width = math.max(width, category.frame.dragger:GetWidth() + category.frame.text:GetWidth())
 
-	for i = 1, #items do
-		local itemLink, bag, slot, itemID = unpack(items[i])
+	for i = 1, #category.items do
+		local itemLink, bag, slot, itemID = unpack(category.items[i])
 		local button = pool:Acquire()
 		button:Show()
+		-- print(bag)
 		button:SetParent(mod.bag_frames[bag])
+		-- button:SetParent(parent)
+		-- button:SetFrameLevel(20)
 		button:SetID(slot)
 		button:SetSize(config.bag_size, config.bag_size)
 		button.bag = bag
@@ -233,13 +232,13 @@ function mod:position_items(parent, items, pool, count)
 
 		button:update()
 
-		if (count ~= nil) then
+		if (category.count ~= nil) then
 			button.blank:Show()
-			SetItemButtonCount(button, count)
+			SetItemButtonCount(button, category.count)
 		end
 
 		if (not lastrow) then
-			button:SetPoint("TOPLEFT", parent.container, "TOPLEFT", 0, 0)
+			button:SetPoint("TOPLEFT", category.frame.container, "TOPLEFT", 0, 0)
 			lastrow = button
 		elseif (index > columns) then
 			button:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -spacing)
