@@ -65,6 +65,12 @@ local config = {
 				label = "Resources",
 				args = {
 					{
+						key = "resources_enable",
+						value = true,
+						type = "toggle",
+						label = "Enable Resource Bar"
+					},
+					{
 						key = "resources_width",
 						value = 200,
 						min = 40,

@@ -13,19 +13,19 @@ end
 mod.update_resources = function(self, unit)
 	-- power
 	self.Resources.power:SetSize(config.resources_width, config.resources_power_height)
-	if (config.resources_power_height == 0) then
+	if (config.resources_power_height == 0 or not config.resources_enable) then
 		self.Resources.power:Hide()
 	else
 		self.Resources.power:Show()
 	end
 	-- primary
 	self.Resources.primary:SetSize(config.resources_width, config.resources_primary_height)
-	if (config.resources_primary_height == 0) then
+	if (config.resources_primary_height == 0 or not config.resources_enable) then
 		self.Resources.primary:Hide()
 	end
 	-- secondary
 	self.Resources.secondary:SetSize(config.resources_width, config.resources_secondary_height)
-	if (config.resources_secondary_height == 0) then
+	if (config.resources_secondary_height == 0 or not config.resources_enable) then
 		self.Resources.secondary:Hide()
 	end
 
