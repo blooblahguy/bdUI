@@ -23,10 +23,16 @@ local function update_healthbars(self, unit)
 	GameTooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 	GameTooltipStatusBar:RegisterEvent("UNIT_HEALTH")
 	GameTooltipStatusBar:SetScript("OnEvent", function(self)
+		if (not UnitExists("mouseover")) then return end
+		
 		local hp, hpmax = UnitHealth("mouseover"), UnitHealthMax("mouseover")
 		self:SetMinMaxValues(0, hpmax)
 		self:SetValue(hp)
-		self:SetStatusBarColor( mod:getUnitColor() )
+		if (UnitIsPlayer("mouseover")) then
+			self:SetStatusBarColor( mod:getUnitColor() )
+		else
+			self:SetStatusBarColor( GameTooltipTextLeft1:GetTextColor() )
+		end
 
 		local perc = 0
 		if (hp > 0 and hpmax > 0) then
@@ -108,6 +114,16 @@ local function replace_tooltip_lines(self, unit)
 	local isFriend = UnitIsFriend("player", unit)
 	local friendColor = (factionGroup == "Horde" or not isFriend) and {r = 1, g = 0.15, b = 0} or {r = 0, g = 0.55, b = 1}
 
+	-- delete lines in the "hide" table
+	local hide = {}
+	hide["Horde"] = true
+	hide["Alliance"] = true
+	hide["PvE"] = true
+	hide["PvP"] = true
+	for k, v in pairs(hide) do
+		GameTooltip:DeleteLine(k, true)
+	end
+
 	-- Set Name
 
 	if UnitIsPlayer(unit) then
@@ -182,13 +198,6 @@ local function update_tootlip(self)
 
 	-- dynamic tooltip functions
 	dynamic_tooltip_information(self, unit)
-
-	-- skin tooltip
-	-- skin_tooltip(self, unit)
-
-	local color = self.TopLeftCorner:GetVertexColor()
-	local color2 = self.LeftEdge:GetVertexColor()
-	print(color, color2)
 end
 
 function mod:create_tooltips()
@@ -222,33 +231,17 @@ function mod:create_tooltips()
 		local frame = _G[tooltips[i]]
 		hook_and_skin(frame)
 	end
-	
-
-	-- delete lines in the "hide" table
-	local hide = {}
-	hide["Horde"] = true
-	hide["Alliance"] = true
-	hide["PvE"] = true
-	hide["PvP"] = true
-	for k, v in pairs(hide) do
-		local txt, line = GameTooltip:FindLine(k)
-		if (line) then
-			GameTooltip:DeleteLine(line, true)
-		end
-	end
 
 	---------------------------------------------------------------------
 	-- hook main styling functions
 	---------------------------------------------------------------------
-	-- GameTooltip:HookScript('OnShow', on_show)
 	GameTooltip:HookScript('OnTooltipSetUnit', update_tootlip)
-	-- mod:RegisterEvent("PLAYER_LOGIN")
-	-- mod:SetScript("OnEvent", function()
-	-- 	if (LibDBIconTooltip) then
-	-- 		LibDBIconTooltip:SetScript('OnShow', on_show)
-	-- 	end
-	-- end)
-	-- function GameTooltip_UnitColor(unitToken) return mod:getReactionColor(unitToken) end
+	mod:RegisterEvent("PLAYER_LOGIN")
+	mod:SetScript("OnEvent", function()
+		if (LibDBIconTooltip) then
+			LibDBIconTooltip:SetScript('OnShow', hook_and_skin)
+		end
+	end)
 end
 
 
