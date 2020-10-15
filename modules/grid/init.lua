@@ -284,23 +284,23 @@ local config = {
 				label = "Truncate names to: ",
 				tooltip = "Longer names will be trucated to this size",
 			},
-			{
-				key = "aliases",
-				type = "repeater",
-				label = "Player Aliases",
-				args = {
-					{
-						key = "player_name",
-						type = "input",
-						label = "Player Name",
-					},
-					{
-						key = "player_alias",
-						type = "input",
-						label = "Player Alias"
-					}
-				}
-			},
+			-- {
+			-- 	key = "aliases",
+			-- 	type = "repeater",
+			-- 	label = "Player Aliases",
+			-- 	args = {
+			-- 		{
+			-- 			key = "player_name",
+			-- 			type = "input",
+			-- 			label = "Player Name",
+			-- 		},
+			-- 		{
+			-- 			key = "player_alias",
+			-- 			type = "input",
+			-- 			label = "Player Alias"
+			-- 		}
+			-- 	}
+			-- },
 		}
 	},
 
