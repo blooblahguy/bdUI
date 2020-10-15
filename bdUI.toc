@@ -178,6 +178,7 @@ modules\tooltips\functions.lua
 modules\tooltips\core.lua
 modules\tooltips\elements\tooltipcolor.lua
 modules\tooltips\elements\namehover.lua
+modules\tooltips\elements\targetinfo.lua
 
 # Unitframes
 modules\unitframes\init.lua

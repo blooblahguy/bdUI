@@ -276,11 +276,13 @@ mod.additional_elements = {
 local function layout(self, unit)
 	mod.units[unit] = self
 	self:RegisterForClicks('AnyDown')
-	self:SetScript('OnEnter', function()
+	self:SetScript('OnEnter', function(self)
 		self.Health.highlight:Show()
+		UnitFrame_OnEnter(self)
 	end)
-	self:SetScript('OnLeave', function()
+	self:SetScript('OnLeave', function(self)
 		self.Health.highlight:Hide()
+		UnitFrame_OnLeave(self)
 	end)
 
 	-- Health

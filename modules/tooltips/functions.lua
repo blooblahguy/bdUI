@@ -33,15 +33,16 @@ function mod:strip(frame)
 	end
 end
 
-function mod:getcolor()
+function mod:getUnitColor(unit)
+	unit = unit or "mouseover"
 	local reaction = UnitReaction("mouseover", "player") or 5
 	
-	if UnitIsPlayer("mouseover") then
-		local _, class = UnitClass("mouseover")
+	if UnitIsPlayer(unit) then
+		local _, class = UnitClass(unit)
 		local color = RAID_CLASS_COLORS[class]
 		return color.r, color.g, color.b
-	elseif UnitCanAttack("player", "mouseover") then
-		if UnitIsDead("mouseover") then
+	elseif UnitCanAttack("player", unit) then
+		if UnitIsDead(unit) then
 			return 136/255, 136/255, 136/255
 		else
 			if reaction<4 then
@@ -51,8 +52,12 @@ function mod:getcolor()
 			end
 		end
 	else
-		if reaction<4 then
+		if (reaction < 4) then
 			return 48/255, 113/255, 191/255
+		-- elseif (UnitClass(unit)) then
+		-- 	local _, class = UnitClass(unit)
+		-- 	local color = RAID_CLASS_COLORS[class]
+		-- 	return color.r, color.g, color.b 
 		else
 			return 1, 1, 1
 		end
@@ -122,13 +127,17 @@ end
 --Delete Line
 GameTooltip["DeleteLine"] = function(self, line, exact)
 	local numLines, originalNum, barNum = self:NumLines()
+	local line2 = false
 	if type(line) == "number" then
 		line = _G["GameTooltipTextLeft"..line]
+		line2 = _G["GameTooltipTextRight"..line]
 	elseif type(line) == "string" then
 		line = self:FindLine(line, exact)
 	end
 	if line then
 		originalNum = self:GetLine(line)
+		line2 = _G["GameTooltipTextRight"..originalNum]
+		-- print(originalNum)
 		if line ~= _G["GameTooltipTextLeft"..numLines] then
 			local number = self:GetLine(line)
 			local tbl = {}
@@ -151,6 +160,10 @@ GameTooltip["DeleteLine"] = function(self, line, exact)
 		line.deleted = true
 		line:SetText("")
 		line:Hide()
+		if (line2) then
+			line2:SetText("")
+			line2:Hide()
+		end
 		self:Show()
 	end
 end

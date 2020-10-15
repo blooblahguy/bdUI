@@ -26,85 +26,86 @@ updater:Hide()
 -- BUTTON FUNCTIONS
 --=========================================
 -- This actually colors the button, main function
-local function UpdateButtonUsable(self, force)
-	if force then
-		buttonColors[self] = nil
-	end
+-- local function UpdateButtonUsable(self, force)
+-- 	if force then
+-- 		buttonColors[self] = nil
+-- 	end
 
-	local action = self.action
-	local isUsable, notEnoughMana = IsUsableAction(action)
-	local colorkey = "normal"
-	if (isUsable) then
-		if (ActionHasRange(action) and IsActionInRange(action) == false) then
-			colorkey = "outrange"
-		end
-	else
-		colorkey = "unusable"
-		if (notEnoughMana) then
-			colorkey = "outmana"
-		end
-	end
+-- 	local action = self.action
+-- 	local isUsable, notEnoughMana = IsUsableAction(action)
+-- 	print(IsUsableAction(action))
+-- 	local colorkey = "normal"
+-- 	if (isUsable) then
+-- 		if (ActionHasRange(action) and IsActionInRange(action) == false) then
+-- 			colorkey = "outrange"
+-- 		end
+-- 	else
+-- 		colorkey = "unusable"
+-- 		if (notEnoughMana) then
+-- 			colorkey = "outmana"
+-- 		end
+-- 	end
 
-	-- cache results, because SetVertexColor is expensive, we don't want to recall it if unecessary
-	if buttonColors[self] == colorkey then return end
-	buttonColors[self] = colorkey
+-- 	-- cache results, because SetVertexColor is expensive, we don't want to recall it if unecessary
+-- 	if buttonColors[self] == colorkey then return end
+-- 	buttonColors[self] = colorkey
 
-	local r, g, b = unpack(colors[colorkey])
-	self.icon:SetVertexColor(r, g, b)
-end
+-- 	local r, g, b = unpack(colors[colorkey])
+-- 	self.icon:SetVertexColor(r, g, b)
+-- end
 
--- since we stripped the OnUpdate from the button, we gotta reimplement this blizzard code
-local function UpdateButtonFlash(self, elapsed)
-	if self.flashing ~= 1 then return end
+-- -- since we stripped the OnUpdate from the button, we gotta reimplement this blizzard code
+-- local function UpdateButtonFlash(self, elapsed)
+-- 	if self.flashing ~= 1 then return end
 
-	self.flashtime = self.flashtime + elapsed
-	if (self.flashtime >= ATTACK_BUTTON_FLASH_TIME) then
-		local flashTexture = self.Flash;
-		if ( flashTexture:IsShown() ) then
-			flashTexture:Hide();
-		else
-			flashTexture:Show();
-		end
+-- 	self.flashtime = self.flashtime + elapsed
+-- 	if (self.flashtime >= ATTACK_BUTTON_FLASH_TIME) then
+-- 		local flashTexture = self.Flash;
+-- 		if ( flashTexture:IsShown() ) then
+-- 			flashTexture:Hide();
+-- 		else
+-- 			flashTexture:Show();
+-- 		end
 
-		self.flashtime = 0;
-	end
-end
+-- 		self.flashtime = 0;
+-- 	end
+-- end
 
---=========================================
--- UPDATER FUNCTIONS
--- Loop through / enable OnUpdater as necessary
---=========================================
-local function UpdateButtons(elapsed)
-	if next(buttons) then
-		for button in pairs(buttons) do
-			UpdateButtonUsable(button)
-			UpdateButtonFlash(button, elapsed)
-		end
+-- --=========================================
+-- -- UPDATER FUNCTIONS
+-- -- Loop through / enable OnUpdater as necessary
+-- --=========================================
+-- local function UpdateButtons(elapsed)
+-- 	if next(buttons) then
+-- 		for button in pairs(buttons) do
+-- 			UpdateButtonUsable(button)
+-- 			UpdateButtonFlash(button, elapsed)
+-- 		end
 
-		return true
-	end
+-- 		return true
+-- 	end
 
-	return false
-end
-local function RequestUpdate()
-	if next(buttons) then
-		updater:Show()
-	end
-end
+-- 	return false
+-- end
+-- local function RequestUpdate()
+-- 	if next(buttons) then
+-- 		updater:Show()
+-- 	end
+-- end
 
--- add button to the queue if it's visible and actionable
--- then run the onupdate if we're passed the throttle time
-local function UpdateButtonStatus(self)
-	local action = self.action
+-- -- add button to the queue if it's visible and actionable
+-- -- then run the onupdate if we're passed the throttle time
+-- local function UpdateButtonStatus(self)
+-- 	local action = self.action
 
-	if action and self:IsVisible() and HasAction(action) then
-		buttons[self] = true
-	else
-		buttons[self] = nil
-	end
+-- 	if action and self:IsVisible() and HasAction(action) then
+-- 		buttons[self] = true
+-- 	else
+-- 		buttons[self] = nil
+-- 	end
 
-	RequestUpdate()
-end
+-- 	RequestUpdate()
+-- end
 
 --=====================================================
 -- Init
@@ -135,5 +136,3 @@ hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange
 	local r, g, b = unpack(colors[colorkey])
 	button.icon:SetVertexColor(r, g, b)
 end)
--- hooksecurefunc('ActionButton_Update', UpdateButtonStatus)
--- hooksecurefunc('ActionButton_UpdateUsable', function(button) UpdateButtonUsable(button, true) end)
