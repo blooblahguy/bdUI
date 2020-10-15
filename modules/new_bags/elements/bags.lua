@@ -72,7 +72,7 @@ function mod:create_bags()
 
 	-- currencies
 	local currencies = mod:create_currencies("bags", mod.bags.footer)
-	currencies:SetPoint("LEFT", mod.bags.footer, "LEFT", 8, 0)
+	currencies:SetPoint("TOPLEFT", mod.bags.footer, "TOPLEFT", 8, 0)
 end
 
 
@@ -245,5 +245,7 @@ function mod:draw_bags()
 
 	-- now position the categories since we have dimensions
 	local width, height = mod:position_categories(mod.bags.container, loop_cats, mod.bags.cat_pool)
+	mod.bags:update_size(width, height)
+	mod:currencies_update()
 	mod.bags:update_size(width, height)
 end

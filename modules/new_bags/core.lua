@@ -159,8 +159,8 @@ function mod:create_container(name, start_id, end_id)
 
 	-- footer
 	local footer = CreateFrame("frame", nil, bags)
-	footer:SetPoint("TOPLEFT", bags, "BOTTOMLEFT", 0, 30)
-	footer:SetPoint("BOTTOMRIGHT", bags, "BOTTOMRIGHT", 0, 0)
+	footer:SetPoint("TOPLEFT", bags, "BOTTOMLEFT", 0, 0)
+	footer:SetPoint("TOPRIGHT", bags, "BOTTOMRIGHT", 0, 0)
 	bags.footer = footer
 
 	-- add category

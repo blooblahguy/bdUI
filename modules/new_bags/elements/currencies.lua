@@ -3,36 +3,102 @@ local mod = bdUI:get_module("Bags (beta)")
 
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 
+--============================================
+-- allow for tracking beyond 3
+--============================================
 MAX_WATCHED_TOKENS = 10
 for i = 3, MAX_WATCHED_TOKENS do
 	local frame = CreateFrame("button", "BackpackTokenFrameToken"..i, BackpackTokenFrame, "BackpackTokenTemplate")
 	BackpackTokenFrame.Tokens[i] = frame
 end
 
-function mod:create_currencies(name, parent)
-	-- local name, isHeader, isExpanded, isUnused, isWatched, count, extraCurrencyType, icon, itemID = GetCurrencyListInfo(i)
 
-	local currencies = CreateFrame("frame", nil, parent)
+--============================================
+-- Currency object
+--============================================
+local currencies = {}
+currencies.watchers = {}
+
+--============================================
+-- Currency updates
+--============================================
+function mod:currencies_update()
+	for i = 1, MAX_WATCHED_TOKENS do
+		currencies.watchers[i]:Hide()
+	end
+
+	local index = 1
+	local last = nil
+	local lastrow = nil
+	local maxwidth = mod.bags:GetWidth() - 40
+	local newheight = 0
+	local rowwidth = 0
+	currencies:SetSize(maxwidth, 30)
+
+	for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
+		local currency = C_CurrencyInfo.GetCurrencyListInfo(i)
+
+		if (currency.isShowInBackpack) then
+			local frame = currencies.watchers[index]
+
+			frame:Show()
+			frame:ClearAllPoints()
+			frame:SetText(AbbreviateLargeNumbers(currency.quantity))
+			frame.icon:SetTexture(currency.iconFileID)
+			frame.currencyID = i
+			rowwidth = rowwidth + frame:GetWidth() + 10
+
+			if (not last) then
+				frame:SetPoint("TOPLEFT", currencies, "TOPLEFT", 0, 0)
+				lastrow = frame
+				newheight = newheight + frame:GetHeight()
+			elseif (rowwidth > maxwidth) then
+				rowwidth = 0
+				frame:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -0)
+				lastrow = frame
+				newheight = newheight + frame:GetHeight() + 0
+			else
+				frame:SetPoint("LEFT", last, "RIGHT", 10, 0)
+			end
+
+			last = frame
+			index = index + 1
+		end
+
+		if (index == MAX_WATCHED_TOKENS) then break end
+	end
+
+	mod.bags.footer:SetHeight(newheight)
+	mod.bags.footer:SetPoint("TOPLEFT", mod.bags, "BOTTOMLEFT", 0, newheight)
+	mod.bags.footer:SetPoint("TOPRIGHT", mod.bags, "BOTTOMRIGHT", 0, newheight)
+
+	currencies:SetHeight(newheight)
+end
+
+
+--============================================
+-- Create the appropriate # of currency trackers
+--============================================
+function mod:create_currencies(name, parent)
+	currencies = CreateFrame("frame", nil, parent)
 	currencies:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	currencies:RegisterEvent("PLAYER_ENTERING_WORLD")
-	currencies:SetScript("OnEvent", currencies.update)
+	currencies:SetScript("OnEvent", mod.currencies_update)
 	currencies:SetSize(200, 30)
 	currencies.watchers = {}
-	
-	local texture = currencies:CreateTexture(nil, "OVERLAY")
 
 	local last = nil
 	for i = 1, MAX_WATCHED_TOKENS do
 		local currency = CreateFrame("button", nil, currencies)
 		currency:SetHeight(20)
-		currency.text = currency:CreateFontString(nil, "OVERLAY")
-		currency.text:SetFont(bdUI.media.font, 12, "OUTLINE")
-		currency.text:SetPoint("LEFT")
 
 		currency.icon = currency:CreateTexture(nil, "OVERLAY")
-		currency.icon:SetPoint("LEFT", currency.text, "RIGHT", 5, 1)
+		currency.icon:SetPoint("LEFT")
 		currency.icon:SetSize(16, 16)
 		currency.icon:SetTexCoord(.07, .93, .07, .93)
+		currency.text = currency:CreateFontString(nil, "OVERLAY")
+		currency.text:SetFont(bdUI.media.font, 12, "OUTLINE")
+		currency.text:SetPoint("LEFT", currency.icon, "RIGHT", 5, -1)
 
 		local bg = currency:CreateTexture(nil, "BORDER")
 		bg:SetPoint("TOPLEFT", currency.icon, "TOPLEFT", -mod.border, mod.border)
@@ -53,42 +119,11 @@ function mod:create_currencies(name, parent)
 			GameTooltip:Hide()
 		end)
 
-		if (not last) then
-			currency:SetPoint("LEFT", currencies, "LEFT", 0, 0)
-		else
-			currency:SetPoint("LEFT", last, "RIGHT", 10, 0)
-		end
-
-		last = currency
 		currencies.watchers[i] = currency
 	end
 
-	function currencies:update()
-		for i = 1, MAX_WATCHED_TOKENS do
-			currencies.watchers[i]:Hide()
-		end
-
-		local index = 1
-		for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
-			local currency = C_CurrencyInfo.GetCurrencyListInfo(i)
-
-			if (currency.isShowInBackpack) then
-				local frame = currencies.watchers[index]
-
-				frame:Show()
-				frame:SetText(AbbreviateLargeNumbers(currency.quantity))
-				frame.icon:SetTexture(currency.iconFileID)
-				frame.currencyID = i
-
-				index = index + 1
-			end
-			if (index == MAX_WATCHED_TOKENS) then break end
-		end
-	end
-
-	hooksecurefunc("BackpackTokenFrame_Update", currencies.update)
-
-	currencies:update()
+	mod:currencies_update()
+	hooksecurefunc("BackpackTokenFrame_Update", mod.currencies_update)
 
 	return currencies
 end
