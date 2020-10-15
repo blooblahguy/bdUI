@@ -33,8 +33,8 @@ function mod:create_bags()
 	end)
 
 	-- currencies
-	local currencies = mod:create_currencies("bags", mod.bags.footer)
-	currencies:SetPoint("TOPLEFT", mod.bags.footer, "TOPLEFT", 8, 0)
+	mod.bags.currencies = mod:create_currencies("bags", mod.bags.footer)
+	mod.bags.currencies:SetPoint("TOPLEFT", mod.bags.footer, "TOPLEFT", 8, 0)
 end
 
 

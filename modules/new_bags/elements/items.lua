@@ -187,6 +187,7 @@ mod.item_pool_create = function(self)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
 
+	-- really surprising that i have to do this, itembuttons dont come with tooltip functionality in the bank main bag
 	button:HookScript("OnEnter", function(self, ...)
 		if (self.bag == -1) then
 			self.GetInventorySlot = ButtonInventorySlot;

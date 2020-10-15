@@ -226,7 +226,11 @@ function mod:create_container(name, ids, bagids)
 	-- callback for sizing
 	function bags:update_size(width, height)
 		-- print(height)
-		bags:SetSize(width, height + header:GetHeight() + footer:GetHeight())
+		if (bags.currencies) then
+			bags:SetSize(width, height + header:GetHeight() + footer:GetHeight())
+		else
+			bags:SetSize(width, height + header:GetHeight() + 10)
+		end
 	end
 
 	-- create parent bags for id searching
