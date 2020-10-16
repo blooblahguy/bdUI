@@ -112,6 +112,7 @@ updater:Hide()
 -- Register all hooks and event handlers
 --=====================================================
 hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange, inRange)
+	if (not mod.config.enabled) then return end
 	if (not checksRange) then 
 		return 
 	end
