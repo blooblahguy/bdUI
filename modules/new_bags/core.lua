@@ -357,9 +357,3 @@ function mod:hook_blizzard_functions()
 	hooksecurefunc("CloseSpecialWindows", close_all)
 
 end
-
-
-
-function ContainerFrame_GenerateFrame(frame, size, id)
-	print(size, id)
-end
