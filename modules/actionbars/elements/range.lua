@@ -117,6 +117,7 @@ hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange
 		return 
 	end
 	local action = button.action
+	if (not action) then return end
 	local isUsable, notEnoughMana = IsUsableAction(action)
 	local colorkey = "normal"
 	if (isUsable) then
