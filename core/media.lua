@@ -400,14 +400,14 @@ end
 	end
 
 	-- Skin Button
-	function bdUI:skin_button(f, small,color)
+	function bdUI:skin_button(f, small, color)
 		local colors = bdUI.media.backdrop
-		local hovercolors = {0,0.55,.85,1}
+		local hovercolors = bdUI.media.blue
 		if (color == "red") then
 			colors = {.6,.1,.1,0.6}
 			hovercolors = {.6,.1,.1,1}
 		elseif (color == "blue") then
-			colors = {0,0.55,.85,0.6}
+			colors = bdUI.media.blue
 			hovercolors = {0,0.55,.85,1}
 		elseif (color == "dark") then
 			colors = bdUI.media.backdrop
@@ -419,8 +419,6 @@ end
 		f:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 2, insets = {left=2,top=2,right=2,bottom=2}})
 		f:SetBackdropColor(unpack(colors)) 
 		f:SetBackdropBorderColor(unpack(bdUI.media.border))
-		f:SetNormalFontObject("BDUI_SMALL")
-		f:SetHighlightFontObject("BDUI_SMALL")
 		f:SetPushedTextOffset(0,-1)
 		f:SetScale(1)
 		
@@ -430,10 +428,19 @@ end
 		if (small and f:GetWidth() <= 24 ) then
 			f:SetWidth(20)
 		end
+
+		bdUI:set_highlight(f)
+		f.highlighter:SetTexture(bdUI.media.flat)
+		f.highlighter:SetVertexColor(1, 1, 1)
+		f.highlighter:SetAlpha(.1)
 		
 		if (small) then
+			f:SetNormalFontObject("BDUI_SMALL")
+			f:SetHighlightFontObject("BDUI_SMALL")
 			f:SetHeight(18)
 		else
+			f:SetNormalFontObject("BDUI_MEDIUM")
+			f:SetHighlightFontObject("BDUI_MEDIUM")
 			f:SetHeight(28)
 		end
 		

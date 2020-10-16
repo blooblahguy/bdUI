@@ -91,6 +91,7 @@ function mod:initialize()
 	-- Create Frames
 	mod:create_bags()
 	mod:create_bank()
+	mod:create_reagents()
 	mod:hook_blizzard_functions()
 
 	mod:create_bag_slots()
@@ -109,7 +110,7 @@ end
 --===============================================
 -- Create Container
 --===============================================
-local function create_button(parent)
+function mod:create_button(parent)
 	local button = CreateFrame("Button", nil, parent)
 	button:SetSize(20, 20)
 	button.text = button:CreateFontString(nil, "OVERLAY")
@@ -137,7 +138,6 @@ function mod:create_container(name, ids, bagids)
 	local bags = CreateFrame("Frame", "bd"..name, UIParent)
 	mod.border = bdUI.border
 	bags:SetSize(500, 400)
-	bags:SetFrameStrata("HIGH")
 	bags:EnableMouse(true)
 	bags:SetMovable(true)
 	bags:SetUserPlaced(true)
@@ -163,7 +163,7 @@ function mod:create_container(name, ids, bagids)
 	bags.footer = footer
 
 	-- add category
-	local add_category = create_button(footer)
+	local add_category = mod:create_button(footer)
 	add_category.text:SetText("+")
 	add_category:SetPoint("RIGHT", footer, "RIGHT", -4, 0)
 	add_category.text:SetFont(bdUI.media.font, 14, "OUTLINE")
@@ -181,7 +181,7 @@ function mod:create_container(name, ids, bagids)
 	bags.container = container
 
 	-- close
-	local close_button = create_button(header)
+	local close_button = mod:create_button(header)
 	close_button.text:SetText("X")
 	close_button:SetPoint("RIGHT", header, "RIGHT", -4, 0)
 	close_button.callback = function(self)
@@ -189,14 +189,18 @@ function mod:create_container(name, ids, bagids)
 	end
 
 	-- sort
-	local sort_bags = create_button(header)
+	local sort_bags = mod:create_button(header)
 	sort_bags.text:SetText("S")
 	sort_bags:SetPoint("RIGHT", close_button, "LEFT", -4, 0)
-	sort_bags.callback = SortBags
+	if(name == "Bags") then
+		sort_bags.callback = SortBags
+	elseif (name == "Bank") then
+		sort_bags.callback = function() BankItemAutoSortButton:Click() end
+	end
 	bags.sorter = sort_bags
 
 	-- bags
-	local bags_button = create_button(header)
+	local bags_button = mod:create_button(header)
 	bags_button.text:SetText("B")
 	bags_button:SetPoint("RIGHT", sort_bags, "LEFT", -4, 0)
 	bags_button.callback = function()

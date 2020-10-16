@@ -72,6 +72,7 @@ local function move_up(self, arg1, arg2, checked)
 	end
 
 	mod:draw_bags()
+	mod:draw_bank()
 end
 local function move_down(self, arg1, arg2, checked)
 	-- sort categories
@@ -93,6 +94,7 @@ local function move_down(self, arg1, arg2, checked)
 	end
 
 	mod:draw_bags()
+	mod:draw_bank()
 end
 
 --===============================
