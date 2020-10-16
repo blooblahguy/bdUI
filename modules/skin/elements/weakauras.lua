@@ -47,7 +47,9 @@ wa_skin:RegisterEvent("ADDON_LOADED")
 wa_skin:SetScript("OnEvent", function(self, event,addon)
 	if (event == "ADDON_LOADED" and not addon == "WeakAuras") then return end
 
-	mod:skin_weak_auras()
+	C_Timer.After(1, function()
+		mod:skin_weak_auras()
+	end)
 end)
 
 function mod:skin_weak_auras()
