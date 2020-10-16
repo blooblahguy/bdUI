@@ -178,7 +178,7 @@ function mod:draw_bags()
 
 	-- find out which categories we should display
 	local loop_cats = mod:get_visible_categories()
-
+	
 	-- 
 	for i = 1, #loop_cats do
 		local category = loop_cats[i]

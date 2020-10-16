@@ -20,34 +20,108 @@ local config = {
 	},
 
 	{
-		key = "bag_size",
-		type = "range",
-		min = 10,
-		max = 50,
-		step = 2,
-		value = 30,
-		label = "Bag Button Size"
+		key = "bags",
+		type = "tab",
+		value = "Bags",
+		args = {
+			{
+				key = "bag_size",
+				type = "range",
+				min = 10,
+				max = 50,
+				step = 2,
+				value = 30,
+				label = "Bag Button Size"
+			},
+
+			{
+				key = "bag_height",
+				type = "range",
+				min = 200,
+				max = 800,
+				step = 20,
+				value = 300,
+				label = "Bag Max Height"
+			},
+
+			{
+				key = "bag_max_column",
+				type = "range",
+				min = 2,
+				max = 20,
+				step = 1,
+				value = 11,
+				label = "Bag Category Max Columns"
+			},
+		}
 	},
 
 	{
-		key = "bag_height",
-		type = "range",
-		min = 200,
-		max = 800,
-		step = 20,
-		value = 300,
-		label = "Bag Max Height"
+		key = "banks",
+		type = "tab",
+		value = "Banks",
+		args = {
+			{
+				key = "bank_size",
+				type = "range",
+				min = 10,
+				max = 50,
+				step = 2,
+				value = 30,
+				label = "Bank Button Size"
+			},
+
+			{
+				key = "bank_height",
+				type = "range",
+				min = 200,
+				max = 800,
+				step = 20,
+				value = 300,
+				label = "Bank Max Height"
+			},
+
+			{
+				key = "bank_max_column",
+				type = "range",
+				min = 2,
+				max = 20,
+				step = 1,
+				value = 11,
+				label = "Bank Category Max Columns"
+			},
+		}
 	},
 
 	{
-		key = "bag_max_column",
-		type = "range",
-		min = 2,
-		max = 20,
-		step = 1,
-		value = 11,
-		label = "Category Max Columns"
+		key = "regeants",
+		type = "tab",
+		value = "Reagents",
+		args = {
+			{
+				key = "reagent_size",
+				type = "range",
+				min = 10,
+				max = 50,
+				step = 2,
+				value = 30,
+				label = "Reagent Button Size"
+			},
+
+			{
+				key = "reagent_columns",
+				type = "range",
+				min = 1,
+				max = 50,
+				step = 1,
+				value = 15,
+				label = "Reagent Max Columns"
+			},
+		}
 	},
+
+
+	
 }
 
 local hide = false

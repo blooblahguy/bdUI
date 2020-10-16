@@ -175,7 +175,7 @@ local dragger_methods = {
 		local parent = self:GetParent()
 
 		if (parent.locked) then 
-			self:Hide() 
+			self:Hide()
 			return 
 		end
 		
@@ -195,7 +195,7 @@ local dragger_methods = {
 
 				if (not mod.show_all) then
 					mod.show_all = true
-					mod:draw_bags()					
+					mod:update_bags()					
 				end
 			end
 		else
@@ -453,7 +453,7 @@ function mod:create_category(name, options)
 	ordermax = math.max(options.order or 0, ordermax) + 1
 	order = options.order or ordermax
 
-	if (mod.categories[name]) then return end
+	if (mod.categories[name] and not options.locked) then return end
 
 	mod.categories[name] = {}
 	local category = mod.categories[name]
@@ -474,29 +474,54 @@ function mod:create_category(name, options)
 	category.order = order
 	category.locked = options.locked
 	category.brand_new = not options.default
+
+	
 end
 
 function mod:get_visible_categories()
 	local loop_cats = {}
+	local all_cats = {}
 	
-	-- find visible only
+	-- add to normal array
 	for k, category in pairs(mod.categories) do
-		if ((mod.show_all and not category.locked) or category.brand_new or #category.items > 0) then
-			loop_cats[#loop_cats + 1] = category
-			category.brand_new = false
-		end
+		all_cats[#all_cats + 1] = category
 	end
 
 	-- sort and reset index
-	table.sort(loop_cats, function(a, b)
+	table.sort(all_cats, function(a, b)
 		return a.order < b.order
 	end)
 
-	for i = 1, #loop_cats do
-		local category = loop_cats[i]
+	-- now sort in new order, and add to new array to return for visible
+	for i = 1, #all_cats do
+		local category = all_cats[i]
 		if (not category.locked) then
 			category.order = i
 		end
+
+		local show = false
+		if (mod.show_all) then
+			show = true
+		else
+			if (category.brand_new) then
+				show = true
+			end
+			if (#category.items > 0) then
+				show = true
+			end
+		end
+		if (category.locked and not category.free and #category.items == 0) then
+			show = false
+		end
+
+		if (show) then
+			loop_cats[#loop_cats + 1] = category
+			category.brand_new = false
+		end
+		-- if (((mod.show_all) or category.brand_new or #category.items > 0) and not category.locked) then
+		-- 	loop_cats[#loop_cats + 1] = category
+		-- 	category.brand_new = false
+		-- end
 	end
 
 	return loop_cats

@@ -32,12 +32,12 @@ function mod:initialize()
 	mod:create_category("Free", {
 		["default"] = true,
 		["locked"] = true,
+		["free"] = true,
 		["order"] = -2,
 	})
 
 	mod:create_category("Bags", {
 		["default"] = true,
-		["duplicate"] = true,
 		["locked"] = true,
 		["order"] = -1,
 	})
