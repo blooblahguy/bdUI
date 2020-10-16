@@ -35,7 +35,7 @@ end
 
 function mod:getUnitColor(unit)
 	unit = unit or "mouseover"
-	local reaction = UnitReaction("mouseover", "player") or 5
+	local reaction = UnitReaction(unit, "player") or 5
 	
 	if UnitIsPlayer(unit) then
 		local _, class = UnitClass(unit)
