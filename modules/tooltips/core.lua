@@ -101,6 +101,7 @@ local function replace_tooltip_lines(self, unit)
 	local race = UnitRace(unit) or ""
 	local creatureType = UnitCreatureType(unit)
 	local factionGroup = select(1, UnitFactionGroup(unit))
+	local replacedClass = false
 
 	-- Color level by difficulty
 	local level = UnitLevel(unit)
@@ -144,7 +145,8 @@ local function replace_tooltip_lines(self, unit)
 			local line = _G['GameTooltipTextLeft'..i]
 			if (not line or not line:GetText()) then break end
 
-			if (level and line:GetText():find('Level '..level) or (creatureType and line:GetText():find('^'..creatureType))) then
+			if (not replacedClass and (level and line:GetText():find('Level '..level) or (creatureType and line:GetText():find('^'..creatureType)))) then
+				replacedClass = true
 				line:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), creatureType or 'Unknown')
 			end
 		end
