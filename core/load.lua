@@ -34,6 +34,18 @@ loader:SetScript("OnEvent", function(self, event, addon)
 	end
 end)
 
+if (IsAddOnLoaded("bdCore")) then
+	DisableAddOn("bdCore")
+	DisableAddOn("bdChat")
+	DisableAddOn("bdNameplates")
+	DisableAddOn("bdMinimap")
+	DisableAddOn("bdBuffs")
+	DisableAddOn("bdGrid")
+	DisableAddOn("bdBags")
+	DisableAddOn("bdTooltips")
+	DisableAddOn("bdUnitframes")
+end
+
 local sharedmedia = CreateFrame("frame", nil, bdParent)
 sharedmedia:RegisterEvent("LOADING_SCREEN_DISABLED")
 sharedmedia:SetScript("OnEvent", function()

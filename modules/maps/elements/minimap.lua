@@ -4,9 +4,15 @@ local config
 --easier to change in the future if more minimap types want to be supported
 local rectangleFileLocation = "Interface\\Addons\\bdUI\\media\\rectangle.tga"
 
+mod.default_shape = GetMinimapShape
+mod.our_shape = function() return "SQUARE" end
+
 function mod:config_callback()
 	config = mod.config
-	if (not config.enabled) then return false end
+	if (not config.enabled) then
+		GetMinimapShape = mod.default_shape
+		return false
+	end
 
 	-- show/hide time
 	if not IsAddOnLoaded("Blizzard_TimeManager") then
@@ -21,7 +27,9 @@ function mod:config_callback()
 	end
 
 	-- Minimap Shape
-	function GetMinimapShape() return "SQUARE" end
+	GetMinimapShape = mod.our_shape
+
+
 	if (config.shape == "Rectangle") then
 		Minimap:SetMaskTexture(rectangleFileLocation)
 		Minimap.background:SetSize(config.size, config.size*.75)

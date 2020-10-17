@@ -178,6 +178,7 @@ local function update_threat(self, event, unit)
 	if (event == "OnShow") then return false end
 	if (event == "OnUpdate") then return false end
 
+
 	-- store these values for reuse
 	unit_information(self, unit)
 
@@ -193,6 +194,7 @@ local function update_threat(self, event, unit)
 	elseif (config.specialunits[UnitName(unit)]) then
 		healthbar:SetStatusBarColor(unpack(config.specialcolor))
 	else
+		-- print("update threat", self.status)
 		healthbar:SetStatusBarColor(unpack(self.smartColors))
 	end
 
@@ -254,7 +256,8 @@ local function nameplate_create(self, unit)
 	self.Health.frequentUpdates = true
 	bdUI:create_shadow(self.Health, 10)
 	self.Health._shadow:SetColor(unpack(config.glowcolor))
-	-- self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
+	-- THREAT
+	self.Health.UpdateColor = update_threat
 
 	--==========================================
 	-- QUEST ICON
@@ -311,10 +314,7 @@ local function nameplate_create(self, unit)
 		self.absorbBar:SetValue(absorb)
 	end
 
-	--==========================================
-	-- THREAT
-	--==========================================
-	self.Health.Override = update_threat
+	
 
 	--==========================================
 	-- UNIT NAME
