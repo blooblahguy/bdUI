@@ -87,6 +87,7 @@ local function Enable(self, unit)
 		self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
 		self:RegisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
 		self:RegisterEvent("UNIT_TARGET", Path)
+		self:RegisterEvent("PLAYER_TARGET_CHANGED", Path)
 
 		return true
 	end
@@ -102,6 +103,7 @@ local function Disable(self)
 		self:UnregisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
 		self:UnregisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
 		self:UnregisterEvent("UNIT_TARGET", Path)
+		self:UnregisterEvent("PLAYER_TARGET_CHANGED", Path)
 	end
 end
 
