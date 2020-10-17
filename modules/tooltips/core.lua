@@ -141,15 +141,20 @@ local function replace_tooltip_lines(self, unit)
 		end
 	else
 		-- get in here to update level and creature 
+		local minwidth = 0
 		for i = 2, self:NumLines() do
 			local line = _G['GameTooltipTextLeft'..i]
+			local text = line:GetText();
 			if (not line or not line:GetText()) then break end
+			minwidth = math.max(minwidth, strlen(text) * 6.7)
 
 			if (not replacedClass and (level and line:GetText():find('Level '..level) or (creatureType and line:GetText():find('^'..creatureType)))) then
 				replacedClass = true
 				line:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), creatureType or 'Unknown')
 			end
 		end
+
+		self:SetMinimumWidth(minwidth)
 	end
 end
 
