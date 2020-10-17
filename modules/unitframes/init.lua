@@ -56,6 +56,13 @@ local config = {
 				options = {"Outside", "Inside"},
 				label = "Text Location"
 			},
+			-- {
+			-- 	key = "aurastyle",
+			-- 	value = "Icons",
+			-- 	type = "select",
+			-- 	options = {"Icons", "Bars"},
+			-- 	label = "Aura Style"
+			-- },
 			--=========================================
 			-- RESOURCES
 			--=========================================
