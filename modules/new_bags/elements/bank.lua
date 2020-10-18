@@ -15,7 +15,7 @@ mod.bank.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 function mod:create_bank()
 	local config = mod.config
 	mod.bank:SetPoint("TOPLEFT", bdParent, "TOPLEFT", 30, -30)
-	mod.bank.container:SetWidth(config.bag_width)
+	mod.bank.container:SetWidth(config.bag_height)
 
 	mod.bank:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	mod.bank:RegisterEvent('EQUIPMENT_SWAP_FINISHED')

@@ -11,7 +11,7 @@ mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 function mod:create_bags()
 	local config = mod.config
 	mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -30, 30)
-	mod.bags.container:SetWidth(config.bag_width)
+	mod.bags.container:SetWidth(config.bag_height)
 
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	mod.bags:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
