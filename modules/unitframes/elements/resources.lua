@@ -46,7 +46,7 @@ mod.create_resources = function(self, unit)
 
 	-- displays class resources
 	self.Resources = CreateFrame("frame", "bdResources", UIParent)
-	self.Resources:SetPoint("CENTER", bdParent, "CENTER", 0, -200)
+	self.Resources:SetPoint("CENTER", bdParent, "CENTER", 0, -180)
 	self.Resources:EnableMouse(false)
 	bdMove:set_moveable(self.Resources, "Player Resources")
 

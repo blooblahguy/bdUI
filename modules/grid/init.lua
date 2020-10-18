@@ -244,7 +244,7 @@ local config = {
 			{
 				key = "group_growth",
 				type = "select",
-				value = "Upwards",
+				value = "Downwards",
 				options = {"Left","Right","Upwards","Downwards"},
 				label = "Group stack direction",
 				tooltip = "Group stacking direction for when a new group is added.",

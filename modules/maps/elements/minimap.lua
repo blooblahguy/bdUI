@@ -7,12 +7,26 @@ local rectangleFileLocation = "Interface\\Addons\\bdUI\\media\\rectangle.tga"
 mod.default_shape = GetMinimapShape
 mod.our_shape = function() return "SQUARE" end
 
+-- local rec_mask = Minimap:CreateTexture("nil")
+-- dump(Minimap:GetRegions())
+
+-- print(mod.default_shape)
+-- print(mod.our_shape)
+
+function mod:set_shape()
+	if (not mod.config.enabled) then
+		GetMinimapShape = mod.default_shape
+		return
+	end
+	GetMinimapShape = mod.our_shape
+end
+
 function mod:config_callback()
 	config = mod.config
-	if (not config.enabled) then
-		GetMinimapShape = mod.default_shape
-		return false
-	end
+	
+	-- Minimap Shape
+	if (not config.enabled) then return end
+	mod:set_shape()
 
 	-- show/hide time
 	if not IsAddOnLoaded("Blizzard_TimeManager") then
@@ -25,10 +39,6 @@ function mod:config_callback()
 		TimeManagerClockButton:SetAlpha(0)
 		TimeManagerClockButton:Hide()
 	end
-
-	-- Minimap Shape
-	GetMinimapShape = mod.our_shape
-
 
 	if (config.shape == "Rectangle") then
 		Minimap:SetMaskTexture(rectangleFileLocation)

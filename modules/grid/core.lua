@@ -615,7 +615,7 @@ end
 function mod:create_container()
 	mod.raidpartyholder = CreateFrame('frame', "bdGrid", UIParent)
 	mod.raidpartyholder:SetSize(config['width'], config['height']*5)
-	mod.raidpartyholder:SetPoint("LEFT", bdParent, "LEFT", 34, -188)
+	mod.raidpartyholder:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 160)
 	bdMove:set_moveable(mod.raidpartyholder, "Raid Frames")
 end
 

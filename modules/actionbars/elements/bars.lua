@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Actionbars")
 local v = mod.variables
 
-local defaultPadding = 14
+local defaultPadding = 10
 
 --===============================================================
 -- Actionbar 1
@@ -16,7 +16,7 @@ function mod:create_actionbar1()
 	cfg.moveName = "Actionbar 1"
 	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.actionPage = "[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
-	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 100}
+	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 80}
 
 	local buttonName = "ActionButton"
 	local numButtons = NUM_ACTIONBAR_BUTTONS
@@ -217,21 +217,48 @@ end
 -- BagBar
 --===============================================================
 function mod:create_bagbar()
-	cfg = {}
-	cfg.cfg = "bagbar"
-	cfg.frameName = "bdActionbars_BagBar"
-	cfg.moveName = "Bagbar"
+	-- cfg = {}
+	-- cfg.cfg = "bagbar"
+	-- cfg.frameName = "bdActionbars_BagBar"
+	-- cfg.moveName = "Bagbar"
 	-- cfg.frameVisibility = "[petbattle] hide; show"
-	cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['microbar'] or bdParent, "TOPRIGHT", 0, defaultPadding }
+	-- cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['microbar'] or bdParent, "TOPRIGHT", 0, defaultPadding }
 	function cfg:callback(frame)
+		mod.bag:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
 		if (c.showBags) then
-			_G['bdActionbars_BagBar']:Show()
+			mod.bag:Show()
 		else
-			_G['bdActionbars_BagBar']:Hide()
+			mod.bag:Hide()
 		end
 	end
-	local buttonList = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
-	local bagbar = mod:CreateBar(buttonList, cfg)
+
+	local bag = CreateFrame("Button", "bdActionbars_BagBar", bdParent, "SecureHandlerClickTemplate, BackdropTemplate")
+	bag:SetPoint("RIGHT", mod.bars['microbar'], "LEFT", -defaultPadding, 0)
+	bag:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
+	bag:RegisterForClicks("AnyUp")
+	bag:SetScript("OnClick", function(self) ToggleAllBags()	end)
+	RegisterStateDriver(bag, "visibility", "[petbattle] hide; show")
+
+	-- ICON
+	local icon = bag:CreateTexture(nil, "ARTWORK")
+	icon:SetTexture("Interface\\Buttons\\Button-Backpack-Up")
+	icon:SetTexCoord(.1, .9, .1, .9)
+	icon:SetAllPoints()
+	bag:SetNormalTexture(icon)
+
+	-- HOVER
+	local hover = bag:CreateTexture()
+	hover:SetTexture(bdUI.media.flat)
+	hover:SetVertexColor(1, 1, 1, 0.1)
+	hover:SetAllPoints()
+	bag:SetHighlightTexture(hover)
+
+	bdMove:set_moveable(bag, "Bagbar")
+	bdUI:set_backdrop(bag)
+
+
+	-- local buttonList = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
+	-- local bagbar = mod:CreateBar(buttonList, cfg)
 end
 
 --===============================================================
@@ -245,7 +272,7 @@ function mod:create_vehicle()
 	cfg.moveName = "Vehicle Exit"
 	cfg.frameVisibility = "[canexitvehicle]c;[mounted]m;n"
 	cfg.frameVisibilityFunc = "exit"
-	cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['bar1'], "TOPLEFT", -defaultPadding, defaultPadding }
+	cfg.frameSpawn = { "CENTER", UIParent, "CENTER", 0, -40}
 	--create vehicle exit button
 	local button = CreateFrame("CHECKBUTTON", "bdActionbars_VehicleExitButton", nil, "ActionButtonTemplate, SecureHandlerClickTemplate")
 	button.icon:SetTexture("Interface\\Vehicles\\UI-Vehicles-Button-Exit-Up")

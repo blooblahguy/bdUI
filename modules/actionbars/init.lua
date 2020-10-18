@@ -170,10 +170,10 @@ local config = {
 			{
 				key = "bagbar_size",
 				type = "range",
-				min = 4,
-				max = 100,
+				min = 10,
+				max = 140,
 				step = 2,
-				value = size_sm,
+				value = size_lg,
 				label = "Bags Bar Button Size"
 			},
 
