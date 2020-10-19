@@ -19,7 +19,7 @@ mod.font_castbar = CreateFont("BDN_FONT_CASTBAR")
 -- place core functionality here
 --===============================================
 function mod:nameplate_size()
-	if (InCombatLockdown()) then return end
+	-- if (InCombatLockdown()) then return end
 
 	C_NamePlate.SetNamePlateFriendlySize(config.width, 0.1)
 	C_NamePlate.SetNamePlateEnemySize(config.width, (config.height + config.targetingTopPadding + config.targetingBottomPadding))
