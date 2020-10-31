@@ -18,7 +18,11 @@ function returnUnitItemLevel(unit)
 		end
 	end
 
-	return math.floor((ilvl / numSlots)+0.5)
+	if (ilvl and numSlots) then
+		return math.floor((ilvl / numSlots)+0.5)
+	else
+		return "err"
+	end
 end
 
 local function returnUnitSpecialization(unit)

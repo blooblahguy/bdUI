@@ -4,7 +4,7 @@ local mod = bdUI:get_module("Tooltips")
 -- add dynamic tooltip information
 local function dynamic_tooltip_information(self, unit)
 	-- who's targeting whom?
-	if (UnitExists(unit..'target')) then
+	if (unit and UnitExists(unit..'target')) then
 		local r, g, b = mod:getReactionColor(unit..'target')
 		GameTooltip:AddDoubleLine("Target", UnitName(unit..'target'), .7, .7, .7, r, g, b)
 	end
@@ -89,6 +89,8 @@ end
 
 -- replace tooltip lines with cleaned up information
 local function replace_tooltip_lines(self, unit)
+	if (not unit) then return end
+	
 	-- name info
 	local name, realm = UnitName(unit)
 	local dnd = UnitIsAFK(unit) and " |cffAAAAAA<AFK>|r " or UnitIsDND(unit) and " |cffAAAAAA<DND>|r " or ""
