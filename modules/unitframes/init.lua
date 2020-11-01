@@ -64,6 +64,28 @@ local config = {
 			-- 	label = "Aura Style"
 			-- },
 			--=========================================
+			-- INDICATORS
+			--=========================================
+			{
+				key = "indicators",
+				type = "group",
+				label = "Indicators",
+				args = {
+					{
+						key = "enable_rested_indicator",
+						value = true,
+						type = "toggle",
+						label = "Rested Indicator"
+					},
+					{
+						key = "enable_combat_indicator",
+						value = true,
+						type = "toggle",
+						label = "Combat Indicator"
+					}
+				}
+			},
+			--=========================================
 			-- RESOURCES
 			--=========================================
 			{
@@ -114,7 +136,7 @@ local config = {
 						label = "Secondary Resource Height"
 					},
 				}
-			},
+			}
 		}
 	},
 
@@ -183,6 +205,32 @@ local config = {
 				value = false,
 				label = "Hide player text"
 			},
+			--=========================================
+			-- BUFFS
+			--=========================================
+			{
+				key = "uf_buffs",
+				type = "group",
+				label = "Buffs",
+				args = {
+					{
+						key = "uf_buff_size",
+						value = 20,
+						step = 1,
+						min = 6,
+						max = 50,
+						type = "range",
+						label = "Icon size"
+					},
+					{
+						key = "uf_buff_target_match_player",
+						type = "toggle",
+						value = false,
+						label = "target buffs match player"
+					}
+				}
+			}
+			
 		}
 	},
 	--=========================================
@@ -322,6 +370,4 @@ function mod:initialize()
 	bdUI.oUF.colors.power[0] = {46/255, 130/255, 215/255}
 	bdUI.oUF.colors.power["MANA"] = {46/255, 130/255, 215/255}
 	mod:create_unitframes()
-
-	mod:config_callback()
 end

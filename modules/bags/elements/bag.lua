@@ -86,7 +86,6 @@ function mod:bag_slots()
 		count:Hide()
 		
 		bdUI:set_backdrop(f)
-		bdUI:strip_textures(f)
 		f:SetNormalTexture("")
 		f:SetPushedTexture("")
 		f:SetHighlightTexture("")

@@ -16,11 +16,9 @@ mod.custom_layout["player"] = function(self, unit)
 
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
-	mod.additional_elements.resting(self, unit)
-	mod.additional_elements.combat(self, unit)
 	mod.additional_elements.buffs(self, unit)
 
-	self.Buffs.size = 22
+	self.Buffs.size = config.uf_buff_size
 
 	self.Power:SetHeight(config.playertargetpowerheight)
 	self.Power:Show()
@@ -29,18 +27,24 @@ mod.custom_layout["player"] = function(self, unit)
 	end
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
 
-	self.RestingIndicator:ClearAllPoints()
-	if (config.textlocation == "Outside") then
-		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
-	elseif (config.textlocation == "Inside") then
-		self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
+	if (config.enable_rested_indicator) then 
+		mod.additional_elements.resting(self, unit)
+		self.RestingIndicator:ClearAllPoints()
+		if (config.textlocation == "Outside") then
+			self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
+		elseif (config.textlocation == "Inside") then
+			self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
+		end
 	end
 
-	self.CombatIndicator:ClearAllPoints()
-	if (config.textlocation == "Outside") then
-		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
-	elseif (config.textlocation == "Inside") then
-		self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
+	if (config.enable_combat_indicator) then
+		mod.additional_elements.combat(self, unit)
+		self.CombatIndicator:ClearAllPoints()
+		if (config.textlocation == "Outside") then
+			self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
+		elseif (config.textlocation == "Inside") then
+			self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
+		end
 	end
 
 	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
