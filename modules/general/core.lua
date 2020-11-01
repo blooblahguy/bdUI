@@ -18,6 +18,7 @@ function mod:initialize()
 	mod.config = mod:get_save()
 
 	mod:create_viewports()
+	mod:create_interrupt()
 	mod:create_dcbo()
 	mod:create_errorblock()
 	mod:create_gmotd()

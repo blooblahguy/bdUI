@@ -183,6 +183,9 @@ end
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
+
+	mod:create_chat_bubbles()
+	
 	if (not config.enabled) then return end
 	
 	if (not ChatFrame1.bd_backdrop) then

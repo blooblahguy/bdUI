@@ -191,37 +191,7 @@ for eclass, color in next, FACTION_BAR_COLORS do
 	end
 end
 
-------------------------------------
--- Helper funcs
-------------------------------------
-function RGBToHex(r, g, b)
-	if (type(r) == "table") then
-		g = r.g
-		b = r.b
-		r = r.r
-	end
-	if (not r and not g and not b) then
-		r = 255
-		g = 255
-		b = 255
-	end
-	r = r <= 255 and r >= 0 and r or 0
-	g = g <= 255 and g >= 0 and g or 0
-	b = b <= 255 and b >= 0 and b or 0
-	return string.format("%02x%02x%02x", r, g, b)
-end
 
-function RGBPercToHex(r, g, b)
-	if (type(r) == "table") then
-		g = r.g
-		b = r.b
-		r = r.r
-	end
-	r = r <= 1 and r >= 0 and r or 0
-	g = g <= 1 and g >= 0 and g or 0
-	b = b <= 1 and b >= 0 and b or 0
-	return string.format("%02x%02x%02x", r*255, g*255, b*255)
-end
 
 -- returns a 1-6 of how this unit reacts to you
 function mod:getUnitReactionIndex(unit)

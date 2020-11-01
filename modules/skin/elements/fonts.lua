@@ -44,7 +44,7 @@ local function changeFonts()
 	STANDARD_TEXT_FONT = NORMAL
 
 	---
-	SetFont(ChatBubbleFont,						NORMAL, 15 * fontScale, "OUTLINE")
+	SetFont(ChatBubbleFont,						NORMAL, 12 * fontScale, "OUTLINE")
 	SetFont(SystemFont_Shadow_Large_Outline,	NUMBER, 20 * fontScale, "OUTLINE")
 	SetFont(GameTooltipHeader, 					NORMAL, 14 * fontScale)
 	SetFont(NumberFont_OutlineThick_Mono_Small, NUMBER, 14 * fontScale, "OUTLINE");

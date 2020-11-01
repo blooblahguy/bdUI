@@ -46,7 +46,7 @@ function mod:config_callback()
 
 		-- castbar
 		local cbi_size = (config.height+config.castbarheight) * config.castbariconscale
-		self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)
+		self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", 2, 0)
 		self.Castbar.Icon:SetSize( cbi_size, cbi_size )
 		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
 		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
@@ -479,7 +479,7 @@ local function nameplate_create(self, unit)
 	self.Castbar:SetFrameLevel(3)
 	self.Castbar:SetStatusBarTexture(bdUI.media.flat)
 	self.Castbar:SetStatusBarColor(unpack(config.kickable))
-	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -border)
+	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -2)
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -config.castbarheight)
 	
 	-- text

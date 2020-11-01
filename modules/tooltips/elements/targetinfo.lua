@@ -72,6 +72,7 @@ end)
 -- Request the average item level of a unit to be calculated
 function mod:getAverageItemLevel(tooltip, unit)
 	if (not UnitIsPlayer(unit) or not UnitIsFriend("player", unit)) then return end
+	if (InCombatLockdown()) then return end
 
 	inspector.inspectUnit = unit
 	inspector.tooltip = tooltip
