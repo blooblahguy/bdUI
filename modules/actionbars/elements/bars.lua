@@ -224,11 +224,11 @@ function mod:create_bagbar()
 	-- cfg.frameVisibility = "[petbattle] hide; show"
 	-- cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['microbar'] or bdParent, "TOPRIGHT", 0, defaultPadding }
 	function cfg:callback(frame)
-		mod.bag:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
+		frame:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
 		if (c.showBags) then
-			mod.bag:Show()
+			frame:Show()
 		else
-			mod.bag:Hide()
+			frame:Hide()
 		end
 	end
 
@@ -329,8 +329,8 @@ function mod:create_extra()
 	cfg = {}
 	cfg.cfg = "extrabar"
 	cfg.blizzardBar = ZoneAbilityFrame
-	cfg.frameName = "bdActionbars_ExtraBar"
-	cfg.moveName = "Extra Button"
+	cfg.frameName = "bdActionbars_ZoneAbility"
+	cfg.moveName = "Zone Ability"
 	cfg.frameVisibility = "[extrabar] show; hide"
 	cfg.frameSpawn = { "LEFT", UIParent, "LEFT", 440, 0 }
 

@@ -96,6 +96,7 @@ modules\actionbars\core.lua
 modules\actionbars\elements\bars.lua
 modules\actionbars\elements\range.lua
 modules\actionbars\elements\hoverbind.lua
+modules\actionbars\elements\zoneability.lua
 modules\actionbars\elements\hotkeys.lua
 
 # Bags

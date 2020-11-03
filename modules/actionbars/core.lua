@@ -38,6 +38,7 @@ function mod:initialize()
 	mod:create_possess()
 	-- mod:create_extra()
 	mod:create_bagbar()
+	mod:create_zone_ability()
 
 	-- Flyout
 	mod:hook_flyout()

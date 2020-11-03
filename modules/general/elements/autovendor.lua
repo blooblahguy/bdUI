@@ -17,6 +17,7 @@ sell:SetScript("OnEvent", function()
 	if (mod.config.autosell) then
 		
 		local profit = 0
+		local index = 0
 		for bagID = 0, 4 do
 			for slot = 0, GetContainerNumSlots(bagID) do
 				local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bagID, slot);
@@ -24,6 +25,12 @@ sell:SetScript("OnEvent", function()
 				if (texture and quality == 0) then
 					local price = select(11, GetItemInfo(itemLink))
 					profit = profit + price
+
+					-- C_Timer.After(0.005 * index, function()
+					-- 	if (not locked) then
+					-- 		UseContainerItem(bagID, slot)
+					-- 	end
+					-- end)
 					if (not locked) then
 						UseContainerItem(bagID, slot)
 					else
