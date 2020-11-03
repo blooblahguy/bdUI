@@ -35,11 +35,22 @@ mod.custom_layout["target"] = function(self, unit)
 			end
 		end
 	end
-
+	
 	self.Buffs:ClearAllPoints()
-	self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 7, 2)
-	self.Buffs:SetSize(80, 60)
-	self.Buffs.size = 12
+
+	if (config.uf_buff_target_match_player) then
+		self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
+		self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
+		self.Buffs:SetSize(config.playertargetwidth, 60)
+		self.Buffs.size = config.uf_buff_size
+		self.Buffs['growth-x'] = "RIGHT"
+		self.Buffs.initialAnchor  = "BOTTOMLEFT"
+	else
+		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 7, 2)
+		self.Buffs:SetSize(80, 60)
+		self.Buffs.size = 12
+	end
+
 	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
