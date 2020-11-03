@@ -20,7 +20,7 @@ function mod:color_tooltips()
 	MELEE_RANGE = "|CFF00FF00Melee Range|r"
 	SPELL_RANGE = "%s |CFF00FF00yd range|r"
 	SPELL_ON_NEXT_SWING = "|CFFFF66CCNext melee|r"
-	ITEM_SOULBOUND = "|CFFFF6633Soulbound|r"
+	-- ITEM_SOULBOUND = "|CFFFF6633Soulbound|r"
 	ITEM_ACCOUNTBOUND = "|CFFCC66FFAccount Bound|r";
 	ITEM_BIND_ON_EQUIP = "|CFFCC66FFBinds when|r |CFFFF66CCequipped|r"
 	ITEM_BIND_ON_PICKUP = "|CFFCC66FFBinds when|r |CFFFF66CCpicked up|r"
