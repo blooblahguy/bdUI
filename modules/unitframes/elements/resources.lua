@@ -15,18 +15,22 @@ mod.update_resources = function(self, unit)
 	self.Resources.power:SetSize(config.resources_width, config.resources_power_height)
 	if (config.resources_power_height == 0 or not config.resources_enable) then
 		self.Resources.power:Hide()
-	else
+	elseif (config.resources_power_height ~= 0) then
 		self.Resources.power:Show()
 	end
 	-- primary
 	self.Resources.primary:SetSize(config.resources_width, config.resources_primary_height)
 	if (config.resources_primary_height == 0 or not config.resources_enable) then
 		self.Resources.primary:Hide()
+	elseif (config.resources_primary_height ~= 0) then
+		self.Resources.primary:Show()
 	end
 	-- secondary
 	self.Resources.secondary:SetSize(config.resources_width, config.resources_secondary_height)
 	if (config.resources_secondary_height == 0 or not config.resources_enable) then
 		self.Resources.secondary:Hide()
+	elseif (config.resources_secondary_height ~= 0) then
+		self.Resources.secondary:Show()
 	end
 
 	-- now update stack positioning
@@ -199,7 +203,9 @@ mod.create_resources = function(self, unit)
 
 		-- resize available bars
 		function self.ClassPower:PostUpdate(cur, max, changed, powerType)
-			
+			self._height = self._height or config.resources_primary_height
+			if (self._height ~= config.resources_primary_height) then changed = true end
+
 			if (not self.__isEnabled) then
 				self.__owner.Resources.primary:Hide()
 				return
