@@ -156,11 +156,14 @@ local function replace_tooltip_lines(self, unit)
 			end
 		end
 
+		minwidth = math.min(minwidth, 200)
+
 		self:SetMinimumWidth(minwidth)
 	end
 end
 
 local function kill_texture(tex)
+	if (not tex) then return end
 	tex:Hide()
 	tex = nil
 end

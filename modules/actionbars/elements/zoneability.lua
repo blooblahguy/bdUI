@@ -2,6 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Actionbars")
 
 function mod:create_zone_ability()
+	if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then return end
 	local za_holder = CreateFrame("frame", "bdUI_ZoneAbility", UIParent)
 	za_holder:SetSize(ZoneAbilityFrame:GetSize())
 	za_holder:SetPoint("BOTTOM", 0, 0)

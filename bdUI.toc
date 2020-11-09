@@ -4,6 +4,9 @@
 ## SavedVariables: BDUI_SAVE
 ## X-oUF: bdUF
 
+# For all versions of game
+core\compatibility.lua
+
 # Ace
 lib\ace\LibStub.lua
 lib\ace\utf8data.lua
@@ -47,18 +50,17 @@ lib\bdCallbacks\bdCallbacks.lua
 lib\bdMove\bdMove.lua
 lib\bdConfig\bdConfig.xml
 
-# Initialize
-core\init.lua
-
 # Locales
 core\locales\enUS.lua
 core\locales\deDE.lua
+
+# Initialize
+core\init.lua
 
 # Core
 core\api.lua
 core\performance.lua
 core\commands.lua
-core\compatibility.lua
 core\core.lua
 core\media.lua
 core\auras.lua

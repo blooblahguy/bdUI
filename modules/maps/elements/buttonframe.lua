@@ -29,7 +29,9 @@ function mod:create_button_frame()
 	if (bdUI:get_game_version() == "shadowlands") then
 		Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
 	end
-	Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_LIST_UPDATE")
+	if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC) then
+		Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_LIST_UPDATE")
+	end
 	Minimap.buttonFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
 
 	Minimap.buttonFrame:SetSize(Minimap.background:GetWidth() - (bdUI.border * 2), config.buttonsize)

@@ -3,11 +3,6 @@ local bdUI, c, l = unpack(select(2, ...))
 local noop = function() return end
 local noob = CreateFrame("frame", nil, UIParent)
 
--- library initialization
-if (bdUI:get_game_version() == "vanilla") then
-	bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
-end
-
 --====================================================
 -- VANILLA
 --====================================================
@@ -54,6 +49,20 @@ if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 	MiniMapTrackingButtonShine = MiniMapTrackingButtonShine or noob
 	QueueStatusMinimapButton = QueueStatusMinimapButton or noob
 	QueueStatusMinimapButtonIcon = QueueStatusMinimapButtonIcon or noob
+
+	-- threat functions
+	local threatcolors = {
+		[0] = {0.69, 0.69, 0.69},
+		[1] = {1, 1, 0.47},
+		[2] = {1, 0.6, 0},
+		[3] = {1, 0, 0},
+	}
+	function GetThreatStatusColor(level)
+		return unpack(threatcolors[level])
+	end
+
+	Enum.PvPUnitClassification = Enum.PvPUnitClassification or {}
+	Enum.SummonStatus = Enum.SummonStatus or {}
 end
 
 --====================================================

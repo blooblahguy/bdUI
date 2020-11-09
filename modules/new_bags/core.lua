@@ -8,7 +8,7 @@ local config = {}
 -- default variables
 mod.containers = {}
 mod.bag_frames = {}
-mod.myilvl = select(1, GetAverageItemLevel())
+mod.myilvl = GetAverageItemLevel and select(1, GetAverageItemLevel()) or 0
 local ace_hook = LibStub("AceHook-3.0")
 ace_hook:Embed(mod)
 

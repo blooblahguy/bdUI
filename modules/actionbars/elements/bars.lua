@@ -232,7 +232,7 @@ function mod:create_bagbar()
 		end
 	end
 
-	local bag = CreateFrame("Button", "bdActionbars_BagBar", bdParent, "SecureHandlerClickTemplate, BackdropTemplate")
+	local bag = CreateFrame("Button", "bdActionbars_BagBar", bdParent, BackdropTemplateMixin and "SecureHandlerClickTemplate, BackdropTemplate" or "SecureHandlerClickTemplate")
 	bag:SetPoint("RIGHT", mod.bars['microbar'], "LEFT", -defaultPadding, 0)
 	bag:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
 	bag:RegisterForClicks("AnyUp")
