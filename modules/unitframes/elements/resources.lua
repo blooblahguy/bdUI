@@ -15,22 +15,18 @@ mod.update_resources = function(self, unit)
 	self.Resources.power:SetSize(config.resources_width, config.resources_power_height)
 	if (config.resources_power_height == 0 or not config.resources_enable) then
 		self.Resources.power:Hide()
-	elseif (config.resources_power_height ~= 0) then
+	else
 		self.Resources.power:Show()
 	end
 	-- primary
 	self.Resources.primary:SetSize(config.resources_width, config.resources_primary_height)
-	if (config.resources_primary_height == 0 or not config.resources_enable or not self.Resources.__isEnabled) then
+	if (config.resources_primary_height == 0 or not config.resources_enable) then
 		self.Resources.primary:Hide()
-	elseif (config.resources_primary_height ~= 0) then
-		self.Resources.primary:Show()
 	end
 	-- secondary
 	self.Resources.secondary:SetSize(config.resources_width, config.resources_secondary_height)
-	if (config.resources_secondary_height == 0 or not config.resources_enable or not self.Resources.secondary.__isEnabled) then
+	if (config.resources_secondary_height == 0 or not config.resources_enable) then
 		self.Resources.secondary:Hide()
-	elseif (config.resources_secondary_height ~= 0) then
-		self.Resources.secondary:Show()
 	end
 
 	-- now update stack positioning
@@ -39,6 +35,7 @@ end
 
 -- Mega resource display
 mod.create_resources = function(self, unit)
+	if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then return end
 	if (unit ~= "player") then return end
 	config = mod.save
 
@@ -60,9 +57,7 @@ mod.create_resources = function(self, unit)
 	self.Resources.power:SetSize(config.resources_width, config.resources_power_height)
 	self.Resources.power:SetStatusBarTexture(bdUI.media.flat)
 	self.Resources.power:RegisterEvent('UNIT_POWER_FREQUENT')
-	if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC) then
-		self.Resources.power:RegisterEvent('UNIT_POWER_POINT_CHARGE')
-	end
+	self.Resources.power:RegisterEvent('UNIT_POWER_POINT_CHARGE')
 	self.Resources.power:RegisterEvent('UNIT_DISPLAYPOWER')
 	self.Resources.power:RegisterEvent('UNIT_MAXPOWER')
 	-- self.Resources.power:RegisterEvent('UNIT_POWER_BAR_SHOW')
@@ -112,7 +107,6 @@ mod.create_resources = function(self, unit)
 	bdUI:set_backdrop(self.Resources.secondary)
 
 	if (class == "SHAMAN") then
-		self.Resources.secondary.__isEnabled = true
 		-- Totem Statusbars
 		self.Resources.primary:Show()
 		self.TotemBar = {}
@@ -137,7 +131,6 @@ mod.create_resources = function(self, unit)
 		end
 
 	elseif (class == "DEATHKNIGHT") then
-		self.Resources.secondary.__isEnabled = true
 		-- Necrostrike Indicator
 		-- self.Health.NecroticOverlay = self.Resources.secondary:CreateTexture(nil, "OVERLAY", self.Resources.secondary)
 		-- self.Health.NecroticOverlay:SetAllPoints(self.Resources.secondary)
@@ -175,7 +168,6 @@ mod.create_resources = function(self, unit)
 	else
 		-- also add stagger bar
 		if (class == "MONK") then
-			self.Resources.secondary.__isEnabled = true
 			print(SPEC_MONK_BREWMASTER ~= GetSpecialization())
 			self.Stagger = CreateFrame('StatusBar', nil, self.Resources.secondary)
 			self.Stagger:SetAllPoints()
@@ -207,13 +199,9 @@ mod.create_resources = function(self, unit)
 
 		-- resize available bars
 		function self.ClassPower:PostUpdate(cur, max, changed, powerType)
-			self._height = self._height or config.resources_primary_height
-			if (self._height ~= config.resources_primary_height) then changed = true end
-
-			self.__owner.Resources.__isEnabled = self.__isEnabled
-			if (not self.__isEnabled or max == 0) then
+			
+			if (not self.__isEnabled) then
 				self.__owner.Resources.primary:Hide()
-				self.__owner.Resources.__isEnabled = false
 				return
 			elseif (changed) then
 				for index = 1, max do
@@ -222,8 +210,7 @@ mod.create_resources = function(self, unit)
 					bar:SetSize(width, config.resources_primary_height)
 				end
 			end
-
-			mod.update_resources(self.__owner, self.__owner.unit)
+			self.__owner.Resources.primary:Show()
 		end
 	end
 
