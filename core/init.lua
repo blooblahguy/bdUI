@@ -60,17 +60,17 @@ bdUI.hidden.Show = function() return end
 -- Fonts
 --===================================================================
 bdUI.font_large = CreateFont("BDUI_LARGE")
-bdUI.font_large:SetFont(bdUI.media.font, 15, "OUTLINE")
+bdUI.font_large:SetFont(bdUI.media.font, 15, "THINOUTLINE")
 bdUI.font_large:SetShadowColor(0, 0, 0)
 bdUI.font_large:SetShadowOffset(0, 0)
 
 bdUI.font_medium = CreateFont("BDUI_MEDIUM")
-bdUI.font_medium:SetFont(bdUI.media.font, 13, "OUTLINE")
+bdUI.font_medium:SetFont(bdUI.media.font, 13, "THINOUTLINE")
 bdUI.font_medium:SetShadowColor(0, 0, 0)
 bdUI.font_medium:SetShadowOffset(0, 0)
 
 bdUI.font_medium = CreateFont("BDUI_SMALL")
-bdUI.font_medium:SetFont(bdUI.media.font, 11, "OUTLINE")
+bdUI.font_medium:SetFont(bdUI.media.font, 11, "THINOUTLINE")
 bdUI.font_medium:SetShadowColor(0, 0, 0)
 bdUI.font_medium:SetShadowOffset(0, 0)
 
