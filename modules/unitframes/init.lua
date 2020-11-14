@@ -56,13 +56,13 @@ local config = {
 				options = {"Outside", "Inside"},
 				label = "Text Location"
 			},
-			-- {
-			-- 	key = "aurastyle",
-			-- 	value = "Icons",
-			-- 	type = "select",
-			-- 	options = {"Icons", "Bars"},
-			-- 	label = "Aura Style"
-			-- },
+			{
+				key = "aurastyle",
+				value = "Icons",
+				type = "select",
+				options = {"Icons", "Bars"},
+				label = "Aura Style"
+			},
 			--=========================================
 			-- INDICATORS
 			--=========================================
@@ -370,4 +370,13 @@ function mod:initialize()
 	bdUI.oUF.colors.power[0] = {46/255, 130/255, 215/255}
 	bdUI.oUF.colors.power["MANA"] = {46/255, 130/255, 215/255}
 	mod:create_unitframes()
+
+	mod:config_callback()
+	
+	-- mod.loader = CreateFrame("frame", nil, UIParent)
+	-- mod.loader:RegisterEvent("PLAYER_ENTERING_WORLD")
+	-- mod.loader:SetScript("OnEvent", function(self, event)
+	-- 	print("callback")
+	-- end)
+
 end

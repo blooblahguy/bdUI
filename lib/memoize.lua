@@ -83,6 +83,8 @@ function memoize.memoize(f, cache)
 	cache = cache or memoizecache
 	currentf = f
 
+	setmetatable(cache, {__mode = "kv"}) -- make it weak
+
 	return function (...)
 		local params = {...}
 
@@ -98,9 +100,8 @@ function memoize.memoize(f, cache)
 		end
 
 		return unpack(results)
-	end
+	end	
 end
 
 -- bdCore modification: this being weak means that empty values will be expunged on collectgarbage
-setmetatable(memoizecache, {__mode = "kv"}) -- make it weak
 setmetatable(memoize, { __call = function(_, ...) return memoize.memoize(...) end })

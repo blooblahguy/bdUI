@@ -155,9 +155,16 @@ end
 			Mixin(frame, BackdropTemplateMixin)
 		end
 		frame:SetBackdrop({bgFile = bdUI.media.flat, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
-		frame:SetBackdropColor(unpack(bdUI.media.border))
+		frame:SetBackdropColor(unpack(bdUI.media.backdrop))
+		frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 
 		frame.background = true
+
+		bdUI:add_action("bdUI/border_size, loaded", function()
+			local border = bdUI:get_border(frame)
+
+			frame:SetBackdrop({bgFile = bdUI.media.flat, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
+		end)
 	end
 
 	function bdUI:get_border_size()
@@ -189,7 +196,7 @@ end
 	function bdUI:set_backdrop(frame, force_border)
 		if (frame._background) then return end
 
-		local border = bdUI.border or 2
+		local border = bdUI.border or bdUI:get_border(frame)
 		if (force_border) then
 			border = bdUI:get_border(frame)
 		end

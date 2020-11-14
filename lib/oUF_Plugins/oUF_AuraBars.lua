@@ -50,7 +50,7 @@ end
 
 local function createAuraBar(element, index)
 	local statusBar = CreateFrame('StatusBar', element:GetName() .. 'StatusBar' .. index, element)
-	statusBar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
+	statusBar:SetStatusBarTexture(element.texture)
 	statusBar:SetMinMaxValues(0, 1)
 	statusBar.tooltipAnchor = element.tooltipAnchor
 	statusBar:SetScript('OnEnter', onEnter)
@@ -67,10 +67,10 @@ local function createAuraBar(element, index)
 	icon:SetPoint('RIGHT', statusBar, 'LEFT', -(element.gap or 2), 0)
 	icon:SetSize(element.height, element.height)
 
-	local nameText = statusBar:CreateFontString(nil, 'OVERLAY', 'NumberFontNormal')
+	local nameText = statusBar:CreateFontString(nil, 'OVERLAY', element.fontObject)
 	nameText:SetPoint('LEFT', statusBar, 'LEFT', 2, 0)
 
-	local timeText = statusBar:CreateFontString(nil, 'OVERLAY', 'NumberFontNormal')
+	local timeText = statusBar:CreateFontString(nil, 'OVERLAY', element.fontObject)
 	timeText:SetPoint('RIGHT', statusBar, 'RIGHT', -2, 0)
 
 	statusBar.icon = icon
@@ -106,6 +106,8 @@ local function updateBar(element, unit, index, offset, filter, isDebuff, visible
 		statusBar.caster = caster
 		statusBar.filter = filter
 		statusBar.isDebuff = isDebuff
+		statusBar.spellID = spellID
+		statusBar.spell = name
 		statusBar.isPlayer = caster == 'player' or caster == 'vehicle'
 
 		local show = (element.CustomFilter or customFilter) (element, unit, statusBar, name, texture,
@@ -122,17 +124,15 @@ local function updateBar(element, unit, index, offset, filter, isDebuff, visible
 
 			statusBar.duration = duration
 			statusBar.expiration = expiration
-			statusBar.spellID = spellID
-			statusBar.spell = name
 			statusBar.noTime = (duration == 0 and expiration == 0)
 
-			if not statusBar.noTime and element.sparkEnabled then
+			if not statusBar.noTime and not element.sparkDisabled then
 				statusBar.spark:Show()
 			else
 				statusBar.spark:Hide()
 			end
 
-			local r, g, b = .2, .6, 1
+			local r, g, b, a = unpack(element.baseColor)
 			if element.buffColor then r, g, b = unpack(element.buffColor) end
 			if filter == 'HARMFUL' then
 				if not debuffType or debuffType == '' then
@@ -143,8 +143,16 @@ local function updateBar(element, unit, index, offset, filter, isDebuff, visible
 				r, g, b = color.r, color.g, color.b
 			end
 
-			statusBar:SetStatusBarColor(r, g, b)
-			statusBar:SetSize(element.width, element.height)
+			statusBar:SetStatusBarColor(r, g, b, a)
+			if (not element.iconDisabled) then
+				statusBar:SetSize(element.width - element.height, element.height)
+				statusBar.icon:Show()
+				statusBar.icon.bg:Show()
+			else
+				statusBar:SetSize(element.width, element.height)
+				statusBar.icon:Hide()
+				statusBar.icon.bg:Hide()
+			end
 			statusBar.icon:SetSize(element.height, element.height)
 			statusBar:SetScript('OnUpdate', onUpdate)
 			statusBar:SetID(index)
@@ -170,9 +178,15 @@ local function SetPosition(element, from, to)
 	for i = from, to do
 		local button = element[i]
 		if(not button) then break end
+		local x = 0
+
+		if (not element.iconDisabled) then
+			x = height
+		end
+		local y = growth * (i > 1 and ((i - 1) * (height + spacing)) or 0)
 
 		button:ClearAllPoints()
-		button:SetPoint(anchor, element, anchor, (height + element.gap), growth * (i > 1 and ((i - 1) * (height + spacing)) or 0))
+		button:SetPoint(anchor, element, anchor, x, y)
 	end
 end
 
@@ -261,12 +275,16 @@ local function Enable(self)
 		element.anchoredBars = 0
 		element.width = element.width or 240
 		element.height = element.height or 12
-		element.sparkEnabled = element.sparkEnabled or true
+		element.sparkDisabled = element.sparkDisabled or false
 		element.spacing = element.spacing or 2
 		element.initialAnchor = element.initialAnchor or 'BOTTOMLEFT'
 		element.growth = element.growth or 'UP'
 		element.gap = element.gap or 2
 		element.maxBars = element.maxBars or 32
+		element.texture = element.texture or [[Interface\TargetingFrame\UI-StatusBar]]
+		element.iconDisabled = element.iconDisabled or false
+		element.fontObject = element.fontObject or "NumberFontNormal"
+		element.baseColor = element.baseColor or {.2, .6, 1, 1}
 
 		-- Avoid parenting GameTooltip to frames with anchoring restrictions,
 		-- otherwise it'll inherit said restrictions which will cause issues

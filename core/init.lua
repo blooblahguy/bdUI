@@ -5,26 +5,11 @@ engine[1] = CreateFrame("Frame", nil, UIParent) -- core ui
 engine[2] = {} -- config
 engine[3] = {} -- locale
 bdUI = engine[1]
-bdUI.oUF = ns.oUF
 bdUI.caches = {}
 bdUI.name = addonName
 bdUI.class = select(2, UnitClass("player"))
+bdUI.classColor = RAID_CLASS_COLORS[bdUI.class]
 bdUI.colorString = '|cffA02C2Fbd|r'
-bdUI.base64 = LibStub("LibBase64-1.0")
-bdUI.shared = LibStub("LibSharedMedia-3.0")
-LibStub("bdCallbacks-1.0"):New(bdUI)
-LibStub("CallbackHandler-1.0"):New(bdUI)
-bdMove = LibStub("bdMove-1.0")
-
--- library initialization
-if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then
-	bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
-end
-
--- Load bdConfig
-ns.bdConfig.media.font = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf"
-ns.bdConfig.media.font_bold = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf"
-bdUI.bdConfig = ns.bdConfig:new("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
 
 --===================================================================
 -- Basic Config
@@ -46,10 +31,6 @@ bdUI.media = {
 	blue = {.2, .4, 0.8, 1},
 	green = {.1, .7, 0.3, 1},
 }
-
--- set better fonts for libraries
-bdMove.media.font = bdUI.media.font
-bdUI.shared:Register("font", "PTSansNarrow (bdUI)", bdUI.media.font)
 
 --===================================================================
 -- Scale & Alt-UIParent 
@@ -93,10 +74,10 @@ bdUI.font_medium:SetFont(bdUI.media.font, 11, "OUTLINE")
 bdUI.font_medium:SetShadowColor(0, 0, 0)
 bdUI.font_medium:SetShadowOffset(0, 0)
 
-bdUI.font_small = CreateFont("BDUI_MONO")
-bdUI.font_small:SetFont(bdUI.media.font, 11, "OUTLINE")
-bdUI.font_small:SetShadowColor(0, 0, 0)
-bdUI.font_small:SetShadowOffset(0, 0)
+-- bdUI.font_small = CreateFont("BDUI_MONO")
+-- bdUI.font_small:SetFont(bdUI.media.font, 10, "OUTLINE")
+-- bdUI.font_small:SetShadowColor(0, 0, 0)
+-- bdUI.font_small:SetShadowOffset(0, 0)
 
 --===================================================================
 --Return game version, so that we can have cross version compatibility when possible

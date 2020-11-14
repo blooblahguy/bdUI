@@ -12,7 +12,9 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	
 	mod:create_viewports()
-	bdUI:do_action("bdUI/border_thickness")
+	bdUI:do_action("bdUI/border_size")
+
+	mod:create_fighttimer()
 end
 function mod:initialize()
 	mod.config = mod:get_save()

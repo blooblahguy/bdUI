@@ -4,19 +4,11 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout["target"] = function(self, unit)
 	local config = mod.save
 	
-	self:SetSize(config.playertargetwidth, config.playertargetheight)
-	
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "right")
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.debuffs(self, unit)
-
-	self.Power:SetHeight(config.playertargetpowerheight)
-	self.Power:Show()
-	if (config.playertargetpowerheight == 0) then
-		self.Power:Hide()
-	end
-	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
+	mod.additional_elements.aurabars(self, unit)
 
 	mod.version = bdUI:get_game_version()
 
@@ -35,21 +27,20 @@ mod.custom_layout["target"] = function(self, unit)
 			end
 		end
 	end
-	
-	self.Buffs:ClearAllPoints()
 
-	if (config.uf_buff_target_match_player) then
-		self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
-		self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-		self.Buffs:SetSize(config.playertargetwidth, 60)
-		self.Buffs.size = config.uf_buff_size
-		self.Buffs['growth-x'] = "RIGHT"
-		self.Buffs.initialAnchor  = "BOTTOMLEFT"
-	else
-		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 7, 2)
-		self.Buffs:SetSize(80, 60)
-		self.Buffs.size = 12
+	self.AuraBars.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+		isBossDebuff = isBossDebuff or false
+		nameplateShowAll = nameplateShowAll or false
+		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+
+		if (castByPlayer and (duration ~= 0 and duration < 300)) then
+			if (bdUI:filter_aura(name, casterIsPlayer, isBossDebuff, nameplateShowAll, true)) then
+				return true
+			end
+		end
 	end
+	
 
 	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -71,4 +62,42 @@ mod.custom_layout["target"] = function(self, unit)
 	
 
 	mod.align_text(self, "right")
+
+	-- config callback
+	self.callback = function()
+		-- sizing
+		self:SetSize(config.playertargetwidth, config.playertargetheight)
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
+
+		-- power
+		self.Power:SetHeight(config.playertargetpowerheight)
+		self.Power:Show()
+		if (config.playertargetpowerheight == 0) then
+			self.Power:Hide()
+		end
+		-- auras
+		self.Buffs:ClearAllPoints()
+
+		if (config.uf_buff_target_match_player) then
+			self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
+			self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
+			self.Buffs:SetSize(config.playertargetwidth, 60)
+			self.Buffs.size = config.uf_buff_size
+			self.Buffs['growth-x'] = "RIGHT"
+			self.Buffs.initialAnchor  = "BOTTOMLEFT"
+		else
+			self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 7, 2)
+			self.Buffs:SetSize(80, 60)
+			self.Buffs.size = 12
+		end
+
+		if (config.aurastyle == "Bars") then
+			self.DisabledDebuffs = self.Debuffs
+			self.Debuffs = nil
+			self:EnableElement("AuraBars")
+		else
+			self.Debuffs = self.DisabledDebuffs
+			self:DisableElement("AuraBars")
+		end
+	end
 end

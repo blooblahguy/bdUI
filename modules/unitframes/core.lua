@@ -8,20 +8,23 @@ local config
 mod.padding = 2
 mod.units = {}
 mod.custom_layout = {}
+mod.additional_elements = {}
 
 --===============================================
 -- Config callback
 --===============================================
 function mod:config_callback()
-	mod.config = mod:get_save()
-	config = mod.config
+	config = mod:get_save()
 	if (not config.enabled) then return false end
 
 	for unit, self in pairs(mod.units) do
 		local func = unit
 		if (string.find(func, "boss")) then func = "boss" end
 		if (string.find(func, "arena")) then func = "arena" end
-		mod.custom_layout[func](self, unit)
+
+		if (self.callback) then
+			self.callback(self, unit, config)
+		end
 	end
 end
 
@@ -29,249 +32,6 @@ end
 -- Core functionality
 -- place core functionality here
 --===============================================
-local function castbar_kickable(self)
-	if (self.notInterruptible) then
-		if (self.Icon) then
-			self.Icon:SetDesaturated(1)
-		end
-		self:SetStatusBarColor(0.7, 0.7, 0.7, 1)
-	else
-		if (self.Icon) then
-			self.Icon:SetDesaturated(false)
-		end
-		self:SetStatusBarColor(.1, .4, .7, 1)
-	end
-end
-
-mod.additional_elements = {
-	castbar = function(self, unit, align, icon)
-		if (not config.enablecastbars) then 
-			self:DisableElement("Castbar")
-			return
-		end
-		if (self.Castbar) then return end
-
-		local font_size = math.restrict(config.castbarheight * 0.8, 8, 14)
-
-		self.Castbar = CreateFrame("StatusBar", nil, self)
-		self.Castbar:SetFrameLevel(3)
-		self.Castbar:SetStatusBarTexture(bdUI.media.flat)
-		self.Castbar:SetStatusBarColor(.1, .4, .7, 1)
-		self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
-		self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
-		if (self.Power) then
-			self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -bdUI.border)
-			self.Castbar:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
-		end
-		
-		self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
-		self.Castbar.Text:SetFont(bdUI.media.font, font_size, "THINOUTLINE")
-		self.Castbar.Text:SetJustifyV("MIDDLE")
-
-		if (icon) then
-			self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
-			self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-			self.Castbar.Icon:SetDrawLayer('ARTWORK')
-			self.Castbar.Icon.bg = self.Castbar:CreateTexture(nil, "BORDER")
-			self.Castbar.Icon.bg:SetTexture(bdUI.media.flat)
-			self.Castbar.Icon.bg:SetVertexColor(unpack(bdUI.media.border))
-			self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -bdUI.border, bdUI.border)
-			self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
-		end
-
-		self.Castbar.SafeZone = self.Castbar:CreateTexture(nil, "OVERLAY")
-		self.Castbar.SafeZone:SetVertexColor(0.85, 0.10, 0.10, 0.20)
-		self.Castbar.SafeZone:SetTexture(bdUI.media.flat)
-
-		self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY")
-		self.Castbar.Time:SetFont(bdUI.media.font, font_size, "THINOUTLINE")
-
-		-- Positioning
-		if (align == "right") then
-			self.Castbar.Time:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
-			self.Castbar.Time:SetJustifyH("RIGHT")
-			self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
-			if (icon) then
-				self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar,"TOPRIGHT", mod.padding*2, 0)
-				self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
-			end
-		else
-			self.Castbar.Time:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
-			self.Castbar.Time:SetJustifyH("LEFT")
-			self.Castbar.Text:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
-			if (icon) then
-				self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
-				self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
-			end			
-		end
-
-		self.Castbar.PostChannelStart = castbar_kickable
-		self.Castbar.PostChannelUpdate = castbar_kickable
-		self.Castbar.PostCastStart = castbar_kickable
-		self.Castbar.PostCastDelayed = castbar_kickable
-		self.Castbar.PostCastNotInterruptible = castbar_kickable
-		self.Castbar.PostCastInterruptible = castbar_kickable
-
-		-- bdMove:set_moveable(self.Castbar, unit.." Castbar")
-		bdUI:set_backdrop(self.Castbar)
-	end,
-
-	perhppp = function(self, unit)
-		if (self.Perhp) then return end
-
-		self.Perhp = self.Health:CreateFontString(nil, "OVERLAY")
-		self.Perhp:SetFont(bdUI.media.font, 12, "OUTLINE")
-		self.Perhp:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
-
-		self.Perpp = self.Health:CreateFontString(nil, "OVERLAY")
-		self.Perpp:SetFont(bdUI.media.font, 12, "OUTLINE")
-		self.Perpp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
-		self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
-
-		self:RegisterEvent("UNIT_POWER_UPDATE", function(self)
-			self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
-		end, true)
-
-		self:Tag(self.Perhp, '[perhp]')
-		self:Tag(self.Perpp, '[perpp]')
-	end,
-
-	resting = function(self, unit)
-		if (self.RestingIndicator) then return end
-
-		local size = math.restrict(self:GetHeight() * 0.75, 8, self:GetHeight())
-
-		-- Resting indicator
-		self.RestingIndicator = self.Health:CreateTexture(nil, "OVERLAY")
-		self.RestingIndicator:SetSize(size, size)
-		self.RestingIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
-		self.RestingIndicator:SetTexCoord(0, 0.5, 0, 0.421875)
-
-		if (config.textlocation == "Outside") then
-			self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
-		elseif (config.textlocation == "Inside") then
-			self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
-		end
-	end,
-
-	combat = function(self, unit)
-		if (self.CombatIndicator) then return end
-
-		local size = math.restrict(self:GetHeight() * 0.75, 8, self:GetHeight())
-
-		-- Resting indicator
-		self.CombatIndicator = self.Health:CreateTexture(nil, "OVERLAY")
-		self.CombatIndicator:SetSize(size, size)
-		self.CombatIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
-		self.CombatIndicator:SetTexCoord(.5, 1, 0, .49)
-
-		if (config.textlocation == "Outside") then
-			self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
-		elseif (config.textlocation == "Inside") then
-			self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
-		end
-	end,
-
-	power = function(self, unit)
-		if (self.Power) then return end
-
-		-- Power
-		self.Power = CreateFrame("StatusBar", nil, self)
-		self.Power:SetStatusBarTexture(bdUI.media.flat)
-		self.Power:ClearAllPoints()
-		
-		self.Power:SetHeight(config.playertargetpowerheight)
-		self.Power.frequentUpdates = true
-		self.Power.colorPower = true
-		self.Power.Smooth = true
-		bdUI:set_backdrop(self.Power)
-
-		bdUI:add_action("bdUI/border_size, post_loaded", function()
-			local border = bdUI:get_border(self)
-			self.Power:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -border)
-			self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, -border)
-			self.Border:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", border, -border)
-		end)
-		
-	end,
-
-	buffs = function(self, unit)
-		if (self.Buffs) then return end
-
-		-- Auras
-		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
-		self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-		self.Buffs:SetSize(config.playertargetwidth, 60)
-		self.Buffs.size = 18
-		self.Buffs.initialAnchor  = "BOTTOMLEFT"
-		self.Buffs.spacing = bdUI.border
-		self.Buffs.num = 20
-		self.Buffs['growth-y'] = "UP"
-		self.Buffs['growth-x'] = "RIGHT"
-		self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-			local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-			duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-		end
-		self.Buffs.PostCreateIcon = function(buffs, button)
-			bdUI:set_backdrop_basic(button)
-			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-			button.cd:GetRegions():SetAlpha(0)
-			button:SetAlpha(0.8)
-		end
-	end,
-
-	debuffs = function(self, unit)
-		if (self.Debuffs) then return end
-
-		-- Auras
-		self.Debuffs = CreateFrame("Frame", nil, self)
-		self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
-		self.Debuffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-		self.Debuffs:SetSize(config.playertargetwidth, 60)
-		self.Debuffs.size = 18
-		self.Debuffs.initialAnchor  = "BOTTOMRIGHT"
-		self.Debuffs.spacing = bdUI.border
-		self.Debuffs.num = 20
-		self.Debuffs['growth-y'] = "UP"
-		self.Debuffs['growth-x'] = "LEFT"
-		self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-			local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-			duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-		end
-		self.Debuffs.PostCreateIcon = function(Debuffs, button)
-			bdUI:set_backdrop_basic(button)
-			button.cd:GetRegions():SetAlpha(0)
-			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-		end
-	end,
-
-	auras = function(self, unit)
-		if (self.Auras) then return end
-
-		-- Auras
-		self.Auras = CreateFrame("Frame", nil, self)
-		self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
-		self.Auras:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
-		self.Auras:SetSize(config.playertargetwidth, 60)
-		self.Auras.size = 18
-		self.Auras.initialAnchor  = "BOTTOMLEFT"
-		self.Auras.spacing = bdUI.border
-		self.Auras.num = 20
-		self.Auras['growth-y'] = "UP"
-		self.Auras['growth-x'] = "RIGHT"
-		self.Auras.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-			local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-			duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-		end
-		self.Auras.PostCreateIcon = function(Debuffs, button)
-			bdUI:set_backdrop_basic(button)
-			button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-			button.cd:GetRegions():SetAlpha(0)
-			-- button:SetAlpha(0.8)
-		end
-	end
-}
 
 local function layout(self, unit)
 	mod.units[unit] = self
@@ -380,14 +140,17 @@ local function layout(self, unit)
     }
 
 	-- Name & Text
-	self.Name = self.Health:CreateFontString(nil, "OVERLAY")
+	self.TextHolder = CreateFrame('frame', nil, self.Health)
+	self.TextHolder:SetAllPoints()
+
+	self.Name = self.TextHolder:CreateFontString(nil, "OVERLAY")
 	self.Name:SetFont(bdUI.media.font, 13, "OUTLINE")
 
-	self.Status = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Status = self.TextHolder:CreateFontString(nil, "OVERLAY")
 	self.Status:SetFont(bdUI.media.font, 10, "OUTLINE")
-	self.Status:SetPoint("CENTER", self.Health, "CENTER")
+	self.Status:SetPoint("CENTER", self.TextHolder, "CENTER")
 	
-	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Curhp = self.TextHolder:CreateFontString(nil, "OVERLAY")
 	self.Curhp:SetFont(bdUI.media.font, 10, "OUTLINE")
 
 	-- Raid Icon
@@ -435,7 +198,7 @@ local function layout(self, unit)
 end
 
 function mod:create_unitframes()
-	config = mod.config
+	config = mod:get_save()
 	oUF:RegisterStyle("bdUnitFrames", layout)
 	oUF:SetActiveStyle("bdUnitFrames")
 
@@ -507,5 +270,4 @@ function mod:create_unitframes()
 	-- mod:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 	-- mod:RegisterEvent("PLAYER_TARGET_CHANGED")
 	-- mod:SetScript("OnEvent", update_borders_pre)
-
 end

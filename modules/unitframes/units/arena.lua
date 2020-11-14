@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
 
-mod.custom_layout["arena"] = function(self, unit)
+mod.custom_layout.arena = function(self, unit)
 	local config = mod.save
 
 	self:SetSize(config.bosswidth, config.bossheight)
@@ -21,4 +21,9 @@ mod.custom_layout["arena"] = function(self, unit)
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
 	
 	mod.align_text(self)
+
+	-- config callback
+	self.callback = function()
+		
+	end
 end
