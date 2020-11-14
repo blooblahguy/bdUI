@@ -172,8 +172,7 @@ local function setHeaderAttributes(header, template, isBuff)
 	s('unit', 'player')
 	s("filter", header.filter)
 	-- s("separateOwn", 1)
-	-- s('sortMethod', 'INDEX')
-	s('sortDirection', '+')
+	s('sortMethod', 'TIME')
     header:HookScript("OnAttributeChanged", InitiateAura)
 
 	header:Show()
@@ -213,11 +212,11 @@ function mod:config_callback()
 	bdBuffs:SetAttribute('weaponTemplate', ("bdBuffsTemplate%d"):format(config.buffsize))
 	if (config.buffhgrowth == "Left") then
 		bdBuffs:SetAttribute('xOffset', -(config.buffsize+config.buffspacing+2))
-		bdBuffs:SetAttribute('sortDirection', "-")
+		bdBuffs:SetAttribute('sortDirection', "+")
 		bdBuffs:SetAttribute('point', "TOPRIGHT")
 	else
 		bdBuffs:SetAttribute('xOffset', (config.buffsize+config.buffspacing+2))
-		bdBuffs:SetAttribute('sortDirection', "+")
+		bdBuffs:SetAttribute('sortDirection', "-")
 		bdBuffs:SetAttribute('point', "TOPLEFT")
 	end
 
@@ -252,11 +251,11 @@ function mod:config_callback()
 	bdDebuffs:SetAttribute("minHeight", (config.debuffsize+config.debuffspacing+2)*debuffrows)
 	if (config.debuffhgrowth == "Left") then
 		bdDebuffs:SetAttribute('xOffset', -(config.debuffsize+config.debuffspacing+2))
-		bdDebuffs:SetAttribute('sortDirection', "-")
+		bdDebuffs:SetAttribute('sortDirection', "+")
 		bdDebuffs:SetAttribute('point', "TOPRIGHT")
 	else
 		bdDebuffs:SetAttribute('xOffset', (config.debuffsize+config.debuffspacing+2))
-		bdDebuffs:SetAttribute('sortDirection', "+")
+		bdDebuffs:SetAttribute('sortDirection', "-")
 		bdDebuffs:SetAttribute('point', "TOPLEFT")
 	end
 
