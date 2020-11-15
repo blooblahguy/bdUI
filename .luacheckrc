@@ -1,16 +1,16 @@
-std = "lua51"
+std = "min"
 max_line_length = false
 exclude_files = {
-	".luacheckrc",
-	"bdUI.lua"
+	".luacheckrc"
 }
 ignore = {
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable
 	"11./BINDING_.*", -- Setting an undefined (Keybinding header) global variable
 	"113/LE_.*", -- Accessing an undefined (Lua ENUM type) global variable
+	"113", -- Accessing an undefined (Lua ENUM type) global variable
 	"113/NUM_LE_.*", -- Accessing an undefined (Lua ENUM type) global variable
 	"211", -- Unused local variable
-	"211/L", -- Unused local variable "CL"
+	"211/L", -- Unused local variable "L"
 	"211/CL", -- Unused local variable "CL"
 	"212", -- Unused argument
 	"213", -- Unused loop variable
@@ -20,8 +20,8 @@ ignore = {
 	"42.", -- Shadowing a local variable, an argument, a loop variable.
 	"43.", -- Shadowing an upvalue, an upvalue argument, an upvalue loop variable.
 	"542", -- An empty if branch
+	"61.", -- Whitespace errors
 }
-
 globals = {
 	"_G",
 	"bit",
@@ -31,6 +31,7 @@ globals = {
 	"AceGUIWidgetLSMlists",
 	"CUSTOM_CLASS_COLORS",
 	"LibStub",
+	"OmniCC",
 
 	-- BDUI Variables
 	"bdMove",
@@ -40,6 +41,7 @@ globals = {
 	-- Third Party Addons/Libs
 	"BigWigs",
 	"BigWigsLoader",
+	"CUSTOM_CLASS_COLORS",
 	"DBM",
 	"ElvUIPlayerNamePlateAnchor",
 	"GTFO",
@@ -48,23 +50,29 @@ globals = {
 	"KuiNameplatesPlayerAnchor",
 
 	-- FrameXML misc
+	"BackdropTemplateMixin",
 	"C_Timer",
 	"ChatFrame_AddMessageEventFilter",
+	"Clamp",
 	"COMBAT_TEXT_SCROLL_FUNCTION",
 	"CombatLogGetCurrentEventInfo",
 	"CombatText_AddMessage",
+	"ClassNameplateManaBarFrame",
 	"CooldownFrame_Set",
+	"CreateFromMixins",
 	"CreateObjectPool",
 	"DEFAULT_CHAT_FRAME",
 	"GameTooltip_Hide",
 	"GameTooltip_SetDefaultAnchor",
 	"GameTooltip_UnitColor",
+	"GetClassColoredTextForUnit",
 	"Lerp",
 	"Mixin",
 	"Round",
 	"Saturate",
 	"SecureButton_GetModifiedUnit",
 	"SlashCmdList",
+	"SearchBoxTemplate_OnTextChanged",
 	"SmoothStatusBarMixin",
 	"STATICPOPUP_NUMDIALOGS",
 	"StaticPopup_Show",
@@ -86,13 +94,16 @@ globals = {
 
 	-- FrameXML globals
 	"ChatFontNormal",
+	"GameFontNormal",
 	"FONT_COLOR_CODE_CLOSE",
+	"ICON_TAG_LIST",
 	"MAX_PVP_TALENT_COLUMNS",
 	"MAX_PVP_TALENT_TIERS",
 	"MAX_TALENT_TIERS",
 	"NUM_TALENT_COLUMNS",
 	"RED_FONT_COLOR_CODE",
 	"STANDARD_TEXT_FONT",
+	"MAX_BOSS_FRAMES",
 
 	-- ENUMS
 	"LOWER_LEFT_VERTEX",
@@ -211,6 +222,7 @@ globals = {
 	"BuyReagentBank",
 	"BuyTrainerService",
 	"BuybackItem",
+	"C_ActionBar",
 	"C_AdventureJournal",
 	"C_AdventureJournal.ActivateEntry",
 	"C_AdventureJournal.CanBeShown",
@@ -291,6 +303,7 @@ globals = {
 	"C_AuthChallenge.OnTabPressed",
 	"C_AuthChallenge.SetFrame",
 	"C_AuthChallenge.Submit",
+	"C_BattleNet",
 	"C_BlackMarket",
 	"C_BlackMarket.Close",
 	"C_BlackMarket.GetHotItem",
@@ -403,6 +416,8 @@ globals = {
 	"C_Commentator.UpdatePlayerInfo",
 	"C_Commentator.ZoomIn",
 	"C_Commentator.ZoomOut",
+	"C_Covenants.GetCovenantData",
+	"C_Covenants.GetActiveCovenantID",
 	"C_CreatureInfo",
 	"C_CreatureInfo.GetClassInfo",
 	"C_CreatureInfo.GetFactionInfo",
@@ -631,6 +646,8 @@ globals = {
 	"C_Heirloom.SetUncollectedHeirloomFilter",
 	"C_Heirloom.ShouldShowHeirloomHelp",
 	"C_Heirloom.UpgradeHeirloom",
+	"C_Item",
+	"C_LegendaryCrafting",
 	"C_LFGList",
 	"C_LFGList.AcceptInvite",
 	"C_LFGList.ApplyToGroup",
@@ -690,14 +707,6 @@ globals = {
 	"C_LootHistory.GiveMasterLoot",
 	"C_LootHistory.SetExpiration",
 	"C_LossOfControl",
-	"C_LootJournal.GetClassAndSpecFilters",
-	"C_LootJournal.GetFilteredItemSets",
-	"C_LootJournal.GetFilteredLegendaries",
-	"C_LootJournal.GetItemSetItems",
-	"C_LootJournal.GetLegendaryInventoryTypeFilter",
-	"C_LootJournal.GetLegendaryInventoryTypes",
-	"C_LootJournal.SetClassAndSpecFilters",
-	"C_LootJournal.SetLegendaryInventoryTypeFilter",
 	"C_LossOfControl.GetEventInfo",
 	"C_LossOfControl.GetNumEvents",
 	"C_Map",
@@ -3576,6 +3585,7 @@ globals = {
 	"UnitInPhase",
 	"UnitInRaid",
 	"UnitInRange",
+	"UnitInSubgroup",
 	"UnitInVehicle",
 	"UnitInVehicleControlSeat",
 	"UnitInVehicleHidesPetFrame",
@@ -3882,6 +3892,7 @@ globals = {
 
 	-- framexml functions
 	"AbbreviateLargeNumbers",
+	"AbbreviateNumbers",
 	"ActionButtonDown",
 	"ActionButtonUp",
 	"AddFrameLock",
@@ -9899,7 +9910,7 @@ globals = {
 	"ERR_MUST_EQUIP_ARTIFACT",
 	"ERR_MUST_EQUIP_ITEM",
 	"ERR_MUST_REPAIR_DURABILITY",
-	-- "ERR_NAME_CONSECUTIVE_SPACES",
+	"ERR_NAME_CONSECUTIVE_SPACES",
 	"ERR_NAME_DECLENSION_DOESNT_MATCH_BASE_NAME",
 	"ERR_NAME_INVALID",
 	"ERR_NAME_INVALID_SPACE",
@@ -19376,6 +19387,9 @@ globals = {
 	"WOW_FRIEND",
 	"WOW_MOUSE",
 	"WOW_MOUSE_NOT_FOUND",
+	"WOW_PROJECT_CLASSIC",
+	"WOW_PROJECT_ID",
+	"WOW_PROJECT_MAINLINE",
 	"WRISTSLOT",
 	"WRONG_SLOT_FOR_ITEM",
 	"XP",
