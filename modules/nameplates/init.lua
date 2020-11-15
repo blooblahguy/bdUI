@@ -76,7 +76,7 @@ local config = {
 			{
 				key = "height",
 				type = "range",
-				value = 20,
+				value = 22,
 				min = 4,
 				max = 50,
 				step = 2,
@@ -216,7 +216,7 @@ local config = {
 			{
 				key = "showhptexttargetonly",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Show Health Text on target only",
 			},
 			{

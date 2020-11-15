@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 
-function mod:friendly_style(self, event, unit)
+mod.friendly_style = function(self, event, unit)
 	local config = mod.config
 	
 	self.Name:SetTextColor(unpack(self.smartColors))
@@ -23,6 +23,8 @@ function mod:friendly_style(self, event, unit)
 
 	-- castbars
 	self:DisableElement("Castbar")
+	self:DisableElement("FixateAlert")
+	-- self:DisableElement("Auras")
 
 	-- healthbar
 	if (config.friendlyplates) then

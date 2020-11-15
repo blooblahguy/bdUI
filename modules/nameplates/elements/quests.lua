@@ -5,6 +5,7 @@ local world_quests = {}
 local quests = {}
 local quest_tt = CreateFrame('GameTooltip', nil, nil, 'GameTooltipTemplate')
 
-function mod:update_quest_marker(self, event, unit)
+mod.create_quest_tracker = function(self, event, unit)
+	self.QuestProgress = CreateFrame("Frame", nil, self.Health)
 	-- print(self, event, unit)
 end

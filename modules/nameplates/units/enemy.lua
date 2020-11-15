@@ -1,8 +1,9 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
+local config
 
-function mod:enemy_style(self, event, unit)
-	local config = mod.config
+mod.enemy_style = function(self, event, unit)
+	config = mod.config
 
 	-- names
 	self.Name:Show()
@@ -20,20 +21,46 @@ function mod:enemy_style(self, event, unit)
 	if (self.currentStyle and self.currentStyle == "enemy") then return end
 	self.currentStyle = "enemy"
 
+	-- elements
+	self:EnableElement("Auras")
+	self:EnableElement("Castbar")
+	self:EnableElement("FixateAlert")
+
 	-- auras
-	self.Auras:Show()
 	self.Name:SetTextColor(1,1,1)
 
 	-- castbars
-	self:EnableElement("Castbar")
 	self.Castbar:ClearAllPoints()
 	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI:get_border(self.Castbar))
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -config.castbarheight)
 
 	-- healthbar
 	self.Health:Show()
-	self.disableFixate = false
 
-	-- power
-	-- self.Power:Hide()
+	if (config.fixatealert == "None") then
+		self:DisableElement("FixateAlert")
+	else
+		self:EnableElement("FixateAlert")
+	end
+
+	-- on target callback
+	self.OnTarget = function(self, event, unit)
+		if (config.showenergy) then
+			self.Curpower:Show()
+		else
+			self.Curpower:Hide()
+		end
+
+		if (config.showhptexttargetonly and not self.isTarget) then
+			self.Curpower:Hide()
+			self.Curhp:Hide()
+			return
+		end
+		if (config.hptext == "None") then
+			self.Curhp:Hide()
+			return
+		end
+
+		self.Curhp:Show()
+	end
 end

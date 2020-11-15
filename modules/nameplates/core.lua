@@ -18,12 +18,20 @@ mod.font_castbar = CreateFont("BDN_FONT_CASTBAR")
 -- Core functionality
 -- place core functionality here
 --===============================================
+local forced = false
+function mod:force_size()
+	if (not forced) then
+		forced = true
+		mod:nameplate_size()
+		forced = false
+	end
+end
 function mod:nameplate_size()
-	-- if (InCombatLockdown()) then return end
+	if (InCombatLockdown()) then return end
 
 	C_NamePlate.SetNamePlateFriendlySize(config.width, 0.1)
 	C_NamePlate.SetNamePlateEnemySize(config.width, (config.height + config.targetingTopPadding + config.targetingBottomPadding))
-	C_NamePlate.SetNamePlateSelfSize(config.width, config.height)
+	C_NamePlate.SetNamePlateSelfSize(config.width, (config.height / 2 + config.targetingTopPadding + config.targetingBottomPadding))
 	C_NamePlate.SetNamePlateFriendlyClickThrough(true)
 	C_NamePlate.SetNamePlateSelfClickThrough(true)
 end
@@ -70,8 +78,8 @@ function mod:config_callback()
 	end
 
 	mod.font:SetFont(bdUI.media.font, config.enemynamesize, "OUTLINE")
-	mod.font_small:SetFont(bdUI.media.font, config.height * 0.78, "OUTLINE")
-	mod.font_castbar:SetFont(bdUI.media.font, config.castbarheight * 0.78, "OUTLINE")
+	mod.font_small:SetFont(bdUI.media.font, math.max(config.height * 0.6, config.height - 20), "OUTLINE")
+	mod.font_castbar:SetFont(bdUI.media.font, math.max(config.castbarheight * 0.74, config.castbarheight - 20), "OUTLINE")
 	mod.font_friendly:SetFont(bdUI.media.font, config.friendlynamesize, "OUTLINE")
 
 	if (InCombatLockdown()) then return end
@@ -87,11 +95,11 @@ function mod:config_callback()
 		, ['nameplateOccludedAlphaMult'] = 1
 		, ['nameplateMaxAlphaDistance'] = 1
 		, ['nameplateMaxDistance'] = config.nameplatedistance+6 -- for some reason there is a 6yd diff
-		, ['nameplateShowOnlyNames'] = 0
 		, ['nameplateShowDebuffsOnFriendly'] = 0
 		, ['nameplateSelectedScale'] = 1
 		, ['nameplateMinScale'] = 1
 		, ['nameplateMaxScale'] = 1
+		, ['showQuestTrackingTooltips'] = 1
 		-- , ['nameplateMaxScaleDistance'] = 80
 		-- , ['nameplateMinScaleDistance'] = 5
 		, ['nameplateLargerScale'] = 1 -- for bosses
@@ -133,6 +141,8 @@ end
 --==============================================
 local function find_target(self, event, unit)
 	unit = unit or self.unit
+
+	-- global alpha/glow change on target
 	if (UnitIsUnit(unit, "target")) then
 		self.isTarget = true
 		self:SetAlpha(1)
@@ -145,11 +155,9 @@ local function find_target(self, event, unit)
 		self.Health._shadow:Hide()
 	end
 
-	-- hp text
-	if (config.hptext == "None" or (config.showhptexttargetonly and not self.isTarget)) then
-		self.Curhp:Hide()
-	else
-		self.Curhp:Show()
+	-- on target callback per specific nameplate
+	if (self.OnTarget) then
+		self.OnTarget(self, event, unit)
 	end
 end
 
@@ -201,6 +209,18 @@ local function update_threat(self, event, unit)
 	return true
 end
 
+local function get_unit_type(self, unit)
+	if (UnitCanAttack("player", unit)) then
+		return "enemy"
+	elseif (UnitIsUnit(unit, "player")) then
+		return "personal"
+	elseif (self.isPlayer) then
+		return "friendly"
+	else
+		return "npc"
+	end
+end
+
 --==============================================
 -- Primary callback
 --==============================================
@@ -211,22 +231,21 @@ local function nameplate_callback(self, event, unit)
 	-- store these values for reuse
 	unit_information(self, unit)
 
-	-- select correct target
-	find_target(self, event, unit)
-
 	--==========================================
 	-- Style by unit type
 	--==========================================
-	if (UnitCanAttack("player", unit)) then
-		mod:enemy_style(self, event, unit)
-		mod:update_quest_marker(self, event, unit)
-	elseif (UnitIsUnit(unit, "player")) then
-		mod:personal_style(self, event, unit)
-	elseif (self.isPlayer) then
-		mod:friendly_style(self, event, unit)
-	else
-		mod:npc_style(self, event, unit)
+	if (get_unit_type(self, unit) == "enemy") then
+		mod.enemy_style(self, event, unit)
+	elseif (get_unit_type(self, unit) == "personal") then
+		mod.personal_style(self, event, unit)
+	elseif (get_unit_type(self, unit) == "friendly") then
+		mod.friendly_style(self, event, unit)
+	elseif (get_unit_type(self, unit) == "npc") then
+		mod.npc_style(self, event, unit)
 	end
+
+	-- select correct target
+	find_target(self, event, unit)
 end
 
 --==============================================
@@ -239,9 +258,6 @@ local function nameplate_create(self, unit)
 	self:SetPoint("TOPLEFT", 0, -math.floor(config.targetingTopPadding))
 	self:SetPoint("TOPRIGHT", 0, -math.floor(config.targetingTopPadding))
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", find_target, true)
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", mod.config_callback, true)
-	self:RegisterEvent("PLAYER_LOGIN", mod.config_callback, true)
-	self:RegisterEvent("VARIABLES_LOADED", mod.config_callback, true)
 
 	--==========================================
 	-- HEALTHBAR
@@ -258,16 +274,6 @@ local function nameplate_create(self, unit)
 	self.Health._shadow:SetColor(unpack(config.glowcolor))
 	-- THREAT
 	self.Health.UpdateColor = update_threat
-
-	--==========================================
-	-- QUEST ICON
-	--==========================================
-	-- self.QuestIcon = self:CreateTexture("nil", "OVERLAY")
-	-- self.QuestIcon:SetPoint("LEFT", self, "RIGHT", 10, 0)
-	-- self.QuestIcon:SetSize(20, 20)
-	-- self.QuestIcon:SetTexture(237608)
-	-- self.QuestIcon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1)
-	-- self.QuestIcon:SetVertexColor(1, 1, 0)
 
 	--==========================================
 	-- DAMAGE ABSORBS
@@ -291,7 +297,7 @@ local function nameplate_create(self, unit)
         maxOverflow = 1,
     }
 
-	function self.HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
+	function self.HealthPrediction.PostUpdate(self, unit, myIncomingHeal, otherIncomingHeal, absorba, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
 		if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
 		
 		local absorb = UnitGetTotalAbsorbs(unit) or 0
@@ -324,6 +330,27 @@ local function nameplate_create(self, unit)
 	self:Tag(self.Name, '[name]')
 
 	--==========================================
+	-- QUEST ICON
+	--==========================================
+	self.QuestProgress = CreateFrame("Frame", nil, self.Health)
+	self.QuestProgress:SetPoint("LEFT", self.Name, "RIGHT", 4, 0)
+	self.QuestProgress:SetSize(20, 20)
+	self.QuestProgress.PostUpdate = function(unit)
+		self.Name:SetTextColor(1, 0, 0)
+		-- self.Health.bg
+	end
+	self.QuestProgress.PostHide = function(unit)
+		self.Name:SetTextColor(1, 1, 1)
+		-- self.Health.bg
+	end
+	-- self.QuestIcon = self:CreateTexture("nil", "OVERLAY")
+	-- self.QuestIcon:SetPoint("LEFT", self, "RIGHT", 10, 0)
+	-- self.QuestIcon:SetSize(20, 20)
+	-- self.QuestIcon:SetTexture(237608)
+	-- self.QuestIcon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1)
+	-- self.QuestIcon:SetVertexColor(1, 1, 0)
+
+	--==========================================
 	-- UNIT HEALTH
 	--==========================================
 	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY", "BDN_FONT_SMALL")
@@ -336,7 +363,7 @@ local function nameplate_create(self, unit)
 		if (config.hptext == "None") then return '' end
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
 		if (bdUI.mobhealth) then
-			hp, hpMax, IsFound = bdUI.mobhealth:GetUnitHealth(unit)
+			local hp, hpMax, found = bdUI.mobhealth:GetUnitHealth(unit)
 		end
 		local hpPercent = bdUI:round(hp / hpMax * 100,1)
 		hp = bdUI:numberize(hp)
@@ -361,7 +388,6 @@ local function nameplate_create(self, unit)
 	local pp, ppMax, ppPercent
 	oUF.Tags.Events['bdncurpower'] = 'UNIT_POWER_UPDATE'
 	oUF.Tags.Methods['bdncurpower'] = function(unit)
-		if (not config.showenergy) then return '' end
 		pp, ppMax, ppPercent = UnitPower(unit), UnitPowerMax(unit), 0
 		if (pp == 0 or ppMax == 0) then return '' end
 		ppPercent = (pp / ppMax) * 100
@@ -457,8 +483,9 @@ local function nameplate_create(self, unit)
 		button.cd:SetReverse(true)
 		button.cd:SetHideCountdownNumbers(false)
 	end
-	self.Auras.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+	self.Auras.PostUpdateIcon = function(self, unit, button, index, position)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+
 		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
 
 		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
@@ -550,6 +577,16 @@ local function nameplate_create(self, unit)
 	end)
 end
 
+local function disable_class_power()
+	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_DISPLAYPOWER")
+	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_POWER_FREQUENT")
+	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_MAXPOWER")
+	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_SPELLCAST_START")
+	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_SPELLCAST_STOP")
+	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_SPELLCAST_FAILED")
+	ClassNameplateManaBarFrame:Hide()
+	hooksecurefunc(ClassNameplateManaBarFrame, "Show", function(self) self:Hide() end)
+end
 
 function mod:initialize()
 	mod.config = mod:get_save()
@@ -557,14 +594,11 @@ function mod:initialize()
 
 	if (not config.enabled) then return end
 
-	local forced = false
-	hooksecurefunc(C_NamePlate, "SetNamePlateEnemySize", function()
-		if (not forced) then
-			forced = true
-			mod:nameplate_size()
-			forced = false
-		end
-	end)
+	hooksecurefunc(C_NamePlate, "SetNamePlateEnemySize", mod.force_size)
+	hooksecurefunc(C_NamePlate, "SetNamePlateSelfSize", mod.force_size)
+
+	-- handle some blizzard things
+	disable_class_power()
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
 	oUF:SetActiveStyle("bdNameplates")

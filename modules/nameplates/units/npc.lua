@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 
-function mod:npc_style(self, event, unit)
+mod.npc_style = function(self, event, unit)
 	local config = mod.config
 
 	if (self.smartColors) then
@@ -13,6 +13,8 @@ function mod:npc_style(self, event, unit)
 
 	-- castbar
 	self:DisableElement("Castbar")
+	self:DisableElement("Auras")
+	self:DisableElement("FixateAlert")
 
 	-- healthbar
 	self.Health:Hide()
@@ -23,7 +25,4 @@ function mod:npc_style(self, event, unit)
 
 	-- name
 	self.Name:Show()
-
-	-- auras
-	self.Auras:Hide()
 end
