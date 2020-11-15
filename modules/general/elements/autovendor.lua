@@ -67,9 +67,9 @@ end)
 local fastloot = CreateFrame("frame",nil)
 fastloot:RegisterEvent("LOOT_OPENED")
 fastloot:SetScript("OnEvent",function()
-	local autoLoot = GetCVar("autoLootDefault") == "0" or true
+	local autoLoot = tonumber(GetCVar("autoLootDefault")) == 1 and true or false
 
-	if ((IsShiftKeyDown() == autoLoot)) then
+	if ((IsShiftKeyDown() ~= autoLoot)) then
 		local numitems = GetNumLootItems()
 		for i = 1, numitems do
 			LootSlot(i)
