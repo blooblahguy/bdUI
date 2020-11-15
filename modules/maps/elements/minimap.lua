@@ -1,6 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 local config
+
 --easier to change in the future if more minimap types want to be supported
 local rectangleFileLocation = "Interface\\Addons\\bdUI\\media\\rectangle.tga"
 
@@ -94,10 +95,13 @@ function mod:create_minimap()
 	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
 	Minimap:EnableMouse(true)
 	Minimap:SetMaskTexture(rectangleFileLocation)
-	Minimap.SetArchBlobRingScalar = Minimap.SetArchBlobRingScalar or noop
-	Minimap.SetQuestBlobRingScalar = Minimap.SetQuestBlobRingScalar or noop
+
+	-- fixes texture issue with non round minimaps
+	Minimap:SetQuestBlobRingAlpha(0)
+	Minimap:SetArchBlobRingAlpha(0)
 	Minimap:SetArchBlobRingScalar(0);
 	Minimap:SetQuestBlobRingScalar(0);
+
 	Minimap:ClearAllPoints()
 	Minimap:SetPoint("CENTER", Minimap.background, "CENTER", 0, 0)
 	Minimap:RegisterEvent("ADDON_LOADED")

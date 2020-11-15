@@ -117,6 +117,22 @@ bdUI.eventer = CreateFrame("frame", nil, bdParent)
 	-- no operation function
 	noop = function() end
 
+	function dump_functions(tbl, indent)
+		if not indent then indent = 4 end
+		for k, v in pairs(tbl) do
+			formatting = string.rep("  ", indent) .. k .. ": "
+			-- print(tostring(v))
+			if type(v) == "table" then
+				print(formatting)
+				dump(v, indent+1)
+			else
+				if string.find(tostring(v), "function") ~= nil then
+					print(formatting .. tostring(v))
+				end
+			end
+		end
+	end
+
 	-- Dump table to chat
 	function dump (tbl, indent)
 		if not indent then indent = 0 end

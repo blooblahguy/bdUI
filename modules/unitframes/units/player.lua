@@ -59,6 +59,7 @@ mod.custom_layout["player"] = function(self, unit)
 			self.DisabledBuffs = self.Buffs
 			self.Buffs = nil
 			self:EnableElement("AuraBars")
+			self.AuraBars:Show()
 		else
 			self.Buffs = self.DisabledBuffs
 			self:DisableElement("AuraBars")

@@ -25,6 +25,7 @@ mod.enemy_style = function(self, event, unit)
 	self:EnableElement("Auras")
 	self:EnableElement("Castbar")
 	self:EnableElement("FixateAlert")
+	self:EnableElement("QuestProgress")
 
 	-- auras
 	self.Name:SetTextColor(1,1,1)

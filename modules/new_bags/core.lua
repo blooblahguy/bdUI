@@ -17,7 +17,7 @@ ace_hook:Embed(mod)
 -- place core functionality here
 --===============================================
 SetSortBagsRightToLeft(false)
-	SetInsertItemsLeftToRight(false)
+SetInsertItemsLeftToRight(false)
 function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config

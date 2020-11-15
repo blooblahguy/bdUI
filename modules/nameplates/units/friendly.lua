@@ -24,7 +24,7 @@ mod.friendly_style = function(self, event, unit)
 	-- castbars
 	self:DisableElement("Castbar")
 	self:DisableElement("FixateAlert")
-	-- self:DisableElement("Auras")
+	self:DisableElement("QuestProgress")
 
 	-- healthbar
 	if (config.friendlyplates) then

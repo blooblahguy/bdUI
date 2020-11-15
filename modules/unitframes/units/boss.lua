@@ -4,7 +4,7 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout["boss"] = function(self, unit)
 	local config = mod.save
 	
-	self:SetSize(config.bosswidth, config.bossheight)
+	self.displayAltPower = true
 	self.Curhp:Hide()
 
 	mod.additional_elements.power(self, unit)
@@ -20,27 +20,16 @@ mod.custom_layout["boss"] = function(self, unit)
 	self.Debuffs.initialAnchor = "TOPRIGHT"
 	self.Debuffs['growth-x'] = "LEFT"
 	self.Debuffs['growth-y'] = "DOWN"
-	self.Debuffs.size = config.bossheight - 10
-	self.Debuffs.spacing = bdUI.border * 2
+	
 	self.Debuffs:ClearAllPoints()
 	self.Debuffs:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -bdUI.border*3, -bdUI.border)
 
 	self.Auras.initialAnchor = "TOPLEFT"
 	self.Auras['growth-x'] = "RIGHT"
 	self.Auras['growth-y'] = "DOWN"
-	self.Auras.size = (config.bossheight - 10) / 2
-	self.Auras.spacing = bdUI.border * 2
-	self.Auras:SetSize((config.bossheight - 10) / 2, config.bossheight)
+	
 	self.Auras:ClearAllPoints()
 	self.Auras:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", bdUI.border*3, -bdUI.border)
-
-	self.Power:SetHeight(config.bosspower)
-	self.Power:Show()
-	if (config.bosspower == 0) then
-		self.Power:Hide()
-	end
-	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
-
 
 	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -67,7 +56,22 @@ mod.custom_layout["boss"] = function(self, unit)
 	end
 
 	-- config callback
-	self.callback = function()
+	self.callback = function(self, unit, config)
+		self:SetSize(config.bosswidth, config.bossheight)
 
+		self.Debuffs.size = config.bossheight - 10
+		self.Debuffs.spacing = bdUI.border * 2
+
+		self.Auras.size = (config.bossheight - 10) / 2
+		self.Auras.spacing = bdUI.border * 2
+		self.Auras:SetSize((config.bossheight - 10) / 2, config.bossheight)
+
+		self.Power:SetHeight(config.bosspower)
+		self.Power:Show()
+		if (config.bosspower == 0) then
+			self.Power:Hide()
+		end
+
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
 	end
 end

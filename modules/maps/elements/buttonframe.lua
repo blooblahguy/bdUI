@@ -16,16 +16,31 @@ function mod:create_button_frame()
 
 	-- Button frame
 	Minimap.buttonFrame = CreateFrame("frame", "bdButtonFrame", Minimap)
-	Minimap.buttonFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 	if (bdUI.version >= 60000) then
 		Minimap.buttonFrame:RegisterEvent("GARRISON_UPDATE")
 	end
-	Minimap.buttonFrame:RegisterEvent("PLAYER_XP_UPDATE")
-	Minimap.buttonFrame:RegisterEvent("PLAYER_LEVEL_UP")
+	-- Minimap.buttonFrame:RegisterEvent("PLAYER_XP_UPDATE")
+	-- Minimap.buttonFrame:RegisterEvent("PLAYER_LEVEL_UP")
 	Minimap.buttonFrame:RegisterEvent("UPDATE_FACTION")
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
 	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("MAIL_CLOSED")
+	Minimap.buttonFrame:RegisterEvent("GARRISON_SHOW_LANDING_PAGE");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_HIDE_LANDING_PAGE");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATED");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_ARCHITECT_OPENED");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_FINISHED");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_NPC_OPENED");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_OPENED");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_AVAILABLE");
+	Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_UNAVAILABLE");
+	Minimap.buttonFrame:RegisterEvent("SHIPMENT_UPDATE");
+	Minimap.buttonFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+	Minimap.buttonFrame:RegisterEvent("ZONE_CHANGED");
+	Minimap.buttonFrame:RegisterEvent("ZONE_CHANGED_INDOORS");
+	Minimap.buttonFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+
 	if (bdUI:get_game_version() == "shadowlands") then
 		Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
 	end
@@ -39,36 +54,36 @@ function mod:create_button_frame()
 
 	bdUI:create_fader(Minimap.buttonFrame, {}, 1, 0, .1, 0)
 
-	local bdConfigButton = CreateFrame("button","bdUI_configButton", Minimap)
-	bdConfigButton.text = bdConfigButton:CreateFontString(nil,"OVERLAY")
-	bdConfigButton.text:SetFontObject("BDUI_SMALL")
-	bdConfigButton.text:SetTextColor(.4,.6,1)
-	bdConfigButton.text:SetText("bd")
-	bdConfigButton.text:SetJustifyH("CENTER")
-	bdConfigButton.text:SetPoint("CENTER", bdConfigButton, "CENTER", -1, -1)
-	bdConfigButton:RegisterForClicks("AnyUp")
-	bdConfigButton:SetScript("OnEnter", function(self) 
-		self.text:SetTextColor(.6,.8,1) 
-		-- ShowUIPanel(GameTooltip)
-		GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 0, 6)
-		GameTooltip:AddLine(bdUI.colorString.."Config\n|cffFFAA33Left Click:|r |cff00FF00Open bdUI Config|r\n|cffFFAA33Right Click:|r |cff00FF00Toggle lock/unlock|r\n|cffFFAA33Ctrl+Click:|r |cff00FF00Reload UI|r")
-		GameTooltip:Show()
-	end)
-	bdConfigButton:SetScript("OnLeave", function(self) 
-		self.text:SetTextColor(.4,.6,1)
-		GameTooltip:Hide()
-	end)
-	bdConfigButton:SetScript("OnClick", function(self, button)
-		if (IsControlKeyDown()) then
-			ReloadUI()
-		end
+	-- local bdConfigButton = CreateFrame("button","bdUI_configButton", Minimap)
+	-- bdConfigButton.text = bdConfigButton:CreateFontString(nil,"OVERLAY")
+	-- bdConfigButton.text:SetFontObject("BDUI_SMALL")
+	-- bdConfigButton.text:SetTextColor(.4,.6,1)
+	-- bdConfigButton.text:SetText("bd")
+	-- bdConfigButton.text:SetJustifyH("CENTER")
+	-- bdConfigButton.text:SetPoint("CENTER", bdConfigButton, "CENTER", -1, -1)
+	-- bdConfigButton:RegisterForClicks("AnyUp")
+	-- bdConfigButton:SetScript("OnEnter", function(self) 
+	-- 	self.text:SetTextColor(.6,.8,1) 
+	-- 	-- ShowUIPanel(GameTooltip)
+	-- 	GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 0, 6)
+	-- 	GameTooltip:AddLine(bdUI.colorString.."Config\n|cffFFAA33Left Click:|r |cff00FF00Open bdUI Config|r\n|cffFFAA33Right Click:|r |cff00FF00Toggle lock/unlock|r\n|cffFFAA33Ctrl+Click:|r |cff00FF00Reload UI|r")
+	-- 	GameTooltip:Show()
+	-- end)
+	-- bdConfigButton:SetScript("OnLeave", function(self) 
+	-- 	self.text:SetTextColor(.4,.6,1)
+	-- 	GameTooltip:Hide()
+	-- end)
+	-- bdConfigButton:SetScript("OnClick", function(self, button)
+	-- 	if (IsControlKeyDown()) then
+	-- 		ReloadUI()
+	-- 	end
 		
-		if (button == "LeftButton") then
-			bdUI.bdConfig:toggle()
-		elseif (button == "RightButton") then
-			bdUI.bdConfig.header.lock:Click()
-		end		
-	end)
+	-- 	if (button == "LeftButton") then
+	-- 		bdUI.bdConfig:toggle()
+	-- 	elseif (button == "RightButton") then
+	-- 		bdUI.bdConfig.header.lock:Click()
+	-- 	end		
+	-- end)
 
 	-- Find and move buttons
 	local ignoreFrames = {}
@@ -185,12 +200,6 @@ function mod:create_button_frame()
 		if (config.buttonpos == "Disabled") then return end
 		if (InCombatLockdown()) then return end
 
-		if (not config.showconfig) then
-			hideButtons['bdUI_configButton'] = true
-		else
-			hideButtons['bdUI_configButton'] = false
-			bdUI_configButton:Show()
-		end
 		if (config.hideclasshall) then
 			hideButtons['GarrisonLandingPageMinimapButton'] = true
 		else

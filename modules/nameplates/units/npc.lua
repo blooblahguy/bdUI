@@ -15,6 +15,7 @@ mod.npc_style = function(self, event, unit)
 	self:DisableElement("Castbar")
 	self:DisableElement("Auras")
 	self:DisableElement("FixateAlert")
+	self:DisableElement("QuestProgress")
 
 	-- healthbar
 	self.Health:Hide()

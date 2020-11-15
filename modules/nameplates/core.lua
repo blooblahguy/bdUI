@@ -335,7 +335,7 @@ local function nameplate_create(self, unit)
 	self.QuestProgress = CreateFrame("Frame", nil, self.Health)
 	self.QuestProgress:SetPoint("LEFT", self.Name, "RIGHT", 4, 0)
 	self.QuestProgress:SetSize(20, 20)
-	self.QuestProgress.PostUpdate = function(unit)
+	self.QuestProgress.PostUpdateIcon = function(unit)
 		self.Name:SetTextColor(1, 0, 0)
 		-- self.Health.bg
 	end

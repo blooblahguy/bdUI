@@ -4,6 +4,7 @@ local bdUI, c, l = unpack(select(2, ...))
 -- ouf
 bdUI.oUF = ns.oUF
 
+-- base libraries
 bdUI.base64 = LibStub("LibBase64-1.0")
 bdUI.shared = LibStub("LibSharedMedia-3.0")
 LibStub("bdCallbacks-1.0"):New(bdUI)

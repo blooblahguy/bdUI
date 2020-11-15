@@ -35,42 +35,73 @@ end, 'texture')
 -- itemid
 bdUI:set_slash_command('ItemID', function()
 	local infoType, info1, info2 = GetCursorInfo(); 
+	print(GetCursorInfo())
 	if infoType == "item" then 
 		print( info1 )
 	end
 end, 'item')
 
-SLASH_BDUI1, SLASH_BDUI2 = "/bdcore", '/bd'
-SlashCmdList["BDUI"] = function(msg, editbox)
-	local s1, s2, s3 = strsplit(" ", msg)
+--====================================================
+-- MAIN COMMANDS
+--====================================================
+SLASH_BDUI1, SLASH_BDUI2, SLASH_BDUI3 = "/bdcore", '/bd', '/bdui'
+SlashCmdList["BDUI"] = function(original_msg, editbox)
+	local msg, msg2, msg3 = strsplit(" ", strtrim(original_msg))
 
-	if (s1 == "") then
-		print(bdUI.colorString.." Options:")
+	-- basic commands
+	if (msg == "" or msg == " ") then
+		bdUI:debug("Options")
 		print("   /"..bdUI.colorString.." lock - unlocks/locks moving bd addons")
 		print("   /"..bdUI.colorString.." config - opens the configuration for bd addons")
 		print("   /"..bdUI.colorString.." reset - options to reset the saved settings")
-		--print("-- /bui lock - locks the UI")
-	elseif (s1 == "unlock" or s1 == "lock") then
+
+		return
+	end
+
+	-- lock toggle
+	if (msg == "lock") then
 		bdMove.toggle_lock()
-	elseif (s1 == "reset") then
-		if (s2 == "") then
-			print(bdUI.colorString.." Reset:")
+
+		return
+	end
+
+	-- smart reset
+	if (msg == "reset") then
+		if (msg2 == "") then
+			bdUI:debug("/bdui reset ...")
 			print("   /"..bdUI.colorString.." all - Resets all profiles and positions")
 			print("   /"..bdUI.colorString.." positions - Resets positions of current profile")
 			return
-		elseif (s2 == "all") then
-			bdMove:reset_positions()
-			BDUI_SAVE = nil
-		elseif (s2 == "positions") then
-			bdMove:reset_positions()
 		end
 
-		ReloadUI()
-	elseif (s1 == "config" or s1 == "conf") then
-		bdUI.bdConfig:toggle()
-	else
-		print(bdUI.colorString.." "..msg.." not recognized as a command.")
+		if (msg2 == "all") then
+			bdMove:reset_positions()
+			BDUI_SAVE = nil
+
+			ReloadUI()
+			return
+		end
+		if (msg2 == "positions") then
+			bdMove:reset_positions()
+
+			ReloadUI()
+			return
+		end
+
+		-- couldn't reset
+		bdUI:debug(msg2.." not recognized as an argument.")
+		return
 	end
+
+	-- configuration
+	if (s1 == "config" or s1 == "conf") then
+		bdUI.bdConfig:toggle()
+
+		return
+	end
+
+	-- otherwise we're here
+	bdUI:debug(msg.." not recognized as a command.")
 end
 
 --======================================

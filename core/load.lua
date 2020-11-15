@@ -22,7 +22,8 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		end, 5)
 		bdMove.spacing = bdUI.border
 
-		bdUI:debug(l['LOAD_MSG'])
+		bdUI:debug(l['loaded'])
+		bdUI:debug(l['for options'])
 		bdUI:do_action("loaded")
 		bdUI:do_action("post_loaded")
 
@@ -30,6 +31,40 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- 	BDUI_SAVE.first_run = true
 		-- 	bdUI:do_action("setup")
 		-- end
+
+		--=====================================
+		-- Add minimap icon
+		--=====================================
+		-- icon
+		local LDB = LibStub("LibDataBroker-1.1", true)
+		local LDBIcon = LDB and LibStub("LibDBIcon-1.0", true)
+		if LDB then
+			local minimapIcon = LDB:NewDataObject("bdUI", {
+				type = "launcher",
+				icon = "Interface\\AddOns\\bdUI\\media\\minimapicon.blp",
+				OnClick = function(clickedframe, button)
+					if (IsControlKeyDown()) then
+						ReloadUI()
+					end
+					
+					if (button == "LeftButton") then
+						bdUI.bdConfig:toggle()
+					elseif (button == "RightButton") then
+						bdUI.bdConfig.header.lock:Click()
+					end	
+				end,
+				OnTooltipShow = function(tt)
+					tt:AddLine(bdUI.colorString.."Config")
+					tt:AddLine("|cffFFAA33Left Click:|r |cff00FF00Open bdUI Config|r")
+					tt:AddLine("|cffFFAA33Right Click:|r |cff00FF00Toggle lock/unlock|r")
+					tt:AddLine("|cffFFAA33Ctrl+Click:|r |cff00FF00Reload UI|r")
+				end,
+			})
+
+			if LDBIcon then
+				LDBIcon:Register("bdUI", minimapIcon, BDUI_SAVE.MinimapIcon)
+			end
+		end
 
 	end
 end)

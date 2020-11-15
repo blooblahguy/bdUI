@@ -225,6 +225,9 @@ local function Update(self, event, unit)
 		element.text:SetText(objectiveCount > 0 and objectiveCount or '?')
 	else -- normal count type quest
 		element.text:SetText(objectiveCount > 0 and objectiveCount or '?')
+		if objectiveCount == 1 then
+			element.text:SetText("")
+		end
 	end
 
 	-- by default, let's say we kill everything
