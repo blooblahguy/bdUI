@@ -367,8 +367,8 @@ local function Enable(self)
 		self:RegisterEvent('QUEST_REMOVED', UpdateWorldQuests, true)
 		self:RegisterEvent('QUEST_ACCEPTED', UpdateWorldQuests, true)
 		self:RegisterEvent('QUEST_WATCH_LIST_CHANGED', UpdateWorldQuests, true)
-
-		self:RegisterEvent('UNIT_QUEST_LOG_CHANGED', UpdateQuests)
+		
+		self:RegisterEvent('QUEST_LOG_UPDATE', UpdateAll, true)
 		self:RegisterEvent('PLAYER_ENTERING_WORLD', UpdateQuests)
 
 		self:RegisterEvent('NAME_PLATE_CREATED', CreateElement, true)
@@ -388,8 +388,8 @@ local function Disable(self)
 		self:UnregisterEvent('QUEST_REMOVED', UpdateWorldQuests, true)
 		self:UnregisterEvent('QUEST_ACCEPTED', UpdateWorldQuests, true)
 		self:UnregisterEvent('QUEST_WATCH_LIST_CHANGED', UpdateWorldQuests, true)
-
-		self:UnregisterEvent('UNIT_QUEST_LOG_CHANGED', UpdateQuests)
+		
+		self:UnregisterEvent('QUEST_WATCH_UPDATE', UpdateAll, true)
 		self:UnregisterEvent('PLAYER_ENTERING_WORLD', UpdateQuests)
 
 		self:UnregisterEvent('NAME_PLATE_CREATED', CreateElement, true)
