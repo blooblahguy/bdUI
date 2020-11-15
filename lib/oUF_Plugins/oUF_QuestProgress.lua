@@ -368,7 +368,7 @@ local function Enable(self)
 		self:RegisterEvent('QUEST_ACCEPTED', UpdateWorldQuests, true)
 		self:RegisterEvent('QUEST_WATCH_LIST_CHANGED', UpdateWorldQuests, true)
 		
-		self:RegisterEvent('QUEST_LOG_UPDATE', UpdateAll, true)
+		self:RegisterEvent('QUEST_WATCH_UPDATE', UpdateAll, true)
 		self:RegisterEvent('PLAYER_ENTERING_WORLD', UpdateQuests)
 
 		self:RegisterEvent('NAME_PLATE_CREATED', CreateElement, true)
