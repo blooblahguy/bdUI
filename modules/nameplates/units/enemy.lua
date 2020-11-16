@@ -24,8 +24,13 @@ mod.enemy_style = function(self, event, unit)
 	-- elements
 	self:EnableElement("Auras")
 	self:EnableElement("Castbar")
+	if (config.enablequests) then
+		self:EnableElement("QuestProgress")
+	else
+		self:DisableElement("QuestProgress")
+		self.Name:SetTextColor(1, 1, 1)
+	end
 	self:EnableElement("FixateAlert")
-	self:EnableElement("QuestProgress")
 
 	-- auras
 	self.Name:SetTextColor(1,1,1)

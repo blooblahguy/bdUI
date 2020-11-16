@@ -22,6 +22,12 @@ local config = {
 				lookup = bdUI.get_fonts
 			},
 			{
+				key = "change_fonts",
+				type = "toggle",
+				value = true,
+				label = "Change Fonts UI-Wide"
+			},
+			{
 				key = "background_color",
 				type = "color",
 				label = "Background Color",
@@ -48,12 +54,6 @@ local config = {
 				type = "toggle",
 				value = true,
 				label = "Skin WeakAuras"
-			},
-			{
-				key = "change_fonts",
-				type = "toggle",
-				value = true,
-				label = "Change Fonts"
 			},
 		}
 	},

@@ -183,6 +183,7 @@ local function UpdateIcon(self, texture)
 end
 
 local function Update(self, event, unit)
+	unit = unit or self.unit
 	if (unit ~= self.unit) then return end
 
 	local element = self.QuestProgress
@@ -280,12 +281,6 @@ local function Update(self, event, unit)
 	end
 end
 
-local function UpdateAll(unit)
-	for k, plate in pairs(nameplates) do
-		Update(plate, nil, plate.unit)
-	end
-end
-
 --================================================
 -- Event handler for finding quests and storing them
 --================================================
@@ -299,7 +294,7 @@ local function UpdateQuests(self, event, ...)
 		end
 	end
 	
-	UpdateAll()
+	Update(self)
 end
 
 local function UpdateWorldQuests(self, event, arg1, arg2)
@@ -332,7 +327,7 @@ local function UpdateWorldQuests(self, event, arg1, arg2)
 				activeWorldQuests[ questName ] = questID
 			end
 		end
-		UpdateAll()
+		Update(self)
 
 		return
 	end
@@ -345,7 +340,7 @@ local function UpdateWorldQuests(self, event, arg1, arg2)
 		if questName and activeWorldQuests[ questName ] then
 			activeWorldQuests[ questName ] = nil
 		end
-		UpdateAll()
+		Update(self)
 
 		return
 	end
@@ -368,11 +363,12 @@ local function Enable(self)
 		self:RegisterEvent('QUEST_ACCEPTED', UpdateWorldQuests, true)
 		self:RegisterEvent('QUEST_WATCH_LIST_CHANGED', UpdateWorldQuests, true)
 		
-		self:RegisterEvent('QUEST_WATCH_UPDATE', UpdateAll, true)
 		self:RegisterEvent('PLAYER_ENTERING_WORLD', UpdateQuests)
+		
+		-- self:RegisterEvent('NAME_PLATE_CREATED', CreateElement, true)
 
-		self:RegisterEvent('NAME_PLATE_CREATED', CreateElement, true)
-		self:RegisterEvent('NAME_PLATE_UNIT_ADDED', Update)
+		self:RegisterEvent('QUEST_LOG_UPDATE', Update, true)
+		self:RegisterEvent('NAME_PLATE_UNIT_ADDED', Update, true)
 		
 		element:Hide()
 
@@ -389,11 +385,12 @@ local function Disable(self)
 		self:UnregisterEvent('QUEST_ACCEPTED', UpdateWorldQuests, true)
 		self:UnregisterEvent('QUEST_WATCH_LIST_CHANGED', UpdateWorldQuests, true)
 		
-		self:UnregisterEvent('QUEST_WATCH_UPDATE', UpdateAll, true)
 		self:UnregisterEvent('PLAYER_ENTERING_WORLD', UpdateQuests)
+		
+		-- self:UnregisterEvent('NAME_PLATE_CREATED', CreateElement, true)
 
-		self:UnregisterEvent('NAME_PLATE_CREATED', CreateElement, true)
-		self:UnregisterEvent('NAME_PLATE_UNIT_ADDED', Update)
+		self:UnregisterEvent('QUEST_LOG_UPDATE', Update, true)
+		self:UnregisterEvent('NAME_PLATE_UNIT_ADDED', Update, true)
 		
 		element:Hide()
 	end

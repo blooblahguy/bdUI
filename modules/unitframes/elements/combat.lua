@@ -10,14 +10,14 @@ mod.additional_elements.combat = function(self, unit)
 	local size = math.restrict(height * 0.75, 8, height)
 
 	-- Resting indicator
-	self.CombatIndicator = self.Health:CreateTexture(nil, "OVERLAY")
+	self.CombatIndicator = self.TextHolder:CreateTexture(nil, "OVERLAY")
 	self.CombatIndicator:SetSize(size, size)
 	self.CombatIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
 	self.CombatIndicator:SetTexCoord(.5, 1, 0, .49)
 
 	if (config.textlocation == "Outside") then
-		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
+		self.CombatIndicator:SetPoint("RIGHT", self.TextHolder, -mod.padding, 1)
 	elseif (config.textlocation == "Inside") then
-		self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
+		self.CombatIndicator:SetPoint("RIGHT", self.TextHolder, "CENTER", -mod.padding, 1)
 	end
 end

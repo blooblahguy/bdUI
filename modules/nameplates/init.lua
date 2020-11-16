@@ -53,7 +53,12 @@ local config = {
 			{
 				key = "text",
 				type = "text",
-				value = "Because of the restrictions blizzard places on nameplates, you may have to type /reload to see certain changes take place."
+				value = "*Because of the restrictions blizzard places on nameplates, you may have to type /reload to see certain changes take place."
+			},
+			{
+				key = "heading",
+				type = "heading",
+				value = "Sizing"
 			},
 			{
 				key = "scale",
@@ -101,6 +106,29 @@ local config = {
 				label = "Click target padding bottom",
 			},
 			{
+				key = "castbarheight",
+				type = "range",
+				value = 18,
+				min = 4,
+				max = 50,
+				step = 2,
+				label = "Castbar Height",
+			},
+			{
+				key = "castbariconscale",
+				type = "range",
+				value = 1,
+				min = 0.1,
+				max = 1,
+				step = 0.1,
+				label = "Castbar Icon Scale",
+			},
+			{
+				key = "heading",
+				type = "heading",
+				value = "Display"
+			},
+			{
 				key = "friendnamealpha",
 				type = "range",
 				value = 1,
@@ -142,24 +170,7 @@ local config = {
 			-- 	step = 0.1,
 			-- 	label = "Vertical Spacing",
 			-- },
-			{
-				key = "castbarheight",
-				type = "range",
-				value = 18,
-				min = 4,
-				max = 50,
-				step = 2,
-				label = "Castbar Height",
-			},
-			{
-				key = "castbariconscale",
-				type = "range",
-				value = 1,
-				min = 0.1,
-				max = 1,
-				step = 0.1,
-				label = "Castbar Icon Scale",
-			},
+			
 			{
 				key = "nameplatedistance",
 				type = "range",
@@ -183,6 +194,12 @@ local config = {
 				max = 1,
 				step = 0.1,
 				label = "Unselected nameplate alpha",
+			},
+			{
+				key = "enablequests",
+				type = "toggle",
+				value = true,
+				label = "Enable Quest Display on Nameplates",
 			},
 		}
 	},

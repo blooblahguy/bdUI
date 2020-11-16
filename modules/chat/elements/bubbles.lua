@@ -18,7 +18,7 @@ function mod:create_chat_bubbles()
 	local config = mod:get_save()
 	local instanceType = select(2, GetInstanceInfo())
 
-	if (instanceType == "none" and config.enabled and config.skinchatbubbles) then
+	if (instanceType == "none" and config.enabled and config.skinchatbubbles == "Skinned") then
 		bubbles:SetScript("OnEvent", bubbles.event)
 		bubbles:SetScript("OnUpdate", bubbles.scan)
 	else

@@ -18,23 +18,28 @@ local config = {
 		heading = "Main Tooltips",
 		args = {
 			{
+				key = "text",
+				type = "text",
+				value = "Hint: Hold shift over a player to see their spec and ilvl",
+			},
+			{
 				key = "showrealm",
 				type = "toggle",
 				value = true,
 				label = "Show Realm Name"
 			},
-			{
-				key = "itemids",
-				type = "toggle",
-				value = false,
-				label = "Enable itemIDs in tooltip"
-			},
-			{
-				key = "spellids",
-				type = "toggle",
-				value = true,
-				label = "Enable spellIDs in tooltip"
-			},
+			-- {
+			-- 	key = "itemids",
+			-- 	type = "toggle",
+			-- 	value = false,
+			-- 	label = "Enable itemIDs in tooltip"
+			-- },
+			-- {
+			-- 	key = "spellids",
+			-- 	type = "toggle",
+			-- 	value = true,
+			-- 	label = "Enable spellIDs in tooltip"
+			-- },
 			{
 				key = "enablelinecolors",
 				type = "toggle",
