@@ -94,7 +94,7 @@ SlashCmdList["BDUI"] = function(original_msg, editbox)
 	end
 
 	-- configuration
-	if (s1 == "config" or s1 == "conf") then
+	if (msg1 == "config" or msg1 == "conf") then
 		bdUI.bdConfig:toggle()
 
 		return
