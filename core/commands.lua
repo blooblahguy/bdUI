@@ -67,7 +67,7 @@ SlashCmdList["BDUI"] = function(original_msg, editbox)
 
 	-- smart reset
 	if (msg == "reset") then
-		if (msg2 == "") then
+		if (not msg2 or msg2 == "") then
 			bdUI:debug("/bdui reset ...")
 			print("   /"..bdUI.colorString.." all - Resets all profiles and positions")
 			print("   /"..bdUI.colorString.." positions - Resets positions of current profile")

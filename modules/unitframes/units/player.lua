@@ -61,9 +61,9 @@ mod.custom_layout["player"] = function(self, unit)
 			self:EnableElement("AuraBars")
 			self.AuraBars:Show()
 		else
+			self.Buffs.size = config.uf_buff_size
 			self.Buffs = self.DisabledBuffs
 			self:DisableElement("AuraBars")
-			self.Buffs.size = config.uf_buff_size
 		end
 
 		-- health

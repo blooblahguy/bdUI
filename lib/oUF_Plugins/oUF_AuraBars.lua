@@ -117,7 +117,7 @@ local function updateBar(element, unit, index, offset, filter, isDebuff, visible
 		if(show) then
 			statusBar.icon:SetTexture(texture)
 			if count > 1 then
-				statusBar.nameText:SetFormattedText('[%d] %s', count, name)
+				statusBar.nameText:SetFormattedText('%s [%d]', name, count)
 			else
 				statusBar.nameText:SetText(name)
 			end
