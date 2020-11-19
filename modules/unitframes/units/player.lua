@@ -19,12 +19,12 @@ mod.custom_layout["player"] = function(self, unit)
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 
 		-- filter from whitelist/blacklist
-		-- if ( not bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then return false end
+		if ( not bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then return false end
 
 		-- but also only show player and with durations
-		-- if (caster == "player" and duration ~= 0 and duration < 300) then return true end
+		if (caster == "player" and duration ~= 0 and duration < 300) then return true end
 
-		return true
+		-- return true
 	end
 
 	self.AuraBars.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
