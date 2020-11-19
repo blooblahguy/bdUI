@@ -62,6 +62,10 @@ loader:SetScript("OnEvent", function(self, event, addon)
 			})
 
 			if LDBIcon then
+				-- init value
+				if (BDUI_SAVE.MinimapIcon == nil) then
+					BDUI_SAVE.MinimapIcon = { minimapPos = 225, hide = false }
+				end
 				LDBIcon:Register("bdUI", minimapIcon, BDUI_SAVE.MinimapIcon)
 			end
 		end
