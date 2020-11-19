@@ -118,19 +118,30 @@ local function layout(self, unit)
 	self.Health.colorReaction = true
 	self.Health.colorHealth = true
 	bdUI:set_backdrop(self.Health)
-	function self.Health.PostUpdate(s, unit, min, max)
-		local r, g, b = self.Health:GetStatusBarColor()
+	function self.Health.PostUpdateColor(s, unit, r, g, b)
+		-- local r, g, b = self.Health:GetStatusBarColor()
+		local bg = bdUI.media.backdrop
 		
 		if (config.invert) then
 			self.Health:SetStatusBarColor(unpack(bdUI.media.backdrop))
-			self.Health._border:SetVertexColor(r/2, g/2, b/2)
+			self.Health._background:SetVertexColor(r / 2, g / 2, b / 2)
 			self.Short:SetTextColor(r*1.1, g*1.1, b*1.1)
-			--self.TotalAbsorb:SetStatusBarColor(1,1,1,.07)
+			self.bdHealthPrediction.absorbBar:SetStatusBarColor(1, 1, 1, .1)
+			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(1, 1, 1, .1)
+
+			if (UnitIsDead(unit)) then
+				self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
+			end
 		else
-			self.Health:SetStatusBarColor(r/2, g/2, b/2)
-			self.Health._border:SetVertexColor(unpack(bdUI.media.backdrop))
-			self.Short:SetTextColor(1,1,1)
-			--self.TotalAbsorb:SetStatusBarColor(.1,.1,.1,.5)
+			self.Health:SetStatusBarColor(r / 1.5, g / 1.5, b / 1.5)
+			self.Health._background:SetVertexColor(unpack(bdUI.media.backdrop))
+			self.Short:SetTextColor(1, 1, 1)
+			self.bdHealthPrediction.absorbBar:SetStatusBarColor(0, 0, 0, .4)
+			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(0, 0, 0, .4)
+
+			if (UnitIsDead(unit)) then
+				self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
+			end
 		end
 	end
 	
@@ -197,44 +208,44 @@ local function layout(self, unit)
 	-- Healing & Damage Absorbs
 	--===============================================
 	-- Heal predections
-    local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
+	local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
 	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
 	incomingHeals:SetStatusBarColor(0.6,1,0.6,.2)
 	incomingHeals:Hide()
 
 	-- Damage Absorbs
-    local absorbBar = CreateFrame('StatusBar', nil, self.Health)
+	local absorbBar = CreateFrame('StatusBar', nil, self.Health)
 	absorbBar:SetStatusBarTexture(bdUI.media.flat)
-	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
+	absorbBar:SetStatusBarColor(.1, .1, .1, .6)
 	absorbBar:Hide()
 	local overAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overAbsorbBar:SetAllPoints()
+	overAbsorbBar:SetAllPoints()
 	overAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
-	overAbsorbBar:SetStatusBarColor(.1, .1, .2, .6)
+	overAbsorbBar:SetStatusBarColor(.1, .1, .1, .6)
 	overAbsorbBar:Hide()
 
 	-- Healing Absorbs
-    local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    healAbsorbBar:SetReverseFill(true)
+	local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+	healAbsorbBar:SetReverseFill(true)
 	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
-	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	healAbsorbBar:SetStatusBarColor(.3, 0, 0, .5)
 	healAbsorbBar:Hide()
 	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overHealAbsorbBar:SetReverseFill(true)
+	overHealAbsorbBar:SetReverseFill(true)
 	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
-	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0, .5)
 	overHealAbsorbBar:Hide()
 
 	-- Register and callback
-    self.bdHealthPrediction = {
-        incomingHeals = incomingHeals,
+	self.bdHealthPrediction = {
+		incomingHeals = incomingHeals,
 
-        absorbBar = absorbBar,
+		absorbBar = absorbBar,
 		overAbsorb = overAbsorbBar,
 
-        healAbsorbBar = healAbsorbBar,
-        overHealAbsorb = overHealAbsorbBar,
-    }
+		healAbsorbBar = healAbsorbBar,
+		overHealAbsorb = overHealAbsorbBar,
+	}
 
 	-- Resurrect 
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -244,12 +255,12 @@ local function layout(self, unit)
 	-- Summon
 	self.SummonIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
 	self.SummonIndicator:SetSize(16, 16)
-    self.SummonIndicator:SetPoint('TOPRIGHT', self)
+	self.SummonIndicator:SetPoint('TOPRIGHT', self)
 
 	-- Phase
 	self.PhaseIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
 	self.PhaseIndicator:SetSize(16, 16)
-    self.PhaseIndicator:SetPoint('BOTTOMLEFT', self)
+	self.PhaseIndicator:SetPoint('BOTTOMLEFT', self)
 
 	-- Power
 	self.Power = CreateFrame("StatusBar", nil, self.Health)
