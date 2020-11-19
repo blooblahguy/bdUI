@@ -24,6 +24,5 @@ mod.additional_elements.buffs = function(self, unit)
 		bdUI:set_backdrop_basic(button)
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 		button.cd:GetRegions():SetAlpha(0)
-		button:SetAlpha(0.8)
 	end
 end

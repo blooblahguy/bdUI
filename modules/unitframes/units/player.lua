@@ -19,10 +19,12 @@ mod.custom_layout["player"] = function(self, unit)
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 
 		-- filter from whitelist/blacklist
-		if ( not bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then return false end
+		-- if ( not bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then return false end
 
 		-- but also only show player and with durations
-		if (caster == "player" and duration ~= 0 and duration < 300) then return true end
+		-- if (caster == "player" and duration ~= 0 and duration < 300) then return true end
+
+		return true
 	end
 
 	self.AuraBars.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
@@ -35,6 +37,8 @@ mod.custom_layout["player"] = function(self, unit)
 
 		-- but also only show player and with durations
 		if (caster == "player" and duration ~= 0 and duration < 300) then return true end
+
+		-- return true
 	end
 
 	-- create standalone resource bar
@@ -57,13 +61,16 @@ mod.custom_layout["player"] = function(self, unit)
 		-- auras
 		if (config.aurastyle == "Bars") then
 			self.DisabledBuffs = self.Buffs
+			self.Buffs:Hide()
 			self.Buffs = nil
 			self:EnableElement("AuraBars")
 			self.AuraBars:Show()
 		else
+			self.Buffs = self.DisabledBuffs or self.Buffs
+			self.Buffs:Show()
 			self.Buffs.size = config.uf_buff_size
-			self.Buffs = self.DisabledBuffs
 			self:DisableElement("AuraBars")
+			self.AuraBars:Hide()
 		end
 
 		-- health

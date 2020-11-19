@@ -92,12 +92,17 @@ mod.custom_layout["target"] = function(self, unit)
 		end
 
 		if (config.aurastyle == "Bars") then
+			self.Debuffs:Hide()
 			self.DisabledDebuffs = self.Debuffs
 			self.Debuffs = nil
 			self:EnableElement("AuraBars")
+			self.AuraBars:Show()
 		else
-			self.Debuffs = self.DisabledDebuffs
+			self.Debuffs = self.DisabledDebuffs or self.Debuffs
+			self.Debuffs.size = config.uf_buff_size
+			self.Debuffs:Show()
 			self:DisableElement("AuraBars")
+			self.AuraBars:Hide()
 		end
 	end
 end

@@ -72,8 +72,8 @@ local function Enable(self, unit)
 		element:SetTextColor(1,1,1)
 		element.SetText_Old = element.SetText
 		element.SetText = function(self, unit)
-			local cc = self.__owner.colors.class[select(2, UnitClass(unit))]
-			local color = RGBPercToHex(unpack(cc))
+			local cc = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+			local color = RGBPercToHex(cc.r, cc.g, cc.b)
 			if (unit and UnitIsUnit(unit, "player")) then
 				self:SetAlpha(1)
 				self:SetText_Old("|T"..self.icon..":16:16:0:0:60:60:4:56:4:56|t ".."|cff"..color..unit.."|r")
