@@ -200,6 +200,16 @@ function mod:create_button_frame()
 		if (config.buttonpos == "Disabled") then return end
 		if (InCombatLockdown()) then return end
 
+		if (not config.showconfig) then
+			hideButtons['LibDBIcon10_bdUI'] = true
+			bdUI_configButton:Hide("bdUI")
+			BDUI_SAVE.MinimapIcon.hide = true
+		else
+			hideButtons['LibDBIcon10_bdUI'] = false
+			bdUI_configButton:Show("bdUI")
+			BDUI_SAVE.MinimapIcon.hide = false
+		end
+
 		if (config.hideclasshall) then
 			hideButtons['GarrisonLandingPageMinimapButton'] = true
 		else
