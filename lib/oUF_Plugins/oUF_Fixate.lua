@@ -73,6 +73,7 @@ local function Enable(self, unit)
 		element.SetText_Old = element.SetText
 		element.SetText = function(self, unit)
 			local cc = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+			if (not cc) then return end
 			local color = RGBPercToHex(cc.r, cc.g, cc.b)
 			if (unit and UnitIsUnit(unit, "player")) then
 				self:SetAlpha(1)
