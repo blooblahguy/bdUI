@@ -42,22 +42,28 @@ loader:SetScript("OnEvent", function(self, event, addon)
 			local minimapIcon = LDB:NewDataObject("bdUI", {
 				type = "launcher",
 				icon = "Interface\\AddOns\\bdUI\\media\\minimapicon.blp",
-				OnClick = function(clickedframe, button)
-					if (IsControlKeyDown()) then
-						ReloadUI()
-					end
-					
+				OnClick = function(clickedframe, button)					
 					if (button == "LeftButton") then
-						bdUI.bdConfig:toggle()
+						if (IsControlKeyDown()) then
+							ReloadUI()
+						else
+							bdUI.bdConfig:toggle()
+						end
 					elseif (button == "RightButton") then
-						bdUI.bdConfig.header.lock:Click()
+						if (IsControlKeyDown()) then
+							BDUI_SAVE.MinimapIcon.hide = true
+							LDBIcon:Hide("bdUI")
+						else
+							bdUI.bdConfig.header.lock:Click()
+						end
 					end	
 				end,
 				OnTooltipShow = function(tt)
 					tt:AddLine(bdUI.colorString.."Config")
 					tt:AddLine("|cffFFAA33Left Click:|r |cff00FF00Open bdUI Config|r")
 					tt:AddLine("|cffFFAA33Right Click:|r |cff00FF00Toggle lock/unlock|r")
-					tt:AddLine("|cffFFAA33Ctrl+Click:|r |cff00FF00Reload UI|r")
+					tt:AddLine("|cffFFAA33Ctrl+Left Click:|r |cff00FF00Reload UI|r")
+					tt:AddLine("|cffFFAA33Ctrl+Right Click:|r |cff00FF00Hide Button|r")
 				end,
 			})
 
