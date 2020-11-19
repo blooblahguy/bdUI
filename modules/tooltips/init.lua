@@ -28,6 +28,13 @@ local config = {
 				value = true,
 				label = "Show Realm Name"
 			},
+			{
+				key = "anchor",
+				type = "select",
+				value = "Frame",
+				options = {"Frame", "Mouse"},
+				label = "Tooltip Anchor"
+			},
 			-- {
 			-- 	key = "itemids",
 			-- 	type = "toggle",
@@ -77,6 +84,5 @@ end
 
 function mod:config_callback()
 	mod.config = mod:get_save()
-
 
 end

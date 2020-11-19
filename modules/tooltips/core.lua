@@ -212,20 +212,34 @@ local function update_tootlip(self)
 	dynamic_tooltip_information(self, unit)
 end
 
+local function tooltip_anchor(self, parent)
+	local config = mod.config
+
+	if (config.anchor == "Frame") then
+		self:SetOwner(parent, "ANCHOR_NONE")
+		self:ClearAllPoints()
+		self:SetPoint("TOPLEFT", mod.tooltipanchor, "TOPLEFT", -34, 16)
+	else
+		self:ClearAllPoints()
+		self:SetOwner(parent, "ANCHOR_CURSOR")
+	end
+end
+
 function mod:create_tooltips()
 	---------------------------------------------
 	--	Modify default position
 	---------------------------------------------
-	local tooltipanchor = CreateFrame("frame", "bdTooltip", bdParent)
-	tooltipanchor:SetSize(150, 100)
-	tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 474, -116)
-	bdMove:set_moveable(tooltipanchor, "Tooltips")
+	mod.tooltipanchor = CreateFrame("frame", "bdTooltip", bdParent)
+	mod.tooltipanchor:SetSize(150, 100)
+	mod.tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 474, -116)
+	bdMove:set_moveable(mod.tooltipanchor, "Tooltips")
 
-	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
-		self:SetOwner(parent, "ANCHOR_NONE")
-		self:ClearAllPoints()
-		self:SetPoint("TOPLEFT", tooltipanchor, "TOPLEFT", -34, 16)
-	end)
+	hooksecurefunc("GameTooltip_SetDefaultAnchor", tooltip_anchor)
+	-- hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
+	-- 	self:SetOwner(parent, "ANCHOR_NONE")
+	-- 	self:ClearAllPoints()
+	-- 	self:SetPoint("TOPLEFT", tooltipanchor, "TOPLEFT", -34, 16)
+	-- end)
 
 	-- for skinning all the tooltips in the UI
 	local tooltips = {
