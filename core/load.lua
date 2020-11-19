@@ -38,11 +38,12 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- icon
 		local LDB = LibStub("LibDataBroker-1.1", true)
 		local LDBIcon = LDB and LibStub("LibDBIcon-1.0", true)
+		bdUI_configButton = LDB and LibStub("LibDBIcon-1.0", true)
 		if LDB then
 			local minimapIcon = LDB:NewDataObject("bdUI", {
 				type = "launcher",
 				icon = "Interface\\AddOns\\bdUI\\media\\minimapicon.blp",
-				OnClick = function(clickedframe, button)					
+				OnClick = function(clickedframe, button)
 					if (button == "LeftButton") then
 						if (IsControlKeyDown()) then
 							ReloadUI()
@@ -51,8 +52,9 @@ loader:SetScript("OnEvent", function(self, event, addon)
 						end
 					elseif (button == "RightButton") then
 						if (IsControlKeyDown()) then
-							BDUI_SAVE.MinimapIcon.hide = true
-							LDBIcon:Hide("bdUI")
+							bdUI_configButton:Hide("bdUI")
+							BDUI_SAVE.MinimapIcon.hide = true --for non bdUI minimaps
+							bdUI:get_module("Maps").config.showconfig = false
 						else
 							bdUI.bdConfig.header.lock:Click()
 						end
@@ -67,12 +69,12 @@ loader:SetScript("OnEvent", function(self, event, addon)
 				end,
 			})
 
-			if LDBIcon then
+			if bdUI_configButton then
 				-- init value
 				if (BDUI_SAVE.MinimapIcon == nil) then
 					BDUI_SAVE.MinimapIcon = { minimapPos = 225, hide = false }
 				end
-				LDBIcon:Register("bdUI", minimapIcon, BDUI_SAVE.MinimapIcon)
+				bdUI_configButton:Register("bdUI", minimapIcon, BDUI_SAVE.MinimapIcon)
 			end
 		end
 
