@@ -316,23 +316,33 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- QUEST ICON
 	--==========================================
-	self.QuestProgress = CreateFrame("Frame", nil, self.Health)
+	self.QuestProgress = CreateFrame("Frame", "bdUF_QuestProgress", self.Health)
 	self.QuestProgress:SetPoint("LEFT", self.Name, "RIGHT", 4, 0)
 	self.QuestProgress:SetSize(20, 20)
-	self.QuestProgress.PostUpdateIcon = function(unit)
+	self.QuestProgress.PostUpdateIcon = function(self, texture, key)
+		-- local border = bdUI:get_border(self.QuestProgress.icon) 
 		self.Name:SetTextColor(1, 0, 0)
+		if (not self.QuestProgress.icon.bg) then
+			self.QuestProgress.icon.bg = self.QuestProgress:CreateTexture(nil, "BACKGROUND")
+			self.QuestProgress.icon.bg:SetTexture(bdUI.media.flat)
+			self.QuestProgress.icon.bg:SetVertexColor(unpack(bdUI.media.backdrop))
+			self.QuestProgress.icon.bg:SetPoint("TOPLEFT", self.QuestProgress.icon, "TOPLEFT", -border, border)
+			self.QuestProgress.icon.bg:SetPoint("BOTTOMRIGHT", self.QuestProgress.icon, "BOTTOMRIGHT", border, -border)
+		end
+
+		if (key == "item") then
+			self.QuestProgress.icon.bg:Show()
+		else
+			self.QuestProgress.icon.bg:Hide()
+		end
+		-- print(self:GetName())
 		-- self.Health.bg
 	end
-	self.QuestProgress.PostHide = function(unit)
+	self.QuestProgress.PostHide = function(texture, key)
 		self.Name:SetTextColor(1, 1, 1)
+		-- print(self:GetName())
 		-- self.Health.bg
 	end
-	-- self.QuestIcon = self:CreateTexture("nil", "OVERLAY")
-	-- self.QuestIcon:SetPoint("LEFT", self, "RIGHT", 10, 0)
-	-- self.QuestIcon:SetSize(20, 20)
-	-- self.QuestIcon:SetTexture(237608)
-	-- self.QuestIcon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1)
-	-- self.QuestIcon:SetVertexColor(1, 1, 0)
 
 	--==========================================
 	-- UNIT HEALTH

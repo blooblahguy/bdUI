@@ -6,7 +6,6 @@ ttscan:SetOwner(WorldFrame, 'ANCHOR_NONE')
 
 local activeQuests = {}
 local activeWorldQuests = {}
-local nameplates = {}
 
 local colors = {
 	['world'] = {},
@@ -117,22 +116,21 @@ end
 --================================================
 local function CreateElement(self, event, nameplate, ...)
 	self:UnregisterEvent('NAME_PLATE_CREATED', CreateElement, true)
-
-	nameplates[self] = self
-
 	local element = self.QuestProgress
 
-	local texture = textures['quest']
-	local icon = element:CreateTexture(nil, "OVERLAY")
-	icon:SetAllPoints()
-	element.icon = icon
+	if (not element.icon) then
+		local icon = element:CreateTexture(nil, "OVERLAY")
+		icon:SetAllPoints()
+		element.icon = icon
+	end
 
-	local text = element:CreateFontString(nil, 'OVERLAY', 'SystemFont_Outline_Small')
-	text:SetPoint('CENTER', icon, 0, 0)
-	text:SetShadowOffset(1, -1)
-	-- text:SetTextColor(1, 0.9, 0)
-	text:SetText(math.random(22))
-	element.text = text
+	if (not element.text) then
+		local text = element:CreateFontString(nil, 'OVERLAY', 'SystemFont_Outline_Small')
+		text:SetPoint('CENTER', icon, 0, 0)
+		text:SetShadowOffset(1, -1)
+		-- text:SetText(math.random(20))
+		element.text = text
+	end
 
 	-- local cooldown = CreateFrame("Cooldown", nil, element, "CooldownFrameTemplate")
 	-- cooldown:SetAllPoints()
@@ -147,7 +145,6 @@ local function CreateElement(self, event, nameplate, ...)
 	-- text:Hide()
 	-- text.Show = text.Hide
 	-- dump(cooldown)
-
 end
 
 -- return an plain text version of this type of quest
@@ -166,7 +163,7 @@ local function GetQuestType(questID, index, bool)
 	end
 end
 
-local function UpdateIcon(self, texture)
+local function UpdateIcon(self, texture, key)
 	local element = self.QuestProgress
 
 	element.icon:SetTexCoord(unpack(texture[2]))
@@ -178,7 +175,7 @@ local function UpdateIcon(self, texture)
 	element.icon:SetRotation(texture[3])
 
 	if (element.PostUpdateIcon) then
-		element:PostUpdateIcon(texture)
+		element.PostUpdateIcon(self, texture, key)
 	end
 end
 
@@ -241,7 +238,7 @@ local function Update(self, event, unit)
 			texture = textures["item"]
 			texture[1] = itemTexture
 
-			UpdateIcon(self, texture)
+			UpdateIcon(self, texture, "item")
 			return
 		end
 	end
@@ -255,7 +252,7 @@ local function Update(self, event, unit)
 			if (questType == "item") then
 				texture = textures["loot"]
 
-				UpdateIcon(self, texture)
+				UpdateIcon(self, texture, "loot")
 				return
 			end
 		end
@@ -267,14 +264,14 @@ local function Update(self, event, unit)
 			if (questType == "item") then
 				texture = textures["loot"]
 
-				UpdateIcon(self, texture)
+				UpdateIcon(self, texture, "loot")
 				return
 			end
 		end
 	end
 
 	-- if we made it here, that means we kill this enemy
-	UpdateIcon(self, texture)
+	UpdateIcon(self, texture, "kill")
 
 	if (element.PostUpdate) then
 		element:PostUpdate(unit, progressGlob, questType, objectiveCount, questLogIndex, questID)
@@ -364,6 +361,7 @@ local function Enable(self)
 		self:RegisterEvent('QUEST_WATCH_LIST_CHANGED', UpdateWorldQuests, true)
 		
 		self:RegisterEvent('PLAYER_ENTERING_WORLD', UpdateQuests)
+		self:RegisterEvent('QUEST_LOG_UPDATE', UpdateQuests, true)
 		
 		-- self:RegisterEvent('NAME_PLATE_CREATED', CreateElement, true)
 
@@ -386,6 +384,7 @@ local function Disable(self)
 		self:UnregisterEvent('QUEST_WATCH_LIST_CHANGED', UpdateWorldQuests, true)
 		
 		self:UnregisterEvent('PLAYER_ENTERING_WORLD', UpdateQuests)
+		self:UnregisterEvent('QUEST_LOG_UPDATE', UpdateQuests, true)
 		
 		-- self:UnregisterEvent('NAME_PLATE_CREATED', CreateElement, true)
 

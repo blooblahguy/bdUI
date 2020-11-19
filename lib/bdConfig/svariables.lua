@@ -56,6 +56,7 @@ end
 
 -- makes sure a value is set in the given save index
 function lib:ensure_value(sv, option, value, persistent)
+	if (not option) then return end
 	if (sv[option] == nil) then
 		if (value == nil) then
 			value = {}
