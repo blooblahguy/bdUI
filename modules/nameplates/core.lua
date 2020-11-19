@@ -6,6 +6,7 @@ local mod = bdUI:get_module("Nameplates")
 local oUF = bdUI.oUF
 local config
 local nameplates = {}
+mod.elements = {}
 
 -- Fonts we use
 mod.font = CreateFont("BDN_FONT")

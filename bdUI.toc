@@ -181,6 +181,7 @@ modules\nameplates\units\enemy.lua
 modules\nameplates\elements\auras.lua
 modules\nameplates\elements\power.lua
 modules\nameplates\elements\resources.lua
+modules\nameplates\elements\castbar.lua
 
 # Tooltips
 modules\tooltips\init.lua

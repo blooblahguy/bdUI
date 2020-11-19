@@ -23,7 +23,8 @@ end
 -- castbar element
 mod.elements.castbar = function(self, unit)
 	local border = bdUI:get_border(self)
-	
+	config = mod.config
+
 	self.Castbar = CreateFrame("StatusBar", nil, self)
 	self.Castbar:SetFrameLevel(3)
 	self.Castbar:SetStatusBarTexture(bdUI.media.flat)
