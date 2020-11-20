@@ -37,7 +37,6 @@ function mod:create_altpower()
 				self:SetStatusBarColor(bdUI.media.blue.r, bdUI.media.blue.g, bdUI.media.blue.b);
 				self:SetStatusBarColor(unpack(bdUI.media.blue));
 
-				-- print(config.alt_height)
 				local extra = config.alt_height / 4
 				local top = (2 + extra)
 

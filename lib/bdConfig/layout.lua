@@ -27,8 +27,6 @@ function lib:register_element(name, create)
 		frame._layout = "element"
 		parent.last_frame = frame
 
-		-- print(name, options.key)
-
 		lib.active_elements[options.key or name] = frame
 
 		return frame

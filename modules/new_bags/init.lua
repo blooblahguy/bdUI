@@ -15,7 +15,13 @@ local config = {
 	{
 		key = "enabled",
 		type = "toggle",
-		label = "Enable New Bag Code (not ready)",
+		label = "Enable New Bag Code (in beta)",
+		value = false,
+	},
+	{
+		key = "text",
+		type = "text",
+		label = "New bags function similar to popular addons like adibags, with categories and auto sorting.",
 		value = false,
 	},
 

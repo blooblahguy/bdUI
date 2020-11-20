@@ -390,6 +390,5 @@ end
 local evHandler = CreateFrame("frame")
 evHandler:RegisterEvent("BAG_NEW_ITEMS_UPDATED")
 evHandler:SetScript("OnEvent", function()
-	-- print("bnew item")
 	mod:bag_generation()
 end)

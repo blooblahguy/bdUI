@@ -229,7 +229,6 @@ function mod:create_container(name, ids, bagids)
 
 	-- callback for sizing
 	function bags:update_size(width, height)
-		-- print(height)
 		if (bags.currencies) then
 			bags:SetSize(width, height + header:GetHeight() + footer:GetHeight())
 		else

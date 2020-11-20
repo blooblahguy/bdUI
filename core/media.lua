@@ -172,9 +172,6 @@ end
 	end
 
 	function bdUI:get_border(frame)
-		-- local general = 
-		-- print(general.border_size)
-
 		local screenheight = select(2, GetPhysicalScreenSize())
 		local scale = 768 / screenheight
 		local frame_scale = frame:GetEffectiveScale()

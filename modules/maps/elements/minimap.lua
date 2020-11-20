@@ -11,9 +11,6 @@ mod.our_shape = function() return "SQUARE" end
 -- local rec_mask = Minimap:CreateTexture("nil")
 -- dump(Minimap:GetRegions())
 
--- print(mod.default_shape)
--- print(mod.our_shape)
-
 function mod:set_shape()
 	if (not mod.config.enabled) then
 		GetMinimapShape = mod.default_shape

@@ -67,8 +67,6 @@ function mod:position_objects(options)
 			last = frame
 			index = index + 1
 
-			-- print(frame, frame:GetPoint())
-
 			if (options.loop) then 
 				options.loop(frame, k, v) 
 			end

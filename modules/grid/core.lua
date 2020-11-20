@@ -286,7 +286,6 @@ local function layout(self, unit)
 	self.GroupRoleIndicator.Override = function(self,event)
 		local role = UnitGroupRolesAssigned(self.unit)
 		self.GroupRoleIndicator:Hide()
-		-- print(role)
 		if (config.roleicon) then
 			if (role and (role == "HEALER" or role == "TANK")) then
 				self.GroupRoleIndicator:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
@@ -516,7 +515,6 @@ function mod:get_attributes()
 	num_groups = config.num_groups
 	if (config.intel_groups) then
 		local difficulty = select(3, GetInstanceInfo()) -- maybe use maxPlayers instead?
-		-- print(difficulty, difficultySize[difficulty])
 		if (difficultySize[difficulty]) then
 			num_groups = (difficultySize[difficulty] / 5)
 		end

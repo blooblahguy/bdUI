@@ -53,12 +53,10 @@ local methods = {
 	['populate'] = function(self)
 		self:release_frames()
 		for k, entry in pairs(self.save[self.key]) do
-			-- print(k, entry)
 		end
 
 		-- for k, entry in pairs(self.save[self.key]) do
 		-- 	local row = self:get_frame()
-		-- 	print(row, entry)
 
 		-- 	for i, arg in pairs(entry) do
 		-- 		-- dump(arg)

@@ -5,7 +5,6 @@ local mod = bdUI:get_module("Bags (beta)")
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
 
 mod.bank = mod:create_container("Bank")
--- print(1 - NUM_BANKBAGSLOTS)
 mod.bank.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 mod.bank.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 

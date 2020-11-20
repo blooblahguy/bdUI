@@ -221,7 +221,6 @@ end
 function mod:quickreagent(show)
 	local numrows, lastrowitem, numitems, lastitem = 0, nil, 1, nil
 	for i = 1, 98 do
-		--print(i)
 		local item = _G["ReagentBankFrameItem"..i]
 		if (not item) then return end
 		item:ClearAllPoints()

@@ -418,7 +418,6 @@ function lib:attach_controls(frame)
 	end
 
 	local quad, y, h = GetQuadrant(frame)
-	-- print(quad, h, y)
 	lib.controls._frame = frame
 	lib.controls:Show()
 	lib.controls:ClearAllPoints()

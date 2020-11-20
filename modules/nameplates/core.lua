@@ -184,7 +184,6 @@ local function update_threat(self, event, unit)
 	elseif (config.specialunits[UnitName(unit)]) then
 		healthbar:SetStatusBarColor(unpack(config.specialcolor))
 	else
-		-- print("update threat", self.status)
 		healthbar:SetStatusBarColor(unpack(self.smartColors))
 	end
 
@@ -335,12 +334,10 @@ local function nameplate_create(self, unit)
 		else
 			self.QuestProgress.icon.bg:Hide()
 		end
-		-- print(self:GetName())
 		-- self.Health.bg
 	end
 	self.QuestProgress.PostHide = function(texture, key)
 		self.Name:SetTextColor(1, 1, 1)
-		-- print(self:GetName())
 		-- self.Health.bg
 	end
 

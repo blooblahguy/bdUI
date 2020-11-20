@@ -21,9 +21,12 @@ local textures = {
 	},
 	['kill'] = {
 		"Interface/CURSOR/Attack.PNG",
+		-- "Interface/CharacterFrame/UI-StateIcon",
+		-- {.5, 1, 0, .49},
 		{.07, .93, .07, .93},
 		0,
-		"texture"
+		"texture",
+		-- 30
 	},
 	-- ['kill'] = {
 	-- 	1375574,
@@ -118,19 +121,23 @@ local function CreateElement(self, event, nameplate, ...)
 	self:UnregisterEvent('NAME_PLATE_CREATED', CreateElement, true)
 	local element = self.QuestProgress
 
-	if (not element.icon) then
+	-- if (not element.icon) then
 		local icon = element:CreateTexture(nil, "OVERLAY")
-		icon:SetAllPoints()
+		icon:SetPoint("CENTER")
+		icon:SetSize(element:GetHeight(), element:GetHeight())
 		element.icon = icon
-	end
+	-- end
 
-	if (not element.text) then
+	-- if (not element.text) then
 		local text = element:CreateFontString(nil, 'OVERLAY', 'SystemFont_Outline_Small')
 		text:SetPoint('CENTER', icon, 0, 0)
 		text:SetShadowOffset(1, -1)
+		-- text:SetAlpha(0)
 		-- text:SetText(math.random(20))
 		element.text = text
-	end
+	-- end
+
+	element:Show()
 
 	-- local cooldown = CreateFrame("Cooldown", nil, element, "CooldownFrameTemplate")
 	-- cooldown:SetAllPoints()
@@ -157,7 +164,6 @@ local function GetQuestType(questID, index, bool)
 		if (objectiveType == "item" or objectiveType == "object") then
 			return "item"
 		else
-			-- print(objectiveType)
 			return objectiveType
 		end
 	end
@@ -173,6 +179,11 @@ local function UpdateIcon(self, texture, key)
 		element.icon:SetTexture(texture[1])	
 	end
 	element.icon:SetRotation(texture[3])
+	if (texture[5]) then
+		element.icon:SetSize(texture[5], texture[5])
+	else
+		element.icon:SetSize(element:GetHeight(), element:GetHeight())
+	end
 
 	if (element.PostUpdateIcon) then
 		element.PostUpdateIcon(self, texture, key)
@@ -291,7 +302,7 @@ local function UpdateQuests(self, event, ...)
 		end
 	end
 	
-	Update(self)
+	-- Update(self)
 end
 
 local function UpdateWorldQuests(self, event, arg1, arg2)

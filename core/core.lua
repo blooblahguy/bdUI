@@ -121,7 +121,6 @@ bdUI.eventer = CreateFrame("frame", nil, bdParent)
 		if not indent then indent = 4 end
 		for k, v in pairs(tbl) do
 			formatting = string.rep("  ", indent) .. k .. ": "
-			-- print(tostring(v))
 			if type(v) == "table" then
 				print(formatting)
 				dump(v, indent+1)
