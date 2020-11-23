@@ -231,6 +231,15 @@ function mod:skin_chats()
 			chatframe.DefaultAddMessage = chatframe.AddMessage
 			chatframe.AddMessage = mod.full_filter
 		end
+		
+		if (not chatframe.bd_backdrop) then
+			bdUI:set_backdrop(chatframe)
+		end
+
+		chatframe._background:SetAlpha(config.bgalpha)
+		chatframe._background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
+		chatframe._background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
+		chatframe._border:SetAlpha(config.bgalpha)
 	end
 
 	-- skin pop up chats
