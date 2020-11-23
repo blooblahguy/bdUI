@@ -248,6 +248,15 @@ function mod:skin_chats()
 			local frame = _G[name]
 			if (frame.isTemporary) then
 				mod:skin_single_chat(frame)
+					
+				if (not frame.bd_backdrop) then
+					bdUI:set_backdrop(frame, true)
+				end
+
+				frame._background:SetAlpha(config.bgalpha)
+				frame._background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
+				frame._background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
+				frame._border:SetAlpha(config.bgalpha)
 			end
 		end
 	end)
