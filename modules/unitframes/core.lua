@@ -158,7 +158,30 @@ local function layout(self, unit)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.RaidTargetIndicator:SetPoint('CENTER', self, 0, 0)
 
+	
+
 	-- Tags
+	oUF.Tags.Events['name'] = 'UNIT_NAME_UPDATE'
+	oUF.Tags.Methods["name"] = function(unit, r)
+		local c = UnitClassification(u)
+		if(c == 'rare') then
+			c = 'R'
+		elseif(c == 'rareelite') then
+			c = 'R+'
+		elseif(c == 'elite') then
+			c = '+'
+		elseif(c == 'worldboss') then
+			c = 'B'
+		elseif(c == 'minus' or c == 'trivial') then
+			c = '-'
+		else
+			c = ""
+		end
+
+		return UnitName(unit or r).." "..c
+	end
+
+
 	oUF.Tags.Events['curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
 	oUF.Tags.Methods['curhp'] = function(unit)
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
