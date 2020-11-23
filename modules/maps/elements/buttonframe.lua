@@ -202,11 +202,15 @@ function mod:create_button_frame()
 
 		if (not config.showconfig) then
 			hideButtons['LibDBIcon10_bdUI'] = true
-			bdUI_configButton:Hide("bdUI")
+			if (bdUI_configButton) then
+				bdUI_configButton:Hide("bdUI")
+			end
 			BDUI_SAVE.MinimapIcon.hide = true
 		else
 			hideButtons['LibDBIcon10_bdUI'] = false
-			bdUI_configButton:Show("bdUI")
+			if (bdUI_configButton) then
+				bdUI_configButton:Show("bdUI")
+			end
 			BDUI_SAVE.MinimapIcon.hide = false
 		end
 

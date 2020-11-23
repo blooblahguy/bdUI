@@ -60,9 +60,11 @@ mod.custom_layout["player"] = function(self, unit)
 
 		-- auras
 		if (config.aurastyle == "Bars") then
-			self.DisabledBuffs = self.Buffs
-			self.Buffs:Hide()
-			self.Buffs = nil
+			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
+			if (self.Buffs) then
+				self.Buffs:Hide()
+				self.Buffs = nil
+			end
 			self:EnableElement("AuraBars")
 			self.AuraBars:Show()
 		else

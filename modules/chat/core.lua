@@ -271,7 +271,7 @@ function mod:skin_chats()
 	function SetItemRef(link, ...)
 		local type, value = link:match("(%a+):(.+)")
 		if IsAltKeyDown() and type == "player" then
-			InviteUnit(value:match("([^:]+)"))
+			C_PartyInfo.InviteUnit(value:match("([^:]+)"))
 		elseif (type == "url") then
 			local eb = LAST_ACTIVE_CHAT_EDIT_BOX or ChatFrame1EditBox
 			if not eb then return end

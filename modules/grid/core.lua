@@ -120,6 +120,7 @@ local function layout(self, unit)
 	bdUI:set_backdrop(self.Health)
 	function self.Health.PostUpdateColor(s, unit, r, g, b)
 		-- local r, g, b = self.Health:GetStatusBarColor()
+		if (r == nil) then return end
 		local bg = bdUI.media.backdrop
 		
 		if (config.invert) then
