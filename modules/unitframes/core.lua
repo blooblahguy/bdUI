@@ -162,8 +162,10 @@ local function layout(self, unit)
 
 	-- Tags
 	oUF.Tags.Events['name'] = 'UNIT_NAME_UPDATE'
-	oUF.Tags.Methods["name"] = function(unit, r)
+	oUF.Tags.Methods["name"] = function(unit)
+		-- print(unit, r)
 		local c = UnitClassification(u)
+		-- print(c)
 		if(c == 'rare') then
 			c = 'R'
 		elseif(c == 'rareelite') then
@@ -178,7 +180,7 @@ local function layout(self, unit)
 			c = ""
 		end
 
-		return UnitName(unit or r).." "..c
+		return UnitName(unit).." "..c
 	end
 
 
@@ -194,6 +196,10 @@ local function layout(self, unit)
 		local r, g, b = bdUI:ColorGradient(hpPercent, 1,0,0, 1,1,0, 1,1,1)
 		local hex = RGBPercToHex(r, g, b)
 		local perc = table.concat({"|cFF", hex, bdUI:round(hpPercent * 100, 1), "|r"}, "")
+
+		if (perc == 0 or perc == "0") then
+			return "0 / "..numberize(UnitHealthMax(unit))
+		end
 
 		return table.concat({bdUI:numberize(hp), "-", perc}, " ")
 	end

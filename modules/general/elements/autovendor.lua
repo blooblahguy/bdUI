@@ -12,8 +12,7 @@ hooksecurefunc(delete_panel, "OnShow", prefill_text)
 -- auto sell
 local sell = CreateFrame("frame")
 sell:RegisterEvent('MERCHANT_SHOW')
--- sell:SetScript()
-sell:SetScript("OnEvent", function()
+sell:HookScript("OnEvent", function()
 	if (mod.config.autosell) then
 		
 		local profit = 0

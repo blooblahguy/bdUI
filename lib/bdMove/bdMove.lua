@@ -153,6 +153,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	local height = frame:GetHeight()
 	local width = frame:GetWidth()
 	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+	if (not relativeTo) then return end
 	relativeTo = _G[relativeTo] or relativeTo:GetName()
 
 	-- frame:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})

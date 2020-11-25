@@ -110,6 +110,7 @@ local methods = {
 		self:skin()
 		self:update_new()
 		self:update_border()
+		self:update_cooldown()
 	end,
 
 	-- return cooldown information
@@ -170,9 +171,9 @@ local methods = {
 		count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
 		
 		-- self.SplitStack = nil -- Remove the function set up by the template
-		if self.NewItemTexture then
-			self.NewItemTexture:Hide()
-		end
+		-- if self.NewItemTexture then
+		-- 	self.NewItemTexture:Hide()
+		-- end
 
 		self.skinned = true
 	end

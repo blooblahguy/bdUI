@@ -6,6 +6,12 @@ function mod:create_azerite()
 
 	if (not C_AzeriteItem) then return end
 
+	-- local animaCurrencyID, maxDisplayableValue = C_CovenantSanctumUI.GetAnimaInfo()
+	-- local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(animaCurrencyID);
+
+	-- print(animaCurrencyID)
+	-- dump(currencyInfo)
+
 	local bar = mod:create_databar("bdAzerite")
 	bar:SetSize(config.databars_width, config.databars_height)
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
