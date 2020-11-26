@@ -92,6 +92,17 @@ function mod:color_name(event, msg)
 	return msg
 end
 
+function mod:skin_chat_frame_bg(frame)
+	if (not frame.bd_backdrop) then
+		bdUI:set_backdrop(frame)
+	end
+
+	frame._background:SetAlpha(config.bgalpha)
+	frame._background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
+	frame._background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
+	frame._border:SetAlpha(config.bgalpha)
+end
+
 --=============================================
 -- DEFAULTS
 --=============================================
@@ -177,18 +188,6 @@ function mod:set_defaults()
 	ToggleChatColorNamesByClassGroup(true, "INSTANCE_CHAT_LEADER")
 end
 
--- Helper function for adding chat backdrops
-function SkinChatFrameBG(frame)
-	if (not frame.bd_backdrop) then
-		bdUI:set_backdrop(frame)
-	end
-
-	frame._background:SetAlpha(config.bgalpha)
-	frame._background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
-	frame._background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
-	frame._border:SetAlpha(config.bgalpha)
-end
-
 --=========================================================
 -- CONFIG CALLBACK
 --=========================================================
@@ -200,7 +199,7 @@ function mod:config_callback()
 	
 	if (not config.enabled) then return end
 	
-	SkinChatFrameBackdrop(ChatFrame1)
+	mod:skin_chat_frame_bg(ChatFrame1)
 end
 
 --=========================================================
@@ -238,7 +237,7 @@ function mod:skin_chats()
 			chatframe.AddMessage = mod.full_filter
 		end
 		
-		SkinChatFrameBackdrop(chatframe)
+		mod:skin_chat_frame_bg(chatframe)
 	end
 
 	-- skin pop up chats
@@ -248,7 +247,7 @@ function mod:skin_chats()
 			if (frame.isTemporary) then
 				mod:skin_single_chat(frame)
 					
-				SkinChatFrameBackdrop(chatframe)
+				mod:skin_chat_frame_bg(chatframe)
 			end
 		end
 	end)
