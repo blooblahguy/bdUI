@@ -110,19 +110,19 @@ function mod:remove_blizzard()
 		ZoneAbilityFrame.ignoreFramePositionManager = true
 	end
 	if (ZoneAbilityFrame) then
-		hooksecurefunc(PetBattleFrame.BottomFrame.MicroButtonFrame, "Show", function(self) self:Hide() end)
-		-- PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
+		-- hooksecurefunc(PetBattleFrame.BottomFrame.MicroButtonFrame, "Show", function(self) self:Hide() end)
+		PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
 		-- bdUI:hide_protected(PetBattleFrame.BottomFrame.MicroButtonFrame)
 	end
 	if (OverrideActionBar) then
-		hooksecurefunc(OverrideActionBar, "Show", function(self) self:Hide() end)
-		-- OverrideActionBar:SetScript("OnShow", nil)
+		-- hooksecurefunc(OverrideActionBar, "Show", function(self) self:Hide() end)
+		OverrideActionBar:SetScript("OnShow", nil)
 		-- bdUI:hide_protected(OverrideActionBar)
 		-- bdUI:hide_protected(OverrideActionBar)
 	end
 	-- bdUI:hide_protected(MainMenuBar)
-	hooksecurefunc(MainMenuBar, "Show", function(self) self:Hide() end)
-	-- MainMenuBar:SetScript("OnShow", nil)
+	-- hooksecurefunc(MainMenuBar, "Show", function(self) self:Hide() end)
+	MainMenuBar:SetScript("OnShow", nil)
 
 	-- bdUI:hide_protected(MainMenuBar)
 end
