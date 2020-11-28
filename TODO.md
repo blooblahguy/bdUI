@@ -12,3 +12,7 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 - better personal nameplate display
 - add full EN localization to get things going on more international locale
 - rebuild config library to be usable as a neater module
+- add elite indicator
+- add mouseover tooltip on raidframes
+- add weapon enchants to buffs
+- add config to disable emojis
