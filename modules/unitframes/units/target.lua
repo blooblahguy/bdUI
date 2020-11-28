@@ -31,6 +31,8 @@ mod.custom_layout["target"] = function(self, unit)
 
 		-- but also only show player and with durations
 		if (castByPlayer and duration ~= 0 and duration < 300) then return true end
+
+		if (nameplateShowSelf) then return true end
 	end
 
 	self.AuraBars.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
@@ -44,6 +46,8 @@ mod.custom_layout["target"] = function(self, unit)
 
 		-- but also only show player and with durations
 		if (castByPlayer and duration ~= 0 and duration < 300) then return true end
+
+		if (nameplateShowSelf) then return true end
 	end
 	
 
