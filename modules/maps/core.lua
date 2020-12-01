@@ -23,6 +23,7 @@ function mod:initialize()
 	mod:create_minimap()
 	mod:create_button_frame()
 	mod:worldmap_coords()
+	-- mod:save_map_zoom()
 	mod:create_objective_tracker()
 
 	mod:config_callback()

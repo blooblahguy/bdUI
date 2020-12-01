@@ -131,7 +131,7 @@ local function layout(self, unit)
 			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(1, 1, 1, .1)
 
 			if (UnitIsDead(unit)) then
-				self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
+				-- self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
 			end
 		else
 			self.Health:SetStatusBarColor(r / 1.5, g / 1.5, b / 1.5)
@@ -141,7 +141,7 @@ local function layout(self, unit)
 			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(0, 0, 0, .4)
 
 			if (UnitIsDead(unit)) then
-				self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
+				-- self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
 			end
 		end
 	end

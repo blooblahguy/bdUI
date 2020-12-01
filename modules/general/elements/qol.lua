@@ -99,3 +99,20 @@ function mod:create_qol()
 
 
 end
+
+
+local autorelease = CreateFrame("frame", nil, UIParent)
+autorelease:RegisterEvent("PLAYER_DEAD")
+autorelease:RegisterEvent("PLAYER_ENTERING_WORLD")
+autorelease:SetScript("OnEvent", function()
+	local config = mod.config
+	if (config.autorelease) then
+		for i = 1, 5 do
+			local status = GetBattlefieldStatus(i)
+			if status == "active" then
+				RepopMe()
+				break
+			end
+		end
+	end
+end)

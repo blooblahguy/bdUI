@@ -11,6 +11,8 @@ LibStub("bdCallbacks-1.0"):New(bdUI)
 LibStub("CallbackHandler-1.0"):New(bdUI)
 bdMove = LibStub("bdMove-1.0")
 
+LibStub("AceHook-3.0"):Embed(bdUI)
+
 -- library initialization
 if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then
 	bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")

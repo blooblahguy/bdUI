@@ -100,6 +100,12 @@ local config = {
 		label = "Quality of Life",
 		args = {
 			{
+				key = "autorelease",
+				type = "toggle",
+				value = true,
+				label = "Auto Release in BGs"
+			},
+			{
 				key = "autosell",
 				type = "toggle",
 				value = true,

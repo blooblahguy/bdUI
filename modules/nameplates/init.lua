@@ -28,6 +28,7 @@ specialMobs["Fel-Charged Obfuscator"] = true
 specialMobs["Ember of Taeshalach"] = true
 specialMobs["Screaming Shrike"] = true
 specialMobs["Explosives"] = true
+specialMobs["Web Wrap"] = true
 
 local specialSpells = {}
 specialSpells["Decaying Flesh"] = true
@@ -187,20 +188,89 @@ local config = {
 				label = "Hide Castbar Icon",
 			},
 			{
+				key = "enablequests",
+				type = "toggle",
+				value = true,
+				label = "Enable Quest Display on Nameplates",
+			},
+		}
+	},
+	{
+		key = "cvars",
+		type = "tab",
+		label = "CVars",
+		args = {
+			{
+				key = "stacking",
+				type = "select",
+				options = {"Stacking", "Overlapping"},
+				value = "Stacking",
+				label = "Positioning Behavior",
+			},
+			{
+				key = "stackingspeed",
+				type = "range",
+				value = 0.025,
+				min = 0,
+				max = 1,
+				step = 0.05,
+				label = "Positioning speed",
+			},
+			{
+				key = "largerscale",
+				type = "range",
+				value = 1.2,
+				min = 0.8,
+				max = 2,
+				step = 0.1,
+				label = "Boss nameplate scale",
+			},
+			{
 				key = "unselectedalpha",
 				type = "range",
 				value = 0.5,
 				min = 0.1,
 				max = 1,
 				step = 0.1,
-				label = "Unselected nameplate alpha",
+				label = "Unselected alpha",
 			},
 			{
-				key = "enablequests",
-				type = "toggle",
-				value = true,
-				label = "Enable Quest Display on Nameplates",
+				key = "selectedscale",
+				type = "range",
+				value = 1,
+				min = 0.1,
+				max = 2,
+				step = 0.1,
+				label = "Selected Scale",
 			},
+			{
+				key = "occludedalpha",
+				type = "range",
+				value = 0.6,
+				min = 0.1,
+				max = 1,
+				step = 0.1,
+				label = "Occluded nameplate alpha",
+			},
+			-- {
+			-- 	key = "oocalpha",
+			-- 	type = "range",
+			-- 	value = 0.6,
+			-- 	min = 0,
+			-- 	max = 1,
+			-- 	step = 0.1,
+			-- 	label = "Out of combat nameplates alpha",
+			-- },
+			-- {
+			-- 	key = "oocscale",
+			-- 	type = "range",
+			-- 	value = 0.7,
+			-- 	min = 0,
+			-- 	max = 1,
+			-- 	step = 0.1,
+			-- 	label = "Out of combat nameplates scale",
+			-- },
+			
 		}
 	},
 	--=======================================

@@ -121,8 +121,8 @@ function mod:remove_blizzard()
 		-- bdUI:hide_protected(OverrideActionBar)
 	end
 	-- bdUI:hide_protected(MainMenuBar)
-	-- hooksecurefunc(MainMenuBar, "Show", function(self) self:Hide() end)
-	MainMenuBar:SetScript("OnShow", nil)
+	hooksecurefunc(MainMenuBar, "Show", function(self) self:Hide() end)
+	-- MainMenuBar:SetScript("OnShow", nil)
 
 	-- bdUI:hide_protected(MainMenuBar)
 end

@@ -16,3 +16,5 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 - add mouseover tooltip on raidframes
 - add weapon enchants to buffs
 - add config to disable emojis
+- remove case sensitivy from auras
+- add back dot in middle of screen

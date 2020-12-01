@@ -37,6 +37,10 @@ function mod:nameplate_size()
 	C_NamePlate.SetNamePlateSelfClickThrough(true)
 end
 
+-- local function pixel_perfect(self)
+-- 	local border = bdUI:get_border(self)
+-- end
+
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
@@ -86,35 +90,37 @@ function mod:config_callback()
 	if (InCombatLockdown()) then return end
 	-- set cVars
 	local cvars = {
-		['nameplateGlobalScale'] = config.scale
+		['nameplateShowAll'] = 1
+		, ['nameplateMotion'] = config.stacking == "Stacking" and 1 or 0
+		, ['nameplateMotionSpeed'] = config.stackingspeed
+
+		-- scale
+		, ['nameplateGlobalScale'] = config.scale
 		, ['nameplateSelfScale'] = config.scale
-		, ['nameplateSelfAlpha'] = 1
-		, ['nameplateShowAll'] = 1
-		, ['nameplateMinAlpha'] = 1
-		, ['nameplateMaxAlpha'] = 1
-		-- , ['nameplateMotionSpeed'] = "default"
-		, ['nameplateOccludedAlphaMult'] = 1
-		, ['nameplateMaxAlphaDistance'] = 1
-		, ['nameplateMaxDistance'] = config.nameplatedistance+6 -- for some reason there is a 6yd diff
-		, ['nameplateShowDebuffsOnFriendly'] = 0
-		, ['nameplateSelectedScale'] = 1
+		, ['nameplateSelectedScale'] = config.selectedscale
+		, ['nameplateLargerScale'] = config.largerscale
 		, ['nameplateMinScale'] = 1
 		, ['nameplateMaxScale'] = 1
-		, ['showQuestTrackingTooltips'] = 1
-		-- , ['nameplateMaxScaleDistance'] = 80
-		-- , ['nameplateMinScaleDistance'] = 5
-		, ['nameplateLargerScale'] = 1 -- for bosses
+		
+		-- alpha
+		, ['nameplateSelfAlpha'] = 1
+		, ['nameplateMinAlpha'] = config.unselectedalpha
+		, ['nameplateMaxAlpha'] = config.unselectedalpha
+		, ['nameplateOccludedAlphaMult'] = config.occludedalpha
+
+		-- misc
+		, ['nameplateMaxDistance'] = config.nameplatedistance+6 -- for some reason there is a 6yd diff
+		, ['nameplateShowDebuffsOnFriendly'] = 0
 		, ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
-		-- , ['showQuestTrackingTooltips'] = 1
 	}
 
 	-- loop through and set CVARS
 	for k, v in pairs(cvars) do
-		-- if (v == "default") then
-		-- 	SetCVar(k, GetCVarDefault(k))	
-		-- else
+		if (v == "default") then
+			SetCVar(k, GetCVarDefault(k))	
+		else
 			SetCVar(k, v)
-		-- end
+		end
 	end
 end
 
@@ -123,6 +129,7 @@ end
 --==============================================
 local function find_target(self, event, unit)
 	unit = unit or self.unit
+	-- self:SetAlpha(self:GetParent():GetAlpha())
 
 	-- global alpha/glow change on target
 	if (UnitIsUnit(unit, "target")) then
@@ -133,7 +140,8 @@ local function find_target(self, event, unit)
 		end
 	else
 		self.isTarget = false
-		self:SetAlpha(config.unselectedalpha)
+		-- print(self:GetParent():GetAlpha())
+		-- self:SetAlpha(self:GetParent():GetAlpha())
 		self.Health._shadow:Hide()
 	end
 
@@ -167,7 +175,6 @@ local function update_threat(self, event, unit)
 	if (event == "NAME_PLATE_UNIT_REMOVED") then return false end
 	if (event == "OnShow") then return false end
 	if (event == "OnUpdate") then return false end
-
 
 	-- store these values for reuse
 	unit_information(self, unit)
@@ -227,6 +234,7 @@ local function nameplate_callback(self, event, unit)
 
 	-- select correct target
 	find_target(self, event, unit)
+	update_threat(self, event, unit)
 end
 
 --==============================================
@@ -247,7 +255,9 @@ local function nameplate_create(self, unit)
 	--==========================================
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
-	self.Health:SetAllPoints(self)
+	self.Health:SetAllPoints()
+	-- self.Health:SetPoint("CENTER", self, "CENTER")
+	-- self.Health:SetSize(self:GetWidth(), self:GetHeight())
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
 	self.Health.colorClass = true
@@ -256,7 +266,16 @@ local function nameplate_create(self, unit)
 	bdUI:create_shadow(self.Health, 10)
 	self.Health._shadow:SetColor(unpack(config.glowcolor))
 	-- THREAT
-	self.Health.UpdateColor = update_threat
+	self.Health.UpdateColor = noop--update_threat
+	local total = 0
+	self:HookScript("OnUpdate", function(self, elapsed)
+		total = total + elapsed
+		if (total < 0.1) then return end
+		if (self.currentStyle ~= "enemy") then return end
+		
+		total = 0
+		update_threat(self, "", self.unit)
+	end)
 
 	--==========================================
 	-- DAMAGE ABSORBS
