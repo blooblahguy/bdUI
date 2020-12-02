@@ -91,6 +91,30 @@ local function UpdateAura(self, index, filter)
 	end
 end
 
+local function UpdateEnchants(self, slot)
+	local enchant, remaining, id, offEnchant, offRemaining, offCount, offId
+	if ((slot == 16) or (slot == 17)) then
+		enchanted, remaining, count, id, offEnchanted, offRemaining, offCount, offId = GetWeaponEnchantInfo()
+		if slot == 17 then enchanted = offEnchanted; remaining = offRemaining; count = offCount; id = offId end
+		if enchanted then
+			remaining = remaining / 1000 -- blizz function returned milliseconds
+			expire = remaining + GetTime()
+			--expire = 0.01 * math.floor(expire * 100 + 0.5) -- round to nearest 1/100
+			texture = GetInventoryItemTexture("player", slot)
+
+			self:Show()
+			self.texture:SetTexture(texture)
+			self.total = 0
+			self.name = "Enchant" --TODO
+			self.count:SetText(count > 1 and count or '')
+			--self.expiration = expire
+			self.expiration = expire - GetTime()
+		else
+			self:Hide()
+		end
+	end
+end
+
 local counterAnchor = {}
 counterAnchor['BOTTOM'] = "TOP"
 counterAnchor['LEFT'] = "RIGHT"
@@ -106,7 +130,7 @@ counterSpacing["BOTTOM"] = {0, -4}
 -- Skin Buttons
 --===============================================
 local function InitiateAura(self, name, button)
-	if(not string.match(name, '^child')) then return end
+	if((not string.match(name, '^child')) and (not string.match(name, '^tempenchant'))) then return end
 	local filter = button:GetParent():GetAttribute("filter")
 	
 	button.filter = filter
@@ -114,6 +138,8 @@ local function InitiateAura(self, name, button)
 	button:SetScript('OnAttributeChanged', function(self, attribute, value)
 		if (attribute == 'index') then
 			UpdateAura(self, value)
+		elseif (attribute == 'target-slot') then
+			UpdateEnchants(self, value)
 		end
 	end)
 	
@@ -310,6 +336,8 @@ function mod:initialize()
 	addonDisabler:SetScript("OnEvent", function(self, event, addon)
 		BuffFrame:UnregisterAllEvents("UNIT_AURA")
 		BuffFrame:Hide()
+		TemporaryEnchantFrame:UnregisterAllEvents("UNIT_AURA")
+		TemporaryEnchantFrame:Hide()
 	end)
 
 	mod:config_callback()

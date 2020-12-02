@@ -12,8 +12,8 @@
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT", -5, -5);
 				GameTooltip:SetFrameLevel(self:GetFrameLevel() + 2);
 				local s = self.slotID or 0;
-				if s == 16 or s == 17 or s == 18 then
-					GameTooltip:SetInventoryItem("player", s);
+				if (self:GetAttribute("target-slot")) then
+					GameTooltip:SetInventoryItem("player", self:GetID());
 				else
 					GameTooltip:SetUnitAura("player", self:GetID(), "HELPFUL");
 				end
