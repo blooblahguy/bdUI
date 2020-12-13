@@ -29,6 +29,8 @@ specialMobs["Ember of Taeshalach"] = true
 specialMobs["Screaming Shrike"] = true
 specialMobs["Explosives"] = true
 specialMobs["Web Wrap"] = true
+specialMobs["Dreadsoul Devil"] = true
+specialMobs["Dreadsoul Concordance"] = true
 
 local specialSpells = {}
 specialSpells["Decaying Flesh"] = true

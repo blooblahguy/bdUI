@@ -93,6 +93,7 @@ modules\auras\elements\whitelist.lua
 modules\auras\elements\raid.lua
 modules\auras\elements\personal.lua
 modules\auras\elements\blacklist.lua
+modules\auras\elements\special.lua
 modules\auras\init.lua
 modules\auras\functions.lua
 modules\auras\core.lua

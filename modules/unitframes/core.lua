@@ -163,7 +163,6 @@ local function layout(self, unit)
 	-- Tags
 	oUF.Tags.Events['name'] = 'UNIT_NAME_UPDATE'
 	oUF.Tags.Methods["name"] = function(unit)
-		-- print(unit, r)
 		local c = UnitClassification(u)
 		-- print(c)
 		if(c == 'rare') then
@@ -180,7 +179,13 @@ local function layout(self, unit)
 			c = ""
 		end
 
-		return UnitName(unit).." "..c
+		c = c or ""
+		-- print(unit)
+		-- print(UnitClass(unit))
+		-- print(UnitName(unit))
+		unit = UnitName(unit) or select(1, UnitClass(unit))
+
+		return unit.." "..c
 	end
 
 

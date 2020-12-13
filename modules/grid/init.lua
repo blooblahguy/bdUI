@@ -3,12 +3,6 @@
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
 
-local specialspells = {}
-specialspells['Sentence of Sargeras'] = true
-specialspells['Soulblight'] = true
-specialspells['Soulbomb'] = true
-specialspells['Fulminating Pulse'] = true
-specialspells['Chilled Blood'] = true
 
 -- Config Table
 local config = {
@@ -168,7 +162,7 @@ local config = {
 			{
 				key = "specialalerts",
 				type = "list",
-				value = specialspells,
+				value = bdUI.aura_lists.special,
 				label = "Special Alerts",
 			},
 		}

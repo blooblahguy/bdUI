@@ -93,6 +93,7 @@ function mod:color_name(event, msg)
 end
 
 function mod:skin_chat_frame_bg(frame)
+	if (not frame) then return end
 	if (not frame.bd_backdrop) then
 		bdUI:set_backdrop(frame)
 	end

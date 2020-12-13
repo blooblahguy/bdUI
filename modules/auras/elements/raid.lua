@@ -615,12 +615,66 @@ local auras = {
 	["Dark Sonar"] = true,
 
 	-- Huntsman Altimor
+	["Sinseeker"] = true,
+	["Vicious Wound"] = true,
+	["Jagged Claws"] = true,
+	["Deathly Roar"] = true,
+	["Petrifying Howl"] = true,
+	["Stone Shards"] = true,
+	
 	-- Hungering Destroyer
+	['Gluttonous Miasma'] = true,
+	['Volatile Injection'] = true,
+
 	-- Sun King's Salvation
+	["Smoldering Remnants"] = true,
+	["Burning Remnants"] = true,
+	["Ember Blast"] = true,
+	["Lingering Embers"] = true,
+	["Smoldering Plumage"] = true,
+	["Vanquished"] = true,
+	["Crimson Flurry"] = true,
+	["Vulgar Brand"] = true,
+	["Infuser's Boon"] = true,
+	["Soul Infusion"] = true,
+	["Greater Castigation"] = true,
+
 	-- Artificer Xy'mox
+	['Dimensional Tear'] = true,
+	['Glyph of Destruction'] = true,
+	['Arcane Vulnerability'] = true,
+	['Statis Trap'] = true,
+	['Statis Trap'] = true,
+	['Possession'] = true,
+	['Withering Touch'] = true,
+	
 	-- Lady Inerva Darkvein
+	['Anima Release'] = true,
+	['Warped Desires'] = true,
+	['Lingering Anima'] = true,
+	['Shared Suffering'] = true,
+	['Ideminfication'] = true,
+	['Anima Web'] = true,
+	['Concentrated Anima'] = true,
+	['Rooted in Anima'] = true,
+	['Unconcionable Guilt'] = true,
+	
 	-- The council of Blood
+	["Duelist's Riposte"] = true,
+	["Drain Essence"] = true,
+	["Dreadbolt Volley"] = true,
+	["Soul Spikes"] = true,
+	["Evasive Lunge"] = true,
+	["Dark Recital"] = true,
+	["Waltz of Blood"] = true,
+	["Wrong Moves"] = true,
+	
+	
 	-- Sludgefist
+	["Shattering Chain"] = true,
+	["Falling Rubble"] = true,
+	["Stonequake"] = true,
+	
 	-- Stone Legion Generals
 	["Wicked Laceration"] = true,
 	["Stone Shatter"] = true,
@@ -628,8 +682,18 @@ local auras = {
 	["Curse of Petrification"] = true,
 	["Stone Breaker's Combo"] = true,
 	["Breath of Corruption"] = true,
-
+	
 	-- Sire Denathrius
+	["Burden of Sin"] = true,
+	["Cleansing of Pain"] = true,
+	["Feeding Time"] = true,
+	["Desolation"] = true,
+	["Carnage"] = true,
+	["Impale"] = true,
+	["Wracking Pain"] = true,
+	["Indignation"] = true,
+	["Scorn"] = true,
+	["Fatal Finesse"] = true,
 }
 
 bdUI.aura_lists.raid = auras
