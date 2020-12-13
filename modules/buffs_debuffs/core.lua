@@ -1,60 +1,8 @@
---===============================================
--- FUNCTIONS
---===============================================
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Buffs & Debuffs")
+local mod = bdUI:get_module("Buffs and Debuffs")
 local config
 
-local bdBuffs = CreateFrame("frame", "Buffs", UIParent, "SecureAuraHeaderTemplate")
-bdBuffs:SetPoint('TOPRIGHT', Minimap, "TOPLEFT", -10, -40)
-local bufffont = CreateFont("BD_BUFFS_FONT")
-bufffont:SetShadowColor(0, 0, 0)
-bufffont:SetShadowOffset(1, -1)
-
-local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTemplate")
-bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -110)
-local debufffont = CreateFont("BD_DEBUFFS_FONT")
-debufffont:SetShadowColor(0, 0, 0)
-debufffont:SetShadowOffset(1, -1)
-
---===============================================
--- Time Functions
---===============================================
-local function UpdateTime(self, elapsed)
-	self.total = self.total + elapsed
-	if (self.total > 0.1) then
-		if(self.expiration) then
-			self.expiration = math.max(self.expiration - self.total, 0)
-			-- local seconds = 
-
-			if(self.expiration <= 0) then
-				self.duration:SetText('')
-			else
-				-- if (seconds < 10 or not config.decimalprec) then
-				-- 	seconds = bdUI:round(seconds, 1)
-				-- else
-				-- end
-				local seconds = Round(self.expiration)
-				local mins = Round(seconds/60);
-				local hours = Round(mins/60, 1);
-
-				if (hours and hours > 1) then
-					self.duration:SetText(hours.."h")
-				elseif (mins and mins > 0) then
-					self.duration:SetText(mins.."m")
-				else			
-					self.duration:SetText(seconds.."s")
-				end
-			
-			end
-		end
-		self.total = 0
-	end
-end
-
---===============================================
--- Update Borders
---===============================================
+local total = 0
 local debuff_colors = {
 	['Magic'] = { 0.20, 0.60, 1.00 },
 	['Curse'] = { 0.60, 0.00, 1.00 },
@@ -62,34 +10,6 @@ local debuff_colors = {
 	['Poison'] = { 0.00, 0.60, 0 },
 	['None'] = { 0.6, 0.1, 0.2 }
 }
-local function UpdateAura(self, index, filter)
-	local unit = self:GetParent():GetAttribute('unit')
-	local filter = self:GetParent():GetAttribute('filter')
-	local name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = UnitAura(unit, index, filter)
-	if(name) then
-		self.texture:SetTexture(texture)
-		if (not count) then
-			count = 0
-		end
-		self.total = 0
-		self.name = name
-		self.count:SetText(count > 1 and count or '')
-		self.expiration = expiration - GetTime()
-
-		if (filter == "HARMFUL") then
-			local color = debuff_colors['None']
-
-			if debuffType and debuff_colors[debuffType] then
-				color = debuff_colors[debuffType]
-			end
-
-			local r, g, b = unpack(color)
-
-			self._border:SetVertexColor(r, g, b)
-		end
-
-	end
-end
 
 local counterAnchor = {}
 counterAnchor['BOTTOM'] = "TOP"
@@ -102,44 +22,136 @@ counterSpacing["LEFT"] = {-4, 0}
 counterSpacing["RIGHT"] = {4, 0}
 counterSpacing["BOTTOM"] = {0, -4}
 
+
+-- parent frames
+local bdBuffs = CreateFrame("frame", "Buffs", UIParent, "SecureAuraHeaderTemplate")
+bdBuffs:SetPoint('TOPRIGHT', Minimap, "TOPLEFT", -10, -40)
+
+local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTemplate")
+bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -110)
+
+-- fonts
+local bufffont = CreateFont("BD_BUFFS_FONT")
+bufffont:SetShadowColor(0, 0, 0)
+bufffont:SetShadowOffset(1, -1)
+
+local debufffont = CreateFont("BD_DEBUFFS_FONT")
+debufffont:SetShadowColor(0, 0, 0)
+debufffont:SetShadowOffset(1, -1)
+
 --===============================================
--- Skin Buttons
+-- Time Function
 --===============================================
-local function InitiateAura(self, name, button)
-	if(not string.match(name, '^child')) then return end
-	local filter = button:GetParent():GetAttribute("filter")
-	
-	button.filter = filter
-	button:SetScript('OnUpdate', UpdateTime)
-	button:SetScript('OnAttributeChanged', function(self, attribute, value)
-		if (attribute == 'index') then
-			UpdateAura(self, value)
+local function set_time(button, duration)
+	local seconds = Round(duration)
+	local mins = Round(seconds/60);
+	local hours = Round(mins/60, 1);
+
+	if(duration <= 0) then
+		button.duration:SetText('')
+	else
+		if (hours and hours > 1) then
+			button.duration:SetText(hours.."h")
+		elseif (mins and mins > 0) then
+			button.duration:SetText(mins.."m")
+		else			
+			button.duration:SetText(seconds.."s")
 		end
-	end)
-	
+	end
+end
+
+local function update_time(self, elapsed)
+	self.total = self.total + elapsed
+	if (self.total > 0.1) then
+		if(self.duration_seconds) then
+			self.duration_seconds = math.max(self.duration_seconds - self.total, 0)
+
+			set_time(self, self.duration_seconds)
+		end
+		self.total = 0
+	end
+end
+
+--==============================================
+-- Auras
+--==============================================
+local function update_enchant(button, index)
+	local offset = (strmatch(button:GetName(), '2$') and 6) or 2
+	local duration, remaining = 600, 0
+	local duration = select(offset, GetWeaponEnchantInfo())
+
+	if not duration then return end
+
+	button.texture:SetTexture(GetInventoryItemTexture('player', index))
+	local quality = GetInventoryItemQuality('player', index)
+	button._border:SetVertexColor(.1, .2, 6, 1)
+
+	duration = duration / 1000
+	set_time(button, duration)
+end
+
+local function update_aura(button, index)
+	local unit = button:GetParent():GetAttribute('unit')
+	local filter = button:GetParent():GetAttribute('filter')
+	local name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = UnitAura(unit, index, filter)
+
+	if (not name) then
+		button:SetScript('OnUpdate', nil)
+		return
+	end
+
+	button.texture:SetTexture(texture)
+	if (not count) then
+		count = 0
+	end
+	button.total = 0
+	button.name = name
+	button.count:SetText(count > 1 and count or '')
+	button.duration_seconds = expiration - GetTime()
+
+	-- color debuffs
+	if (filter == "HARMFUL") then
+		local color = debuff_colors['None']
+
+		if debuffType and debuff_colors[debuffType] then
+			color = debuff_colors[debuffType]
+		end
+
+		local r, g, b = unpack(color)
+
+		button._border:SetVertexColor(r, g, b)
+	end
+
+	button:SetScript('OnUpdate', update_time)
+end
+
+function mod:create_aura(button, ...)
+	local filter = button:GetParent():GetAttribute("filter")
+	local auraType = filter
+
+	button.filter = filter
+	button.auraType = auraType == 'HELPFUL' and 'buffs' or 'debuffs' -- used to update cooldown text
+	button.total = 0
+
 	bdUI:set_backdrop(button)
-	
+
+	-- debuff default coloring
 	if (filter == "HARMFUL") then
 		button._border:SetVertexColor(.7,0,0,1)
 	end
-	
-	if (not button.texture) then
-		button.texture = button:CreateTexture(nil, 'BORDER')
-		button.texture:SetAllPoints()
-		button.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-	end
 
-	if (not button.count) then
-		button.count = button:CreateFontString()
-		button.count:SetPoint('BOTTOMRIGHT', -2, 2)
-		button.count:SetFont(bdUI.media.font, 12, "OUTLINE")
-		button.count:SetJustifyH("LEFT")
-	end
+	-- texture
+	button.texture = button:CreateTexture(nil, 'BORDER')
+	button.texture:SetAllPoints()
+	button.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
-	if (not button.duration) then
-		button.duration = button:CreateFontString()
-		button.duration:SetJustifyH("CENTER")
-	end
+	button.count = button:CreateFontString()
+	button.count:SetPoint('BOTTOMRIGHT', -2, 2)
+	button.count:SetFont(bdUI.media.font, 12, "OUTLINE")
+	button.count:SetJustifyH("LEFT")
+
+	button.duration = button:CreateFontString()
+	button.duration:SetJustifyH("CENTER")
 
 	if (filter == "HARMFUL") then
 		button.duration:SetFontObject("BD_DEBUFFS_FONT")
@@ -150,72 +162,73 @@ local function InitiateAura(self, name, button)
 		button.count:SetFontObject("BD_BUFFS_FONT")
 		button.duration:SetPoint(counterAnchor[config.bufftimer], button, config.bufftimer, unpack(counterSpacing[config.bufftimer]))
 	end
-	
-	UpdateAura(button, button:GetID(), filter)
+
+	button:SetScript('OnAttributeChanged', function(self, attribute, value)
+		if (attribute == 'index') then
+			update_aura(self, value)
+		elseif (attribute == "target-slot") then
+			update_enchant(self, value)
+		end
+	end)
 end
 
---===============================================
--- Set secure header attributes
---===============================================
-local function setHeaderAttributes(header, template, isBuff)
-	local s = function(...) header:SetAttribute(...) end
-    header.filter = isBuff and "HELPFUL" or "HARMFUL"
-	
-	if (isBuff) then
-		header:SetAttribute('includeWeapons', 1)
-		header:SetAttribute('weaponTemplate', "bdBuffsTemplate")
-	end
-
-	-- header:SetSize()
-	
-	bdMove:set_moveable(header)
-	s('unit', 'player')
-	s("filter", header.filter)
-	-- s("separateOwn", 1)
-	s('sortMethod', 'TIME')
-    header:HookScript("OnAttributeChanged", InitiateAura)
-
-	header:Show()
-end
-
---===============================================
--- Resize Children
---===============================================
-local function loopChildren(header,size)
-	local c = {header:GetChildren()}
+--==============================================
+-- Size the frames
+--==============================================
+function mod:size_frames(frame, size)
+	local c = {frame:GetChildren()}
 	for i = 1, #c do
 		local child = c[i]
 		child:SetSize(size, size)
 	end
 end
 
---===============================================
--- Config Callback
---===============================================
-function mod:config_callback()
-	config = mod:get_save()
-	if (not config.enabled) then return end
-	if (InCombatLockdown()) then return end
+--==============================================
+-- All Auras
+--==============================================
+function mod:common_headers(header, filter)
+	-- assign to player
+	header:SetAttribute('unit', 'player')
+	header:SetAttribute("separateOwn", 1)
+	header:SetAttribute('sortMethod', 'TIME')
+	header:SetAttribute("filter", filter)
+	header.filter = filter
 
-	-- font sizes
-	bufffont:SetFont(bdUI.media.font, config.bufffontsize)
-	debufffont:SetFont(bdUI.media.font, config.debufffontsize)
+	header:Show()
+end
 
+--==============================================
+-- Buffs
+--==============================================
+function mod:update_buffs()
 	local buffrows = math.ceil(20/config.buffperrow)
-	bdBuffs:SetSize((config.buffsize+config.buffspacing+2)*config.buffperrow, (config.buffsize+config.buffspacing+2)*buffrows)
-	bdBuffs:SetAttribute("template", ("bdBuffsTemplate%d"):format(config.buffsize))
+	local template = string.format('bdAuraTemplate%d', config.buffsize)
+
+	-- they share some stuff
+	mod:common_headers(bdBuffs, "HELPFUL")
+
+	-- sizing
+	bdBuffs:SetSize((config.buffsize + config.buffspacing + 2) * config.buffperrow, (config.buffsize + config.buffspacing + 2) * buffrows)
+	bdBuffs:SetAttribute("template", template)
 	bdBuffs:SetAttribute("style-width", config.buffsize)
 	bdBuffs:SetAttribute("style-height", config.buffsize)
 	bdBuffs:SetAttribute('wrapAfter', config.buffperrow)
-	bdBuffs:SetAttribute("minWidth", (config.buffsize+config.buffspacing+2)*config.buffperrow)
-	bdBuffs:SetAttribute("minHeight", (config.buffsize+config.buffspacing+2)*buffrows)
-	bdBuffs:SetAttribute('weaponTemplate', ("bdBuffsTemplate%d"):format(config.buffsize))
+	bdBuffs:SetAttribute("minWidth", (config.buffsize + config.buffspacing + 2) * config.buffperrow)
+	bdBuffs:SetAttribute("minHeight", (config.buffsize + config.buffspacing + 2) * buffrows)
+	
+	-- Weapons
+	bdBuffs:SetAttribute('consolidateDuration', -1)
+	bdBuffs:SetAttribute('includeWeapons', 1)
+	bdBuffs:SetAttribute('weaponTemplate', template)
+	bdBuffs:SetAttribute('consolidateTo', 0)
+
+	-- positioning
 	if (config.buffhgrowth == "Left") then
-		bdBuffs:SetAttribute('xOffset', -(config.buffsize+config.buffspacing+2))
+		bdBuffs:SetAttribute('xOffset', -(config.buffsize + config.buffspacing + 2))
 		bdBuffs:SetAttribute('sortDirection', "+")
 		bdBuffs:SetAttribute('point', "TOPRIGHT")
 	else
-		bdBuffs:SetAttribute('xOffset', (config.buffsize+config.buffspacing+2))
+		bdBuffs:SetAttribute('xOffset', (config.buffsize + config.buffspacing + 2))
 		bdBuffs:SetAttribute('sortDirection', "-")
 		bdBuffs:SetAttribute('point', "TOPLEFT")
 	end
@@ -239,11 +252,22 @@ function mod:config_callback()
 		bdBuffs:SetAttribute('wrapYOffset', -yspacing)
 	end
 
-	loopChildren(bdBuffs, config.buffsize)
+	-- size children
+	mod:size_frames(bdBuffs, config.buffsize)
+end
 
+--==============================================
+-- Debuffs
+--==============================================
+function mod:update_debuffs()
 	local debuffrows = math.ceil(10/config.debuffperrow)
+	local template = string.format('bdAuraTemplate%d', config.buffsize)
+
+	-- they share some stuff
+	mod:common_headers(bdDebuffs, "HARMFUL")
+
 	bdDebuffs:SetSize((config.debuffsize+config.debuffspacing+2)*config.debuffperrow, (config.debuffsize+config.debuffspacing+2)*debuffrows)
-	bdDebuffs:SetAttribute("template", ("bdDebuffsTemplate%d"):format(config.debuffsize))
+	bdDebuffs:SetAttribute("template", template)
 	bdDebuffs:SetAttribute("style-width", config.debuffsize)
 	bdDebuffs:SetAttribute("style-height", config.debuffsize)
 	bdDebuffs:SetAttribute('wrapAfter', config.debuffperrow)
@@ -278,7 +302,33 @@ function mod:config_callback()
 	else
 		bdDebuffs:SetAttribute('wrapYOffset', -yspacing)
 	end
-	loopChildren(bdDebuffs,config.debuffsize)
+
+	-- size children
+	mod:size_frames(bdDebuffs, config.debuffsize)
+end
+
+--===============================================
+-- Config Callback
+--===============================================
+function mod:config_callback()
+	config = mod:get_save()
+	if (not config.enabled) then return end
+	if (InCombatLockdown()) then return end
+
+	-- font sizes
+	bufffont:SetFont(bdUI.media.font, config.bufffontsize)
+	debufffont:SetFont(bdUI.media.font, config.debufffontsize)
+
+	-- buffs
+	mod:update_buffs()
+	
+	-- debuffs
+	mod:update_debuffs()
+
+	-- drivers
+	-- RegisterStateDriver(header, 'visibility', '[petbattle] hide; show')
+	RegisterAttributeDriver(bdBuffs, 'unit', '[vehicleui] vehicle; player')
+	RegisterAttributeDriver(bdDebuffs, 'unit', '[vehicleui] vehicle; player')
 end
 
 --===============================================
@@ -286,30 +336,19 @@ end
 --===============================================
 function mod:initialize()
 	config = mod:get_save()
+
 	if (not config.enabled) then return end
 
-	setHeaderAttributes(bdBuffs,"bdBuffsTemplate",true)
-	setHeaderAttributes(bdDebuffs,"bdDebuffsTemplate",false)
-	
-	-- show who casts each buff
-	hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
-		local caster = select(7, UnitAura(unit, index, filter))
-		
-		local name = caster and UnitName(caster)
-		if name then
-			self:AddDoubleLine("Cast by:", name, nil, nil, nil, 1, 1, 1)
-			self:Show()
-		end
-	end)
-	
-	-- clean up
-	setHeaderAttributes = nil
+	bdMove:set_moveable(bdBuffs)
+	bdMove:set_moveable(bdDebuffs)
 
 	local addonDisabler = CreateFrame("Frame", nil)
 	addonDisabler:RegisterEvent("ADDON_LOADED")
 	addonDisabler:SetScript("OnEvent", function(self, event, addon)
 		BuffFrame:UnregisterAllEvents("UNIT_AURA")
 		BuffFrame:Hide()
+		TemporaryEnchantFrame:UnregisterAllEvents("UNIT_AURA")
+		TemporaryEnchantFrame:Hide()
 	end)
 
 	mod:config_callback()

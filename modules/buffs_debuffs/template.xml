@@ -1,182 +1,48 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">	
-	<Button name='bdBuffsTemplate' inherits='SecureActionButtonTemplate' virtual='true'>
+	<Button name='bdAuraTemplate' inherits='SecureActionButtonTemplate, BackdropTemplate' virtual='true' framelevel='4'>
 		<Size x='32' y='32'/>
 		<Attributes>
 			<Attribute name='type' value='cancelaura'/>
 		</Attributes>
 		<Scripts>
 			<OnLoad>
+				bdUI:get_module("Buffs and Debuffs"):create_aura(self)
 				self:RegisterForClicks("RightButtonUp");
 			</OnLoad>
 			<OnEnter>
-				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT", -5, -5);
-				GameTooltip:SetFrameLevel(self:GetFrameLevel() + 2);
-				local s = self.slotID or 0;
-				if s == 16 or s == 17 or s == 18 then
-					GameTooltip:SetInventoryItem("player", s);
-				else
-					GameTooltip:SetUnitAura("player", self:GetID(), "HELPFUL");
+				GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMLEFT', -5, -5)
+				if self:GetAttribute('index') then
+					GameTooltip:SetUnitAura(SecureButton_GetUnit(self:GetParent()), self:GetID(), self:GetParent():GetAttribute('filter'))
+				elseif self:GetAttribute('target-slot') then
+					GameTooltip:SetInventoryItem('player', self:GetID())
 				end
 			</OnEnter>
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
-		</Scripts>
-	</Button>
-	<Button name="bdDebuffsTemplate" inherits="SecureActionButtonTemplate" virtual="true">
-		<Size x="34" y="34"/>
-		<Scripts>
-			<OnEnter>
-				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT", -5, -5);
-				GameTooltip:SetFrameLevel(self:GetFrameLevel() + 2);
-				GameTooltip:SetUnitAura("player", self:GetID(), "HARMFUL");
-			</OnEnter>
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
+			<OnLeave function='GameTooltip_Hide'/>
 		</Scripts>
 	</Button>
 	
 	<!-- Buffs (great change blizz) -->
-	<Button name='bdBuffsTemplate16' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='16' y='16'/>
-	</Button>
-	<Button name='bdBuffsTemplate18' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='18' y='18'/>
-	</Button>
-	<Button name='bdBuffsTemplate20' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='20' y='20'/>
-	</Button>
-	<Button name='bdBuffsTemplate22' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='22' y='22'/>
-	</Button>
-	<Button name='bdBuffsTemplate24' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='24' y='24'/>
-	</Button>
-	<Button name='bdBuffsTemplate26' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='26' y='26'/>
-	</Button>
-	<Button name='bdBuffsTemplate28' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='28' y='28'/>
-	</Button>
-	<Button name='bdBuffsTemplate30' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='30' y='30'/>
-	</Button>
-	<Button name='bdBuffsTemplate32' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='32' y='32'/>
-	</Button>
-	<Button name='bdBuffsTemplate34' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='34' y='34'/>
-	</Button>
-	<Button name='bdBuffsTemplate36' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='36' y='36'/>
-	</Button>
-	<Button name='bdBuffsTemplate38' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='38' y='38'/>
-	</Button>
-	<Button name='bdBuffsTemplate40' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='40' y='40'/>
-	</Button>
-	<Button name='bdBuffsTemplate42' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='42' y='42'/>
-	</Button>
-	<Button name='bdBuffsTemplate44' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='44' y='44'/>
-	</Button>
-	<Button name='bdBuffsTemplate46' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='46' y='46'/>
-	</Button>
-	<Button name='bdBuffsTemplate48' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='48' y='48'/>
-	</Button>
-	<Button name='bdBuffsTemplate50' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='50' y='50'/>
-	</Button>
-	<Button name='bdBuffsTemplate52' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='52' y='52'/>
-	</Button>
-	<Button name='bdBuffsTemplate54' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='54' y='54'/>
-	</Button>
-	<Button name='bdBuffsTemplate56' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='56' y='56'/>
-	</Button>
-	<Button name='bdBuffsTemplate58' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='58' y='58'/>
-	</Button>
-	<Button name='bdBuffsTemplate60' inherits='bdBuffsTemplate' virtual='true'>
-		<Size x='60' y='60'/>
-	</Button>
-	
-	<!-- Debuffs(great change blizz) -->
-	<Button name='bdDebuffsTemplate16' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='16' y='16'/>
-	</Button>
-	<Button name='bdDebuffsTemplate18' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='18' y='18'/>
-	</Button>
-	<Button name='bdDebuffsTemplate20' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='20' y='20'/>
-	</Button>
-	<Button name='bdDebuffsTemplate22' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='22' y='22'/>
-	</Button>
-	<Button name='bdDebuffsTemplate24' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='24' y='24'/>
-	</Button>
-	<Button name='bdDebuffsTemplate26' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='26' y='26'/>
-	</Button>
-	<Button name='bdDebuffsTemplate28' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='28' y='28'/>
-	</Button>
-	<Button name='bdDebuffsTemplate30' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='30' y='30'/>
-	</Button>
-	<Button name='bdDebuffsTemplate32' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='32' y='32'/>
-	</Button>
-	<Button name='bdDebuffsTemplate34' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='34' y='34'/>
-	</Button>
-	<Button name='bdDebuffsTemplate36' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='36' y='36'/>
-	</Button>
-	<Button name='bdDebuffsTemplate38' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='38' y='38'/>
-	</Button>
-	<Button name='bdDebuffsTemplate40' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='40' y='40'/>
-	</Button>
-	<Button name='bdDebuffsTemplate42' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='42' y='42'/>
-	</Button>
-	<Button name='bdDebuffsTemplate44' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='44' y='44'/>
-	</Button>
-	<Button name='bdDebuffsTemplate46' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='46' y='46'/>
-	</Button>
-	<Button name='bdDebuffsTemplate48' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='48' y='48'/>
-	</Button>
-	<Button name='bdDebuffsTemplate50' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='50' y='50'/>
-	</Button>
-	<Button name='bdDebuffsTemplate52' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='52' y='52'/>
-	</Button>
-	<Button name='bdDebuffsTemplate54' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='54' y='54'/>
-	</Button>
-	<Button name='bdDebuffsTemplate56' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='56' y='56'/>
-	</Button>
-	<Button name='bdDebuffsTemplate58' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='58' y='58'/>
-	</Button>
-	<Button name='bdDebuffsTemplate60' inherits='bdDebuffsTemplate' virtual='true'>
-		<Size x='60' y='60'/>
-	</Button>
-	
+	<Button name='bdAuraTemplate16' inherits='bdAuraTemplate' virtual='true'><Size x='16' y='16'/></Button>
+	<Button name='bdAuraTemplate18' inherits='bdAuraTemplate' virtual='true'><Size x='18' y='18'/></Button>
+	<Button name='bdAuraTemplate20' inherits='bdAuraTemplate' virtual='true'><Size x='20' y='20'/></Button>
+	<Button name='bdAuraTemplate22' inherits='bdAuraTemplate' virtual='true'><Size x='22' y='22'/></Button>
+	<Button name='bdAuraTemplate24' inherits='bdAuraTemplate' virtual='true'><Size x='24' y='24'/></Button>
+	<Button name='bdAuraTemplate26' inherits='bdAuraTemplate' virtual='true'><Size x='26' y='26'/></Button>
+	<Button name='bdAuraTemplate28' inherits='bdAuraTemplate' virtual='true'><Size x='28' y='28'/></Button>
+	<Button name='bdAuraTemplate30' inherits='bdAuraTemplate' virtual='true'><Size x='30' y='30'/></Button>
+	<Button name='bdAuraTemplate32' inherits='bdAuraTemplate' virtual='true'><Size x='32' y='32'/></Button>
+	<Button name='bdAuraTemplate34' inherits='bdAuraTemplate' virtual='true'><Size x='34' y='34'/></Button>
+	<Button name='bdAuraTemplate36' inherits='bdAuraTemplate' virtual='true'><Size x='36' y='36'/></Button>
+	<Button name='bdAuraTemplate38' inherits='bdAuraTemplate' virtual='true'><Size x='38' y='38'/></Button>
+	<Button name='bdAuraTemplate40' inherits='bdAuraTemplate' virtual='true'><Size x='40' y='40'/></Button>
+	<Button name='bdAuraTemplate42' inherits='bdAuraTemplate' virtual='true'><Size x='42' y='42'/></Button>
+	<Button name='bdAuraTemplate44' inherits='bdAuraTemplate' virtual='true'><Size x='44' y='44'/></Button>
+	<Button name='bdAuraTemplate46' inherits='bdAuraTemplate' virtual='true'><Size x='46' y='46'/></Button>
+	<Button name='bdAuraTemplate48' inherits='bdAuraTemplate' virtual='true'><Size x='48' y='48'/></Button>
+	<Button name='bdAuraTemplate50' inherits='bdAuraTemplate' virtual='true'><Size x='50' y='50'/></Button>
+	<Button name='bdAuraTemplate52' inherits='bdAuraTemplate' virtual='true'><Size x='52' y='52'/></Button>
+	<Button name='bdAuraTemplate54' inherits='bdAuraTemplate' virtual='true'><Size x='54' y='54'/></Button>
+	<Button name='bdAuraTemplate56' inherits='bdAuraTemplate' virtual='true'><Size x='56' y='56'/></Button>
+	<Button name='bdAuraTemplate58' inherits='bdAuraTemplate' virtual='true'><Size x='58' y='58'/></Button>
+	<Button name='bdAuraTemplate60' inherits='bdAuraTemplate' virtual='true'><Size x='60' y='60'/></Button>
 </Ui>

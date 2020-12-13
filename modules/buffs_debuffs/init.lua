@@ -155,4 +155,4 @@ local config = {
 	
 }
 
-local mod = bdUI:register_module("Buffs & Debuffs", config)
+local mod = bdUI:register_module("Buffs and Debuffs", config)
