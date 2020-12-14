@@ -105,6 +105,7 @@ function mod:config_callback()
 		-- alpha
 		, ['nameplateSelfAlpha'] = 1
 		, ['nameplateMinAlpha'] = config.unselectedalpha
+		, ['nameplateMinAlpha'] = config.unselectedalpha
 		, ['nameplateMaxAlpha'] = config.unselectedalpha
 		, ['nameplateOccludedAlphaMult'] = config.occludedalpha
 
@@ -542,4 +543,8 @@ function mod:initialize()
 	oUF:SpawnNamePlates("bdNameplates", nameplate_callback)
 
 	mod:config_callback()
+
+	C_Timer.After(1, function()
+		mod:config_callback()
+	end)
 end

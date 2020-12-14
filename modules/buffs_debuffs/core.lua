@@ -261,7 +261,7 @@ end
 --==============================================
 function mod:update_debuffs()
 	local debuffrows = math.ceil(10/config.debuffperrow)
-	local template = string.format('bdAuraTemplate%d', config.buffsize)
+	local template = string.format('bdAuraTemplate%d', config.debuffsize)
 
 	-- they share some stuff
 	mod:common_headers(bdDebuffs, "HARMFUL")
