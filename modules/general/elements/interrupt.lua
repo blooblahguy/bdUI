@@ -14,8 +14,9 @@ function mod:create_interrupt()
 		-- local inInstance, instanceType = IsInInstance()
 
 		-- if (UnitExists(sourceName) and UnitIsUnit(sourceName, 'player') and inInstance and (instanceType == "party" or instanceType == "raid")) then
+		if (UnitExists(sourceName) and UnitIsUnit(sourceName, 'player')) then
 			SendChatMessage(UnitName("player")..' interrupted ' .. GetSpellLink(extraSpellID), "SAY")
-		-- end
+		end
 	end
 
 	interrupt:SetScript('OnEvent', OnEvent)

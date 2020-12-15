@@ -183,7 +183,7 @@ local function layout(self, unit)
 		-- print(unit)
 		-- print(UnitClass(unit))
 		-- print(UnitName(unit))
-		unit = UnitName(unit) or select(1, UnitClass(unit))
+		unit = UnitName(unit) or ""
 
 		return unit.." "..c
 	end

@@ -47,7 +47,10 @@ local function returnUnitSpecialization(unit)
 	local currentSpec = GetInspectSpecialization(unit)
 	local id, name, description, icon, background, role, class = GetSpecializationInfoByID(currentSpec)
 
-	return "|T"..icon..":12|t "..name
+	if (name) then
+		return "|T"..icon..":12|t "..name
+	end
+	return ""
 end
 
 local function populateTooltip(tooltip, ilvl, spec)
