@@ -180,10 +180,16 @@ local function layout(self, unit)
 		end
 
 		c = c or ""
-		-- print(unit)
-		-- print(UnitClass(unit))
-		-- print(UnitName(unit))
 		unit = UnitName(unit) or ""
+		local name = unit.." "..c
+
+		if (IsActiveBattlefieldArena()) then
+			for i = 1, 5 do
+				if UnitIsUnit(unit, "arena"..i) then
+					name = i
+				end
+			end
+		end
 
 		return unit.." "..c
 	end
@@ -297,6 +303,7 @@ function mod:create_unitframes()
 				arena:SetPoint("TOP", lastarena, "BOTTOM", -2, -30)
 			end
 			arena:SetSize(config.bosswidth, config.bossheight)
+			arena:SetAttribute('oUF-enableArenaPrep', 1)
 			lastarena = arena
 		end
 	end

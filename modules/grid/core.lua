@@ -667,16 +667,14 @@ function mod:disable_blizzard()
 	addonDisabler:RegisterEvent("PLAYER_REGEN_ENABLED")
 	addonDisabler:SetScript("OnEvent", function(self, event, addon)
 		if (InCombatLockdown()) then return end
+		if (CompactUnitFrameProfiles) then
+			CompactUnitFrameProfiles:UnregisterAllEvents()
+		end
 		if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
 			CompactRaidFrameManager:UnregisterAllEvents() 
-			CompactRaidFrameManager:Hide() 
-			CompactRaidFrameManager.Show = noop
 			CompactRaidFrameContainer:UnregisterAllEvents() 
-			CompactRaidFrameContainer:Hide()
-			CompactRaidFrameContainer.Show = noop
 
-			addonDisabler:UnregisterEvent("ADDON_LOADED")
-			addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
 		end
+		addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	end)
 end
