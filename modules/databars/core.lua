@@ -9,7 +9,7 @@ local config
 -- Core functionality
 -- place core functionality here
 --===============================================
-local azerite, honor, rep, xp, altpower, container
+local honor, rep, xp, altpower, container
 function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
@@ -24,10 +24,9 @@ function mod:initialize()
 	xp = mod:create_xp()
 	rep = mod:create_reputation()
 	honor = mod:create_honor()
-	azerite = mod:create_azerite()
 
 	-- put into frame group
-	bdUI:frame_group(container, "downwards", azerite, honor, rep, xp)
+	bdUI:frame_group(container, "downwards", honor, rep, xp)
 	container:SetPoint("TOP", bdParent, "TOP", 0, -10)
 	bdMove:set_moveable(container, "Databars")
 end
@@ -59,15 +58,11 @@ function mod:config_callback()
 		honor:SetSize(config.databars_width, config.databars_height)
 		honor:callback()
 	end
-	if (azerite) then
-		azerite:SetSize(config.databars_width, config.databars_height)
-		azerite:callback()
-	end
 	if (altpower) then
 		altpower:SetSize(config.alt_width, config.alt_height)
 		altpower:callback()
 	end
 
 	
-	bdUI:frame_group(container, "downwards", azerite, honor, rep, xp)
+	bdUI:frame_group(container, "downwards", honor, rep, xp)
 end
