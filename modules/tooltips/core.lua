@@ -92,7 +92,13 @@ local function replace_tooltip_lines(self, unit)
 	if (not unit) then return end
 	
 	-- name info
-	local name, realm = UnitName(unit)
+	local _, realm = UnitName(unit)
+	local name = ""
+	if (mod.config.enabletitlesintt) then
+		name = UnitPVPName(unit) or UnitName(unit)
+	else
+		name = UnitName(unit)
+	end
 	local dnd = UnitIsAFK(unit) and " |cffAAAAAA<AFK>|r " or UnitIsDND(unit) and " |cffAAAAAA<DND>|r " or ""
 	self.namecolor = {mod:getUnitColor(unit)}
 	self.namehex = RGBPercToHex(unpack(self.namecolor))
