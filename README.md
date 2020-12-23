@@ -37,7 +37,7 @@ The plan is for large-scale testing to begin after BigDumbGuild finishes Eternal
 - Grid
 - Tooltips
 - Viewports
-- Databars (xp, azerite, honor, reputation)
+- Databars (xp, honor, reputation)
 - Standalone Resource Bar (power, stagger, runes, totems, holy power, combo points, chi)
 - Alternative Power
 - Quality of Life Additions
