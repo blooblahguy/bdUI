@@ -7,18 +7,15 @@ end
 
 local function BW_Style()
 	if not BigWigs then return end
-	local bars = BigWigs:GetPlugin("Bars", true)
-	if not bars then return end
+	-- local bars = BigWigs:GetPlugin("Bars", true)
+	-- if not bars then return end
 	
-	bars:RegisterBarStyle("Big Dumb", {
+	BigWigsAPI:RegisterBarStyle("Big Dumb", {
 		apiVersion = 1,
 		version = 1,
+		barHeight = 16,
 		GetSpacing = function(bar) return 10 end,
-		ApplyStyle = function(bar) 
-			bar:SetHeight(16)
-			bar:SetScale(1)
-			bar.SetScale = function() return end
-			
+		ApplyStyle = function(bar) 			
 			bar.bg = CreateFrame('frame', nil, bar)
 			bar.bg:SetFrameStrata("BACKGROUND")
 			bar.bg:SetAllPoints(bar.candyBarBar)
