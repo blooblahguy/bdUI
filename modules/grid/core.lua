@@ -73,6 +73,8 @@ function mod:config_callback()
 	config = mod.config
 	if (not config.enabled) then return false end
 	if (InCombatLockdown()) then return end
+	-- prevent case where callback is called before frameHeader initialization
+	if (not mod.frameHeader) then return end
 
 	mod:update_header()
 	
