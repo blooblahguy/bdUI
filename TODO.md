@@ -18,3 +18,6 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 - add config to disable emojis
 - remove case sensitivy from auras
 - add back dot in middle of screen
+- multirow button frame
+- add expressway font
+- advanced text formatting options on unitframes

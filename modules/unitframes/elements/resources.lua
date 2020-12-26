@@ -206,7 +206,7 @@ mod.create_resources = function(self, unit)
 			elseif (changed) then
 				for index = 1, max do
 					local bar = self[index]
-					local width = (self.__owner.Resources:GetWidth() - (bdUI.border * (max - 1))) / max
+					local width = (self.__owner.Resources.primary:GetWidth() - (bdUI.border * (max - 1))) / max
 					bar:SetSize(width, config.resources_primary_height)
 				end
 			end
