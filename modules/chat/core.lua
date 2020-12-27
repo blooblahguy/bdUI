@@ -51,7 +51,9 @@ mod.url_patterns = {
 function mod:clean_labels(event, msg)
 -- assert(false, msg)
 	-- Remove player brackets
-	msg = msg:gsub("|Hplayer:([^%|]+)|h%[([^%]]+)%]|h", "|Hplayer:%1|h%2|h")
+	if (not config.pastureschatconfig) then
+		msg = msg:gsub("|Hplayer:([^%|]+)|h%[([^%]]+)%]|h", "|Hplayer:%1|h%2|h")
+	end
 	
 	-- Abbreviate
 	msg = msg:gsub("<Away>", "<afk>")
@@ -63,8 +65,11 @@ function mod:clean_labels(event, msg)
 
 	-- Whispers are now done with globals
 	msg = msg:gsub("Guild Message of the Day:", "GMotD -")
-	msg = msg:gsub("has come online.", "+")
-	msg = msg:gsub("has gone offline.", "-")
+	
+	if (not config.pastureschatconfig) then
+		msg = msg:gsub("has come online.", "+")
+		msg = msg:gsub("has gone offline.", "-")
+	end
 		
 	--channel replace (Trade and custom)
 	msg = msg:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
@@ -145,10 +150,18 @@ function mod:set_defaults()
 	CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA = 1
 	CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA = 1
 
-	CHAT_WHISPER_GET              = "F %s "
-	CHAT_WHISPER_INFORM_GET       = "T %s "
-	CHAT_BN_WHISPER_GET           = "F %s "
-	CHAT_BN_WHISPER_INFORM_GET    = "T %s "
+	if (config.pastureschatconfig) then
+		CHAT_WHISPER_GET              = "|cffB19CD9From:|r %s "
+		CHAT_WHISPER_INFORM_GET       = "|cff966FD6To:|r %s "
+		CHAT_BN_WHISPER_GET           = "|cffB19CD9From:|r %s "
+		CHAT_BN_WHISPER_INFORM_GET    = "|cff966FD6To:|r %s "
+	else
+		CHAT_WHISPER_GET              = "F %s "
+		CHAT_WHISPER_INFORM_GET       = "T %s "
+		CHAT_BN_WHISPER_GET           = "F %s "
+		CHAT_BN_WHISPER_INFORM_GET    = "T %s "
+	end
+	
 	CHAT_BATTLEGROUND_GET         = "|Hchannel:Battleground|hBG.|h %s: "
 	CHAT_BATTLEGROUND_LEADER_GET  = "|Hchannel:Battleground|hBGL.|h %s: "
 	CHAT_GUILD_GET                = "|Hchannel:Guild|hG.|h %s: "
