@@ -391,7 +391,11 @@ end
 -- filter the message thats sent after the encoded string 
 mod.message_filter = function(self, event, msg, ...)
 	msg = mod:color_name(event, msg)
-	msg = mod:filter_emojis(event, msg)
+	
+	if (config.enableemojis) then
+		msg = mod:filter_emojis(event, msg)
+	end
+	
 	msg = mod:clean_labels(event, msg)
 
 	-- url
