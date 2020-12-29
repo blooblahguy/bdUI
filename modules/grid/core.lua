@@ -23,6 +23,8 @@ mod.frames = {}
 -- Callback on creation and configuration change
 --======================================================
 local function update_frame(self)
+	if (InCombatLockdown()) then return end
+
 	self:SetSize(config.width, config.height)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.ReadyCheckIndicator:SetSize(12, 12)
@@ -523,6 +525,8 @@ function mod:get_attributes()
 
 	xOffset = bdUI.pixel * (xOffset or 2)
 	yOffset = bdUI.pixel * (yOffset or 2)
+
+	-- print(xOffset)
 
 	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 end

@@ -284,6 +284,15 @@ local config = {
 		label = "Text",
 		args = {
 			{
+				key = "hpoffset",
+				type = "range",
+				value = 6,
+				min = -20,
+				max = 20,
+				step = 2,
+				label = "HP Text offset",
+			},
+			{
 				key = "hptext",
 				type = "select",
 				value = "HP - %",

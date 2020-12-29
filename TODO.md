@@ -21,3 +21,5 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 - multirow button frame
 - add expressway font
 - advanced text formatting options on unitframes
+- add chat tab keybinds
+- threat plate if another tank has threat

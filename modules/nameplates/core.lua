@@ -64,6 +64,9 @@ function mod:config_callback()
 		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
 		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
 
+		self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)
+		self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24+config.hpoffset)
+
 		-- Disabled auras
 		if (config.disableauras) then
 			self.Auras:Hide()
@@ -328,8 +331,8 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- UNIT NAME
 	--==========================================
-	self.Name = self:CreateFontString(nil, "OVERLAY", "BDN_FONT")
-	self.Name:SetPoint("BOTTOM", self, "TOP", 0, 6)	
+	self.Name = self.Health:CreateFontString(nil, "OVERLAY", "BDN_FONT")
+	self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)	
 	self:Tag(self.Name, '[name]')
 
 	--==========================================
@@ -451,7 +454,7 @@ local function nameplate_create(self, unit)
 	self.Auras = CreateFrame("Frame", nil, self)
 	self.Auras:SetFrameLevel(0)
 	self.Auras:ClearAllPoints()
-	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24)
+	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24+config.hpoffset)
 	self.Auras:SetSize(config.width, config.raidbefuffs)
 	self.Auras:EnableMouse(false)
 	self.Auras.size = config.raidbefuffs * config.scale
