@@ -19,7 +19,8 @@ local is_blacklisted = function(self, name)
 	return false
 end
 
-bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
+-- bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
+bdUI.is_blacklisted = memoize(is_blacklisted)
 
 --===============================================
 -- Intelligent Filtering
@@ -56,4 +57,6 @@ local filter_aura = function(self, name, castByPlayer, isRaidDebuff, nameplateSh
 	return false
 end
 
-bdUI.filter_aura = memoize(filter_aura, bdUI.caches.auras)
+-- bdUI.filter_aura = memoize(filter_aura, bdUI.caches.auras)
+-- bdUI.filter_aura = memoize(filter_aura)
+bdUI.filter_aura = filter_aura

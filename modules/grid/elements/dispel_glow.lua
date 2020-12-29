@@ -15,7 +15,8 @@ local dispelColors = {
 	['Disease'] = {.76, .46, .12, 1},
 	['Curse'] = {.80, .33, .95, 1},
 }
-local lib_glow = bdButtonGlow
+local lib_glow = LibStub("LibCustomGlow-1.0")
+local class = select(2, UnitClass("player"))
 
 --===========================================
 -- DISPEL / GLOWING
@@ -23,61 +24,72 @@ local lib_glow = bdButtonGlow
 mod.dispel_glow = function(self, event, unit)
 	local config = mod.config
 	if (unit ~= self.unit) then return end
+	-- if (not dispelClass[class]) then return end
 
-	local foundGlow = false
-	local foundDispel = false
-	local noMoreDebuffs = false -- let's us exit loop early if we run out of one or both aura types
-	local noMoreBuffs = false -- let's us exit loop early if we run out of one or both aura types
+	local found = {}
+	local primaryDispel = {0, 0, 0, 0}
+	local glow = false
+	local dispel = false
 
+	-- find debuffs
 	for i = 1, 40 do
+		local debuff, icon, count, debuffType = UnitDebuff(unit, i)
 
-		if (not noMoreDebuffs) then
-			local debuff, icon, count, debuffType = UnitDebuff(unit, i)
-			if (not debuff) then
-				noMoreDebuffs = true
-			else
-				if (dispelColors[debuffType] and not bdUI:is_blacklisted(debuff)) then
-					foundDispel = debuffType
-					noMoreDebuffs = true
-				end
+		if (not debuff) then break end
 
-				if (config.specialalerts[debuff]) then -- or bdUI:isGlow(debuff)) then
-					foundGlow = true
-					noMoreBuffs = true
-					noMoreDebuffs = true
+		-- if (not found[debuffType] and dispelClass[class][debuffType]) then
+		if (not found[debuffType]) then
+			if (dispelColors[debuffType] and not bdUI:is_blacklisted(debuff)) then
+				found[debuffType] = true
+				dispel = true
+				if (dispelClass[class][debuffType]) then
+					primaryDispel = dispelColors[debuffType]
 				end
 			end
 		end
 
-		-- glow
-		if (not noMoreBuffs) then
-			local buff = UnitBuff(unit, i)
-			if (not buff) then
-				noMoreBuffs = true
-			end
-
-			if (config.specialalerts[buff]) then --or bdUI:isGlow(buff)) then
-				foundGlow = true
-				noMoreBuffs = true
-			end
-		end
-		
-		-- breka if possible
-		if ((foundGlow and foundDispel) or (noMoreBuffs and noMoreDebuffs)) then
-			break
+		if (config.specialalerts[debuff]) then -- or bdUI:isGlow(debuff)) then
+			glow = true
 		end
 	end
 
-	if (foundDispel) then
+	-- find buffs
+	if (not glow) then
+		for i = 1, 40 do
+			local buff = UnitBuff(unit, i)
+
+			if (not buff) then break end
+
+			if (config.specialalerts[buff]) then
+				glow = true
+				break
+			end
+		end
+	end
+
+	-- show dispels
+	if (dispel) then
 		self.Dispel:Show()
-		self.Dispel:SetBackdropBorderColor(unpack(dispelColors[foundDispel]))
+		self.Dispel:SetBackdropBorderColor(unpack(primaryDispel))
+
+		-- show priority overlays
+		for k, v in pairs(dispelColors) do
+			if (found[k]) then
+				self.Dispel[k]:Show()
+			else
+				self.Dispel[k]:Hide()
+			end
+		end
 	else
 		self.Dispel:Hide()
 	end
 
-	if (foundGlow) then
-		lib_glow.ShowOverlayGlow(self.Glow)
+	-- show glow
+	if (glow) then
+		lib_glow.PixelGlow_Start(self.Glow, false, 8, 0.25, false, mod.border, 0, false, false)
+		-- lib_glow.ShowOverlayGlow(self.Glow)
 	else
-		lib_glow.HideOverlayGlow(self.Glow)
+		lib_glow.PixelGlow_Stop(self.Glow)
+		-- lib_glow.HideOverlayGlow(self.Glow)
 	end
 end

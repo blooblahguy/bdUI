@@ -28,7 +28,8 @@ lib\ace\ChatThrottleLib.lua
 lib\ace\AceComm-3.0.lua
 lib\ace\AceSerializer-3.0.lua
 lib\ace\AceTimer-3.0.lua
-lib\ace\LibButtonGlow-1.0.lua
+# lib\ace\LibButtonGlow-1.0.lua
+lib\ace\LibCustomGlow-1.0.lua
 lib\ace\LibSharedMedia-3.0.lua
 lib\ace\LibSimpleSticky.lua
 lib\ace\LibDataBroker-1.1.lua

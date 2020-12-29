@@ -3,10 +3,17 @@
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Grid")
-local lib_glow = bdButtonGlow
 local config
 local oUF = bdUI.oUF
 mod.frames = {}
+
+
+local dispelColors = {
+	['Magic'] = {.16, .5, .81, 1},
+	['Poison'] = {.12, .76, .36, 1},
+	['Disease'] = {.76, .46, .12, 1},
+	['Curse'] = {.80, .33, .95, 1},
+}
 
 --===============================================
 -- Core functionality
@@ -91,6 +98,9 @@ local function layout(self, unit)
 	self:RegisterForClicks('AnyDown')
 	index = index + 1
 	self.index = index
+
+	local border = bdUI:get_border(self)
+	mod.border = border
 
 	-- Unit doesn't always include index
 	if (unit == "raid" or unit == "party") then
@@ -350,7 +360,7 @@ local function layout(self, unit)
 	self.Buffs.disableMouse = true
 	self.Buffs.initialAnchor  = "TOPLEFT"
 	self.Buffs.size = config.buffSize
-	self.Buffs.spacing = 1
+	self.Buffs.spacing = mod.border
 	self.Buffs.num = 6
 	self.Buffs['growth-y'] = "DOWN"
 	self.Buffs['growth-x'] = "RIGHT"
@@ -379,6 +389,7 @@ local function layout(self, unit)
 
 		button.cd:SetReverse(true)
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		bdUI:set_backdrop(button)
 	end
 
 	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
@@ -396,18 +407,54 @@ local function layout(self, unit)
 	self.Dispel:SetFrameLevel(100)
 	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", 1, 1)
 	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -1, -1)
-	self.Dispel:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 2})
+	self.Dispel:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
 	self.Dispel:SetBackdropBorderColor(1, 0, 0,1)
 	self.Dispel:SetBackdropColor(0,0,0,0)
 	self.Dispel:Hide()
 	
 	-- look / color / show dispels and glows
 	self:RegisterEvent("UNIT_AURA", mod.dispel_glow);
+
+	-- overlays if there are multiple dispells
+	self.Dispel.Magic = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Magic:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Dispel.Magic:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
+	self.Dispel.Magic:SetWidth(border)
+	self.Dispel.Magic:SetTexture(bdUI.media.flat)
+	self.Dispel.Magic:SetVertexColor(unpack(dispelColors['Magic']))
+	self.Dispel.Magic:Hide()
+
+	-- overlays if there are multiple dispells
+	self.Dispel.Disease = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Disease:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Dispel.Disease:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
+	self.Dispel.Disease:SetHeight(border)
+	self.Dispel.Disease:SetTexture(bdUI.media.flat)
+	self.Dispel.Disease:SetVertexColor(unpack(dispelColors['Disease']))
+	self.Dispel.Disease:Hide()
+
+	-- overlays if there are multiple dispells
+	self.Dispel.Poison = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Poison:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
+	self.Dispel.Poison:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
+	self.Dispel.Poison:SetWidth(border)
+	self.Dispel.Poison:SetTexture(bdUI.media.flat)
+	self.Dispel.Poison:SetVertexColor(unpack(dispelColors['Poison']))
+	self.Dispel.Poison:Hide()
+
+	-- overlays if there are multiple dispells
+	self.Dispel.Curse = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Curse:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
+	self.Dispel.Curse:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
+	self.Dispel.Curse:SetHeight(border)
+	self.Dispel.Curse:SetTexture(bdUI.media.flat)
+	self.Dispel.Curse:SetVertexColor(unpack(dispelColors['Curse']))
+	self.Dispel.Curse:Hide()
 	
 	-- Debuffs
 	self.Debuffs = CreateFrame("Frame", nil, self.Health)
 	self.Debuffs:SetFrameLevel(21)
-	self.Debuffs:SetPoint("CENTER", self.Health, "CENTER")
+	self.Debuffs:SetPoint("CENTER")
 	
 	self.Debuffs.initialAnchor = "CENTER"
 	self.Debuffs.size = config.debuffSize
@@ -417,6 +464,12 @@ local function layout(self, unit)
 	self.Debuffs.num = 4
 	self.Debuffs['growth-y'] = "DOWN"
 	self.Debuffs['growth-x'] = "RIGHT"
+
+
+	self.Debuffs.PostUpdate = function(self, unit)
+		local offset =  (config.debuffSize / 2) * (self.visibleDebuffs - 1)
+		self:SetPoint("CENTER", -offset, 0)
+	end
 
 	self.Debuffs.CustomFilter = function(self, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod)
 		isBossDebuff = isBossDebuff or false
@@ -437,17 +490,29 @@ local function layout(self, unit)
 			region:SetTextHeight(config.debuffSize)
 			region:SetJustifyH("CENTER")
 			region:SetJustifyV("MIDDLE")
-			region:SetPoint("TOPLEFT", button.cd, "TOPLEFT", -config.debuffSize, 0)
-			region:SetPoint("BOTTOMRIGHT", button.cd, "BOTTOMRIGHT", config.debuffSize, 0)
+			region:ClearAllPoints()
+			region:SetPoint("CENTER")
+			-- region:SetPoint("TOPLEFT", button.cd, "TOPLEFT", -config.debuffSize, 0)
+			-- region:SetPoint("BOTTOMRIGHT", button.cd, "BOTTOMRIGHT", config.debuffSize, 0)
 		else
 			region:SetAlpha(0)
 		end
+
+		button.cd:SetReverse(true)
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		bdUI:set_backdrop(button)
 	end
 
 	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		-- for classic
+		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+
+		-- color borders of debuffs
+		if (dispelColors[debuffType]) then
+			button._border:SetVertexColor(unpack(dispelColors[debuffType]))
+		else
+			button._border:SetVertexColor(unpack(bdUI.media.border))
+		end
 	end
 	
 	table.insert(mod.frames, self)
