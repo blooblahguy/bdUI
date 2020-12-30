@@ -268,6 +268,21 @@ function mod:create_tooltips()
 			LibDBIconTooltip:SetScript('OnShow', hook_and_skin)
 		end
 	end)
+
+	
+	---------------------------------------------------------------------
+	-- Who cast this?
+	---------------------------------------------------------------------
+	hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
+		local caster = select(7, UnitAura(unit, index, filter))
+		local name = caster and UnitName(caster)
+
+		if (not name) then return end
+		if (not UnitIsPlayer(name)) then return end
+		
+		self:AddDoubleLine("Cast by:", name, nil, nil, nil, mod:getUnitColor(name))
+		self:Show()
+	end)
 end
 
 
