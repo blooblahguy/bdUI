@@ -406,6 +406,12 @@ local config = {
 				label = "Have Aggro Color"
 			},
 			{
+				key = "othertankcolor",
+				type = "color",
+				value = {.79, .2, .61, 1},
+				label = "Another Tank has Aggro Color"
+			},
+			{
 				key = "nothreatcolor",
 				type = "color",
 				value = {0.3, 1, 0.3,1},

@@ -158,7 +158,7 @@ end
 --==============================================
 -- Unit Information Variables
 --==============================================
-local function unit_information(self, unit)
+local function store_unit_information(self, unit)
 	self.tapDenied = UnitIsTapDenied(unit) or false
 	self.status = UnitThreatSituation("player", unit)
 	if (self.status == nil) then
@@ -166,6 +166,10 @@ local function unit_information(self, unit)
 	end
 	self.isPlayer = UnitIsPlayer(unit) and select(2, UnitClass(unit)) or false
 	self.reaction = UnitReaction(unit, "player") or false
+	self.targetRole = self.isPlayer and UnitGroupRolesAssigned(unit.."target") or "NONE"
+	if (UnitGroupRolesAssigned("player") ~= "TANK") then
+		self.targetRole = "NONE"
+	end
 
 	self.smartColors = mod:unitColor(self.tapDenied, self.isPlayer, self.reaction, self.status)
 end
@@ -181,7 +185,7 @@ local function update_threat(self, event, unit)
 	if (event == "OnUpdate") then return false end
 
 	-- store these values for reuse
-	unit_information(self, unit)
+	store_unit_information(self, unit)
 
 	local healthbar = self.Health
 	local cur, max = UnitHealth(unit), UnitHealthMax(unit)
@@ -221,7 +225,7 @@ local function nameplate_callback(self, event, unit)
 	nameplates[self] = self
 
 	-- store these values for reuse
-	unit_information(self, unit)
+	store_unit_information(self, unit)
 
 	--==========================================
 	-- Style by unit type

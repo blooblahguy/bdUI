@@ -53,7 +53,7 @@ mod.custom_layout["target"] = function(self, unit)
 	end
 	
 
-	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
@@ -62,12 +62,17 @@ mod.custom_layout["target"] = function(self, unit)
 		if ( bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll) ) then
 			return true
 		end
+
 		-- also allow anything that might be casted by the boss
-		if (not caster and not UnitIsPlayer("target")) then
+		if (castByPlayer) then return true end
+
+		--
+		if (not castByPlayer) then
 			return true
 		end
+
 		-- look for non player casters
-		if (caster and not strfind(caster, "raid") and not strfind(caster, "party") and not caster == "player") then
+		if (castByPlayer and not strfind(source, "raid") and not strfind(source, "party") and not source == "player") then
 			return true
 		end
 	end
