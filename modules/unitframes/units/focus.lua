@@ -41,10 +41,10 @@ mod.custom_layout["focus"] = function(self, unit)
 	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
 				
-		if (castByPlayer) then
-			if (bdUI:filter_aura(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		if (castByMe) then
+			if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 				return true
 			end
 		end
@@ -53,10 +53,10 @@ mod.custom_layout["focus"] = function(self, unit)
 	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
 				
-		if (not caster or not casterIsPlayer) then
-			if (bdUI:filter_aura(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		if (not caster or not castByPlayer) then
+			if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 				return true
 			end
 		end

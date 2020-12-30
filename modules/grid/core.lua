@@ -368,9 +368,9 @@ local function layout(self, unit)
 	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		return bdUI:filter_aura(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+		return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 	self.Buffs.PostCreateIcon = function(self, button) 
 		local region = button.cd:GetRegions()
@@ -475,11 +475,12 @@ local function layout(self, unit)
 	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		-- for classic
+		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expirationTime)
 
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		return bdUI:filter_aura(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+		return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 
 	self.Debuffs.PostCreateIcon = function(self, button)

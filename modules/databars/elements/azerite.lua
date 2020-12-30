@@ -4,6 +4,7 @@ local mod = bdUI:get_module("Databars")
 function mod:create_azerite()
 	local config = mod.config
 
+	if (true) then return end
 	if (not C_AzeriteItem) then return end
 
 	-- local animaCurrencyID, maxDisplayableValue = C_CovenantSanctumUI.GetAnimaInfo()
@@ -18,6 +19,7 @@ function mod:create_azerite()
 	bar:RegisterEvent("AZERITE_ITEM_EXPERIENCE_CHANGED")
 	bar.callback = function(self, event)
 		local azerite = C_AzeriteItem.FindActiveAzeriteItem()
+		if (not azerite) then return end
 		local isMaxLevel = C_AzeriteItem.IsAzeriteItemAtMaxLevel();
 		local disable = false
 
@@ -33,6 +35,8 @@ function mod:create_azerite()
 			self:Hide()
 			return
 		end
+
+		print(azerite)
 
 		local xp, totalXP = C_AzeriteItem.GetAzeriteItemXPInfo(azerite)
 		local level = C_AzeriteItem.GetPowerLevel(azerite)
