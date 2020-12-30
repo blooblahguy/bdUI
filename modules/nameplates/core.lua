@@ -469,12 +469,13 @@ local function nameplate_create(self, unit)
 	self.specialExpiration = 0
 	self.enrageExpiration = 0
 	
-	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3)
+	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
+		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 
-		return bdUI.filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false) or mod:auraFilter(name, castByPlayer, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
+		return bdUI.filter_aura(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll) or mod:auraFilter(name, castByPlayer, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
 	end
 	
 	self.Auras.PostCreateIcon = function(self, button)

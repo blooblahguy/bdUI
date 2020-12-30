@@ -45,7 +45,7 @@ mod.additional_elements.aurabars = function(self, unit)
 			if (not IsShiftKeyDown() or not button == "MiddleButton") then return end
 			local name = self.spell
 			BDUI_SAVE.persistent.Auras.blacklist[name] = true
-			bdUI.caches.auras = false
+			bdUI.caches.auras = {}
 
 			bdUI:debug("Blacklisted "..name)
 		end)

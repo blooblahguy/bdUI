@@ -365,11 +365,12 @@ local function layout(self, unit)
 	self.Buffs['growth-y'] = "DOWN"
 	self.Buffs['growth-x'] = "RIGHT"
 
-	self.Buffs.CustomFilter = function(self, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll,timeMod, effect1, effect2, effect3)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		return bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)
+
+		return bdUI:filter_aura(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 	self.Buffs.PostCreateIcon = function(self, button) 
 		local region = button.cd:GetRegions()
@@ -471,14 +472,14 @@ local function layout(self, unit)
 		self:SetPoint("CENTER", -offset, 0)
 	end
 
-	self.Debuffs.CustomFilter = function(self, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod)
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 
 		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
 
 		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-		return bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false)
+		return bdUI:filter_aura(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 
 	self.Debuffs.PostCreateIcon = function(self, button)

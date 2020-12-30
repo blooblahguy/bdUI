@@ -7,56 +7,113 @@ local auras
 bdUI.caches.auras = {}
 
 --===============================================
--- Blacklisting
+-- Whitelist
 --===============================================
-
-local is_blacklisted = function(self, name)
+local is_whitelisted = function(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = auras or mod.config
 
-	if (auras[name]) then	
-		return true	
-	end	
+	-- ez mode
+	if (nameplateShowAll) then
+		return true
+	end
+
+	-- whitelisted if in raid
+	if (bdUI:is_whitelist_raid(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		return true
+	end
+
+	-- whitelisted if its mine
+	if (bdUI:is_whitelist_mine(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		return true
+	end
+
+	-- whitelisted
+	if (auras["whitelisted"][name]) then	
+		return true
+	end
+
+	-- whitelisted if i'm on the class
+	if (bdUI:is_whitelist_class(name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		return true
+	end
+	
+	return false
+end
+
+--===============================================
+-- Blacklists
+--===============================================
+local is_blacklisted = function(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+	auras = auras or mod.config
+
+	if (auras["blacklist"][name]) then	
+		return true
+	end
+
+	return false
+end
+
+--===============================================
+-- Personal
+--===============================================
+local is_whitelist_mine = function(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+	auras = auras or mod.config
+
+	if (nameplateShowPersonal and castByPlayer) or (auras["mine"] and auras["mine"][name] and castByPlayer)) then
+		return true
+	end
+	
+	return false
+end
+
+--===============================================
+-- Class
+--===============================================
+local is_whitelist_class = function(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+	auras = auras or mod.config
+
+	if (auras[bdUI.class][name]) then	
+		return true
+	end
+	
+	return false
+end
+
+--===============================================
+-- Raid
+--===============================================
+local is_whitelist_raid = function(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+	auras = auras or mod.config
+
+	local inInstance, instanceType = IsInInstance()
+	if (inInstance and (instanceType == "party" or instanceType == "raid")) then
+		if (isBossDebuff or bdUI.aura_lists.raid[name]) then	
+			return true
+		end
+	end
+	
 	return false
 end
 
 -- bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
-bdUI.is_blacklisted = memoize(is_blacklisted)
+bdUI.is_whitelisted = is_whitelisted
+bdUI.is_blacklisted = is_blacklisted
+bdUI.is_whitelist_mine = is_whitelist_mine
+bdUI.is_whitelist_class = is_whitelist_class
+bdUI.is_whitelist_raid = is_whitelist_raid
 
 --===============================================
 -- Intelligent Filtering
 --===============================================
-local filter_aura = function(self, name, castByPlayer, isRaidDebuff, nameplateShowAll, invert)
+local filter_aura = function(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = auras or mod.config
 
-	local blacklist = auras["blacklist"]
-	local whitelist = auras["whitelist"]
-	local mine = auras["mine"]
-	local class = auras[bdUI.class]
-	local raid = bdUI.aura_lists.raid
-
-	-- blacklist has priority
-	if (blacklist and blacklist[name]) then
+	if (is_blacklisted(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return false
 	end
 
-	-- but let's let things through that are obvious
-	if (isRaidDebuff or nameplateShowAll or invert) then
-		return true
-	end
-	
-	if (whitelist and whitelist[name]) then
-		return true
-	elseif (raid and raid[name]) then
-		return true
-	elseif (class and class[name]) then
-		return true
-	elseif (mine and mine[name] and castByPlayer) then
-		return true
-	end
-	
-	return false
+	return is_whitelisted(self, name, spellID, castByPlayer, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 end
 
 -- bdUI.filter_aura = memoize(filter_aura, bdUI.caches.auras)
--- bdUI.filter_aura = memoize(filter_aura)
 bdUI.filter_aura = filter_aura
