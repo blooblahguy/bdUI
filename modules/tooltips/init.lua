@@ -68,6 +68,19 @@ local config = {
 			}
 		}
 	},
+	{
+		key = "titles",
+		type = "group",
+		heading = "Titles",
+		args = {
+			{
+				key = "enabletitlesintt",
+				type = "toggle",
+				value = true,
+				label = "Enable title display in unit mouseover"
+			}
+		}
+	},
 	
 }
 
