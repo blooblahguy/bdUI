@@ -299,7 +299,7 @@ local function layout(self, unit)
 	self.GroupRoleIndicator:SetSize(12, 12)
 	self.GroupRoleIndicator:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT",2,2)
 	self.GroupRoleIndicator.Override = function(self, event)
-		-- self.GroupRoleIndicator:Hide()
+		self.GroupRoleIndicator:Hide()
 
 		local role = UnitGroupRolesAssigned(self.unit)
 		if (config.roleicon) then
