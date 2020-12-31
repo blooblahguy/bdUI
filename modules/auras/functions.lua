@@ -43,7 +43,7 @@ local is_blacklisted = function(self, name, spellID, castByMe, isBossDebuff, nam
 	-- auras = auras or mod.config
 	name = name:lower()
 
-	if (auras["blacklist"][name]) then	
+	if (auras and auras["blacklist"][name]) then	
 		return true
 	end
 
@@ -72,7 +72,7 @@ local is_whitelist_mine = function(self, name, spellID, castByMe, isBossDebuff, 
 	-- auras = auras or mod.config
 	name = name:lower()
 
-	if (auras["mine"][name] and castByMe) then
+	if (auras and auras["mine"][name] and castByMe) then
 		return true
 	end
 	
@@ -86,7 +86,7 @@ local is_whitelist_class = function(self, name, spellID, castByMe, isBossDebuff,
 	-- auras = auras or mod.config
 	name = name:lower()
 
-	if (auras[bdUI.class][name]) then	
+	if (auras and auras[bdUI.class][name]) then	
 		return true
 	end
 	

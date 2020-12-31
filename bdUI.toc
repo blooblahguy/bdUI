@@ -151,7 +151,6 @@ modules\databars\init.lua
 modules\databars\functions.lua
 modules\databars\core.lua
 modules\databars\elements\xp.lua
-modules\databars\elements\azerite.lua
 modules\databars\elements\reputation.lua
 modules\databars\elements\honor.lua
 modules\databars\elements\altpower.lua
