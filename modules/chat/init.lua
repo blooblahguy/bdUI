@@ -42,6 +42,18 @@ local config = {
 		value = false,
 		label = "Hide all chat frames in boss combat."
 	},
+	{
+		key = "pastureschatconfig",
+		type = "toggle",
+		value = false,
+		label = "Use Pastures' alternative chat formatting"
+  },
+  {
+		key = "enableemojis",
+		type = "toggle",
+		value = true,
+		label = "Render emojis/emotes in chat as images"
+	},
 
 }
 
