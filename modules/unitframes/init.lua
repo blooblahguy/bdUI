@@ -369,7 +369,6 @@ function mod:initialize()
 
 	bdUI.oUF.colors.power[0] = {46/255, 130/255, 215/255}
 	bdUI.oUF.colors.power["MANA"] = {46/255, 130/255, 215/255}
-
 	bdUI.oUF.colors.power.ARCANE_CHARGES = {55/255, 139/255, 224/255}
 	
 	mod:create_unitframes()

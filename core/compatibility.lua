@@ -4,6 +4,11 @@ local noop = function() return end
 local noob = CreateFrame("frame", nil, UIParent)
 
 --====================================================
+-- Release highlights
+--====================================================
+
+
+--====================================================
 -- VANILLA
 --====================================================
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then

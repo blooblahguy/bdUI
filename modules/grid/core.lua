@@ -302,13 +302,13 @@ local function layout(self, unit)
 		-- self.GroupRoleIndicator:Hide()
 
 		local role = UnitGroupRolesAssigned(self.unit)
-		-- if (config.roleicon) then
-			-- if (role and (role == "HEALER" or role == "TANK")) then
-				self.GroupRoleIndicator:SetTexture("Interface\\Addons\\bdUI\\media\\tank.tga")
-				-- self.GroupRoleIndicator:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
+		if (config.roleicon) then
+			if (role and (role == "HEALER" or role == "TANK")) then
+				-- self.GroupRoleIndicator:SetTexture("Interface\\Addons\\bdUI\\media\\tank.tga")
+				self.GroupRoleIndicator:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
 				self.GroupRoleIndicator:Show()
-			-- end
-		-- end
+			end
+		end
 
 
 		self.Short:ClearAllPoints()
