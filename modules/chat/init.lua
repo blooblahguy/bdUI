@@ -42,6 +42,12 @@ local config = {
 		value = false,
 		label = "Hide all chat frames in boss combat."
 	},
+	{
+		key = "enableemojis",
+		type = "toggle",
+		value = true,
+		label = "Render emojis/emotes in chat as images"
+	},
 
 }
 
