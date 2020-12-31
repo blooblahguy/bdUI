@@ -49,9 +49,7 @@ mod.custom_layout["boss"] = function(self, unit)
 		local castByMe = source and UnitIsUnit(source, "player") or false
 				
 		if (not source or not castByPlayer) then
-			if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
-				return true
-			end
+			return not bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 		end
 	end
 

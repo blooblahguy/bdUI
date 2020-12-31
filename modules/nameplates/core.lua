@@ -479,7 +479,15 @@ local function nameplate_create(self, unit)
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		return bdUI.filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll) or mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
+		local allow = false
+		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+			return true
+		end
+		if (bdUI:is_whitelist_nameplate(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+			return true
+		end
+
+		return mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
 	end
 	
 	self.Auras.PostCreateIcon = function(self, button)

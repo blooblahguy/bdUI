@@ -296,15 +296,18 @@ local function layout(self, unit)
 	self.GroupRoleIndicator = self.Health:CreateTexture(nil, "OVERLAY")
 	self.GroupRoleIndicator:SetSize(12, 12)
 	self.GroupRoleIndicator:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT",2,2)
-	self.GroupRoleIndicator.Override = function(self,event)
+	self.GroupRoleIndicator.Override = function(self, event)
+		-- self.GroupRoleIndicator:Hide()
+
 		local role = UnitGroupRolesAssigned(self.unit)
-		self.GroupRoleIndicator:Hide()
-		if (config.roleicon) then
-			if (role and (role == "HEALER" or role == "TANK")) then
-				self.GroupRoleIndicator:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
+		-- if (config.roleicon) then
+			-- if (role and (role == "HEALER" or role == "TANK")) then
+				self.GroupRoleIndicator:SetTexture("Interface\\Addons\\bdUI\\media\\tank.tga")
+				-- self.GroupRoleIndicator:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
 				self.GroupRoleIndicator:Show()
-			end
-		end
+			-- end
+		-- end
+
 
 		self.Short:ClearAllPoints()
 		self.Power:Hide()
@@ -500,7 +503,6 @@ local function layout(self, unit)
 			region:SetAlpha(0)
 		end
 
-		button.cd:SetReverse(true)
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 		bdUI:set_backdrop(button)
 	end
