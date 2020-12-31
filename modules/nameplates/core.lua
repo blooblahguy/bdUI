@@ -64,6 +64,9 @@ function mod:config_callback()
 		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
 		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
 
+		self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)
+		self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24+config.hpoffset)
+
 		-- Disabled auras
 		if (config.disableauras) then
 			self.Auras:Hide()
@@ -155,7 +158,7 @@ end
 --==============================================
 -- Unit Information Variables
 --==============================================
-local function unit_information(self, unit)
+local function store_unit_information(self, unit)
 	self.tapDenied = UnitIsTapDenied(unit) or false
 	self.status = UnitThreatSituation("player", unit)
 	if (self.status == nil) then
@@ -163,6 +166,10 @@ local function unit_information(self, unit)
 	end
 	self.isPlayer = UnitIsPlayer(unit) and select(2, UnitClass(unit)) or false
 	self.reaction = UnitReaction(unit, "player") or false
+	self.targetRole = self.isPlayer and UnitGroupRolesAssigned(unit.."target") or "NONE"
+	if (UnitGroupRolesAssigned("player") ~= "TANK") then
+		self.targetRole = "NONE"
+	end
 
 	self.smartColors = mod:unitColor(self.tapDenied, self.isPlayer, self.reaction, self.status)
 end
@@ -178,7 +185,7 @@ local function update_threat(self, event, unit)
 	if (event == "OnUpdate") then return false end
 
 	-- store these values for reuse
-	unit_information(self, unit)
+	store_unit_information(self, unit)
 
 	local healthbar = self.Health
 	local cur, max = UnitHealth(unit), UnitHealthMax(unit)
@@ -218,7 +225,7 @@ local function nameplate_callback(self, event, unit)
 	nameplates[self] = self
 
 	-- store these values for reuse
-	unit_information(self, unit)
+	store_unit_information(self, unit)
 
 	--==========================================
 	-- Style by unit type
@@ -328,8 +335,8 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- UNIT NAME
 	--==========================================
-	self.Name = self:CreateFontString(nil, "OVERLAY", "BDN_FONT")
-	self.Name:SetPoint("BOTTOM", self, "TOP", 0, 6)	
+	self.Name = self.Health:CreateFontString(nil, "OVERLAY", "BDN_FONT")
+	self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)	
 	self:Tag(self.Name, '[name]')
 
 	--==========================================
@@ -451,7 +458,7 @@ local function nameplate_create(self, unit)
 	self.Auras = CreateFrame("Frame", nil, self)
 	self.Auras:SetFrameLevel(0)
 	self.Auras:ClearAllPoints()
-	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24)
+	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24+config.hpoffset)
 	self.Auras:SetSize(config.width, config.raidbefuffs)
 	self.Auras:EnableMouse(false)
 	self.Auras.size = config.raidbefuffs * config.scale
@@ -466,12 +473,21 @@ local function nameplate_create(self, unit)
 	self.specialExpiration = 0
 	self.enrageExpiration = 0
 	
-	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3)
+	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		nameplateShowPersonal = nameplateShowPersonal or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		return bdUI.filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, false) or mod:auraFilter(name, castByPlayer, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
+		local allow = false
+		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+			return true
+		end
+		if (bdUI:is_whitelist_nameplate(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+			return true
+		end
+
+		return mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
 	end
 	
 	self.Auras.PostCreateIcon = function(self, button)

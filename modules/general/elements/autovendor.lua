@@ -12,9 +12,15 @@ hooksecurefunc(delete_panel, "OnShow", prefill_text)
 -- auto sell
 local sell = CreateFrame("frame")
 sell:RegisterEvent('MERCHANT_SHOW')
-sell:HookScript("OnEvent", function()
+sell:RegisterEvent('MERCHANT_CLOSED')
+local cansell = false
+sell:HookScript("OnEvent", function(self, event)
+	if (event == "MERCHANT_SHOW") then
+		cansell = true
+	else
+		cansell = false
+	end
 	if (mod.config.autosell) then
-		
 		local profit = 0
 		local index = 0
 		for bagID = 0, 4 do
@@ -25,24 +31,23 @@ sell:HookScript("OnEvent", function()
 					local price = select(11, GetItemInfo(itemLink))
 					profit = profit + price
 
-					-- C_Timer.After(0.005 * index, function()
-					-- 	if (not locked) then
-					-- 		UseContainerItem(bagID, slot)
-					-- 	end
-					-- end)
 					if (not locked) then
 						UseContainerItem(bagID, slot)
 					else
-						C_Timer.After(0.3, function()
-							UseContainerItem(bagID, slot)
+						C_Timer.After(0.2, function()
+							if (cansell) then
+								UseContainerItem(bagID, slot)
+							end
 						end)
 					end
 				end
 			end
 		end
-		if (profit > 0) then
-			print(("Sold all trash for %d|cFFF0D440"..GOLD_AMOUNT_SYMBOL.."|r %d|cFFC0C0C0"..SILVER_AMOUNT_SYMBOL.."|r %d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r"):format(profit / 100 / 100, (profit / 100) % 100, profit % 100));
-		end
+		C_Timer.After(2, function()
+			if (profit > 0) then
+				print(("Sold all trash for %d|cFFF0D440"..GOLD_AMOUNT_SYMBOL.."|r %d|cFFC0C0C0"..SILVER_AMOUNT_SYMBOL.."|r %d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r"):format(profit / 100 / 100, (profit / 100) % 100, profit % 100));
+			end
+		end)
 	end
 end)
 

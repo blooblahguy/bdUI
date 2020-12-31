@@ -54,7 +54,7 @@ function mod:autoUnitColor(unit)
 	end
 end
 
-local function unitColor(self, tapDenied, isPlayer, reaction, status)
+local function unitColor(self, tapDenied, isPlayer, reaction, status, targetRole)
 	config = mod:get_save()
 
 	if (tapDenied) then
@@ -70,6 +70,8 @@ local function unitColor(self, tapDenied, isPlayer, reaction, status)
 	else
 		if (status == 3) then -- securely tanking
 			return config.threatcolor
+		elseif (targetRole == "TANK") then -- another tank has threat threat
+			return config.othertankcolor
 		elseif (status == 2 or status == 1) then -- near or over tank threat
 			return config.threatdangercolor
 		else -- on threat table, but not near tank threat

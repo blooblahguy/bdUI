@@ -42,6 +42,29 @@ local methods = {
 		local height = 0;
 		local save = self:get()
 
+
+		for k, v in spairs(save, function(a, b)
+			return b:lower() > a:lower()
+			-- a.wantLevel = a.wantLevel or 0
+			-- b.wantLevel = b.wantLevel or 0
+			-- if a.wantLevel ~= b.wantLevel then
+			-- 	return a.wantLevel < b.wantLevel
+			-- end
+			-- if a.rankIndex ~= b.rankIndex then
+			-- 	return a.rankIndex > b.rankIndex
+			-- end
+			-- if a.roll ~= b.roll then
+			-- 	return a.roll > b.roll
+			-- end
+			
+			-- return a.name:GetText() > b.name:GetText()
+		end) do
+			if (v ~= false) then
+				string = string..k.."\n";
+				height = height + 14
+			end
+		end
+
 		-- maintained list
 		-- allows us to pass a list of variables that should be maintained inside of this listbox, but can be set to false and won't be added again
 		-- if (options.autoadd or options.autoAdd or options.maintained) then
@@ -54,12 +77,12 @@ local methods = {
 		-- end
 
 		-- populated the saved options
-		for k, v in pairs(save) do
-			if (v ~= false) then
-				string = string..k.."\n";
-				height = height + 14
-			end
-		end
+		-- for k, v in pairs(save) do
+		-- 	if (v ~= false) then
+		-- 		string = string..k.."\n";
+		-- 		height = height + 14
+		-- 	end
+		-- end
 
 		local scrollheight = (height - 200) 
 		scrollheight = scrollheight > 1 and scrollheight or 1
@@ -78,15 +101,28 @@ local methods = {
 	-- add or remove an item from the list, depending on if it exists
 	["add_remove"] = function(self, value)
 		local save = self:get()
-		if (save[value]) then
+		value = value:lower()
+
+		-- do a case insensitive remove
+		local removed = false
+		for upval, v in pairs(save) do
+			val = upval:lower()
+			if (val == value) then
+				save[upval] = nil
+				removed = true
+			end
+		end
+
+		if (removed) then
 			self.input.alert:SetTextColor(1, 0.1, 0.1)
 			self.input.alert:SetText(value.." removed")
-			save[value] = false
+			save[value] = nil
 		else
 			self.input.alert:SetTextColor(0, 1, .2)
 			self.input.alert:SetText(value.." added")
 			save[value] = true
 		end
+
 		self:start_fade()
 		self:populate()
 		self:callback()

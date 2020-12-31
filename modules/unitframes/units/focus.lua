@@ -38,25 +38,25 @@ mod.custom_layout["focus"] = function(self, unit)
 	end
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.focuspower + bdUI.border)
 
-	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
 				
-		if (castByPlayer) then
-			if (bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
+		if (castByMe) then
+			if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 				return true
 			end
 		end
 	end
 
-	self.Auras.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
 				
-		if (not caster or not casterIsPlayer) then
-			if (bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then
+		if (not caster or not castByPlayer) then
+			if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 				return true
 			end
 		end

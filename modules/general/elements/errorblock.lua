@@ -11,6 +11,7 @@ local filter = {
 	[ERR_OUT_OF_ENERGY] = true,						-- Not enough energy
 	[ERR_OUT_OF_RUNIC_POWER] = true,				-- Not enough runic power
 	[ERR_ABILITY_COOLDOWN] = true,					-- Ability is not ready yet.
+	[ERR_ITEM_COOLDOWN] = true,						-- Item is not ready yet.
 	[ERR_GENERIC_NO_TARGET] = true,					-- You have no target.
 	[ERR_INVALID_ATTACK_TARGET] = true, 			-- You cannot attack that target.
 	[ERR_NO_ATTACK_TARGET] = true, 					-- There is nothing to attack.

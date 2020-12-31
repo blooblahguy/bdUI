@@ -41,13 +41,17 @@ mod.additional_elements.aurabars = function(self, unit)
 
 		-- blacklist
 		bar:SetScript("OnMouseDown", function(self, button)
-			self:GetParent():ForceUpdate()
-			if (not IsShiftKeyDown() or not button == "MiddleButton") then return end
-			local name = self.spell
-			BDUI_SAVE.persistent.Auras.blacklist[name] = true
-			bdUI.caches.auras = false
+			if (not IsShiftKeyDown() or not IsAltKeyDown() or not IsAltKeyDown() or not button == "MiddleButton") then return end
+			local name = self.spell:lower()
+			local auras = bdUI:get_module("Auras")
+			
+			auras:get_save().blacklist[name] = true
+			auras:store_lowercase_auras()
+			bdUI.caches.auras = {}
 
 			bdUI:debug("Blacklisted "..name)
+
+			self:GetParent():ForceUpdate()
 		end)
 	end
 

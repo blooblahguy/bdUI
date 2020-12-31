@@ -1,6 +1,23 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
+local debuff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	isBossDebuff = isBossDebuff or false
+	nameplateShowAll = nameplateShowAll or false
+	local castByMe = source and UnitIsUnit(source, "player") or false
+
+	-- classic
+	bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+
+	-- filter from whitelist/blacklist
+	if ( not bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then return false end
+
+	-- but also only show player and with durations
+	if (castByMe and duration ~= 0 and duration < 300) then return true end
+
+	if (castByMe and nameplateShowSelf) then return true end
+end
+
 mod.custom_layout["target"] = function(self, unit)
 	local config = mod.save
 	
@@ -20,53 +37,50 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Debuffs.initialAnchor = "BOTTOMLEFT"
 	self.Debuffs.size = 22
 	self.Debuffs['growth-x'] = "RIGHT"
-	self.Debuffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
-		isBossDebuff = isBossDebuff or false
-		nameplateShowAll = nameplateShowAll or false
-		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
 
-		-- filter from whitelist/blacklist
-		if ( not bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then return false end
-
-		-- but also only show player and with durations
-		if (castByPlayer and duration ~= 0 and duration < 300) then return true end
-
-		if (castByPlayer and nameplateShowSelf) then return true end
-	end
-
-	self.AuraBars.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
-		isBossDebuff = isBossDebuff or false
-		nameplateShowAll = nameplateShowAll or false
-		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-		local castByPlayer = caster and UnitIsUnit(caster, "player") or false
-
-		-- filter from whitelist/blacklist
-		if ( not bdUI:filter_aura(name, castByPlayer, isBossDebuff, nameplateShowAll, true)) then return false end
-
-		-- but also only show player and with durations
-		if (castByPlayer and duration ~= 0 and duration < 300) then return true end
-
-		if (castByPlayer and nameplateShowSelf) then return true end
-	end
+	self.Debuffs.CustomFilter = debuff_filter
+	self.AuraBars.CustomFilter = debuff_filter
 	
 
-	self.Buffs.CustomFilter = function(element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
+		local castByMe = source and UnitIsUnit(source, "player") or false
+
+		-- print(name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 
 		-- allow it if it's tracked in the ui and not blacklisted
-		if ( bdUI:filter_aura(name, casterIsPlayer, isBossDebuff, nameplateShowAll, true) ) then
-			return true
+		if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+			return false
 		end
-		-- also allow anything that might be casted by the boss
-		if (not caster and not UnitIsPlayer("target")) then
-			return true
-		end
+		-- if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		-- 	return true
+		-- end
+
+		return true
+
+		-- return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+		-- if ( bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll) ) then
+		-- 	return true
+		-- end
+
+		-- if (InCombatLockdown()) then
+		-- 	if (duration ~= 0 and duration > 300) then
+		-- 		return true
+		-- 	end
+		-- else
+		-- 	if (castByPlayer) then return true end
+		-- 	if (source) then return true end
+		-- 	if (isBossDebuff) then return true end
+		-- end
+
+		
+
+		-- return true
 		-- look for non player casters
-		if (caster and not strfind(caster, "raid") and not strfind(caster, "party") and not caster == "player") then
-			return true
-		end
+		-- if (not strfind(source, "raid") and not strfind(source, "party") and not source == "player") then
+		-- 	return true
+		-- end
 	end
 	
 

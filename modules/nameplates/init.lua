@@ -284,6 +284,15 @@ local config = {
 		label = "Text",
 		args = {
 			{
+				key = "hpoffset",
+				type = "range",
+				value = 6,
+				min = -20,
+				max = 20,
+				step = 2,
+				label = "HP Text offset",
+			},
+			{
 				key = "hptext",
 				type = "select",
 				value = "HP - %",
@@ -395,6 +404,12 @@ local config = {
 				type = "color",
 				value = {.79, .3, .21, 1},
 				label = "Have Aggro Color"
+			},
+			{
+				key = "othertankcolor",
+				type = "color",
+				value = {.79, .2, .61, 1},
+				label = "Another Tank has Aggro Color"
 			},
 			{
 				key = "nothreatcolor",

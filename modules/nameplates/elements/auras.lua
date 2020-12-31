@@ -43,13 +43,17 @@ mod.forcedWhitelist = {
 
 local function auraFilter(self, name, castByPlayer, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
 	-- blacklist is priority
-	if (config.highlightPurge and isStealable) then return true end
+	if (config.highlightPurge and isStealable) then
+		return true
+	end
 	-- this is an enrage
-	if (config.highlightEnrage and debuffType == "") then return true end
+	if (config.highlightEnrage and debuffType == "") then
+		return true
+	end
 	-- if we've whitelisted this inside of bdCore defaults
-	if (config.automydebuff and castByPlayer) then return true end
-	-- show if blizzard decided that it was a self-show or all-show aira 
-	if (nameplateShowAll or (nameplateShowSelf and castByPlayer)) then return true end
+	if (config.automydebuff and castByPlayer) then
+		return true
+	end
 	
 	return false
 end

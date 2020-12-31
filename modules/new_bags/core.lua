@@ -102,7 +102,9 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
 	if (not config.enabled) then return end
-
+	-- stops callback from running before new_bags init
+	if (not mod.categories) then return end
+	
 	mod:update_bags()
 	mod:update_bank()
 end

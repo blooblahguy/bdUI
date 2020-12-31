@@ -72,6 +72,7 @@ local mine = {
 	["Beacon of Light"] = true,
 	["Beacon of Faith"] = true,
 	["Tyr's Deliverance"] = true,
+	["Glimmer of Light"] = true,
 	
 	-- Priest
 	["Weakened Soul"] = true,

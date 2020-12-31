@@ -76,7 +76,6 @@ local auras = {
 	["Forbearance"] = true,
 	["Hammer of Justice"] = true,
 	
-	
 	-- Monks
 	["Fortifying Brew"] = true,
 	["Zen Meditation"] = true,

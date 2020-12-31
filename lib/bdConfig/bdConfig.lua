@@ -77,6 +77,10 @@ local module_methods = {
 	end,
 	['ensure_values'] = function(self, config)
 		for option, info in pairs(config) do
+			-- type assertion fixes some errors
+			-- possibly a bad fix? look into why config
+			-- has non-table members to begin with
+			if (type(info) ~= "table") then return end
 			lib:ensure_value(self.save, info.key, info.value, self.options.persistent) -- initiate sv default
 
 			if (info.args) then

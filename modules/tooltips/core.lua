@@ -92,7 +92,13 @@ local function replace_tooltip_lines(self, unit)
 	if (not unit) then return end
 	
 	-- name info
-	local name, realm = UnitName(unit)
+	local _, realm = UnitName(unit)
+	local name = ""
+	if (mod.config.enabletitlesintt) then
+		name = UnitPVPName(unit) or UnitName(unit)
+	else
+		name = UnitName(unit)
+	end
 	local dnd = UnitIsAFK(unit) and " |cffAAAAAA<AFK>|r " or UnitIsDND(unit) and " |cffAAAAAA<DND>|r " or ""
 	self.namecolor = {mod:getUnitColor(unit)}
 	self.namehex = RGBPercToHex(unpack(self.namecolor))
@@ -267,6 +273,21 @@ function mod:create_tooltips()
 		if (LibDBIconTooltip) then
 			LibDBIconTooltip:SetScript('OnShow', hook_and_skin)
 		end
+	end)
+
+	
+	---------------------------------------------------------------------
+	-- Who cast this?
+	---------------------------------------------------------------------
+	hooksecurefunc(GameTooltip, "SetUnitAura", function(self, unit, index, filter)
+		local caster = select(7, UnitAura(unit, index, filter))
+		local name = caster and UnitName(caster)
+
+		if (not name) then return end
+		if (not UnitIsPlayer(name)) then return end
+		
+		self:AddDoubleLine("Cast by:", name, nil, nil, nil, mod:getUnitColor(name))
+		self:Show()
 	end)
 end
 

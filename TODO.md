@@ -14,10 +14,11 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 - rebuild config library to be usable as a neater module
 - add elite indicator
 - add mouseover tooltip on raidframes
-- add weapon enchants to buffs
 - add config to disable emojis
 - remove case sensitivy from auras
 - add back dot in middle of screen
 - multirow button frame
 - add expressway font
 - advanced text formatting options on unitframes
+- add chat tab keybinds
+<!-- - threat plate if another tank has threat -->
