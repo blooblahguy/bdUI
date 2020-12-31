@@ -236,8 +236,9 @@ function mod:position_items(category, parent, pool)
 		local button = pool:Acquire()
 
 		button:Show()
-		button:SetParent(mod.bag_frames[bag])
+		-- print(mod.bag_frames[bag])
 		button:SetID(slot)
+		button:SetParent(mod.bag_frames[bag])
 		button:SetSize(config.bag_size, config.bag_size)
 		button.bag = bag
 		button.slot = slot
