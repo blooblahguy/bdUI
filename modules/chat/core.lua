@@ -248,7 +248,7 @@ function mod:skin_chats()
 			if (frame.isTemporary) then
 				mod:skin_single_chat(frame)
 					
-				mod:skin_chat_frame_bg(chatframe)
+				mod:skin_chat_frame_bg(frame)
 			end
 		end
 	end)
