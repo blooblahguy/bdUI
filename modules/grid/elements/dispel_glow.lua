@@ -42,7 +42,7 @@ mod.dispel_glow = function(self, event, unit)
 			if (dispelColors[debuffType] and not bdUI:is_blacklisted(debuff)) then
 				found[debuffType] = true
 				dispel = true
-				if (dispelClass[class][debuffType]) then
+				if (dispelClass[class] and dispelClass[class][debuffType]) then
 					primaryDispel = dispelColors[debuffType]
 				end
 			end
