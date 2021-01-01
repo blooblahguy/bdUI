@@ -30,9 +30,10 @@ local dispelColors = {
 -- Callback on creation and configuration change
 --======================================================
 local function update_frame(self)
-	if (InCombatLockdown()) then return end
+	if (not InCombatLockdown()) then
+		self:SetSize(config.width, config.height)
+	end
 
-	self:SetSize(config.width, config.height)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.ReadyCheckIndicator:SetSize(12, 12)
 	self.ResurrectIndicator:SetSize(16, 16)
@@ -81,12 +82,10 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
 	if (not config.enabled) then return false end
-	if (InCombatLockdown()) then return end
+	
 	-- prevent case where callback is called before frameHeader initialization
 	if (not mod.frameHeader) then return end
 
-	mod:update_header()
-	
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
 	end
@@ -143,81 +142,19 @@ local function layout(self, unit)
 			self.Short:SetTextColor(r*1.1, g*1.1, b*1.1)
 			self.bdHealthPrediction.absorbBar:SetStatusBarColor(1, 1, 1, .1)
 			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(1, 1, 1, .1)
-
-			if (UnitIsDead(unit)) then
-				-- self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
-			end
 		else
 			self.Health:SetStatusBarColor(r / 1.5, g / 1.5, b / 1.5)
 			self.Health._background:SetVertexColor(unpack(bdUI.media.backdrop))
 			self.Short:SetTextColor(1, 1, 1)
 			self.bdHealthPrediction.absorbBar:SetStatusBarColor(0, 0, 0, .4)
 			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(0, 0, 0, .4)
-
-			if (UnitIsDead(unit)) then
-				-- self.Health._background:SetVertexColor(0.3, 0.3, 0.3, 1)
-			end
 		end
 	end
 	
 	--===============================================
 	-- Tags
 	--===============================================
-	-- Status (offline/dead)
-	self.Status = self.Health:CreateFontString(nil)
-	self.Status:SetFont(bdUI.media.font, 12, "OUTLINE")
-	self.Status:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", 0, 0)
-	oUF.Tags.Events["status"] = "UNIT_HEALTH UNIT_CONNECTION"
-	oUF.Tags.Methods["status"] = function(unit)
-		if not UnitIsConnected(unit) then
-			return "offline"		
-		elseif UnitIsDead(unit) then
-			return "dead"		
-		elseif UnitIsGhost(unit) then
-			return "ghost"
-		end
-	end
-	
-	
-	-- shortname
-	self.Short = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Short:SetFont(bdUI.media.font, 12, "OUTLINE")
-	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
-	self.Short:SetJustifyH("RIGHT")
-	
-	oUF.Tags.Events["self.Short"] = "UNIT_NAME_UPDATE"
-	oUF.Tags.Methods["self.Short"] = function(unit)
-		local name = UnitName(unit)
-		if (not name) then return end
-		-- if (bdUI.persistent.GridAliases[name]) then
-		-- 	name = bdUI.persistent.GridAliases[name];
-		-- end
-		return string.utf8sub(name, 1, config.namewidth)
-	end
-
-	-- group number
-	self.Group = self.Health:CreateFontString(nil)
-	self.Group:SetFont(bdUI.media.font, 12, "OUTLINE")
-	self.Group:SetPoint('TOPRIGHT', self, "TOPRIGHT", -2, -2)
-	self.Group:Hide()
-	oUF.Tags.Events["self.Group"] = "UNIT_NAME_UPDATE"
-	oUF.Tags.Methods["self.Group"] = function(unit)
-		local name, server = UnitName(unit)
-		if(server and server ~= '') then
-			name = string.format('%s-%s', name, server)
-		end
-		
-		for i = 1, GetNumGroupMembers() do
-			local raidName, _, group = GetRaidRosterInfo(i)
-			if( raidName == name ) then
-				return "[" .. group .. "]"
-			end
-		end
-	end
-	self:Tag(self.Group, '[self.Group]')
-	self:Tag(self.Status, '[status]')
-	self:Tag(self.Short, '[self.Short]')
-	
+	mod.add_tags(self, unit)
 
 	--===============================================
 	-- Healing & Damage Absorbs
@@ -348,11 +285,10 @@ local function layout(self, unit)
 	self.ResurrectIndicator:SetPoint('CENTER', self, "CENTER", 0,0)
 	
 	-- Threat
-	self.ThreatLite = CreateFrame('frame', nil, self, BackdropTemplateMixin and "BackdropTemplate")
-	self.ThreatLite:SetFrameLevel(95)
-	self.ThreatLite:SetPoint('TOPRIGHT', self, "TOPRIGHT", 1, 1)
-	self.ThreatLite:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -1, -1)
-	self.ThreatLite:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 1})
+	self.ThreatLite = CreateFrame('frame', nil, self.Health, BackdropTemplateMixin and "BackdropTemplate")
+	self.ThreatLite:SetPoint('TOPRIGHT')
+	self.ThreatLite:SetPoint('BOTTOMLEFT')
+	self.ThreatLite:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.pixel})
 	self.ThreatLite:SetBackdropBorderColor(1, 0, 0,1)
 	self.ThreatLite:SetBackdropColor(0,0,0,0)
 	self.ThreatLite:Hide()
@@ -414,7 +350,7 @@ local function layout(self, unit)
 	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", 1, 1)
 	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -1, -1)
 	self.Dispel:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
-	self.Dispel:SetBackdropBorderColor(1, 0, 0,1)
+	self.Dispel:SetBackdropBorderColor(0, 0, 0, 0)
 	self.Dispel:SetBackdropColor(0,0,0,0)
 	self.Dispel:Hide()
 	
@@ -423,8 +359,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Magic = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Magic:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
-	self.Dispel.Magic:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
+	self.Dispel.Magic:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -border, border)
+	self.Dispel.Magic:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", -border, -border)
 	self.Dispel.Magic:SetWidth(border)
 	self.Dispel.Magic:SetTexture(bdUI.media.flat)
 	self.Dispel.Magic:SetVertexColor(unpack(dispelColors['Magic']))
@@ -432,8 +368,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Disease = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Disease:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
-	self.Dispel.Disease:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
+	self.Dispel.Disease:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -border, border)
+	self.Dispel.Disease:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT", border, border)
 	self.Dispel.Disease:SetHeight(border)
 	self.Dispel.Disease:SetTexture(bdUI.media.flat)
 	self.Dispel.Disease:SetVertexColor(unpack(dispelColors['Disease']))
@@ -441,8 +377,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Poison = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Poison:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
-	self.Dispel.Poison:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
+	self.Dispel.Poison:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT", border, border)
+	self.Dispel.Poison:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", border, -border)
 	self.Dispel.Poison:SetWidth(border)
 	self.Dispel.Poison:SetTexture(bdUI.media.flat)
 	self.Dispel.Poison:SetVertexColor(unpack(dispelColors['Poison']))
@@ -450,8 +386,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Curse = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Curse:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
-	self.Dispel.Curse:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
+	self.Dispel.Curse:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", -border, -border)
+	self.Dispel.Curse:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", border, -border)
 	self.Dispel.Curse:SetHeight(border)
 	self.Dispel.Curse:SetTexture(bdUI.media.flat)
 	self.Dispel.Curse:SetVertexColor(unpack(dispelColors['Curse']))
@@ -585,12 +521,27 @@ function mod:get_attributes()
 	end
 	
 	-- group limit
-	local difficultySize = {[3] = 1, [4] = 25, [5] = 10, [6] = 25, [7] = 25, [9] = 40, [14] = 30, [15] = 30, [16] = 20, [17] = 30, [18] = 40, [20] = 25, [149] = 30}
+	local difficultySize = {
+		[3] = 1,
+		[4] = 25,
+		[5] = 10,
+		[6] = 25,
+		[7] = 25,
+		[9] = 40,
+		[14] = 30,
+		[15] = 30,
+		[16] = 20,
+		[17] = 30,
+		[18] = 40,
+		[20] = 25,
+		[149] = 30
+	}
+
 	num_groups = config.num_groups
 	if (config.intel_groups) then
 		local difficulty = select(3, GetInstanceInfo()) -- maybe use maxPlayers instead?
 		if (difficultySize[difficulty]) then
-			num_groups = (difficultySize[difficulty] / 5)
+			num_groups = math.min(1, (difficultySize[difficulty] / 5))
 		end
 	end
 
@@ -607,12 +558,12 @@ end
 --======================================================
 function mod:update_header()
 	if (InCombatLockdown()) then return end
-	
+
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
 	
-	for k, frame in pairs(mod.frames) do
-		frame:ClearAllPoints()
-	end
+	-- for k, frame in pairs(mod.frames) do
+		-- frame:ClearAllPoints()
+	-- end
 
 	mod:resize_container()
 
@@ -647,19 +598,15 @@ function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
 
+	-- exit if not initialized
 	if (not config.enabled) then return false end
 
+	-- make sure we can store grid aliases
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
-	
-	local function enable(self)
-		mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
-		-- mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
-		mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
-		mod.raidpartyholder:RegisterEvent("LOADING_SCREEN_DISABLED")
-		mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
-			mod:config_callback()
-		end)
 
+	-- send to factory
+	oUF:RegisterStyle("bdGrid", layout)
+	oUF:Factory(function(self)
 		self:SetActiveStyle("bdGrid")
 
 		-- Initial header spawning
@@ -683,14 +630,13 @@ function mod:initialize()
 			"point", new_player_anchor,
 			"groupBy", group_by
 		);
-	end
+	end)
 
+	-- hold the raid frames
 	mod:create_container()
-	-- mod:disable_blizzard()
-	-- mod:create_alias()
 
-	oUF:RegisterStyle("bdGrid", layout)
-	oUF:Factory(enable)
+	-- disable blizzard things
+	mod:disable_blizzard()
 end
 
 
@@ -702,10 +648,22 @@ function mod:create_container()
 	mod.raidpartyholder:SetSize(config['width'], config['height']*5)
 	mod.raidpartyholder:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 160)
 	bdMove:set_moveable(mod.raidpartyholder, "Raid Frames")
+
+	-- register events for resizing the box/group size
+	mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
+	mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
+	mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
+	mod.raidpartyholder:RegisterEvent("LOADING_SCREEN_DISABLED")
+	mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
+		mod:update_header()
+		mod:config_callback()
+	end)
 end
 
 function mod:resize_container()
 	mod.frameHeader:ClearAllPoints();
+
+	-- change where to start the growth of groups
 	if (config.group_growth == "Right") then
 		mod.raidpartyholder:SetSize(config.width*4+8, config.height*5+8)
 		hgrowth = "LEFT"
@@ -730,6 +688,7 @@ function mod:resize_container()
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end
 	end
+
 	mod.frameHeader:SetPoint(vgrowth..hgrowth, mod.raidpartyholder, vgrowth..hgrowth, 0, 0)
 end
 

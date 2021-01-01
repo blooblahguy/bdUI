@@ -160,6 +160,7 @@ modules\grid\init.lua
 modules\grid\functions.lua
 modules\grid\core.lua
 modules\grid\elements\alias.lua
+modules\grid\elements\tags.lua
 modules\grid\elements\dispel_glow.lua
 
 # Maps

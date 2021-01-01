@@ -13,10 +13,10 @@ local function Update(self, event, unit)
 		element:PreUpdate()
 	end
 
-	local unitAlive = not UnitIsDead(unit) and not UnitIsGhost(unit)
+	local unitAlive = not UnitIsDead(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit)
 	local status = UnitThreatSituation(unit)
 
-	if (unitAlive) then
+	if (not unitAlive) then
 		element:Hide()
 	else
 		if (status and status >= 2) then
