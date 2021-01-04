@@ -20,36 +20,6 @@ bdUI:register_theme("bdUI", {
 })
 
 --========================================================
--- Fonts
---========================================================
-
-function bdUI:new_font(name)
-	size = size or 15
-	outline = outline or "OUTLINE"
-
-	local font = CreateFont(name, size, outline)
-	font:SetFont(bdUI.media.font, size, outline)
-	font:SetShadowColor(0, 0, 0)
-	font:SetShadowOffset(0, 0)
-
-	bdUI.fonts[name] = font
-	
-	return font
-end
-
-function bdUI:get_font_path(font)
-	return bdUI.shared:Fetch("font", font)
-end
-
-function bdUI:get_fonts()
-	local fonts = {}
-	local shared_fonts = bdUI.shared:List("font")
-
-	return shared_fonts
-end
-
-
---========================================================
 -- Frames Groups
 -- automatically positions frames in given direction, and
 -- returns dimensions of the "stack"
@@ -169,6 +139,15 @@ end
 
 	function bdUI:get_border_size()
 		return bdUI:get_module("General"):get_save().border_size
+	end
+
+	function bdUI:get_pixel(frame)
+		local screenheight = select(2, GetPhysicalScreenSize())
+		local scale = 768 / screenheight
+		local frame_scale = frame:GetEffectiveScale()
+		local pixel = scale / frame_scale
+
+		return pixel
 	end
 
 	function bdUI:get_border(frame)
@@ -454,12 +433,12 @@ end
 		f.highlighter:SetAlpha(.1)
 		
 		if (small) then
-			f:SetNormalFontObject("BDUI_SMALL")
-			f:SetHighlightFontObject("BDUI_SMALL")
+			f:SetNormalFontObject(bdUI:get_font(11))
+			f:SetHighlightFontObject(bdUI:get_font(11))
 			f:SetHeight(18)
 		else
-			f:SetNormalFontObject("BDUI_MEDIUM")
-			f:SetHighlightFontObject("BDUI_MEDIUM")
+			f:SetNormalFontObject(bdUI:get_font(13))
+			f:SetHighlightFontObject(bdUI:get_font(13))
 			f:SetHeight(28)
 		end
 		

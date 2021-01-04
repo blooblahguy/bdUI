@@ -7,7 +7,7 @@ function mod:create_mouseover_tooltips()
 	local motooltip = CreateFrame('frame',nil)
 	motooltip:SetFrameStrata("TOOLTIP")
 	motooltip.text = motooltip:CreateFontString(nil, "OVERLAY")
-	motooltip.text:SetFont(bdUI.media.font, 11, "THINOUTLINE")
+	motooltip.text:SetFontObject(bdUI:get_font(11))
 
 	-- Show unit name at mouse
 	motooltip:SetScript("OnUpdate", function(self)

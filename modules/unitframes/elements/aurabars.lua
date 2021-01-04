@@ -1,10 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
-local font = CreateFont("BDUI_UF_AURAS")
-font:SetFont(bdUI.media.font, 13, "THINOUTLINE")
-font:SetShadowColor(0, 0, 0)
-font:SetShadowOffset(0, 0)
+local font = bdUI:get_font(13)
 
 mod.additional_elements.aurabars = function(self, unit)
 	if (self.AuraBars) then return end
@@ -16,7 +13,6 @@ mod.additional_elements.aurabars = function(self, unit)
 	self.AuraBars:SetHeight(60)
 	self.AuraBars.width = config.playertargetwidth
 	self.AuraBars.height = 16
-	-- self.AuraBars.iconDisabled = true
 	self.AuraBars.sparkDisabled = true
 	self.AuraBars.spacing = bdUI.border * 3
 	self.AuraBars.fontObject = "BDUI_UF_AURAS"

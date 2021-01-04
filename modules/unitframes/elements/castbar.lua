@@ -37,7 +37,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	end
 	
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Text:SetFont(bdUI.media.font, font_size, "THINOUTLINE")
+	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size))
 	self.Castbar.Text:SetJustifyV("MIDDLE")
 
 	if (icon) then
@@ -56,7 +56,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self.Castbar.SafeZone:SetTexture(bdUI.media.flat)
 
 	self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Time:SetFont(bdUI.media.font, font_size, "THINOUTLINE")
+	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size))
 
 	-- Positioning
 	if (align == "right") then

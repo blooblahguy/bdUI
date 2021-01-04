@@ -24,6 +24,14 @@ function mod:config_callback()
 	mod:store_lowercase_auras()
 end
 
+local function sanitize(str)
+	str = str:lower()
+	str = strtrim(str)
+	str = gsub(str, "[^a-zA-Z%s]+", "")
+
+	return str
+end
+
 function mod:store_lowercase_auras()
 	mod.config = mod:get_save()
 
@@ -36,16 +44,18 @@ function mod:store_lowercase_auras()
 	for category, spells in pairs(auras) do
 		mod.auras[category] = {}
 
+		
 		for spell, v in pairs(spells) do
-			mod.auras[category][string.lower(spell)] = true
+			spell = sanitize(spell)
+			mod.auras[category][spell] = true
 		end
 	end
-
+	
 	mod.auras[class] = {}
 	for spell, v in pairs(mod.config[class]) do
-
-		-- print(k, spells)
-		mod.auras[class][string.lower(spell)] = true
+		spell = sanitize(spell)
+		
+		mod.auras[class][spell] = true
 
 		-- for spell, v in pairs(spells) do
 		-- end

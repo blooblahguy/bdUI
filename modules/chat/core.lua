@@ -236,7 +236,7 @@ function mod:skin_chats()
 	GeneralDockManager:SetFrameStrata("HIGH")
 
 	--editbox font
-	ChatFontNormal:SetFont(bdUI.media.font, 14)
+	ChatFontNormal:SetFontObject(bdUI:get_font(14))
 	ChatFontNormal:SetShadowOffset(1,1)
 	ChatFontNormal:SetShadowColor(0,0,0)
 
@@ -355,7 +355,7 @@ function mod:skin_single_chat(frame)
 	end
 	
 	-- tab style
-	_G[tab:GetName().."Text"]:SetFont(bdUI.media.font, fontSize,"thinoutline")
+	_G[tab:GetName().."Text"]:SetFontObject(bdUI:get_font(fontSize))
 	_G[tab:GetName().."Text"]:SetTextColor(1,1,1)
 	_G[tab:GetName().."Text"]:SetVertexColor(1,1,1)
 	_G[tab:GetName().."Text"]:SetAlpha(.5)

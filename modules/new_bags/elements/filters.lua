@@ -16,7 +16,7 @@ types["Quest"] = {12}
 types["Keys"] = {13}
 types["Tokens"] = {10, 14, 18}
 types["Battle Pets"] = {17}
-types["Miscellaneous"] = {15}
+types["Misc"] = {15}
 
 mod.types = types
 

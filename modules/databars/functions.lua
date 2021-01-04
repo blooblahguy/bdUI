@@ -32,7 +32,7 @@ function mod:create_databar(name)
 	bar.text:SetAllPoints()
 	bar.text:SetJustifyH("CENTER")
 	bar.text:SetJustifyV("CENTER")
-	bar.text:SetFont(bdUI.media.font, 11, "OUTLINE")
+	bar.text:SetFontObject(bdUI:get_font(11))
 	bar.text:Hide()
 
 	bar:SetScript("OnEnter", function() bar.text:Show() end)

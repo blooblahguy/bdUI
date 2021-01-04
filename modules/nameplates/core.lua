@@ -9,11 +9,10 @@ local nameplates = {}
 mod.elements = {}
 
 -- Fonts we use
-mod.font = CreateFont("BDN_FONT")
-mod.font:SetFont(bdUI.media.font, 14)
-mod.font_friendly = CreateFont("BDN_FONT_FRIENDLY")
-mod.font_small = CreateFont("BDN_FONT_SMALL")
-mod.font_castbar = CreateFont("BDN_FONT_CASTBAR")
+mod.font = bdUI:get_font(14)
+mod.font_friendly = bdUI:get_font(14)
+mod.font_small = bdUI:get_font(14)
+mod.font_castbar = bdUI:get_font(14)
 
 --===============================================
 -- Core functionality
@@ -85,10 +84,13 @@ function mod:config_callback()
 		end
 	end
 
-	mod.font:SetFont(bdUI.media.font, config.enemynamesize, "OUTLINE")
-	mod.font_small:SetFont(bdUI.media.font, math.max(config.height * 0.6, config.height - 20), "OUTLINE")
-	mod.font_castbar:SetFont(bdUI.media.font, math.max(config.castbarheight * 0.74, config.castbarheight - 20), "OUTLINE")
-	mod.font_friendly:SetFont(bdUI.media.font, config.friendlynamesize, "OUTLINE")
+	local small = math.max(config.height * 0.6, config.height - 20)
+	local castbar = math.max(config.castbarheight * 0.74, config.castbarheight - 20)
+
+	mod.font:SetFontObject(bdUI:get_font(config.enemynamesize))
+	mod.font_small:SetFontObject(bdUI:get_font(small))
+	mod.font_castbar:SetFontObject(bdUI:get_font(castbar))
+	mod.font_friendly:SetFontObject(bdUI:get_font(config.friendlynamesize))
 
 	if (InCombatLockdown()) then return end
 	-- set cVars
@@ -494,12 +496,12 @@ local function nameplate_create(self, unit)
 		bdUI:set_backdrop(button, true)
 
 		local cdtext = button.cd:GetRegions()
-		cdtext:SetFontObject("BDN_FONT_SMALL") 
+		cdtext:SetFontObject(bdUI:get_font(11)) 
 		cdtext:SetJustifyH("CENTER")
 		cdtext:ClearAllPoints()
 		cdtext:SetAllPoints(button)
 		
-		button.count:SetFontObject("BDN_FONT_SMALL") 
+		button.count:SetFontObject(bdUI:get_font(11)) 
 		button.count:SetTextColor(1,.8,.3)
 		button.count:SetJustifyH("RIGHT")
 		button.count:ClearAllPoints()

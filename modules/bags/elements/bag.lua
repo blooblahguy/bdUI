@@ -58,7 +58,7 @@ function mod:bag_slots()
 			_G["BackpackTokenFrameToken"..i.."Icon"]:SetSize(12,12) 
 			_G["BackpackTokenFrameToken"..i.."Icon"]:SetTexCoord(.1,.9,.1,.9) 
 			_G["BackpackTokenFrameToken"..i.."Icon"]:SetPoint("LEFT", _G["BackpackTokenFrameToken"..i], "RIGHT", -8, 2) 
-			_G["BackpackTokenFrameToken"..i.."Count"]:SetFont(bdUI.media.font, 14)
+			_G["BackpackTokenFrameToken"..i.."Count"]:SetFontObject(bdUI:get_font(14))
 			if (i ~= 1) then
 				_G["BackpackTokenFrameToken"..i]:SetPoint("LEFT", _G["BackpackTokenFrameToken"..(i-1)], "RIGHT", 10, 0)
 			end
@@ -177,7 +177,7 @@ function mod:create_moneyframe()
 
 	local money = {"Gold","Silver","Copper"}
 	for k, v in pairs(money) do
-		_G["ContainerFrame1MoneyFrame"..v.."ButtonText"]:SetFont(bdUI.media.font, 14)
+		_G["ContainerFrame1MoneyFrame"..v.."ButtonText"]:SetFontObject(bdUI:get_font(14))
 		_G["ContainerFrame1MoneyFrame"..v.."Button"]:EnableMouse(false)
 		_G["ContainerFrame1MoneyFrame"..v.."Button"]:SetFrameLevel(8)
 	end

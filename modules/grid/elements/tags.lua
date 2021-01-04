@@ -48,18 +48,18 @@ mod.add_tags = function(self, unit)
 
 	-- Status (offline/dead)
 	self.Status = self.Health:CreateFontString(nil)
-	self.Status:SetFont(bdUI.media.font, 12, "OUTLINE")
+	self.Status:SetFontObject(bdUI:get_font(12))
 	self.Status:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", 0, 0)
 	
 	-- shortname
 	self.Short = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Short:SetFont(bdUI.media.font, 12, "OUTLINE")
+	self.Short:SetFontObject(bdUI:get_font(12))
 	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
 	self.Short:SetJustifyH("RIGHT")
 
 	-- group number
 	self.Group = self.Health:CreateFontString(nil)
-	self.Group:SetFont(bdUI.media.font, 12, "OUTLINE")
+	self.Group:SetFontObject(bdUI:get_font(12))
 	self.Group:SetPoint('TOPRIGHT', self, "TOPRIGHT", -2, -2)
 	self.Group:Hide()
 	

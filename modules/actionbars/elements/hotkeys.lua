@@ -75,7 +75,7 @@ end
 -- Main Hooks
 -- Dequeue this button's updater, and use our own queue
 --=====================================================
-if (bdUI:get_game_version() == "shadowlands") then
-	hooksecurefunc(ActionButton1, "UpdateHotkeys", mod.UpdateHotkeys)
-end
+-- if (bdUI:get_game_version() == "shadowlands") then
+-- 	hooksecurefunc(ActionButton1, "UpdateHotkeys", mod.UpdateHotkeys)
+-- end
 -- hooksecurefunc("PetActionButton_SetHotkeys", mod.UpdateHotkeys)

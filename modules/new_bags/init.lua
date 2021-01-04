@@ -36,7 +36,7 @@ local config = {
 				min = 10,
 				max = 50,
 				step = 2,
-				value = 30,
+				value = 40,
 				label = "Bag Button Size"
 			},
 
@@ -46,7 +46,7 @@ local config = {
 				min = 200,
 				max = 800,
 				step = 20,
-				value = 300,
+				value = 400,
 				label = "Bag Max Height"
 			},
 

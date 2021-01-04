@@ -266,7 +266,7 @@ local category_methods = {
 	end,
 	['create_text'] = function(self)
 		local text = self.header:CreateFontString(nil, "OVERLAY")
-		text:SetFont(bdUI.media.font, 13, "OUTLINE")
+		text:SetFontObject(bdUI:get_font(13))
 		text:SetPoint("LEFT", self.header, "LEFT", self.spacing, 0)
 		text:SetAlpha(0.7)
 

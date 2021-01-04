@@ -85,7 +85,7 @@ mod.create_resources = function(self, unit)
 	end
 	self.Resources.power.__owner = self
 	self.Resources.power.text = self.Resources.power:CreateFontString(nil, "OVERLAY")
-	self.Resources.power.text:SetFont(bdUI.media.font, 11, "OUTLINE")
+	self.Resources.power.text:SetFontObject(bdUI:get_font(11))
 	self.Resources.power.text:SetJustifyV("MIDDLE")
 	self.Resources.power.text:SetPoint("CENTER", self.Resources.power)
 	self.Resources.power:SetScript("OnEvent", self.Resources.power.Update)

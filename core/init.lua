@@ -56,29 +56,6 @@ bdUI.hidden:SetScale(0.001)
 bdUI.hidden.Show = function() return end
 
 --===================================================================
--- Fonts
---===================================================================
-bdUI.font_large = CreateFont("BDUI_LARGE")
-bdUI.font_large:SetFont(bdUI.media.font, 15, "THINOUTLINE")
-bdUI.font_large:SetShadowColor(0, 0, 0)
-bdUI.font_large:SetShadowOffset(0, 0)
-
-bdUI.font_medium = CreateFont("BDUI_MEDIUM")
-bdUI.font_medium:SetFont(bdUI.media.font, 13, "THINOUTLINE")
-bdUI.font_medium:SetShadowColor(0, 0, 0)
-bdUI.font_medium:SetShadowOffset(0, 0)
-
-bdUI.font_medium = CreateFont("BDUI_SMALL")
-bdUI.font_medium:SetFont(bdUI.media.font, 11, "THINOUTLINE")
-bdUI.font_medium:SetShadowColor(0, 0, 0)
-bdUI.font_medium:SetShadowOffset(0, 0)
-
--- bdUI.font_small = CreateFont("BDUI_MONO")
--- bdUI.font_small:SetFont(bdUI.media.font, 10, "OUTLINE")
--- bdUI.font_small:SetShadowColor(0, 0, 0)
--- bdUI.font_small:SetShadowOffset(0, 0)
-
---===================================================================
 --Return game version, so that we can have cross version compatibility when possible
 --===================================================================
 local versions = {}

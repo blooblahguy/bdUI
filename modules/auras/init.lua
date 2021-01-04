@@ -4,6 +4,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 
 local friendlyclass, class = UnitClass("player")
+bdUI.caches.auras = {}
 
 -- Config Table
 local config = {

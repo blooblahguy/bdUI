@@ -86,7 +86,7 @@ function mod:create_money(name, parent)
 	money:HookScript("OnClick", money.click)
 
 	for k, v in pairs({"Gold", "Silver", "Copper"}) do
-		_G[money:GetName()..v.."ButtonText"]:SetFont(bdUI.media.font, 12)
+		_G[money:GetName()..v.."ButtonText"]:SetFontObject(bdUI:get_font(12))
 		_G[money:GetName()..v.."Button"]:EnableMouse(false)
 		_G[money:GetName()..v.."Button"]:SetFrameLevel(8)
 	end

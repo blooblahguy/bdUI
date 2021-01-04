@@ -1,6 +1,14 @@
 local parent, ns = ...
 local lib = ns.bdConfig
 
+local function sanitize(str)
+	str = str:lower()
+	str = strtrim(str)
+	str = gsub(str, "[^a-zA-Z%s]+", "")
+
+	return str
+end
+
 --========================================
 -- Methods Here
 --========================================
@@ -42,9 +50,8 @@ local methods = {
 		local height = 0;
 		local save = self:get()
 
-
 		for k, v in spairs(save, function(a, b)
-			return b:lower() > a:lower()
+			return sanitize(b) > sanitize(a)
 			-- a.wantLevel = a.wantLevel or 0
 			-- b.wantLevel = b.wantLevel or 0
 			-- if a.wantLevel ~= b.wantLevel then
@@ -101,12 +108,12 @@ local methods = {
 	-- add or remove an item from the list, depending on if it exists
 	["add_remove"] = function(self, value)
 		local save = self:get()
-		value = value:lower()
+		value = sanitize(value)
 
 		-- do a case insensitive remove
 		local removed = false
 		for upval, v in pairs(save) do
-			val = upval:lower()
+			val = sanitize(upval)
 			if (val == value) then
 				save[upval] = nil
 				removed = true

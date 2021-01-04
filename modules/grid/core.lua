@@ -285,9 +285,10 @@ local function layout(self, unit)
 	self.ResurrectIndicator:SetPoint('CENTER', self, "CENTER", 0,0)
 	
 	-- Threat
+	local pixel = bdUI:get_pixel(self)
 	self.ThreatLite = CreateFrame('frame', nil, self.Health, BackdropTemplateMixin and "BackdropTemplate")
-	self.ThreatLite:SetPoint('TOPRIGHT')
-	self.ThreatLite:SetPoint('BOTTOMLEFT')
+	self.ThreatLite:SetPoint('TOPRIGHT', pixel, pixel)
+	self.ThreatLite:SetPoint('BOTTOMLEFT', -pixel, -pixel)
 	self.ThreatLite:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.pixel})
 	self.ThreatLite:SetBackdropBorderColor(1, 0, 0,1)
 	self.ThreatLite:SetBackdropColor(0,0,0,0)
@@ -347,8 +348,8 @@ local function layout(self, unit)
 	-- Dispels
 	self.Dispel = CreateFrame('frame', nil, self.Health, BackdropTemplateMixin and "BackdropTemplate")
 	self.Dispel:SetFrameLevel(100)
-	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", 1, 1)
-	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -1, -1)
+	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", border, border)
+	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -border, -border)
 	self.Dispel:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
 	self.Dispel:SetBackdropBorderColor(0, 0, 0, 0)
 	self.Dispel:SetBackdropColor(0,0,0,0)
@@ -359,8 +360,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Magic = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Magic:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -border, border)
-	self.Dispel.Magic:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", -border, -border)
+	self.Dispel.Magic:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Dispel.Magic:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
 	self.Dispel.Magic:SetWidth(border)
 	self.Dispel.Magic:SetTexture(bdUI.media.flat)
 	self.Dispel.Magic:SetVertexColor(unpack(dispelColors['Magic']))
@@ -368,8 +369,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Disease = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Disease:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -border, border)
-	self.Dispel.Disease:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT", border, border)
+	self.Dispel.Disease:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Dispel.Disease:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
 	self.Dispel.Disease:SetHeight(border)
 	self.Dispel.Disease:SetTexture(bdUI.media.flat)
 	self.Dispel.Disease:SetVertexColor(unpack(dispelColors['Disease']))
@@ -377,8 +378,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Poison = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Poison:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT", border, border)
-	self.Dispel.Poison:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", border, -border)
+	self.Dispel.Poison:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
+	self.Dispel.Poison:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
 	self.Dispel.Poison:SetWidth(border)
 	self.Dispel.Poison:SetTexture(bdUI.media.flat)
 	self.Dispel.Poison:SetVertexColor(unpack(dispelColors['Poison']))
@@ -386,8 +387,8 @@ local function layout(self, unit)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Curse = self.Dispel:CreateTexture(nil, "OVERLAY")
-	self.Dispel.Curse:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", -border, -border)
-	self.Dispel.Curse:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", border, -border)
+	self.Dispel.Curse:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
+	self.Dispel.Curse:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
 	self.Dispel.Curse:SetHeight(border)
 	self.Dispel.Curse:SetTexture(bdUI.media.flat)
 	self.Dispel.Curse:SetVertexColor(unpack(dispelColors['Curse']))
@@ -539,9 +540,11 @@ function mod:get_attributes()
 
 	num_groups = config.num_groups
 	if (config.intel_groups) then
-		local difficulty = select(3, GetInstanceInfo()) -- maybe use maxPlayers instead?
-		if (difficultySize[difficulty]) then
-			num_groups = math.min(1, (difficultySize[difficulty] / 5))
+		local maxPlayers = select(5, GetInstanceInfo())
+		if (IsInInstance() == "none") then
+			num_groups = 8
+		else
+			num_groups = math.min(1, (maxPlayers / 5))
 		end
 	end
 
@@ -560,11 +563,8 @@ function mod:update_header()
 	if (InCombatLockdown()) then return end
 
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
-	
-	-- for k, frame in pairs(mod.frames) do
-		-- frame:ClearAllPoints()
-	-- end
 
+	-- reize the container if necessary
 	mod:resize_container()
 
 	-- growth/spacing
@@ -653,7 +653,6 @@ function mod:create_container()
 	mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
 	mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
 	mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
-	mod.raidpartyholder:RegisterEvent("LOADING_SCREEN_DISABLED")
 	mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
 		mod:update_header()
 		mod:config_callback()
@@ -703,12 +702,13 @@ function mod:disable_blizzard()
 		if (InCombatLockdown()) then return end
 		if (CompactUnitFrameProfiles) then
 			CompactUnitFrameProfiles:UnregisterAllEvents()
+			CompactRaidFrameManagerContainerResizeFrame:Hide()
 		end
 		if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
 			CompactRaidFrameManager:UnregisterAllEvents() 
 			CompactRaidFrameContainer:UnregisterAllEvents() 
 
 		end
-		addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
+		-- addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	end)
 end

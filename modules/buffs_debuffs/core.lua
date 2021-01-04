@@ -31,13 +31,8 @@ local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTem
 bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -110)
 
 -- fonts
-local bufffont = CreateFont("BD_BUFFS_FONT")
-bufffont:SetShadowColor(0, 0, 0)
-bufffont:SetShadowOffset(1, -1)
-
-local debufffont = CreateFont("BD_DEBUFFS_FONT")
-debufffont:SetShadowColor(0, 0, 0)
-debufffont:SetShadowOffset(1, -1)
+local bufffont = bdUI:get_font(12)
+local debufffont = bdUI:get_font(12)
 
 --===============================================
 -- Time Function
@@ -147,19 +142,18 @@ function mod:create_aura(button, ...)
 
 	button.count = button:CreateFontString()
 	button.count:SetPoint('BOTTOMRIGHT', -2, 2)
-	button.count:SetFont(bdUI.media.font, 12, "OUTLINE")
 	button.count:SetJustifyH("LEFT")
 
 	button.duration = button:CreateFontString()
 	button.duration:SetJustifyH("CENTER")
 
 	if (filter == "HARMFUL") then
-		button.duration:SetFontObject("BD_DEBUFFS_FONT")
-		button.count:SetFontObject("BD_DEBUFFS_FONT")
+		button.duration:SetFontObject(debufffont)
+		button.count:SetFontObject(debufffont)
 		button.duration:SetPoint(counterAnchor[config.debufftimer], button, config.debufftimer, unpack(counterSpacing[config.debufftimer]))
 	else
-		button.duration:SetFontObject("BD_BUFFS_FONT")
-		button.count:SetFontObject("BD_BUFFS_FONT")
+		button.duration:SetFontObject(bufffont)
+		button.count:SetFontObject(bufffont)
 		button.duration:SetPoint(counterAnchor[config.bufftimer], button, config.bufftimer, unpack(counterSpacing[config.bufftimer]))
 	end
 
@@ -316,8 +310,8 @@ function mod:config_callback()
 	if (InCombatLockdown()) then return end
 
 	-- font sizes
-	bufffont:SetFont(bdUI.media.font, config.bufffontsize)
-	debufffont:SetFont(bdUI.media.font, config.debufffontsize)
+	bufffont:SetFontObject(bdUI:get_font(config.bufffontsize))
+	debufffont:SetFontObject(bdUI:get_font(config.debufffontsize))
 
 	-- buffs
 	mod:update_buffs()

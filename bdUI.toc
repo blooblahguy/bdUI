@@ -64,6 +64,7 @@ lib\bdConfig\bdConfig.xml
 
 # Core
 core\libraries.lua
+core\fonts.lua
 core\api.lua
 core\performance.lua
 core\commands.lua
@@ -118,7 +119,7 @@ modules\new_bags\elements\currencies.lua
 modules\new_bags\elements\money.lua
 modules\new_bags\elements\filters.lua
 modules\new_bags\elements\categories.lua
-modules\new_bags\elements\items.lua
+modules\new_bags\elements\button_lib.lua
 modules\new_bags\elements\bags.lua
 modules\new_bags\elements\bank.lua
 modules\new_bags\elements\reagents.lua

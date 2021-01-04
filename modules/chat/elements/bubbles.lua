@@ -112,7 +112,7 @@ function bubbles:skin(frame, backdrop)
 	frame.name = frame:CreateFontString(nil, "OVERLAY")
 	frame.name:SetPoint('BOTTOMLEFT', frame.text, 'TOPLEFT', 0, bdUI.border * 3)
 	frame.name:SetJustifyH('LEFT')
-	frame.name:SetFont(bdUI.media.font, 12, "OUTLINE")
+	frame.name:SetFontObject(bdUI:get_font(12))
 
 	backdrop.BottomEdge:Hide()
 	backdrop.BottomLeftCorner:Hide()

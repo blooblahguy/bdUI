@@ -55,7 +55,7 @@ function mod:create_alerts()
 	mod.alert:SetWidth(300);
 	mod.alert:Hide();
 	mod.alert.text = mod.alert:CreateFontString(nil, "BACKGROUND");
-	mod.alert.text:SetFont(bdUI.media.font, 16, "OUTLINE");
+	mod.alert.text:SetFontObject(bdUI:get_font(16));
 	mod.alert.text:SetAllPoints();
 	mod.alert:SetPoint("CENTER", 0, 200);
 	mod.alert.time = 0;

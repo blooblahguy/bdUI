@@ -166,7 +166,7 @@ local methods = {
 		self:SetHighlightTexture(hover)
 
 		-- count
-		count:SetFont(bdUI.media.font, 13, "OUTLINE")
+		count:SetFontObject(bdUI:get_font(13))
 		count:SetJustifyH("RIGHT")
 		count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
 		

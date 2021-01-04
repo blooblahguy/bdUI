@@ -60,7 +60,8 @@ function mod:config_callback()
 	end
 	
 	mod:UnregisterEvent("PLAYER_REGEN_DISABLED")
-	mod.variables.font:SetFont(bdUI.media.font, c.font_size, "OUTLINE")
+	mod.variables.font = bdUI:get_font(c.font_size)
+	mod.variables.cooldownfont = bdUI:get_font(14)
 
 	-- loop through bar callbacks
 	for k, callback in pairs(mod.variables.callbacks) do
@@ -331,7 +332,7 @@ function mod:SkinButton(button)
 	if (cooldown) then
 		local cooldowntext = cooldown:GetRegions()
 		cooldowntext = cooldown:GetRegions()
-		cooldowntext:SetFont(bdUI.media.font, 16, "OUTLINE")
+		cooldowntext:SetFontObject(v.cooldownfont)
 		cooldowntext:SetJustifyH("Center")
 		cooldowntext:SetAllPoints(cooldown)
 		cooldown:SetParent(button)

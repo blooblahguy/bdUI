@@ -54,37 +54,6 @@ function mod:create_button_frame()
 
 	bdUI:create_fader(Minimap.buttonFrame, {}, 1, 0, .1, 0)
 
-	-- local bdConfigButton = CreateFrame("button","bdUI_configButton", Minimap)
-	-- bdConfigButton.text = bdConfigButton:CreateFontString(nil,"OVERLAY")
-	-- bdConfigButton.text:SetFontObject("BDUI_SMALL")
-	-- bdConfigButton.text:SetTextColor(.4,.6,1)
-	-- bdConfigButton.text:SetText("bd")
-	-- bdConfigButton.text:SetJustifyH("CENTER")
-	-- bdConfigButton.text:SetPoint("CENTER", bdConfigButton, "CENTER", -1, -1)
-	-- bdConfigButton:RegisterForClicks("AnyUp")
-	-- bdConfigButton:SetScript("OnEnter", function(self) 
-	-- 	self.text:SetTextColor(.6,.8,1) 
-	-- 	-- ShowUIPanel(GameTooltip)
-	-- 	GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 0, 6)
-	-- 	GameTooltip:AddLine(bdUI.colorString.."Config\n|cffFFAA33Left Click:|r |cff00FF00Open bdUI Config|r\n|cffFFAA33Right Click:|r |cff00FF00Toggle lock/unlock|r\n|cffFFAA33Ctrl+Click:|r |cff00FF00Reload UI|r")
-	-- 	GameTooltip:Show()
-	-- end)
-	-- bdConfigButton:SetScript("OnLeave", function(self) 
-	-- 	self.text:SetTextColor(.4,.6,1)
-	-- 	GameTooltip:Hide()
-	-- end)
-	-- bdConfigButton:SetScript("OnClick", function(self, button)
-	-- 	if (IsControlKeyDown()) then
-	-- 		ReloadUI()
-	-- 	end
-		
-	-- 	if (button == "LeftButton") then
-	-- 		bdUI.bdConfig:toggle()
-	-- 	elseif (button == "RightButton") then
-	-- 		bdUI.bdConfig.header.lock:Click()
-	-- 	end		
-	-- end)
-
 	-- Find and move buttons
 	local ignoreFrames = {}
 	local hideTextures = {}

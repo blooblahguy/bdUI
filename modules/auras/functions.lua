@@ -4,7 +4,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Auras")
 local auras
-bdUI.caches.auras = {}
 
 --===============================================
 -- Whitelist
@@ -111,12 +110,12 @@ local is_whitelist_raid = function(self, name, spellID, castByMe, isBossDebuff, 
 end
 
 -- bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
-bdUI.is_whitelisted = is_whitelisted
-bdUI.is_blacklisted = is_blacklisted
-bdUI.is_whitelist_nameplate = is_whitelist_nameplate
-bdUI.is_whitelist_mine = is_whitelist_mine
-bdUI.is_whitelist_class = is_whitelist_class
-bdUI.is_whitelist_raid = is_whitelist_raid
+bdUI.is_whitelisted = memoize(is_whitelisted, bdUI.caches.auras)
+bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
+bdUI.is_whitelist_nameplate = memoize(is_whitelist_nameplate, bdUI.caches.auras)
+bdUI.is_whitelist_mine = memoize(is_whitelist_mine, bdUI.caches.auras)
+bdUI.is_whitelist_class = memoize(is_whitelist_class, bdUI.caches.auras)
+bdUI.is_whitelist_raid = memoize(is_whitelist_raid, bdUI.caches.auras)
 
 --===============================================
 -- Intelligent Filtering

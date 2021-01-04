@@ -111,10 +111,10 @@ function mod:skin_loot()
 				quality:SetAlpha(0)
 			end
 			
-			font:SetFont(bdUI.media.font, 14)
+			font:SetFontObject(bdUI:get_font(14))
 
 			if (count) then
-				count:SetFont(bdUI.media.font, 14, 'OUTLINE')
+				count:SetFontObject(bdUI:get_font(14))
 			end
 			
 			frame:SetNormalTexture("")

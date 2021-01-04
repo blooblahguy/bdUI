@@ -45,7 +45,7 @@ local function update_healthbars(self, unit)
 	end)
 
 	GameTooltipStatusBar.text = GameTooltipStatusBar:CreateFontString(nil)
-	GameTooltipStatusBar.text:SetFont(bdUI.media.font, 11, "THINOUTLINE")
+	GameTooltipStatusBar.text:SetFontObject(bdUI:get_font(11))
 	GameTooltipStatusBar.text:SetAllPoints()
 	GameTooltipStatusBar.text:SetJustifyH("CENTER")
 	GameTooltipStatusBar.text:SetJustifyV("MIDDLE")

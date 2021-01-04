@@ -144,14 +144,14 @@ local function layout(self, unit)
 	self.TextHolder:SetAllPoints()
 
 	self.Name = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Name:SetFont(bdUI.media.font, 13, "OUTLINE")
+	self.Name:SetFontObject(bdUI:get_font(13))
 
 	self.Status = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Status:SetFont(bdUI.media.font, 10, "OUTLINE")
+	self.Status:SetFontObject(bdUI:get_font(10))
 	self.Status:SetPoint("CENTER", self.TextHolder, "CENTER")
 	
 	self.Curhp = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Curhp:SetFont(bdUI.media.font, 10, "OUTLINE")
+	self.Curhp:SetFontObject(bdUI:get_font(10))
 
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 7)

@@ -281,15 +281,9 @@ mod.variables.hidden = CreateFrame("Frame")
 mod.variables.hidden:Hide()
 mod.variables.callbacks = {}
 
-mod.variables.cooldownfont = CreateFont("BDUI_MEDIUM")
-mod.variables.cooldownfont:SetFont(bdUI.media.font, 30, "OUTLINE")
-mod.variables.cooldownfont:SetShadowColor(0, 0, 0)
-mod.variables.cooldownfont:SetShadowOffset(0, 0)
-
-mod.variables.font = CreateFont("BDUI_MEDIUM")
-mod.variables.font:SetFont(bdUI.media.font, 14, "OUTLINE")
-mod.variables.font:SetShadowColor(0, 0, 0)
-mod.variables.font:SetShadowOffset(0, 0)
+--fonts
+mod.variables.cooldownfont = bdUI:get_font(30)
+mod.variables.font = bdUI:get_font(14)
 
 function mod:unpack()
 	return self[1], self[2], self[3]

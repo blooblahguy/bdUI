@@ -33,7 +33,7 @@ function mod:initialize()
 		["default"] = true,
 		["locked"] = true,
 		["free"] = true,
-		["order"] = 2000,
+		["order"] = -2,
 	})
 
 	mod:create_category("Bags", {
@@ -80,8 +80,8 @@ function mod:initialize()
 			["subtype"] = tMerge(mod.subtypes["Generic Weapons"]),
 			["default"] = true,
 		})
-		mod:create_category("Misc", {
-			['type'] = tMerge(mod.types["Misc"]),
+		mod:create_category("Miscellaneous", {
+			['type'] = tMerge(mod.types["Miscellaneous"]),
 			["default"] = true,
 		})
 
@@ -116,7 +116,7 @@ function mod:create_button(parent)
 	local button = CreateFrame("Button", nil, parent)
 	button:SetSize(20, 20)
 	button.text = button:CreateFontString(nil, "OVERLAY")
-	button.text:SetFont(bdUI.media.font, 11, "OUTLINE")
+	button.text:SetFontObject(bdUI:get_font(11))
 	button.text:SetAllPoints()
 	button.text:SetJustifyH("CENTER")
 	button.text:SetTextColor(.4, .4, .4)
@@ -168,7 +168,7 @@ function mod:create_container(name, ids, bagids)
 	local add_category = mod:create_button(footer)
 	add_category.text:SetText("+")
 	add_category:SetPoint("RIGHT", footer, "RIGHT", -4, 0)
-	add_category.text:SetFont(bdUI.media.font, 14, "OUTLINE")
+	add_category.text:SetFontObject(bdUI:get_font(14))
 	add_category.callback = function(self)
 		mod:create_category("New Category", {
 			["brand_new"] = true

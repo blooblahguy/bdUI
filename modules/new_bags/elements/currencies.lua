@@ -97,7 +97,7 @@ function mod:create_currencies(name, parent)
 		currency.icon:SetSize(16, 16)
 		currency.icon:SetTexCoord(.07, .93, .07, .93)
 		currency.text = currency:CreateFontString(nil, "OVERLAY")
-		currency.text:SetFont(bdUI.media.font, 12, "OUTLINE")
+		currency.text:SetFontObject(bdUI:get_font(13))
 		currency.text:SetPoint("LEFT", currency.icon, "RIGHT", 5, -1)
 
 		local bg = currency:CreateTexture(nil, "BORDER")
