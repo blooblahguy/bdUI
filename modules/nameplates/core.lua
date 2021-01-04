@@ -337,7 +337,8 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- UNIT NAME
 	--==========================================
-	self.Name = self.Health:CreateFontString(nil, "OVERLAY", "BDN_FONT")
+	self.Name = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Name:SetFontObject(mod.font)
 	self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)	
 	self:Tag(self.Name, '[name]')
 
@@ -373,7 +374,8 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- UNIT HEALTH
 	--==========================================
-	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY", "BDN_FONT_SMALL")
+	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Curhp:SetFontObject(mod.font_small)
 	self.Curhp:SetJustifyH("RIGHT")
 	self.Curhp:SetAlpha(0.8)
 	self.Curhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
@@ -401,7 +403,8 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- UNIT POWER
 	--==========================================
-	self.Curpower = self.Health:CreateFontString(nil, "OVERLAY", "BDN_FONT_SMALL")
+	self.Curpower = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Curpower:SetFontObject(mod.font_small)
 	self.Curpower:SetJustifyH("LEFT")
 	self.Curpower:SetAlpha(0.8)
 	self.Curpower:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
@@ -432,7 +435,8 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- FIXATES / TARGETS
 	--==========================================
-	self.FixateAlert = self:CreateFontString(nil, "OVERLAY", "BDN_FONT_SMALL")
+	self.FixateAlert = self:CreateFontString(nil, "OVERLAY")
+	self.FixateAlert:SetFontObject(mod.font_small)
 	self.FixateAlert:SetPoint("LEFT", self.Health, "RIGHT", 4, -1)
 	self.FixateAlert:SetSize(self.Health:GetSize())
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)

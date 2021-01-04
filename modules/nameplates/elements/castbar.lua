@@ -33,11 +33,13 @@ mod.elements.castbar = function(self, unit)
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -config.castbarheight)
 	
 	-- text
-	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY", "BDN_FONT_CASTBAR")
+	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
+	self.Castbar.Text:SetFontObject(mod.font_castbar)
 	self.Castbar.Text:SetJustifyH("LEFT")
 	self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", 10, 0)
 
-	self.Castbar.AttributeText = self.Castbar:CreateFontString(nil, "OVERLAY", "BDN_FONT_CASTBAR")
+	self.Castbar.AttributeText = self.Castbar:CreateFontString(nil, "OVERLAY")
+	self.Castbar.AttributeText:SetFontObject(mod.font_castbar)
 	self.Castbar.AttributeText:SetJustifyH("RIGHT")
 	self.Castbar.AttributeText:SetPoint("RIGHT", self.Castbar, "RIGHT", -10, 0)
 	

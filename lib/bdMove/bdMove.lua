@@ -180,14 +180,20 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	mover.text:SetText(rename)
 	mover.text:SetJustifyH("CENTER")
 	mover.text:SetAlpha(0.8)
-	mover.text:Hide()	
+	mover.text:Hide()
 
-	-- Sizing
-	hooksecurefunc(frame, "SetSize", function() 
+	local function resize()
 		local height = frame:GetHeight()
 		local width = frame:GetWidth()
-		mover:SetSize(width+2+lib.border, height+2+lib.border)
-	end)
+
+		-- print(frame:GetWidth(), frame:GetEffectiveScale(), frame:GetWidth() * frame:GetEffectiveScale())
+
+		mover:SetSize(width + 2 + lib.border, height + 2 + lib.border)
+	end
+
+	-- Sizing
+	hooksecurefunc(frame, "SetSize", resize)
+	hooksecurefunc(frame, "SetScale", resize)
 
 	-- Transfer Methods to this object
 	frame.mover = mover

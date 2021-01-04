@@ -52,6 +52,17 @@ end
 --==============================================
 -- Useful Functions
 --==============================================
+-- function bdUI:truncate_text(textObject, targetWidth)
+-- 	BDUI_SAVE.truncates = BDUI_SAVE.truncates or {}
+-- 	local width = textObject:GetTextWidth()
+-- 	if (width <= targetWidth) then return end
+-- 	local text = textObject:GetText()
+
+-- 	local auto = {"of", "the", "and"}
+
+-- 	local words = strsplit()
+-- end
+
 function bdUI:hide_protected(frame)
 	frame:Hide()
 	frame:EnableMouse(false)

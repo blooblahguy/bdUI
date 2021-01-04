@@ -8,9 +8,11 @@ function mod:create_objective_tracker()
 	local ignore_point
 
 	local quest_anchor = CreateFrame("frame", "bdObjectiveFrame", bdParent)
-	quest_anchor:SetSize(config.size, 50)
+	quest_anchor:SetSize(160 * config.scale, 50)
 	quest_anchor:SetPoint("TOP", Minimap.background, "BOTTOM", 0, -50)
 	bdMove:set_moveable(quest_anchor, "Objective Tracker")
+
+	Minimap.qa = quest_anchor
 
 	local function move_objective_tracker()
 		local tracker = ObjectiveTrackerFrame
@@ -33,9 +35,6 @@ function mod:create_objective_tracker()
 			ObjectiveTracker_Expand()
 		else
 			if (IsAddOnLoaded("Blizzard_ObjectiveTracker") or bdUI:get_game_version() == "vanilla") then
-				-- bdUI:set_backdrop(ObjectiveTrackerFrame)
-				-- ObjectiveTrackerFrame:ClearAllPoints()
-				-- print(ObjectiveTrackerFrame:GetPoint())
 				move_objective_tracker()
 				hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
 					if (not ignore_point) then
@@ -52,5 +51,4 @@ function mod:create_objective_tracker()
 	f:RegisterEvent("PLAYER_LOGIN")
 	f:RegisterEvent("ENCOUNTER_START")
 	f:RegisterEvent("ENCOUNTER_END")
-
 end

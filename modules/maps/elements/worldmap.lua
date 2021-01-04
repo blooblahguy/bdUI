@@ -1,5 +1,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
+local config
 
 -- thank you to xcoords
 function mod:worldmap_coords()

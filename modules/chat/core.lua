@@ -236,7 +236,7 @@ function mod:skin_chats()
 	GeneralDockManager:SetFrameStrata("HIGH")
 
 	--editbox font
-	ChatFontNormal:SetFontObject(bdUI:get_font(14))
+	ChatFontNormal:SetFontObject(bdUI:get_font(14, "NONE"))
 	ChatFontNormal:SetShadowOffset(1,1)
 	ChatFontNormal:SetShadowColor(0,0,0)
 

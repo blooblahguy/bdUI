@@ -165,7 +165,7 @@ modules\grid\elements\tags.lua
 modules\grid\elements\dispel_glow.lua
 
 # Maps
-modules\maps\init.lua
+modules\maps\config.lua
 modules\maps\functions.lua
 modules\maps\core.lua
 modules\maps\elements\minimap.lua
