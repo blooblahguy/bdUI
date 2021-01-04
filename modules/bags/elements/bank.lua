@@ -315,7 +315,7 @@ function mod:create_bank_money()
 	ContainerFrame2MoneyFrame:SetParent(mod.bank)
 	local money = {"Gold","Silver","Copper"}
 	for k, v in pairs(money) do
-		_G["ContainerFrame2MoneyFrame"..v.."ButtonText"]:SetFont(bdUI.media.font,14)
+		_G["ContainerFrame2MoneyFrame"..v.."ButtonText"]:SetFontObject(bdUI:get_font(14))
 	end
 end
 

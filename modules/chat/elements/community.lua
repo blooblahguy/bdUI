@@ -63,9 +63,9 @@ end
 function mod:telltarget()
 	SLASH_TELLTARGET1 = "/tt"
 	SLASH_TELLTARGET2 = "/wt"
-	SlashCmdList.TELLTARGET = function(message)
-		if UnitIsPlayer("target") and (UnitIsUnit("player", "target") or UnitCanCooperate("player", "target")) then
-			SendChatMessage(message, "WHISPER", nil, GetUnitName("target", true))
+	SlashCmdList.TELLTARGET = function(msg)
+		if UnitIsPlayer("target") and UnitIsFriend("player", "target") and msg then
+			SendChatMessage(msg, "WHISPER", nil, GetUnitName("target", true))
 		end
 	end
 end

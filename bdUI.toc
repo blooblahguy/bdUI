@@ -5,9 +5,11 @@
 ## X-oUF: bdUF
 
 # Initialize
-# modules\general\elements\hybridmap.xml
 core\init.lua
 lib\ace\LibStub.lua
+lib\fixes\TaintLess.xml
+lib\fixes\InspectFix.lua
+lib\fixes\LibStrataFix.lua
 
 # Locales
 lib\ace\AceLocale-3.0.lua
@@ -34,6 +36,7 @@ lib\ace\LibSharedMedia-3.0.lua
 lib\ace\LibSimpleSticky.lua
 lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
+lib\LibChatAnims.lua
 
 # Classic
 lib\classic\LibClassicCasterino\LibClassicCasterino.lua
@@ -80,7 +83,6 @@ modules\general\init.lua
 modules\general\functions.lua
 modules\general\core.lua
 modules\general\elements\autovendor.lua
-modules\general\elements\gmotd.lua
 modules\general\elements\doubleclickbo.lua
 modules\general\elements\developer.lua
 modules\general\elements\errorblock.lua
@@ -143,9 +145,20 @@ modules\chat\init.lua
 modules\chat\functions.lua
 modules\chat\core.lua
 modules\chat\elements\alerts.lua
+modules\chat\elements\altinv.lua
+modules\chat\elements\autolog.lua
+modules\chat\elements\bnet.lua
 modules\chat\elements\bubbles.lua
+modules\chat\elements\channels.lua
+modules\chat\elements\chatcopy.lua
 modules\chat\elements\community.lua
 modules\chat\elements\emojis.lua
+modules\chat\elements\gmotd.lua
+modules\chat\elements\highlight.lua
+modules\chat\elements\history.lua
+modules\chat\elements\names.lua
+modules\chat\elements\skin.lua
+modules\chat\elements\url.lua
 
 # Databars
 modules\databars\init.lua

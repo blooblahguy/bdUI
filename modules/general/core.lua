@@ -23,6 +23,5 @@ function mod:initialize()
 	mod:create_interrupt()
 	mod:create_dcbo()
 	mod:create_errorblock()
-	mod:create_gmotd()
 	mod:create_qol()
 end

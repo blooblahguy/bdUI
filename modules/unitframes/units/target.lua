@@ -28,7 +28,7 @@ mod.custom_layout["target"] = function(self, unit)
 	mod.additional_elements.aurabars(self, unit)
 
 	-- self.Classification = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	-- self.Classification:SetFont(bdUI.media.font, 13, "OUTLINE")
+	-- self.Classification:SetFontObject(bdUI:get_font(13))
 	-- self.Classification:SetPoint("TOPLEFT", self.Health, "BOTTOMRIGHT", 0, -4)
 	-- self:Tag(self.Classification, '[shortclassification]')
 

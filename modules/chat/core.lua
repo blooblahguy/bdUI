@@ -15,20 +15,32 @@ function mod:initialize()
 	config = mod.config
 	if (not config.enabled) then return end
 
-	-- defaults
-	mod:set_defaults()
-	-- alerts
-	mod:create_alerts()
+	-- url copy
+	mod:chat_urls()
+
+	-- alt invite
+	mod:alt_invite()
+
 	-- bubbles
 	mod:create_chat_bubbles()
-	-- telltarget command
-	mod:telltarget()
-	-- community mask
-	mod:create_community()
-	-- finally
-	mod:skin_chats()
+
+	-- defaults
+	-- mod:set_defaults()
+	-- -- alerts
+	-- mod:create_alerts()
+	
+	-- -- telltarget command
+	-- mod:telltarget()
+	-- -- community mask
+	-- mod:create_community()
+	-- -- finally
+	-- mod:skin_chats()
 
 	mod:config_callback()
+end
+
+function mod:config_callback()
+
 end
 
 -- credit to tannerng
@@ -178,28 +190,6 @@ function mod:set_defaults()
 	LOOT_MONEY_SPLIT_GUILD = LOOT_MONEY_SPLIT
 
 	-- Enable Classcolor in chat author
-	ToggleChatColorNamesByClassGroup(true, "SAY")
-	ToggleChatColorNamesByClassGroup(true, "EMOTE")
-	ToggleChatColorNamesByClassGroup(true, "YELL")
-	ToggleChatColorNamesByClassGroup(true, "GUILD")
-	ToggleChatColorNamesByClassGroup(true, "OFFICER")
-	ToggleChatColorNamesByClassGroup(true, "GUILD_ACHIEVEMENT")
-	ToggleChatColorNamesByClassGroup(true, "ACHIEVEMENT")
-	ToggleChatColorNamesByClassGroup(true, "WHISPER")
-	ToggleChatColorNamesByClassGroup(true, "PARTY")
-	ToggleChatColorNamesByClassGroup(true, "PARTY_LEADER")
-	ToggleChatColorNamesByClassGroup(true, "RAID")
-	ToggleChatColorNamesByClassGroup(true, "RAID_LEADER")
-	ToggleChatColorNamesByClassGroup(true, "RAID_WARNING")
-	ToggleChatColorNamesByClassGroup(true, "BATTLEGROUND")
-	ToggleChatColorNamesByClassGroup(true, "BATTLEGROUND_LEADER")
-	ToggleChatColorNamesByClassGroup(true, "CHANNEL1")
-	ToggleChatColorNamesByClassGroup(true, "CHANNEL2")
-	ToggleChatColorNamesByClassGroup(true, "CHANNEL3")
-	ToggleChatColorNamesByClassGroup(true, "CHANNEL4")
-	ToggleChatColorNamesByClassGroup(true, "CHANNEL5")
-	ToggleChatColorNamesByClassGroup(true, "INSTANCE_CHAT")
-	ToggleChatColorNamesByClassGroup(true, "INSTANCE_CHAT_LEADER")
 end
 
 --=========================================================
@@ -288,24 +278,6 @@ function mod:skin_chats()
 			end
 		end
 	end
-
-	-- Alt-invite and url clicks
-	local DefaultSetItemRef = SetItemRef
-	function SetItemRef(link, ...)
-		local type, value = link:match("(%a+):(.+)")
-		if IsAltKeyDown() and type == "player" then
-			C_PartyInfo.InviteUnit(value:match("([^:]+)"))
-		elseif (type == "url") then
-			local eb = LAST_ACTIVE_CHAT_EDIT_BOX or ChatFrame1EditBox
-			if not eb then return end
-			eb:Show()
-			eb:SetText(value)
-			eb:SetFocus()
-			eb:HighlightText()
-		else
-			return DefaultSetItemRef(link, ...)
-		end
-	end
 end
 
 --=========================================================
@@ -355,7 +327,7 @@ function mod:skin_single_chat(frame)
 	end
 	
 	-- tab style
-	_G[tab:GetName().."Text"]:SetFontObject(bdUI:get_font(fontSize))
+	_G[tab:GetName().."Text"]:SetFontObject(bdUI:get_font(fontSize, "OUTLINE"))
 	_G[tab:GetName().."Text"]:SetTextColor(1,1,1)
 	_G[tab:GetName().."Text"]:SetVertexColor(1,1,1)
 	_G[tab:GetName().."Text"]:SetAlpha(.5)
