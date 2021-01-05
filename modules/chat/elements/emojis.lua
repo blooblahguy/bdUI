@@ -136,18 +136,41 @@ mod.emojis['<3'] = emoji_textures.Heart
 mod.emojis['</3'] = emoji_textures.BrokenHeart
 
 -- replace emojis
-function mod:filter_emojis(event, msg)
-	for word in gmatch(msg, "%s-%S+%s*") do
-		word = strtrim(word)
-		local pattern = gsub(word, '([%(%)%.%%%+%-%*%?%[%^%$])', '%%%1')
-		local emoji = mod.emojis[pattern]
-		-- mod:alert_message(mod:rawText(pattern))
-		if emoji and strmatch(msg, '[%s%p]-'..pattern..'[%s%p]*') then
-			emoji = "|T"..emoji..":12|t"
-			local base64 = bdUI.base64:Encode(word)
-			msg = gsub(msg, '([%s%p]-)'..pattern..'([%s%p]*)', (base64 and ('%1|Hbduimoji:%%'..base64..'|h|cFFffffff|r|h') or '%1')..emoji..'%2');
+function mod:create_emojis()
+
+
+	local function filter(chatFrame, event, msg, ...)
+		if (not mod.config.enableemojis) then return end
+
+		local newMsg = msg
+
+		for word in gmatch(newMsg, "%s-%S+%s*") do
+			word = strtrim(word)
+			local pattern = gsub(word, '([%(%)%.%%%+%-%*%?%[%^%$])', '%%%1')
+			local emoji = mod.emojis[pattern]
+			-- mod:alert_message(mod:rawText(pattern))
+			if emoji and strmatch(newMsg, '[%s%p]-'..pattern..'[%s%p]*') then
+				emoji = "|T"..emoji..":12|t"
+				local base64 = bdUI.base64:Encode(word)
+				newMsg = gsub(newMsg, '([%s%p]-)'..pattern..'([%s%p]*)', (base64 and ('%1|Hbduimoji:%%'..base64..'|h|cFFffffff|r|h') or '%1')..emoji..'%2');
+			end
 		end
+
+		return false, newMsg, ...
 	end
 
-	return msg
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", filter)
 end

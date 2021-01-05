@@ -236,33 +236,35 @@ function mod:position_items(category, parent, pool)
 		local button = pool:Acquire()
 
 		button:Show()
-		-- print(mod.bag_frames[bag])
-		button:SetID(slot)
-		button:SetParent(mod.bag_frames[bag])
-		button:SetSize(config.bag_size, config.bag_size)
-		button.bag = bag
-		button.slot = slot
+		if (slot) then
+			-- print(mod.bag_frames[bag])
+			button:SetID(slot)
+			button:SetParent(mod.bag_frames[bag])
+			button:SetSize(config.bag_size, config.bag_size)
+			button.bag = bag
+			button.slot = slot
 
-		button:update()
+			button:update()
 
-		if (category.count ~= nil) then
-			button.blank:Show()
-			SetItemButtonCount(button, category.count)
+			if (category.count ~= nil) then
+				button.blank:Show()
+				SetItemButtonCount(button, category.count)
+			end
+
+			if (not lastrow) then
+				button:SetPoint("TOPLEFT", category.frame.container, "TOPLEFT", 0, 0)
+				lastrow = button
+			elseif (index > columns) then
+				button:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -spacing)
+				lastrow = button
+				index = 1
+			else
+				button:SetPoint("TOPLEFT", last, "TOPRIGHT", spacing, 0)
+			end
+			
+			last = button
+			index = index + 1
 		end
-
-		if (not lastrow) then
-			button:SetPoint("TOPLEFT", category.frame.container, "TOPLEFT", 0, 0)
-			lastrow = button
-		elseif (index > columns) then
-			button:SetPoint("TOPLEFT", lastrow, "BOTTOMLEFT", 0, -spacing)
-			lastrow = button
-			index = 1
-		else
-			button:SetPoint("TOPLEFT", last, "TOPRIGHT", spacing, 0)
-		end
-
-		last = button
-		index = index + 1
 	end
 
 	return width, height

@@ -32,14 +32,14 @@ function mod:config_callback()
 	-- resize elements
 	Minimap:SetScale(config.scale)
 	
-	local border = bdUI.border * (1 / config.scale)
+	local border = bdUI.border --* (1 / config.scale)
 	Minimap.background:SetScale(1 * (1 / config.scale))
-	Minimap.background:SetSize(160 * config.scale, 160 * config.scale)
+	Minimap.background:SetSize(config.size * config.scale, config.size * config.scale)
 	Minimap.background:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
 	Minimap.background:SetBackdropColor(0, 0, 0, 0)
 	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
-
-	Minimap.qa:SetSize(160 * config.scale, 50)
+	Minimap:SetSize(config.size, config.size)
+	Minimap.qa:SetSize(config.size * config.scale, 50)
 	
 	-- scale elements back down
 	TimeManagerClockButton:SetScale(1 / config.scale)

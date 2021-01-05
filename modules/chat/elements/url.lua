@@ -36,7 +36,7 @@ function mod:chat_urls()
 		for k, p in pairs(patterns) do
 			if string.find(newMsg, p) then
 				-- we use garrmission because blizzard checks for known types only
-				newMsg = newMsg:gsub(p, '|cffffffff|Hgarrmission:%1|h[%1]|h|r')
+				newMsg = newMsg:gsub(p, '|cffffffff|Hgarrmission:BDCurl:%1|h[%1]|h|r')
 			end
 		end
 
@@ -62,7 +62,9 @@ function mod:chat_urls()
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_INLINE_TOAST_BROADCAST", filter)
 
 	hooksecurefunc("SetItemRef", function(link, text)
-		local type, value = link:match("(%a+):(.+)")
+		local base, type, value = strsplit(":", link, 3)
+
+		if (type ~= "BDCurl") then return end
 
 		local eb = LAST_ACTIVE_CHAT_EDIT_BOX or ChatFrame1EditBox
 		if not eb then return end

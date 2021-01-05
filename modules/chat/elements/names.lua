@@ -2,6 +2,42 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
 function mod:color_names()
+	local function filter(chatFrame, event, msg, ...)
+		local newMsg = msg
+
+		local test = newMsg:gsub("[^a-zA-Z%s]",'')
+
+		local words = {strsplit(' ',test)}
+		for i = 1, #words do
+			local w = words[i]
+			
+			if (w and not (w == "player" or w == "target") and UnitName(w) and UnitIsPlayer(w)) then
+				local class = select(2, UnitClass(w))
+				local colors = RAID_CLASS_COLORS[class]
+				if (colors) then
+					newMsg = gsub(newMsg, w, "|cff"..RGBPercToHex(colors.r,colors.g,colors.b).."%1|r")
+				end
+			end
+		end
+
+		return false, newMsg, ...
+	end
+
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", filter)
+
 	ToggleChatColorNamesByClassGroup(true, "SAY")
 	ToggleChatColorNamesByClassGroup(true, "EMOTE")
 	ToggleChatColorNamesByClassGroup(true, "YELL")

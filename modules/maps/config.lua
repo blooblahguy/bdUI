@@ -18,13 +18,22 @@ local config = {
 		value = "Minimap",
 		args = {
 			{
+				key = "size",
+				label = "Minimap Size",
+				type = "range",
+				min = 50,
+				max = 500,
+				step = 5,
+				value = 210
+			},
+			{
 				key = "scale",
 				label = "Minimap Scale",
 				type = "range",
 				min = 0.1,
 				max = 3,
 				step = .1,
-				value = 1
+				value = 1.3
 			},
 			{
 				key = "shape",
