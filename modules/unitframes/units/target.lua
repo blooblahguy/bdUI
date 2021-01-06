@@ -13,9 +13,11 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 	if ( not bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then return false end
 
 	-- but also only show player and with durations
-	if (castByMe and duration ~= 0 and duration < 300) then return true end
-
 	if (castByMe and nameplateShowSelf) then return true end
+	
+	if (bdUI:is_whitelist_nameplate(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then return true end
+
+	if (castByMe and duration ~= 0 and duration < 300) then return true end
 end
 
 mod.custom_layout["target"] = function(self, unit)
