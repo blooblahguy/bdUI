@@ -538,15 +538,61 @@ function mod:get_attributes()
 		[149] = 30
 	}
 
+	local difficultySize = {
+		[1] = 5, -- Normal	party
+		[2] = 5, -- Heroic	party	isHeroic
+		[3] = 10, -- 10 Player	raid	toggleDifficultyID: 5
+		[4] = 25, -- 25 Player	raid	toggleDifficultyID: 6
+		[5] = 10, -- 10 Player (Heroic)	raid	isHeroic, toggleDifficultyID: 3
+		[6] = 25, -- 25 Player (Heroic)	raid	isHeroic, toggleDifficultyID: 4
+		[7] = 30, -- Looking For Raid	raid	(Legacy LFRs; prior to SoO)
+		[8] = 5, -- Mythic Keystone	party	isHeroic, isChallengeMode
+		[9] = 40, -- 40 Player	raid
+		[11] = 5, -- Heroic Scenario	scenario	isHeroic
+		[12] = 5, -- Normal Scenario	scenario
+		[14] = 30, -- Normal	raid
+		[15] = 30, -- Heroic	raid	displayHeroic
+		[16] = 20, -- Mythic	raid	isHeroic, displayMythic
+		[17] = 25, -- Looking For Raid	raid
+		[18] = 30, -- Event	raid
+		[19] = 5, -- Event	party
+		[20] = 5, -- Event Scenario	scenario
+		[23] = 5, -- Mythic	party	isHeroic, displayMythi
+		[24] = 5, -- Timewalking	party
+		[25] = 5, -- World PvP Scenario	scenario
+		[29] = 5, -- PvEvP Scenario	pvp
+		[30] = 5, -- Event	scenario
+		[32] = 5, -- World PvP Scenario	scenario
+		[33] = 40, -- Timewalking	raid
+		[34] = 40, -- PvP	pvp
+		[38] = 5, -- Normal	scenario
+		[39] = 5, -- Heroic	scenario	displayHeroic
+		[40] = 5, -- Mythic	scenario	displayMythic
+		[45] = 5, -- PvP	scenario	displayHeroic
+		[147] = 5, -- Normal	scenario	(Warfronts)
+		[148] = 20, -- 20 Player	raid	(Classic WoW 20mans; ZG, AQ20)
+		[149] = 20, -- Heroic	scenario	displayHeroic (Warfronts)
+		[150] = 5, -- Normal	party
+		[151] = 25, -- Looking For Raid	raid	(Timewalking)
+		[152] = 5, -- Visions of N'Zoth	scenario
+		[153] = 5, -- Teeming Island	scenario	displayHeroic
+		[167] = 40, -- Torghast	scenario
+		[168] = 5, -- Path of Ascension: Courage	scenario
+		[169] = 5, -- Path of Ascension: Loyalty	scenario
+		[170] = 5, -- Path of Ascension: Wisdom	scenario
+		[171] = 5, -- Path of Ascension: Humility	scenario
+	}
+
 	num_groups = config.num_groups
 	if (config.intel_groups) then
-		local maxPlayers = select(5, GetInstanceInfo())
+		local diff = select(3, GetInstanceInfo())
 		if (IsInInstance() == "none") then
 			num_groups = 8
-		else
-			num_groups = math.min(1, (maxPlayers / 5))
+		elseif (difficultySize[diff]) then
+			num_groups = difficultySize[diff] / 5
 		end
 	end
+	-- print(difficultySize[diff], num_groups)
 
 	xOffset = bdUI.pixel * (xOffset or 2)
 	yOffset = bdUI.pixel * (yOffset or 2)
