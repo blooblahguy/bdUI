@@ -59,18 +59,18 @@ local config = {
 			{
 				key = "buttonsize",
 				type = "range",
-				value = 28,
+				value = 24,
 				min = 10,
 				max = 60,
 				step = 2,
 				label = "Size of buttons"
 			},
-			{
-				key = "mouseoverbuttonframe",
-				type = "toggle",
-				value = false,
-				label = "Hide button frame until mouseover"
-			},
+			-- {
+			-- 	key = "mouseoverbuttonframe",
+			-- 	type = "toggle",
+			-- 	value = false,
+			-- 	label = "Hide button frame until mouseover"
+			-- },
 			{
 				key = "showconfig",
 				type = "toggle",

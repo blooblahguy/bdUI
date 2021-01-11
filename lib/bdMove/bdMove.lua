@@ -11,7 +11,7 @@ LibStub("bdCallbacks-1.0"):New(lib)
 --========================================================
 -- Helpers
 --========================================================
-function IsMouseOverFrame(self)
+local function IsMouseOverFrame(self)
 	if MouseIsOver(self) then return true end
 	if not SpellFlyout:IsShown() then return false end
 	if not SpellFlyout.__faderParent then return false end
@@ -39,7 +39,7 @@ lib.border = lib.pixel * 2
 StickyFrames.rangeX = lib.border * 3
 StickyFrames.rangeY = lib.border * 3
 
-lib.moveable_frames = {}
+lib.movers = {}
 lib.save = nil
 lib.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
@@ -63,55 +63,312 @@ function lib:set_save(sv)
 		lib.save.positions = lib.save.positions or {}
 	end
 
-	for k, v in pairs(lib.moveable_frames) do
+	for k, v in pairs(lib.movers) do
 		v:position()
 	end
 end
 
 --========================================================
--- Methods
+-- Bumper
 --========================================================
-local methods = {
-	['unlock'] = function(self)
-		self:SetAlpha(1)
-		self.text:Show()
-		self.locked = false
-		self:EnableMouse(true)
+local bumper = CreateFrame("frame", "bdMoveBumper", UIParent, BackdropTemplateMixin and "BackdropTemplate")
+bumper:SetSize(114, 20)
+bumper:SetFrameStrata("TOOLTIP")
+bumper:SetFrameLevel(129)
+bumper:SetPoint("CENTER", UIParent, "CENTER")
+bumper:SetBackdrop({bgFile = lib.media.flat})
+bumper:SetBackdropColor(unpack(lib.media.border))
+bumper:Hide()
+lib.bumper = bumper
+
+local buttons = {"Left", "Right", "Up", "Down", "CenterH", "CenterY"}
+for i = 1, #buttons do
+	local name = buttons[i]
+
+	local button = CreateFrame("button", nil, bumper, BackdropTemplateMixin and "BackdropTemplate")
+	button:SetSize(18, 18)
+	button:SetBackdrop({bgFile = lib.media.flat})
+	button:SetBackdropColor(0, 0, 0, 1)
+	button.bumper = bumper
+
+	-- l, r, t, b
+	button.tex = button:CreateTexture(nil, "OVERLAY")
+	button.tex:SetTexture(lib.media.arrow)
+	button.tex:SetPoint("CENTER")
+	button.tex:SetSize(button:GetWidth() * 0.7, button:GetHeight() * 0.7)
+	button.tex:SetDesaturated(1)
+
+	-- default callback
+	button.callback = function(self)
+		local frame = self.bumper.frame
+
+		local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+		if (IsShiftKeyDown()) and IsControlKeyDown() then
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(self.moveX*20), yOfs+(self.moveY*20))
+		elseif (IsShiftKeyDown()) then
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(self.moveX*10), yOfs+(self.moveY*10))
+		else
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(self.moveX*1), yOfs+(self.moveY*1))
+		end
+
+		frame:save()
+	end
+
+	button:SetScript("OnEnter", function(self)
+		self.tex:SetDesaturated(false)
+	end)
+	button:SetScript("OnLeave", function(self)
+		self.tex:SetDesaturated(1)
+	end)
+	button:SetScript("OnClick", function(self)
+		button.callback(self)
+	end)
+
+	-- automatically position
+	if (bumper.last) then
+		button:SetPoint("LEFT", bumper.last, "RIGHT", lib.pixel, 0)
+	else
+		button:SetPoint("LEFT", bumper, "LEFT", lib.pixel, 0)
+	end
+
+	bumper.last = button
+	bumper[name] = button
+end
+
+-- left
+bumper.Left.moveX = -1
+bumper.Left.moveY = 0
+bumper.Left.tex:SetRotation(3.14159)
+
+-- right
+bumper.Right.moveX = 1
+bumper.Right.moveY = 0
+
+-- up
+bumper.Up.moveX = 0
+bumper.Up.moveY = 1
+bumper.Up.tex:SetRotation(1.5708)
+
+-- down
+bumper.Down.moveX = 0
+bumper.Down.moveY = -1
+bumper.Down.tex:SetRotation(-1.5708)
+
+-- center horizontal
+bumper.CenterH.tex:SetTexture(lib.media.align)
+bumper.CenterH.tex:SetRotation(1.5708)
+bumper.CenterH.callback = function(self)
+	local frame = self.controls.frame
+	if (not frame) then return end
+	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+	local width, height = frame:GetSize()
+	local s_width, s_height = GetScreenWidth(), GetScreenHeight()
+
+	frame:ClearAllPoints()
+	if (point == "LEFT" or point == "TOPLEFT" or point == "BOTTOMLEFT") then
+		frame:SetPoint(point, UIParent, point, ((s_width / 2) - (width / 2)), yOfs)
+	elseif (point == "CENTER" or point == "TOP" or point == "BOTTOM") then
+		frame:SetPoint(point, UIParent, point, 0, yOfs)
+	elseif (point == "RIGHT" or point == "TOPRIGHT" or point == "BOTTOMRIGHT") then
+		frame:SetPoint(point, UIParent, point, -((s_width / 2) - (width / 2)), yOfs)
+	end
+
+	frame:save()
+end
+
+-- center vertically
+bumper.CenterY.tex:SetTexture(lib.media.align)
+bumper.CenterY = function(self)
+	local frame = self.controls.frame
+	if (not frame) then return end
+	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+	local width, height = frame:GetSize()
+	local s_width, s_height = GetScreenWidth(), GetScreenHeight()
+
+	yOfs = ((s_height / 2) - (height / 2))
+
+	frame:ClearAllPoints()
+	if (point == "TOPLEFT" or point == "TOP" or point == "TOPRIGHT") then
+		frame:SetPoint(point, UIParent, point, xOfs, -yOfs)
+	elseif (point == "LEFT" or point == "CENTER" or point == "RIGHT") then
+		frame:SetPoint(point, UIParent, point, xOfs, 0)
+	elseif (point == "BOTTOMLEFT" or point == "BOTTOM" or point == "BOTTOMRIGHT") then
+		frame:SetPoint(point, UIParent, point, xOfs, yOfs)
+	end
+	
+	frame:save()
+end
+
+
+--========================================================
+-- Mover
+--========================================================
+function lib:set_moveable(frame, rename, left, top, right, bottom)
+	if (not lib.save) then print("lib needs SavedVariable to save positions. Use lib:set_save(sv_string)") return end
+	-- has it been positioned?
+	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
+	if (not relativeTo) then return end
+
+	-- get variables
+	local height = frame:GetHeight()
+	local width = frame:GetWidth()
+	rename = rename or frame:GetName()
+	left = left or lib.border
+	top = top or lib.border
+	right = right or left or lib.border
+	bottom = bottom or top or lib.border
+	relativeTo = _G[relativeTo] or relativeTo:GetName()
+
+	-- Create Mover Parent
+	local mover = CreateFrame("Button", rename, UIParent, BackdropTemplateMixin and "BackdropTemplate")
+	mover:SetSize(width + (right + left), height + (top + bottom))
+	mover:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})
+	mover:SetBackdropColor(0, 0, 0, .3)
+	mover:SetBackdropBorderColor(0, 0, 0, 0)
+	mover:SetFrameStrata("BACKGROUND")
+	mover:SetClampedToScreen(true)
+	mover:SetAlpha(0)
+	mover:EnableMouse(false)
+	mover:SetMovable(false)
+	mover.locked = true
+	mover.selected = false
+	
+	-- Text Label
+	mover.text = mover:CreateFontString(mover:GetName().."_Text")
+	mover.text:SetFont(lib.media.font, 14, "OUTLINE")
+	mover.text:SetPoint("CENTER", mover, "CENTER", 0, 0)
+	mover.text:SetText(rename)
+	mover.text:SetJustifyH("CENTER")
+	mover.text:SetAlpha(0.8)
+	mover.text:Hide()
+
+	-- Transfer Methods to this object
+	frame.mover = mover
+	mover.frame = frame
+	mover.rename = rename
+	
+	-- Sizing
+	local function resize(self)
+		local height = self:GetHeight()
+		local width = self:GetWidth()
+
+		self.mover:SetSize(width + 2 + lib.border, height + 2 + lib.border)
+	end
+	hooksecurefunc(frame, "SetSize", resize)
+	hooksecurefunc(frame, "SetScale", resize)
+
+	-- select this element for moving
+	function mover:select()
+		-- deselect everything else
+		for k, frame in pairs(lib.movers) do
+			frame:deselect()
+		end
+
+		self.selected = true
 		self:SetMovable(true)
-		self:SetUserPlaced(false)
 		self:RegisterForDrag("LeftButton")
-		self:SetFrameStrata("TOOLTIP")
+		self:SetBackdropColor(0, 0, 0, .8)
+		self:SetBackdropBorderColor(unpack(lib.media.border))
+
 		self:SetScript("OnDragStart", function(self)
-			StickyFrames:StartMoving(self, lib.moveable_frames, -lib.border, -lib.border, -lib.border, -lib.border)
+			StickyFrames:StartMoving(self, lib.movers, -lib.border, -lib.border, -lib.border, -lib.border)
 		end)
 		self:SetScript("OnDragStop", function(self)
 			StickyFrames:StopMoving(self)
 			StickyFrames:AnchorFrame(self)
+
+			local quad, y, h = GetQuadrant(self)
+			lib.bumper:ClearAllPoints()
+			if (y == "TOP") then
+				lib.bumper:SetPoint("TOP", self, "BOTTOM", 0, lib.pixel)
+			else
+				lib.bumper:SetPoint("BOTTOM", self, "TOP", 0, -lib.pixel)
+			end
 		end)
-	end,
-	['save'] = function(self)
+
+		-- place the bumper here
+		local quad, y, h = GetQuadrant(self)
+		lib.bumper.frame = self
+		lib.bumper:Show()
+		lib.bumper:ClearAllPoints()
+		if (y == "TOP") then
+			lib.bumper:SetPoint("TOP", self, "BOTTOM", 0, lib.pixel)
+		else
+			lib.bumper:SetPoint("BOTTOM", self, "TOP", 0, -lib.pixel)
+		end
+	end
+
+	-- deselect this for movement
+	function mover:deselect()
+		self.selected = false
+		self:SetMovable(false)
+		self:SetBackdropColor(0,0,0,.3)
+		self:SetBackdropBorderColor(0, 0, 0, 0)
+
+		self:SetScript("OnDragStart", noop)
+		self:SetScript("OnDragStop", noop)
+
+		self:SetScript("OnEnter", noop)
+		self:SetScript("OnLeave", noop)
+	end
+
+	-- unlock ui for movement
+	function mover:unlock()
+		self:SetAlpha(1)
+		self.text:Show()
+		self.locked = false
+		self.selected = false
+		self:EnableMouse(true)
+		self:SetFrameStrata("TOOLTIP")
+		
+		mover:SetScript("OnClick", mover.select)
+
+		self:SetScript("OnEnter", function() 
+			if (self.frame:GetScript("OnEnter")) then
+				self.frame:GetScript("OnEnter")(self.frame)
+			end
+		end)
+		self:SetScript("OnLeave", function() 
+			if (self.frame:GetScript("OnLeave")) then
+				self.frame:GetScript("OnLeave")(self.frame)
+			end
+		end)
+	end
+
+	-- lock ui movement again
+	function mover:lock()
+		self:SetAlpha(0)
+		self.text:Hide()
+		self.locked = true
+		self.selected = false
+
+		self:SetScript("OnEnter", noop)
+		self:SetScript("OnLeave", noop)
+		self:SetScript("OnDragStart", noop)
+		self:SetScript("OnDragStop", noop)
+		self:SetScript("OnClick", noop)
+
+		self:SetMouseMotionEnabled(false)
+		self:SetMouseClickEnabled(false)
+		self:SetFrameStrata("BACKGROUND")
+		self:SetMovable(false)
+		self:EnableMouse(false)
+		
+		self:save()
+	end
+
+	function mover:save()
 		-- save in saved variables
 		local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
 		if (not relativeTo) then relativeTo = UIParent end
 		relativeTo = relativeTo:GetName()
 
 		lib.save.positions[self.rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
-	end,
-	['lock'] = function(self)
-		self:SetAlpha(0)
-		self.text:Hide()
-		self.locked = true
-		self:EnableMouse(false)
-		self:SetUserPlaced(false)
-		self:SetMovable(false)
-		self:SetFrameStrata("BACKGROUND")
-		self:SetScript("OnDragStart", noop)
-		self:SetScript("OnDragStop", noop)
+	end
 
-		self:save()
-	end,
+	
 	-- position save in saved variables (protects against lost positions during UI errors)
-	['position'] = function(self)
+	function mover:position()
 		self:ClearAllPoints()
 		local point, relativeTo, relativePoint, xOfs, yOfs = self.frame:GetPoint()
 		relativeTo = _G[relativeTo] or relativeTo:GetName()
@@ -135,100 +392,21 @@ local methods = {
 		self.frame:ClearAllPoints()
 		self.frame:SetPoint("CENTER", self, "CENTER", 0, 0)
 	end
-}
-
---========================================================
--- Mover
---========================================================
-function lib:set_moveable(frame, rename, left, top, right, bottom)
-	if (not lib.save) then print("lib needs SavedVariable to save positions. Use lib:set_save(sv_string)") return end
-	rename = rename or frame:GetName()
-
-	left = left or lib.border
-	top = top or lib.border
-	right = right or left or lib.border
-	bottom = bottom or top or lib.border
-
-	-- get dimensions
-	local height = frame:GetHeight()
-	local width = frame:GetWidth()
-	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
-	if (not relativeTo) then return end
-	relativeTo = _G[relativeTo] or relativeTo:GetName()
-
-	-- frame:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})
-	-- frame:SetBackdropColor(0,0.2,0,.4)
-
-	-- Create Mover Parent
-	local mover = CreateFrame("frame", rename, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-	mover:EnableMouse(false)
-	mover:SetSize(width + (right + left), height + (top + bottom))
-	mover:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})
-	mover:SetBackdropColor(0,0,0,.6)
-	mover:SetBackdropBorderColor(unpack(lib.media.border))
-	mover:SetFrameStrata("BACKGROUND")
-	mover:SetClampedToScreen(true)
-	mover:SetAlpha(0)
-	mover:EnableMouse(false)
-	mover:SetMovable(false)
-	mover.locked = true
-	
-	-- Text Label
-	mover.text = mover:CreateFontString(mover:GetName().."_Text")
-	mover.text:SetFont(lib.media.font, 14, "OUTLINE")
-	mover.text:SetPoint("CENTER", mover, "CENTER", 0, 0)
-	mover.text:SetText(rename)
-	mover.text:SetJustifyH("CENTER")
-	mover.text:SetAlpha(0.8)
-	mover.text:Hide()
-
-	local function resize()
-		local height = frame:GetHeight()
-		local width = frame:GetWidth()
-
-		-- print(frame:GetWidth(), frame:GetEffectiveScale(), frame:GetWidth() * frame:GetEffectiveScale())
-
-		mover:SetSize(width + 2 + lib.border, height + 2 + lib.border)
-	end
-
-	-- Sizing
-	hooksecurefunc(frame, "SetSize", resize)
-	hooksecurefunc(frame, "SetScale", resize)
-
-	-- Transfer Methods to this object
-	frame.mover = mover
-	mover.frame = frame
-	mover.rename = rename
-	Mixin(mover, methods)
-
-	-- nudge controls
-	mover:SetScript("OnEnter", function(self)
-		lib:attach_controls(self)
-	end)
-	mover:SetScript("OnLeave", function(self)
-		if (not MouseIsOver(lib.controls)) then
-			lib.controls:Hide()
-		end
-	end)
-
-	mover:RegisterEvent("PLAYER_ENTERING_WORLD")
-	mover:SetScript("OnEvent", function()
-		mover:EnableMouse(false)
-		mover:SetMovable(false)
-	end)
 
 	-- position
 	mover:position()
 
-	table.insert(lib.moveable_frames, mover)
+	table.insert(lib.movers, mover)
 end
 
 function lib:toggle_lock()
 	if (lib.unlocked) then
 		-- lock
+		lib.bumper:Hide()
 		lib.unlocked = false
 		lib.align:Hide()
-		for k, frame in pairs(lib.moveable_frames) do
+		for k, frame in pairs(lib.movers) do
+			frame:deselect()
 			frame:lock()
 		end
 	else
@@ -239,7 +417,8 @@ function lib:toggle_lock()
 		-- unlock
 		lib.unlocked = true
 		lib.align:Show()
-		for k, frame in pairs(lib.moveable_frames) do
+		for k, frame in pairs(lib.movers) do
+			frame:deselect()
 			frame:unlock()
 		end
 	end
@@ -255,6 +434,7 @@ end
 lib.align = CreateFrame('Frame', nil, UIParent) 
 lib.align:SetAllPoints(UIParent)
 lib.align:Hide()
+lib.align:SetAlpha(0.5)
 local grid_x = 32
 local grid_y = 18
 local w = GetScreenWidth() / grid_x
@@ -264,7 +444,7 @@ for i = 0, grid_x do
 	if i == grid_x / 2 then
 		t:SetColorTexture(unpack(lib.media.border))
 	else
-		t:SetColorTexture(1, 1, 1, 0.1)
+		t:SetColorTexture(1, 1, 1, 0.2)
 	end
 	t:SetPoint('TOPLEFT', lib.align, 'TOPLEFT', i * w - 1, 0)
 	t:SetPoint('BOTTOMRIGHT', lib.align, 'BOTTOMLEFT', i * w + 1, 0)
@@ -274,165 +454,10 @@ for i = 0, grid_y do
 	if i == grid_y / 2 then
 		t:SetColorTexture(unpack(lib.media.border))
 	else
-		t:SetColorTexture(1, 1, 1, 0.15)
+		t:SetColorTexture(1, 1, 1, .2)
 	end
 	t:SetPoint('TOPLEFT', lib.align, 'TOPLEFT', 0, -i * h + 1)
 	t:SetPoint('BOTTOMRIGHT', lib.align, 'TOPRIGHT', 0, -i * h - 1)
-end
-
---========================================================
--- Controls
---========================================================
-lib.controls = CreateFrame("frame", nil, bdParent)
-lib.controls:SetPoint("CENTER", UIParent)
-lib.controls:SetSize(110, 22)
-lib.controls:SetFrameStrata("TOOLTIP")
-lib.controls:SetFrameLevel(129)
-lib.controls:Hide()
-lib.controls:SetScript("OnLeave", function(self)
-	if (MouseIsOver(self)) then return end
-	if (not self._frame) then
-		self:Hide()
-	elseif (not MouseIsOver(self._frame)) then
-		self:Hide()
-	end
-end)
-
-local function create_nudge_button(moveX, moveY, callback)
-	local controls = lib.controls
-	moveX = moveX or 0
-	moveY = moveY or 0
-
-	local button = CreateFrame("button", nil, controls, BackdropTemplateMixin and "BackdropTemplate")
-	button:SetSize(36, 36)
-	button:SetBackdrop({bgFile = lib.media.flat})
-	button:SetBackdropColor(0,0,0,1)
-	button.controls = controls
-
-	-- l, r, t, b
-	button.tex = button:CreateTexture(nil, "OVERLAY")
-	button.tex:SetTexture(lib.media.arrow)
-	button.tex:SetPoint("CENTER")
-	button.tex:SetSize(15, 15)
-	button.tex:SetDesaturated(1)
-
-
-	button:SetScript("OnEnter", function(self)
-		self.tex:SetDesaturated(false)
-	end)
-	button:SetScript("OnLeave", function(self)
-		self.tex:SetDesaturated(1)
-	end)
-
-	-- default callback
-	callback = callback or function(self)
-		local frame = self.controls._frame
-		if (not frame) then print("no frame") return end
-		local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
-		if (IsShiftKeyDown()) and IsControlKeyDown() then
-			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(moveX*20), yOfs+(moveY*20))
-		elseif (IsShiftKeyDown()) then
-			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(moveX*5), yOfs+(moveY*5))
-		else
-			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(moveX*1), yOfs+(moveY*1))
-		end
-		frame:save()
-	end
-
-	button:SetScript("OnClick", callback)
-
-	-- automatically position
-	if (controls.last) then
-		button:SetPoint("LEFT", controls.last, "RIGHT", 2, 0)
-	else
-		button:SetPoint("LEFT", controls, "LEFT", 2, 0)
-	end
-
-	controls.last = button
-
-	return button
-end
-
--- left
-lib.controls.left = create_nudge_button(-1, 0)
-lib.controls.left.tex:SetRotation(3.14159)
-
--- up
-lib.controls.up = create_nudge_button(0, 1)
-lib.controls.up.tex:SetRotation(1.5708)
-
--- down
-lib.controls.down = create_nudge_button(0, -1)
-lib.controls.down.tex:SetRotation(-1.5708)
-
--- right
-lib.controls.right = create_nudge_button(1, 0)
-lib.controls.right.tex:SetRotation(0)
-
--- center horizontal
-lib.controls.center_h = create_nudge_button(nil, nil, function(self)
-	local frame = self.controls._frame
-	if (not frame) then return end
-	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
-	local width, height = frame:GetSize()
-	local s_width, s_height = GetScreenWidth(), GetScreenHeight()
-
-	frame:ClearAllPoints()
-	if (point == "LEFT" or point == "TOPLEFT" or point == "BOTTOMLEFT") then
-		frame:SetPoint(point, UIParent, point, ((s_width / 2) - (width / 2)), yOfs)
-	elseif (point == "CENTER" or point == "TOP" or point == "BOTTOM") then
-		frame:SetPoint(point, UIParent, point, 0, yOfs)
-	elseif (point == "RIGHT" or point == "TOPRIGHT" or point == "BOTTOMRIGHT") then
-		frame:SetPoint(point, UIParent, point, -((s_width / 2) - (width / 2)), yOfs)
-	end
-
-	frame:save()
-end)
-
-lib.controls.center_h.tex:SetTexture(lib.media.align)
-lib.controls.center_h.tex:SetRotation(1.5708)
-lib.controls.center_h.tex:SetSize(18, 18)
-
--- center vertically
-lib.controls.center_v = create_nudge_button(nil, nil, function(self)
-	local frame = self.controls._frame
-	if (not frame) then return end
-	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
-	local width, height = frame:GetSize()
-	local s_width, s_height = GetScreenWidth(), GetScreenHeight()
-
-	yOfs = ((s_height / 2) - (height / 2))
-
-	frame:ClearAllPoints()
-	if (point == "TOPLEFT" or point == "TOP" or point == "TOPRIGHT") then
-		frame:SetPoint(point, UIParent, point, xOfs, -yOfs)
-	elseif (point == "LEFT" or point == "CENTER" or point == "RIGHT") then
-		frame:SetPoint(point, UIParent, point, xOfs, 0)
-	elseif (point == "BOTTOMLEFT" or point == "BOTTOM" or point == "BOTTOMRIGHT") then
-		frame:SetPoint(point, UIParent, point, xOfs, yOfs)
-	end
-	
-	frame:save()
-end)
-
-lib.controls.center_v.tex:SetTexture(lib.media.align)
-lib.controls.center_v.tex:SetSize(18, 18)
-
-function lib:attach_controls(frame)
-	if (frame.locked) then 
-		lib.controls:Hide()
-		return
-	end
-
-	local quad, y, h = GetQuadrant(frame)
-	lib.controls._frame = frame
-	lib.controls:Show()
-	lib.controls:ClearAllPoints()
-	if (y == "TOP") then
-		lib.controls:SetPoint("TOP", frame, "BOTTOM", 0, 0)
-	else
-		lib.controls:SetPoint("BOTTOM", frame, "TOP", 0, 0)
-	end
 end
 
 

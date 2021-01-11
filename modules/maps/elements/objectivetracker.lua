@@ -9,7 +9,7 @@ function mod:create_objective_tracker()
 
 	local quest_anchor = CreateFrame("frame", "bdObjectiveFrame", bdParent)
 	quest_anchor:SetSize(160 * config.scale, 50)
-	quest_anchor:SetPoint("TOP", Minimap.background, "BOTTOM", 0, -50)
+	quest_anchor:SetPoint("TOP", Minimap, "BOTTOM", 0, -50)
 	bdMove:set_moveable(quest_anchor, "Objective Tracker")
 
 	Minimap.qa = quest_anchor
@@ -24,7 +24,7 @@ function mod:create_objective_tracker()
 		ignore_point = false
 
 		DurabilityFrame:ClearAllPoints()
-		DurabilityFrame:SetPoint("BOTTOMRIGHT", Minimap.background, "BOTTOMLEFT", -20, 0)
+		DurabilityFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -20, 0)
 	end
 
 	local f = CreateFrame("Frame")

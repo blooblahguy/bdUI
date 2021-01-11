@@ -12,6 +12,8 @@ local is_whitelisted = function(self, name, spellID, castByMe, isBossDebuff, nam
 	-- auras = auras or mod.config
 	name = name:lower()
 
+	
+
 	-- whitelisted if in raid
 	if (bdUI:is_whitelist_raid(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return true
@@ -42,7 +44,7 @@ local is_blacklisted = function(self, name, spellID, castByMe, isBossDebuff, nam
 	-- auras = auras or mod.config
 	name = name:lower()
 
-	if (auras and auras["blacklist"][name]) then	
+	if (auras and auras["blacklist"][name]) then
 		return true
 	end
 
@@ -71,7 +73,13 @@ local is_whitelist_mine = function(self, name, spellID, castByMe, isBossDebuff, 
 	-- auras = auras or mod.config
 	name = name:lower()
 
-	if (auras and auras["mine"][name] and castByMe) then
+	-- print(name, auras["mine"][name])
+	-- if (castByMe) then
+	-- end
+
+	-- print(auras["mine"], name)
+
+	if (auras and auras["mine"] and auras["mine"][name] and castByMe) then
 		return true
 	end
 	
@@ -110,12 +118,12 @@ local is_whitelist_raid = function(self, name, spellID, castByMe, isBossDebuff, 
 end
 
 -- bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
-bdUI.is_whitelisted = memoize(is_whitelisted, bdUI.caches.auras)
-bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
-bdUI.is_whitelist_nameplate = memoize(is_whitelist_nameplate, bdUI.caches.auras)
-bdUI.is_whitelist_mine = memoize(is_whitelist_mine, bdUI.caches.auras)
-bdUI.is_whitelist_class = memoize(is_whitelist_class, bdUI.caches.auras)
-bdUI.is_whitelist_raid = memoize(is_whitelist_raid, bdUI.caches.auras)
+bdUI.is_whitelisted = memoize(is_whitelisted, bdUI.caches.auras.white)
+bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras.black)
+bdUI.is_whitelist_nameplate = memoize(is_whitelist_nameplate, bdUI.caches.auras.nameplate)
+bdUI.is_whitelist_mine = is_whitelist_mine --, bdUI.caches.auras.mine)
+bdUI.is_whitelist_class = is_whitelist_class --, bdUI.caches.auras.class)
+bdUI.is_whitelist_raid = is_whitelist_raid --, bdUI.caches.auras.raid)
 
 --===============================================
 -- Intelligent Filtering

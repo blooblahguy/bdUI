@@ -21,4 +21,6 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 - add expressway font
 - advanced text formatting options on unitframes
 - add chat tab keybinds
+- BW Font fix
+- Chat fixes
 <!-- - threat plate if another tank has threat -->

@@ -65,9 +65,9 @@ function mod:position_button_frame()
 				row = f
 			elseif (row_width > minimap_width) then
 				if (config.buttonpos == "BOTTOM") then
-					f:SetPoint("TOPLEFT", row, "BOTTOMLEFT", 0, -(bdUI.border * 3))
-				else
 					f:SetPoint("BOTTOMLEFT", row, "TOPLEFT", 0, (bdUI.border * 3))
+				else
+					f:SetPoint("TOPLEFT", row, "BOTTOMLEFT", 0, -(bdUI.border * 3))
 				end
 				
 				row = f
