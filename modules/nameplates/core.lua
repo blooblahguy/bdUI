@@ -87,10 +87,10 @@ function mod:config_callback()
 	local small = math.max(config.height * 0.6, config.height - 20)
 	local castbar = math.max(config.castbarheight * 0.74, config.castbarheight - 20)
 
-	mod.font:SetFontObject(bdUI:get_font(config.enemynamesize))
-	mod.font_small:SetFontObject(bdUI:get_font(small))
-	mod.font_castbar:SetFontObject(bdUI:get_font(castbar))
-	mod.font_friendly:SetFontObject(bdUI:get_font(config.friendlynamesize))
+	mod.font = bdUI:get_font(config.enemynamesize)
+	mod.font_small = bdUI:get_font(small)
+	mod.font_castbar = bdUI:get_font(castbar)
+	mod.font_friendly = bdUI:get_font(config.friendlynamesize)
 
 	if (InCombatLockdown()) then return end
 	-- set cVars
