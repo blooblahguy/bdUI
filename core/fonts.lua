@@ -20,25 +20,25 @@ function bdUI:get_font(size, outline)
 end
 
 -- update the objects that the ui uses
-function bdUI:update_fonts()
-	for key, font in pairs(bdUI.fonts) do
-		local size, outline = strsplit("_", key)
-		if (outline == "NONE") then outline = nil end
+-- function bdUI:update_fonts()
+-- 	for key, font in pairs(bdUI.fonts) do
+-- 		local size, outline = strsplit("_", key)
+-- 		if (outline == "NONE") then outline = nil end
 
-		local config_font = bdUI:get_module("General"):get_save().font
+-- 		local config_font = bdUI:get_module("General"):get_save().font
 
-		font:SetFont(config_font, tonumber(size), outline)
-	end
-end
+-- 		font:SetFont(config_font, tonumber(size), outline)
+-- 	end
+-- end
 
--- font changed or initialized
-bdUI:add_action("profile_change,bdUI/fonts", function()
-	bdUI.media.font = bdUI:get_module("General"):get_save().font
-	bdUI.media.font = bdUI.shared:Fetch("font", bdUI.media.font)
+-- -- font changed or initialized
+-- bdUI:add_action("profile_change,bdUI/fonts", function()
+-- 	bdUI.media.font = bdUI:get_module("General"):get_save().font
+-- 	bdUI.media.font = bdUI.shared:Fetch("font", bdUI.media.font)
 
-	bdUI.update_fonts()
-	bdUI:change_fonts()
-end)
+-- 	bdUI.update_fonts()
+-- 	bdUI:change_fonts()
+-- end)
 
 -- when fonts are ready, run this event
 local sharedmedia = CreateFrame("frame", nil, bdParent)

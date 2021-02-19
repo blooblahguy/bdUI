@@ -51,10 +51,10 @@ local config = {
 			},
 			{
 				key = "textlocation",
-				value = "Outside",
+				value = "Minimal",
 				type = "select",
-				options = {"Outside", "Inside"},
-				label = "Text Location"
+				options = {"Outside", "Inside", "Minimal"},
+				label = "Text Display"
 			},
 			{
 				key = "aurastyle",

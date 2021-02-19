@@ -30,7 +30,7 @@ function bdUI:change_fonts()
 	if (not config.change_fonts) then return end
 	-- if (not c.persistent.bdAddons.changefonts) then return end
 
-	local font = config.font--bdUI:getMedia("font", c.persistent.bdAddons.font )
+	local font = bdUI.media.font --config.font--bdUI:getMedia("font", c.persistent.bdAddons.font )
 
 	local NORMAL = font
 	local COMBAT = font

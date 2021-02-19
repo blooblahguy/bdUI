@@ -38,7 +38,7 @@ local config = {
 			{
 				key = "shape",
 				type = "select",
-				value = "Rectangle",
+				value = "Square",
 				options = {"Rectangle", "Square"},
 				label = "Minimap Shape"
 			}

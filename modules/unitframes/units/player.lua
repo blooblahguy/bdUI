@@ -32,6 +32,7 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.resting(self, unit)
 	mod.additional_elements.combat(self, unit)
 	mod.additional_elements.aurabars(self, unit)
+	mod.additional_elements.perhp(self, unit)
 
 	self.Buffs.CustomFilter = buff_filter
 	self.AuraBars.CustomFilter = buff_filter
@@ -51,6 +52,13 @@ mod.custom_layout["player"] = function(self, unit)
 			mod.align_text(self)
 			self.Name:Show()
 			self.Curhp:Show()
+		end
+
+		if (config.textlocation == "Minimal") then
+			self.Perhp:ClearAllPoints()
+			self.Perpp:ClearAllPoints()
+			self.Perhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
+			self.Perpp:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
 		end
 
 		-- auras

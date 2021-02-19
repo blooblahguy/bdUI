@@ -15,7 +15,7 @@ mod.additional_elements.perhp = function(self, unit)
 	self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
 
 	self:RegisterEvent("UNIT_POWER_UPDATE", function(self)
-		self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
+		-- self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
 	end, true)
 
 	self:Tag(self.Perhp, '[perhp]')
