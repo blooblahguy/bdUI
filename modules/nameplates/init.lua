@@ -75,7 +75,7 @@ local config = {
 			{
 				key = "width",
 				type = "range",
-				value = 200,
+				value = 194,
 				min = 30,
 				max = 250,
 				step = 2,
@@ -84,7 +84,7 @@ local config = {
 			{
 				key = "height",
 				type = "range",
-				value = 22,
+				value = 26,
 				min = 4,
 				max = 50,
 				step = 2,
@@ -286,10 +286,10 @@ local config = {
 			{
 				key = "hpoffset",
 				type = "range",
-				value = 6,
+				value = -7,
 				min = -20,
 				max = 20,
-				step = 2,
+				step = 1,
 				label = "HP Text offset",
 			},
 			{

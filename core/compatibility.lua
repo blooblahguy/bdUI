@@ -16,6 +16,7 @@ if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 	ATTACK_BUTTON_FLASH_TIME = ATTACK_BUTTON_FLASH_TIME or 0.4
 
 	-- functions
+	IsActiveBattlefieldArena = IsActiveBattlefieldArena or noop
 	CanExitVehicle = CanExitVehicle or noop
 	SetSortBagsRightToLeft = SetSortBagsRightToLeft or noop
 	UnitGroupRolesAssigned = UnitGroupRolesAssigned or noop
@@ -30,6 +31,8 @@ if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
 	GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 
 	-- frames
+	SpellFlyout = SpellFlyout or noob
+	ClassNameplateManaBarFrame = TalentMicroButtonAlert or noob
 	TalentMicroButtonAlert = TalentMicroButtonAlert or noob
 	ChatFrameMenuButton = ChatFrameMenuButton or noob
 	QuickJoinToastButton = QuickJoinToastButton or noob

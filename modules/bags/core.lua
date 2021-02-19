@@ -278,7 +278,7 @@ function mod:skin(frame)
 	icon:SetPoint("BOTTOMRIGHT", frame, -2, 2)
 	icon:SetTexCoord(.1, .9, .1, .9)
 	
-	cooldown:GetRegions():SetFontObject(getUI:get_font(14))
+	cooldown:GetRegions():SetFontObject(bdUI:get_font(14))
 	cooldown:GetRegions():SetJustifyH("Center")
 	cooldown:GetRegions():ClearAllPoints()
 	cooldown:GetRegions():SetAllPoints(cooldown)

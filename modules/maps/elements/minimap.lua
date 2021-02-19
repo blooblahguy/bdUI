@@ -52,10 +52,18 @@ function mod:create_minimap()
 	
 	-- fixes texture issue with non round minimaps
 	Minimap:EnableMouse(true)
-	Minimap:SetQuestBlobRingAlpha(0)
-	Minimap:SetArchBlobRingAlpha(0)
-	Minimap:SetArchBlobRingScalar(0);
-	Minimap:SetQuestBlobRingScalar(0);
+	if (Minimap.SetQuestBlobRingAlpha) then	
+		Minimap:SetQuestBlobRingAlpha(0)
+	end
+	if (Minimap.SetArchBlobRingAlpha) then	
+		Minimap:SetArchBlobRingAlpha(0)
+	end
+	if (Minimap.SetArchBlobRingScalar) then	
+		Minimap:SetArchBlobRingScalar(0)
+	end
+	if (Minimap.SetQuestBlobRingScalar) then	
+		Minimap:SetQuestBlobRingScalar(0)
+	end
 	MinimapCluster:EnableMouse(false)
 	MiniMapInstanceDifficulty:ClearAllPoints()
 	MiniMapInstanceDifficulty:SetPoint("TOPRIGHT", Minimap.background, "TOPRIGHT", -2, -2)

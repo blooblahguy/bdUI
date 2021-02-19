@@ -207,17 +207,19 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
 	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("MAIL_CLOSED")
-	Minimap.buttonFrame:RegisterEvent("GARRISON_SHOW_LANDING_PAGE");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_HIDE_LANDING_PAGE");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATED");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_ARCHITECT_OPENED");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_FINISHED");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_NPC_OPENED");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_OPENED");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_AVAILABLE");
-	Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_UNAVAILABLE");
-	Minimap.buttonFrame:RegisterEvent("SHIPMENT_UPDATE");
+	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+		Minimap.buttonFrame:RegisterEvent("GARRISON_SHOW_LANDING_PAGE");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_HIDE_LANDING_PAGE");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATED");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_ARCHITECT_OPENED");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_FINISHED");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_NPC_OPENED");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_OPENED");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_AVAILABLE");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_UNAVAILABLE");
+		Minimap.buttonFrame:RegisterEvent("SHIPMENT_UPDATE");
+	end
 	Minimap.buttonFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 	Minimap.buttonFrame:RegisterEvent("ZONE_CHANGED");
 	Minimap.buttonFrame:RegisterEvent("ZONE_CHANGED_INDOORS");

@@ -25,7 +25,9 @@ function bdUI:update_fonts()
 		local size, outline = strsplit("_", key)
 		if (outline == "NONE") then outline = nil end
 
-		font:SetFont(bdUI.media.font, tonumber(size), outline)
+		local config_font = bdUI:get_module("General"):get_save().font
+
+		font:SetFont(config_font, tonumber(size), outline)
 	end
 end
 
