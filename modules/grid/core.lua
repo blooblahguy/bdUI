@@ -334,11 +334,6 @@ local function layout(self, unit)
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 		bdUI:set_backdrop(button)
 	end
-
-	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-	end
 	
 	-- special spell alerts
 	self.Glow = CreateFrame("frame", "glow", self.Health)
@@ -419,9 +414,6 @@ local function layout(self, unit)
 		nameplateShowAll = nameplateShowAll or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		-- for classic
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expirationTime)
-
 		return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 
@@ -447,9 +439,6 @@ local function layout(self, unit)
 	end
 
 	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		-- for classic
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-
 		-- color borders of debuffs
 		if (dispelColors[debuffType]) then
 			button._border:SetVertexColor(unpack(dispelColors[debuffType]))

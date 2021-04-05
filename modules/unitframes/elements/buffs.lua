@@ -23,10 +23,6 @@ mod.additional_elements.buffs = function(self, unit)
 
 		-- for blacklisting
 		button.spell = name
-
-		-- classic
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-
 	end
 	self.Buffs.PostCreateIcon = function(buffs, button)
 		bdUI:set_backdrop_basic(button)

@@ -13,11 +13,6 @@ bdMove = LibStub("bdMove-1.0")
 
 LibStub("AceHook-3.0"):Embed(bdUI)
 
--- library initialization
-if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then
-	bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
-end
-
 -- Load bdConfig
 ns.bdConfig.media.font = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf"
 ns.bdConfig.media.font_bold = "Interface\\Addons\\"..addonName.."\\media\\PTSansNarrow.ttf"

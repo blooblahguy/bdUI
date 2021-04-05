@@ -133,12 +133,12 @@ local filter_aura = function(self, name, spellID, castByMe, isBossDebuff, namepl
 	name = name:lower()
 	-- print(name)
 
-	if (is_blacklisted(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+	if (bdUI.is_blacklisted(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return false
 	end
 
-	return is_whitelisted(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+	return bdUI.is_whitelisted(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 end
 
--- bdUI.filter_aura = memoize(filter_aura, bdUI.caches.auras)
-bdUI.filter_aura = filter_aura
+bdUI.filter_aura = memoize(filter_aura, bdUI.caches.auras)
+-- bdUI.filter_aura = filter_aura

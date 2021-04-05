@@ -519,8 +519,6 @@ local function nameplate_create(self, unit)
 	self.Auras.PostUpdateIcon = function(self, unit, button, index, position)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
 
-		duration, expiration = bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-
 		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
 		if (config.highlightPurge and isStealable) then -- purge alert
 			button._border:SetVertexColor(unpack(config.purgeColor))

@@ -18,7 +18,7 @@ function mod:create_objective_tracker()
 		local tracker = ObjectiveTrackerFrame
 		tracker:ClearAllPoints()
 		ignore_point = true
-		tracker:SetPoint("TOPLEFT", quest_anchor, "TOPLEFT", -10, 0)
+		tracker:SetPoint("TOPLEFT", quest_anchor, "TOPLEFT", -30, 0)
 		local bottom = quest_anchor:GetBottom() * bdUI.scale
 		tracker:SetHeight(bottom - 100)
 		ignore_point = false

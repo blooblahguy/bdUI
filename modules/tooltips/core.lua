@@ -196,8 +196,8 @@ end
 --=========================================
 -- Main tooltip hook
 --=========================================
-local function update_tootlip(self)
-	if (self:IsForbidden()) then return end -- don't mess with forbidden frames, which sometimes randomly happens
+local function update_unit_tooltip(self)
+	if (self:IsForbidden() or self:IsProtected()) then return end -- don't mess with forbidden frames, which sometimes randomly happens
 	local name, unit = self:GetUnit()
 	unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
 
@@ -205,14 +205,14 @@ local function update_tootlip(self)
 	self.ilvl = nil
 	self.spec = nil
 
+	-- replace tooltip information
+	replace_tooltip_lines(self, unit)
+
 	-- skin healthbars
 	update_healthbars(self, unit)
 
 	-- extra tooltip information
-	extra_tooltip_info(self, unit)
-
-	-- replace tooltip information
-	replace_tooltip_lines(self, unit)
+	extra_tooltip_info(self, unit)	
 
 	-- dynamic tooltip functions
 	dynamic_tooltip_information(self, unit)
@@ -267,7 +267,7 @@ function mod:create_tooltips()
 	---------------------------------------------------------------------
 	-- hook main styling functions
 	---------------------------------------------------------------------
-	GameTooltip:HookScript('OnTooltipSetUnit', update_tootlip)
+	GameTooltip:HookScript('OnTooltipSetUnit', update_unit_tooltip)
 	mod:RegisterEvent("PLAYER_LOGIN")
 	mod:SetScript("OnEvent", function()
 		if (LibDBIconTooltip) then

@@ -17,9 +17,6 @@ lib\ace\AceLocale-3.0.lua
 core\locales\enUS.lua
 core\locales\deDE.lua
 
-# For all versions of game
-core\compatibility.lua
-
 # Ace
 lib\ace\utf8data.lua
 lib\ace\utf8.lua
@@ -44,6 +41,9 @@ lib\classic\LibClassicCasterino\LibClassicCasterino.lua
 lib\classic\LibClassicDurations\LibClassicDurations.xml
 lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
 lib\classic\LibHealComm\LibHealComm-4.0.lua
+
+# For all versions of game
+core\classic.lua
 
 # oUF
 lib\oUF\oUF.xml
@@ -203,6 +203,7 @@ modules\nameplates\elements\castbar.lua
 # Tooltips
 modules\tooltips\init.lua
 modules\tooltips\functions.lua
+modules\tooltips\extend.lua
 modules\tooltips\core.lua
 modules\tooltips\elements\tooltipcolor.lua
 modules\tooltips\elements\namehover.lua

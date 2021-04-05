@@ -19,7 +19,17 @@ Usage example 1:
 --]================]
 if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 
-local MAJOR, MINOR = "LibClassicDurations", 44
+local apiLevel = math.floor(select(4,GetBuildInfo())/10000)
+local isClassic = apiLevel <= 2
+local isBC = apiLevel == 2
+
+if isBC then
+    -- lib.UnitAuraDirect = _G.UnitAura
+    -- lib.UnitAuraWrapper = _G.UnitAura
+    return
+end
+
+local MAJOR, MINOR = "LibClassicDurations", 66
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -76,6 +86,8 @@ local GetTime = GetTime
 local tinsert = table.insert
 local unpack = unpack
 local GetAuraDurationByUnitDirect
+local GetGUIDAuraTime
+local time = time
 
 if lib.enableEnemyBuffTracking == nil then lib.enableEnemyBuffTracking = false end
 local enableEnemyBuffTracking = lib.enableEnemyBuffTracking
@@ -111,6 +123,7 @@ lib.AddAura = function(id, opts)
     end
 
     local spellName = GetSpellInfo(lastRankID)
+    if not spellName then return end
     spellNameToID[spellName] = lastRankID
 
     if type(id) == "table" then
@@ -176,12 +189,12 @@ end
 -- OLD GUIDs PURGE
 --------------------------
 
-local function purgeOldGUIDs()
-    local now = GetTime()
+local function purgeOldGUIDsArgs(dataTable, accessTimes)
+    local now = time()
     local deleted = {}
-    for guid, lastAccessTime in pairs(guidAccessTimes) do
+    for guid, lastAccessTime in pairs(accessTimes) do
         if lastAccessTime + PURGE_THRESHOLD < now then
-            guids[guid] = nil
+            dataTable[guid] = nil
             nameplateUnitMap[guid] = nil
             buffCacheValid[guid] = nil
             buffCache[guid] = nil
@@ -191,10 +204,59 @@ local function purgeOldGUIDs()
         end
     end
     for _, guid in ipairs(deleted) do
-        guidAccessTimes[guid] = nil
+        accessTimes[guid] = nil
     end
 end
-lib.purgeTicker = lib.purgeTicker or C_Timer.NewTicker( PURGE_INTERVAL, purgeOldGUIDs)
+
+local function purgeOldGUIDs()
+    purgeOldGUIDsArgs(guids, guidAccessTimes)
+end
+if lib.purgeTicker then
+    lib.purgeTicker:Cancel()
+end
+lib.purgeTicker = C_Timer.NewTicker( PURGE_INTERVAL, purgeOldGUIDs)
+
+------------------------------------
+-- Restore data if using standalone
+f:RegisterEvent("PLAYER_LOGIN")
+function f:PLAYER_LOGIN()
+    if LCD_Data and LCD_GUIDAccess then
+        purgeOldGUIDsArgs(LCD_Data, LCD_GUIDAccess)
+
+        local function MergeTable(t1, t2)
+            if not t2 then return false end
+            for k,v in pairs(t2) do
+                if type(v) == "table" then
+                    if t1[k] == nil then
+                        t1[k] = CopyTable(v)
+                    else
+                        MergeTable(t1[k], v)
+                    end
+                else
+                    t1[k] = v
+                end
+            end
+            return t1
+        end
+
+        local curSessionData = lib.guids
+        lib.guids = LCD_Data
+        guids = lib.guids -- update upvalue
+        MergeTable(guids, curSessionData)
+
+        local curSessionAccessTimes = lib.guidAccessTimes
+        lib.guidAccessTimes = LCD_GUIDAccess
+        guidAccessTimes = lib.guidAccessTimes -- update upvalue
+        MergeTable(guidAccessTimes, curSessionAccessTimes)
+    end
+
+    f:RegisterEvent("PLAYER_LOGOUT")
+    function f:PLAYER_LOGOUT()
+        LCD_Data = guids
+        LCD_GUIDAccess = guidAccessTimes
+    end
+end
+
 
 --------------------------
 -- DIMINISHING RETURNS
@@ -214,18 +276,18 @@ local function addDRLevel(dstGUID, category)
 
     local catTable = guidTable[category]
     if not catTable then
-        guidTable[category] = {}
+        guidTable[category] = { level = 0, expires = 0}
         catTable = guidTable[category]
     end
 
     local now = GetTime()
     local isExpired = (catTable.expires or 0) <= now
-    if isExpired then
-        catTable.level = 1
-        catTable.expires = now + DRResetTime
-    else
-        catTable.level = catTable.level + 1
+    local oldDRLevel = catTable.level
+    if isExpired or oldDRLevel >= 3 then
+        catTable.level = 0
     end
+    catTable.level = catTable.level + 1
+    catTable.expires = now + DRResetTime
 end
 local function clearDRs(dstGUID)
     DRInfo[dstGUID] = nil
@@ -311,7 +373,7 @@ local function cleanDuration(duration, spellID, srcGUID, comboPoints)
     return duration
 end
 
-local function RefreshTimer(srcGUID, dstGUID, spellID)
+local function GetSpellTable(srcGUID, dstGUID, spellID)
     local guidTable = guids[dstGUID]
     if not guidTable then return end
 
@@ -325,9 +387,16 @@ local function RefreshTimer(srcGUID, dstGUID, spellID)
         applicationTable = spellTable
     end
     if not applicationTable then return end
+    return applicationTable
+end
 
-    applicationTable[2] = GetTime() -- set start time to now
-    return true
+local function RefreshTimer(srcGUID, dstGUID, spellID, overrideTime)
+    local applicationTable = GetSpellTable(srcGUID, dstGUID, spellID)
+    if not applicationTable then return end
+
+    local oldStartTime = applicationTable[2]
+    applicationTable[2] = overrideTime or GetTime() -- set start time to now
+    return true, oldStartTime
 end
 
 local function SetTimer(srcGUID, dstGUID, dstName, dstFlags, spellID, spellName, opts, auraType, doRemove)
@@ -407,7 +476,7 @@ local function SetTimer(srcGUID, dstGUID, dstName, dstFlags, spellID, spellName,
     end
     applicationTable[4] = comboPoints
 
-    guidAccessTimes[dstGUID] = now
+    guidAccessTimes[dstGUID] = time()
 end
 
 local function FireToUnits(event, dstGUID)
@@ -431,7 +500,7 @@ end
 local eventSnapshot
 castLog.SetLastCast = function(self, srcGUID, spellID, timestamp)
     self[srcGUID] = { spellID, timestamp }
-    guidAccessTimes[srcGUID] = timestamp
+    guidAccessTimes[srcGUID] = time()
 end
 castLog.IsCurrent = function(self, srcGUID, spellID, timestamp, timeWindow)
     local entry = self[srcGUID]
@@ -450,16 +519,19 @@ function f:COMBAT_LOG_EVENT_UNFILTERED(event)
     return self:CombatLogHandler(CombatLogGetCurrentEventInfo())
 end
 
-local function ProcIndirectRefresh(eventType, spellName, srcGUID, srcFlags, dstGUID, dstFlags, dstName)
+local rollbackTable = setmetatable({}, { __mode="v" })
+local function ProcIndirectRefresh(eventType, spellName, srcGUID, srcFlags, dstGUID, dstFlags, dstName, isCrit)
     if indirectRefreshSpells[spellName] then
-        local refreshTable = indirectRefreshSpells[spellName]
+        local targetSpells = indirectRefreshSpells[spellName]
+
+        for targetSpellID, refreshTable in pairs(targetSpells) do
         if refreshTable.events[eventType] then
-            local targetSpellID = refreshTable.targetSpellID
+
 
             local condition = refreshTable.condition
             if condition then
                 local isMine = bit_band(srcFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) == COMBATLOG_OBJECT_AFFILIATION_MINE
-                if not condition(isMine) then return end
+                if not condition(isMine, isCrit) then return end
             end
 
             if refreshTable.targetResistCheck then
@@ -476,10 +548,62 @@ local function ProcIndirectRefresh(eventType, spellName, srcGUID, srcFlags, dstG
                     local targetSpellName = GetSpellInfo(targetSpellID)
                     SetTimer(srcGUID, dstGUID, dstName, dstFlags, targetSpellID, targetSpellName, opts, targetAuraType)
                 end
+            elseif refreshTable.customAction then
+                refreshTable.customAction(srcGUID, dstGUID, targetSpellID)
             else
-                RefreshTimer(srcGUID, dstGUID, targetSpellID)
+                local _, oldStartTime = RefreshTimer(srcGUID, dstGUID, targetSpellID)
+
+                if refreshTable.rollbackMisses and oldStartTime then
+                    rollbackTable[srcGUID] = rollbackTable[srcGUID] or {}
+                    rollbackTable[srcGUID][dstGUID] = rollbackTable[srcGUID][dstGUID] or {}
+                    local now = GetTime()
+                    rollbackTable[srcGUID][dstGUID][targetSpellID] = {now, oldStartTime}
+                end
             end
         end
+        end
+    end
+end
+
+local igniteName = GetSpellInfo(12654)
+do
+    local igniteOpts = { duration = 4 }
+    function f:IgniteHandler(...)
+        local timestamp, eventType, hideCaster,
+        srcGUID, srcName, srcFlags, srcFlags2,
+        dstGUID, dstName, dstFlags, dstFlags2,
+        spellID, spellName, spellSchool, auraType, _, _, _, _, _, isCrit = ...
+
+        spellID = 12654
+        local opts = igniteOpts
+
+        if eventType == "SPELL_AURA_APPLIED" then
+            SetTimer(srcGUID, dstGUID, dstName, dstFlags, spellID, spellName, opts, auraType)
+            local spellTable = GetSpellTable(srcGUID, dstGUID, spellID)
+            spellTable.tickExtended = true -- skipping first tick by treating it as already extended
+            if lib.DEBUG_IGNITE then
+                print(GetTime(), "[Ignite] Applied", dstGUID, "StartTime:", spellTable[2])
+            end
+        elseif eventType == "SPELL_PERIODIC_DAMAGE" then
+            local spellTable = GetSpellTable(srcGUID, dstGUID, spellID)
+            if spellTable then
+                if lib.DEBUG_IGNITE then
+                    print(GetTime(), "[Ignite] Tick", dstGUID)
+                end
+                spellTable.tickExtended = false -- unmark tick
+            end
+        elseif eventType == "SPELL_AURA_REMOVED" then
+            SetTimer(srcGUID, dstGUID, dstName, dstFlags, spellID, spellName, opts, auraType, true)
+            if lib.DEBUG_IGNITE then
+                print(GetTime(), "[Ignite] Removed", dstGUID)
+            end
+        end
+    end
+    -- if playerClass ~= "MAGE" then
+        -- f.IgniteHandler = function() end
+    -- end
+    function lib:GetSpellTable(...)
+        return GetSpellTable(...)
     end
 end
 
@@ -487,16 +611,41 @@ function f:CombatLogHandler(...)
     local timestamp, eventType, hideCaster,
     srcGUID, srcName, srcFlags, srcFlags2,
     dstGUID, dstName, dstFlags, dstFlags2,
-    spellID, spellName, spellSchool, auraType = ...
+    spellID, spellName, spellSchool, auraType, _, _, _, _, _, isCrit = ...
 
+    ProcIndirectRefresh(eventType, spellName, srcGUID, srcFlags, dstGUID, dstFlags, dstName, isCrit)
 
-    ProcIndirectRefresh(eventType, spellName, srcGUID, srcFlags, dstGUID, dstFlags, dstName)
+    if spellName == igniteName then
+        self:IgniteHandler(...)
+    end
 
     if  eventType == "SPELL_MISSED" and
         bit_band(srcFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) == COMBATLOG_OBJECT_AFFILIATION_MINE
     then
         local missType = auraType
-        if missType == "RESIST" then
+        -- ABSORB BLOCK DEFLECT DODGE EVADE IMMUNE MISS PARRY REFLECT RESIST
+        if not (missType == "ABSORB" or missType == "BLOCK") then -- not sure about those two
+
+            local refreshTable = indirectRefreshSpells[spellName]
+            -- This is just for Sunder Armor misses
+            if refreshTable and refreshTable.rollbackMisses then
+                local rollbacksFromSource = rollbackTable[srcGUID]
+                if rollbacksFromSource then
+                    local rollbacks = rollbacksFromSource[dstGUID]
+                    if rollbacks then
+                        local targetSpellID = refreshTable.targetSpellID
+                        local snapshot = rollbacks[targetSpellID]
+                        if snapshot then
+                            local timestamp, oldStartTime = unpack(snapshot)
+                            local now = GetTime()
+                            if now - timestamp < 0.5 then
+                                RefreshTimer(srcGUID, dstGUID, targetSpellID, oldStartTime)
+                            end
+                        end
+                    end
+                end
+            end
+
             spellID = GetLastRankSpellID(spellName)
             if not spellID then
                 return
@@ -547,7 +696,7 @@ function f:CombatLogHandler(...)
                     -- All the following APPLIED events are accepted while cast pass is valid
                     -- (Unconfirmed whether timestamp is the same even for a 40m raid)
                 local now = GetTime()
-                castEventPass = castLog:IsCurrent(srcGUID, spellID, now, 0.4)
+                castEventPass = castLog:IsCurrent(srcGUID, spellID, now, 0.8)
                 if not castEventPass and (eventType == "SPELL_AURA_REFRESH" or eventType == "SPELL_AURA_APPLIED") then
                     eventSnapshot = { timestamp, eventType, hideCaster,
                     srcGUID, srcName, srcFlags, srcFlags2,
@@ -633,7 +782,8 @@ local makeBuffInfo = function(spellID, applicationTable, dstGUID, srcGUID)
     end
     local now = GetTime()
     if expirationTime > now then
-        return { name, icon, 0, nil, duration, expirationTime, nil, nil, nil, spellID, false, false, false, false, 1 }
+        local buffType = spells[spellID] and spells[spellID].buffType
+        return { name, icon, 0, buffType, duration, expirationTime, nil, nil, nil, spellID, false, false, false, false, 1 }
     end
 end
 
@@ -646,30 +796,34 @@ local shouldDisplayAura = function(auraTable)
     return false
 end
 
-local function RegenerateBuffList(dstGUID)
-    local guidTable = guids[dstGUID]
-    if not guidTable then
-        return
-    end
-
+lib.scanTip = lib.scanTip or CreateFrame("GameTooltip", "LibClassicDurationsScanTip", nil, "GameTooltipTemplate")
+local scanTip = lib.scanTip
+scanTip:SetOwner(WorldFrame, "ANCHOR_NONE")
+local function RegenerateBuffList(unit, dstGUID)
     local buffs = {}
-    for spellID, t in pairs(guidTable) do
-        if t.applications then
-            for srcGUID, auraTable in pairs(t.applications) do
-                if auraTable[3] == "BUFF" then
-                    local buffInfo = makeBuffInfo(spellID, auraTable, dstGUID, srcGUID)
-                    if buffInfo then
-                        tinsert(buffs, buffInfo)
-                    end
+    local spellName
+    for i=1, 32 do
+        scanTip:ClearLines()
+        scanTip:SetUnitAura(unit, i, "HELPFUL")
+        spellName = LibClassicDurationsScanTipTextLeft1:GetText()
+        if spellName then
+            local spellID = GetLastRankSpellID(spellName)
+            if spellID then
+                local icon = GetSpellTexture(spellID)
+                local opts = spells[spellID]
+                local buffInfo = { spellName, icon, 0, (opts and opts.buffType), 0, 0, nil, nil, nil, spellID, false, false, false, false, 1 }
+                local isStacking = opts and opts.stacking
+                local srcGUID = nil
+                local duration, expirationTime = GetGUIDAuraTime(dstGUID, spellName, spellID, srcGUID, isStacking)
+                if duration then
+                    buffInfo[5] = duration
+                    buffInfo[6] = expirationTime
                 end
+
+                tinsert(buffs, buffInfo)
             end
         else
-            if t[3] == "BUFF" then
-                local buffInfo = makeBuffInfo(spellID, t, dstGUID)
-                if buffInfo then
-                    tinsert(buffs, buffInfo)
-                end
-            end
+            break
         end
     end
 
@@ -694,7 +848,7 @@ function lib.UnitAuraDirect(unit, index, filter)
         if not unitGUID then return end
         local isValid = buffCacheValid[unitGUID]
         if not isValid or isValid < GetTime() then
-            RegenerateBuffList(unitGUID)
+            RegenerateBuffList(unit, unitGUID)
         end
 
         local buffCacheHit = buffCache[unitGUID]
@@ -749,7 +903,7 @@ end
 ---------------------------
 -- PUBLIC FUNCTIONS
 ---------------------------
-local function GetGUIDAuraTime(dstGUID, spellName, spellID, srcGUID, isStacking, forcedNPCDuration)
+GetGUIDAuraTime = function(dstGUID, spellName, spellID, srcGUID, isStacking, forcedNPCDuration)
     local guidTable = guids[dstGUID]
     if guidTable then
 
@@ -846,7 +1000,8 @@ function lib:GetDurationForRank(spellName, spellID, srcGUID)
     end
 end
 
-local activeFrames = {}
+lib.activeFrames = lib.activeFrames or {}
+local activeFrames = lib.activeFrames
 function lib:RegisterFrame(frame)
     activeFrames[frame] = true
     if next(activeFrames) then
@@ -919,5 +1074,92 @@ function lib:MonitorUnit(unit)
         lib.debug:UnregisterAllEvents()
         lib.debug.enabled = false
         print("[LCD] Disabled combat log event display")
+    end
+end
+
+------------------
+-- Set Tracking
+------------------
+
+
+local itemSets = {}
+
+function lib:TrackItemSet(setname, itemArray)
+    itemSets[setname] = itemSets[setname] or {}
+    if not itemSets[setname].items then
+        itemSets[setname].items = {}
+        itemSets[setname].callbacks = {}
+        local bitems = itemSets[setname].items
+        for _, itemID in ipairs(itemArray) do
+            bitems[itemID] = true
+        end
+    end
+end
+function lib:RegisterSetBonusCallback(setname, pieces, handle_on, handle_off)
+    local set = itemSets[setname]
+    if not set then error(string.format("Itemset '%s' is not registered", setname)) end
+    set.callbacks[pieces] = {}
+    set.callbacks[pieces].equipped = false
+    set.callbacks[pieces].on = handle_on
+    set.callbacks[pieces].off = handle_off
+end
+
+function lib:IsSetBonusActive(setname, bonusLevel)
+    local set = itemSets[setname]
+    if not set then return false end
+    local setCallbacks = set.callbacks
+    if setCallbacks[bonusLevel] and setCallbacks[bonusLevel].equipped then
+        return true
+    end
+    return false
+end
+
+
+function lib:IsSetBonusActiveFullCheck(setname, bonusLevel)
+    local set = itemSets[setname]
+    if not set then return false end
+    local set_items = set.items
+    local pieces_equipped = 0
+    for slot=1,17 do
+        local itemID = GetInventoryItemID("player", slot)
+        if set_items[itemID] then pieces_equipped = pieces_equipped + 1 end
+    end
+    return (pieces_equipped >= bonusLevel)
+end
+
+
+lib.setwatcher = lib.setwatcher or CreateFrame("Frame", nil, UIParent)
+local setwatcher = lib.setwatcher
+setwatcher:SetScript("OnEvent", function(self, event, ...)
+    return self[event](self, event, ...)
+end)
+setwatcher:RegisterEvent("PLAYER_LOGIN")
+function setwatcher:PLAYER_LOGIN()
+    if next(itemSets) then
+        self:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "player")
+        self:UNIT_INVENTORY_CHANGED(nil, "player")
+    end
+end
+function setwatcher:UNIT_INVENTORY_CHANGED(event, unit)
+    for setname, set in pairs(itemSets) do
+        local set_items = set.items
+        local pieces_equipped = 0
+        for slot=1,17 do -- That excludes ranged slot in classic
+            local itemID = GetInventoryItemID("player", slot)
+            if set_items[itemID] then pieces_equipped = pieces_equipped + 1 end
+        end
+        for bp, bonus in pairs(set.callbacks) do
+            if pieces_equipped >= bp then
+                if not bonus.equipped then
+                    if bonus.on then bonus.on() end
+                    bonus.equipped = true
+                end
+            else
+                if bonus.equipped then
+                    if bonus.off then bonus.off() end
+                    bonus.equipped = false
+                end
+            end
+        end
     end
 end

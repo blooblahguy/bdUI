@@ -158,7 +158,8 @@ bumper.Down.tex:SetRotation(-1.5708)
 bumper.CenterH.tex:SetTexture(lib.media.align)
 bumper.CenterH.tex:SetRotation(1.5708)
 bumper.CenterH.callback = function(self)
-	local frame = self.controls.frame
+	local frame = bumper.frame
+	print(frame, self, bumper)
 	if (not frame) then return end
 	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
 	local width, height = frame:GetSize()
@@ -179,7 +180,7 @@ end
 -- center vertically
 bumper.CenterY.tex:SetTexture(lib.media.align)
 bumper.CenterY = function(self)
-	local frame = self.controls.frame
+	local frame = bumper.frame
 	if (not frame) then return end
 	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
 	local width, height = frame:GetSize()

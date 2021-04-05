@@ -19,12 +19,6 @@ mod.additional_elements.aurabars = function(self, unit)
 	self.AuraBars.texture = bdUI.media.smooth
 	self.AuraBars.baseColor = bdUI.media.blue
 
-	-- self.AuraBars.PostUpdateBar = function(self, unit, bar, index, position, duration, expiration, debuffType, isStealable)
-	-- 	-- print("hey bar")
-	-- -- 	local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, bar.filter)
-	-- -- 	duration, expiration = bdUI:update_duration(bar.cd, unit, spellID, caster, name, duration, expiration)
-	-- end
-
 	self.AuraBars.PostCreateBar = function(buffs, bar)
 		bdUI:set_backdrop(bar)
 		bar.icon.bg = bar:CreateTexture(nil, "BACKGROUND")
