@@ -9,8 +9,8 @@ local function unit_name(self, unit)
 	end
 
 	-- color by class
-	local namecolor = {mod:getUnitColor(unit)}
-	local namehex = RGBPercToHex(unpack(namecolor))
+	self.namecolor = {mod:getUnitColor(unit)}
+	local namehex = RGBPercToHex(unpack(self.namecolor))
 
 	-- color the strings
 	name = "|CFF"..namehex..name.."|r"
@@ -36,10 +36,10 @@ function mod:player_tooltip(self, unit)
 
 	-- Color level by difficulty
 	local level = UnitLevel(unit)
-	local levelColor = GetQuestDifficultyColor(level)
+	self.levelColor = GetQuestDifficultyColor(level)
 	if level == -1 then
 		level = '??'
-		levelColor = {r = 1, g = 0, b = 0}
+		self.levelColor = {r = 1, g = 0, b = 0}
 	end
 
 	-- Friend / Enemy coloring
@@ -57,5 +57,5 @@ function mod:player_tooltip(self, unit)
 
 	-- color leveling, color faction, add realm
 	local level_line, level_line_index = GameTooltip:FindLine("Level %d")
-	level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race, realm)
+	level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), race, realm)
 end
