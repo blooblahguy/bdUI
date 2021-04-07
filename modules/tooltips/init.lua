@@ -76,7 +76,7 @@ local config = {
 			{
 				key = "enabletitlesintt",
 				type = "toggle",
-				value = true,
+				value = false,
 				label = "Enable title display in unit mouseover"
 			}
 		}

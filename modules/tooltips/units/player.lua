@@ -13,7 +13,7 @@ local function unit_name(self, unit)
 	local namehex = RGBPercToHex(unpack(namecolor))
 
 	-- color the strings
-	name = mod.config.showrealm and realm and "|CFF"..namehex..name.."-"..realm.."|r" or "|CFF"..namehex..name.."|r"
+	name = "|CFF"..namehex..name.."|r"
 	
 	return name
 end
@@ -57,5 +57,5 @@ function mod:player_tooltip(self, unit)
 
 	-- color leveling, color faction, add realm
 	local level_line, level_line_index = GameTooltip:FindLine("Level %d")
-	level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r %s', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race, realm)
+	level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), race, realm)
 end
