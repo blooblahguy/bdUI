@@ -9,13 +9,18 @@ mod.additional_elements.debuffs = function(self, unit)
 	self.Debuffs = CreateFrame("Frame", nil, self)
 	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
 	self.Debuffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-	self.Debuffs:SetSize(config.playertargetwidth, 60)
+	self.Debuffs:SetHeight(60)
 	self.Debuffs.size = 18
 	self.Debuffs.initialAnchor  = "BOTTOMRIGHT"
 	self.Debuffs.spacing = bdUI.border
 	self.Debuffs.num = 20
 	self.Debuffs['growth-y'] = "UP"
 	self.Debuffs['growth-x'] = "LEFT"
+
+	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+	end
 
 	self.Debuffs.PostCreateIcon = function(Debuffs, button)
 		bdUI:set_backdrop_basic(button)

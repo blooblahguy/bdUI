@@ -99,15 +99,6 @@ function bdUI:kill(frame)
 end
 
 --==============================================
--- Aura Funcitonality
--- library for spell durations
---==============================================
-if (bdUI:get_game_version() == "vanilla") then
-	bdUI.spell_durations = LibStub("LibClassicDurations")
-	bdUI.spell_durations:Register("bdUI")
-end
-
---==============================================
 -- Event, Filter, & Action System
 bdUI.events = bdUI.events or {}
 bdUI.eventer = CreateFrame("frame", nil, bdParent)

@@ -91,6 +91,23 @@ local oUF = ns.oUF
 
 local FALLBACK_ICON = 136243 -- Interface\ICONS\Trade_Engineering
 
+-- set up classic casting
+local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+local LibCC = isClassic and LibStub("LibClassicCasterino", true)
+
+if (LibCC) then
+	UnitCastingInfo = function(unit)
+		return LibClassicCasterino:UnitCastingInfo(unit)
+	end
+	
+	UnitChannelInfo = function(unit)
+		return LibClassicCasterino:UnitChannelInfo(unit)
+	end
+end
+
+EventFunctions = {}
+
+
 local function resetAttributes(self)
 	self.castID = nil
 	self.casting = nil
@@ -380,14 +397,33 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_SPELLCAST_START', CastStart)
-		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_START', CastStart)
-		self:RegisterEvent('UNIT_SPELLCAST_STOP', CastStop)
-		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', CastStop)
-		self:RegisterEvent('UNIT_SPELLCAST_DELAYED', CastUpdate)
-		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', CastUpdate)
-		self:RegisterEvent('UNIT_SPELLCAST_FAILED', CastFail)
-		if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC) then 
+		if (LibCC) then
+			local CastbarEventHandler = function(event, ...)
+				return EventFunctions[event](self, event, ...)
+			end
+
+			LibCC.RegisterCallback(self, "UNIT_SPELLCAST_START", CastbarEventHandler)
+    		LibCC.RegisterCallback(self, "UNIT_SPELLCAST_DELAYED", CastbarEventHandler) -- only for player
+			LibCC.RegisterCallback(self, "UNIT_SPELLCAST_STOP", CastbarEventHandler)
+			LibCC.RegisterCallback(self, "UNIT_SPELLCAST_FAILED", CastbarEventHandler)
+			LibCC.RegisterCallback(self, "UNIT_SPELLCAST_INTERRUPTED", CastbarEventHandler)
+			LibCC.RegisterCallback(self, "UNIT_SPELLCAST_CHANNEL_START", CastbarEventHandler)
+			LibCC.RegisterCallback(self, "UNIT_SPELLCAST_CHANNEL_UPDATE", CastbarEventHandler) -- only for player
+			LibCC.RegisterCallback(self, "UNIT_SPELLCAST_CHANNEL_STOP", CastbarEventHandler)
+			UnitCastingInfo = function(unit)
+				return LibCC:UnitCastingInfo(unit)
+			end
+			UnitChannelInfo = function(unit)
+				return LibCC:UnitChannelInfo(unit)
+			end
+		else
+			self:RegisterEvent('UNIT_SPELLCAST_START', CastStart)
+			self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_START', CastStart)
+			self:RegisterEvent('UNIT_SPELLCAST_STOP', CastStop)
+			self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', CastStop)
+			self:RegisterEvent('UNIT_SPELLCAST_DELAYED', CastUpdate)
+			self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', CastUpdate)
+			self:RegisterEvent('UNIT_SPELLCAST_FAILED', CastFail)
 			self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', CastFail)
 			self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
 			self:RegisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
@@ -432,16 +468,27 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
-		self:UnregisterEvent('UNIT_SPELLCAST_START', CastStart)
-		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_START', CastStart)
-		self:UnregisterEvent('UNIT_SPELLCAST_DELAYED', CastUpdate)
-		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', CastUpdate)
-		self:UnregisterEvent('UNIT_SPELLCAST_STOP', CastStop)
-		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', CastStop)
-		self:UnregisterEvent('UNIT_SPELLCAST_FAILED', CastFail)
-		self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', CastFail)
-		self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
-		self:UnregisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
+		if (LibCC) then 
+			LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_START")
+    		LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_DELAYED") -- only for player
+			LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_STOP")
+			LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_FAILED")
+			LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_INTERRUPTED")
+			LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_CHANNEL_START")
+			LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_CHANNEL_UPDATE") -- only for player
+			LibCC.UnregisterCallback(self, "UNIT_SPELLCAST_CHANNEL_STOP")
+		else
+			self:UnregisterEvent('UNIT_SPELLCAST_START', CastStart)
+			self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_START', CastStart)
+			self:UnregisterEvent('UNIT_SPELLCAST_DELAYED', CastUpdate)
+			self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', CastUpdate)
+			self:UnregisterEvent('UNIT_SPELLCAST_STOP', CastStop)
+			self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', CastStop)
+			self:UnregisterEvent('UNIT_SPELLCAST_FAILED', CastFail)
+			self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', CastFail)
+			self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
+			self:UnregisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
+		end
 
 		element:SetScript('OnUpdate', nil)
 
@@ -451,5 +498,14 @@ local function Disable(self)
 		end
 	end
 end
+
+EventFunctions["UNIT_SPELLCAST_START"] = CastStart
+EventFunctions["UNIT_SPELLCAST_FAILED"] = CastFail
+EventFunctions["UNIT_SPELLCAST_INTERRUPTED"] = CastFail
+EventFunctions["UNIT_SPELLCAST_DELAYED"] = CastUpdate
+EventFunctions["UNIT_SPELLCAST_STOP"] = CastStop
+EventFunctions["UNIT_SPELLCAST_CHANNEL_START"] = CastStart
+EventFunctions["UNIT_SPELLCAST_CHANNEL_UPDATE"] = CastUpdate
+EventFunctions["UNIT_SPELLCAST_CHANNEL_STOP"] = CastStop
 
 oUF:AddElement('Castbar', Update, Enable, Disable)

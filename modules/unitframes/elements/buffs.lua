@@ -9,7 +9,7 @@ mod.additional_elements.buffs = function(self, unit)
 	self.Buffs = CreateFrame("Frame", nil, self)
 	self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
 	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-	self.Buffs:SetSize(config.playertargetwidth, 60)
+	self.Buffs:SetHeight(60)
 	self.Buffs.size = 18
 	self.Buffs.initialAnchor  = "BOTTOMLEFT"
 	self.Buffs.spacing = bdUI.border
@@ -17,12 +17,13 @@ mod.additional_elements.buffs = function(self, unit)
 	self.Buffs['growth-y'] = "UP"
 	self.Buffs['growth-x'] = "RIGHT"
 
-
 	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
 
 		-- for blacklisting
 		button.spell = name
+
+		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
 	end
 	self.Buffs.PostCreateIcon = function(buffs, button)
 		bdUI:set_backdrop_basic(button)

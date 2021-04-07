@@ -90,9 +90,18 @@ function mod:initialize()
 	mod.config = mod:get_save()
 	if (not mod.config.enablett) then return end
 
-	mod:create_tooltips()
-	mod:color_tooltips()
+	--============================
+	-- elements
+	--============================
+	mod:create_castby()
 	mod:create_mouseover_tooltips()
+	-- mod:color_tooltips()
+	mod:fix_healthbars()
+	mod:create_unit_info()
+	mod:create_targettarget()
+
+	-- now do the rest
+	mod:create_tooltips()
 end
 
 function mod:config_callback()

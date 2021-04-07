@@ -61,7 +61,7 @@ function mod:config_callback()
 	
 	mod:UnregisterEvent("PLAYER_REGEN_DISABLED")
 	mod.variables.font = bdUI:get_font(c.font_size)
-	mod.variables.cooldownfont = bdUI:get_font(14)
+	mod.variables.cooldownfont = bdUI:get_font(12)
 
 	-- loop through bar callbacks
 	for k, callback in pairs(mod.variables.callbacks) do

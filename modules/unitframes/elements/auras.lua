@@ -17,6 +17,11 @@ mod.additional_elements.auras = function(self, unit)
 	self.Auras['growth-y'] = "UP"
 	self.Auras['growth-x'] = "RIGHT"
 
+	self.Auras.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+	end
+
 	self.Auras.PostCreateIcon = function(Debuffs, button)
 		bdUI:set_backdrop_basic(button)
 		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)

@@ -6,6 +6,9 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 	nameplateShowAll = nameplateShowAll or false
 	local castByMe = source and UnitIsUnit(source, "player") or false
 
+	-- classic
+	duration, expirationTime = bdUI:update_duration(button.cd, unit, spellId, source, name, duration, expirationTime)
+
 	if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return false
 	end

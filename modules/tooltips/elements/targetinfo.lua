@@ -1,6 +1,51 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
 
+function mod:create_unit_info()
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
+
+	GameTooltip:HookScript('OnTooltipSetUnit', function(self, unit)
+		local name, unit = self:GetUnit()
+		unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
+
+		self.unit = unit
+		self.ilvl = nil
+		self.spec = nil
+		
+		if (IsShiftKeyDown()) then
+			mod:getAverageItemLevel(self, self.unit)
+		end
+		if (self._extra) then return end
+
+		self:RegisterEvent("MODIFIER_STATE_CHANGED")
+		self:HookScript("OnEvent", function(self, event, arg1, arg2)
+			if (not UnitIsPlayer("mouseover")) then return end
+
+			if (IsShiftKeyDown()) then
+				mod:getAverageItemLevel(self, "mouseover")
+			else
+				if (self.ilvl) then
+					_G["GameTooltipTextLeft"..self.ilvl]:SetText("")
+					_G["GameTooltipTextLeft"..self.ilvl]:Hide()
+					_G["GameTooltipTextRight"..self.ilvl]:SetText("")
+					_G["GameTooltipTextRight"..self.ilvl]:Hide()
+
+					_G["GameTooltipTextLeft"..self.spec]:SetText("")
+					_G["GameTooltipTextLeft"..self.spec]:Hide()
+					_G["GameTooltipTextRight"..self.spec]:SetText("")
+					_G["GameTooltipTextRight"..self.spec]:Hide()
+
+					self:Show()
+				end
+			end
+		end)
+		
+		self._extra = true
+	end)
+end
+
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
+
 local inspector = CreateFrame("frame", nil, UIParent)
 inspector:RegisterEvent("INSPECT_READY")
 local stored_units = {}

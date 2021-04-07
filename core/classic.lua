@@ -12,6 +12,9 @@ if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
 
 -- classic spell durations
+bdUI.spell_durations = LibStub("LibClassicDurations")
+bdUI.spell_durations:Register("bdUI")
+
 local UnitAura = _G.UnitAura
 local LibClassicDurations = LibStub("LibClassicDurations", true)
 if LibClassicDurations then
@@ -23,6 +26,7 @@ end
 ATTACK_BUTTON_FLASH_TIME = ATTACK_BUTTON_FLASH_TIME or 0.4
 
 -- functions
+GetSpecializationInfoByID = GetSpecializationInfoByID or noop
 GetInspectSpecialization = GetInspectSpecialization or noop
 IsActiveBattlefieldArena = IsActiveBattlefieldArena or noop
 CanExitVehicle = CanExitVehicle or noop
@@ -40,6 +44,7 @@ UnitPhaseReason = UnitPhaseReason or noop
 GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 
 -- frames
+MiniMapTrackingDropDown = MiniMapTrackingDropDown or noob
 SpellFlyout = SpellFlyout or noob
 ClassNameplateManaBarFrame = TalentMicroButtonAlert or noob
 TalentMicroButtonAlert = TalentMicroButtonAlert or noob

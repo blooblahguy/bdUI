@@ -205,9 +205,15 @@ modules\tooltips\init.lua
 modules\tooltips\functions.lua
 modules\tooltips\extend.lua
 modules\tooltips\core.lua
+modules\tooltips\elements\castby.lua
+modules\tooltips\elements\healthbarfix.lua
+modules\tooltips\elements\targettarget.lua
+modules\tooltips\elements\targetinfo.lua
 modules\tooltips\elements\tooltipcolor.lua
 modules\tooltips\elements\namehover.lua
 modules\tooltips\elements\targetinfo.lua
+modules\tooltips\units\player.lua
+modules\tooltips\units\npc.lua
 
 # Unitframes
 modules\unitframes\init.lua

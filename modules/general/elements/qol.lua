@@ -53,7 +53,7 @@ function mod:create_qol()
 
 			-- fps info and color
 			local fps = math.floor(GetFramerate()+0.5)
-			local target_fps = GetCVar("targetfps")
+			local target_fps = GetCVar("targetfps") or 60
 			local fps_quality = (fps - 15) / (target_fps - 15)
 			local fr, fg, fb = bdUI:ColorGradient(fps_quality, 1,0,0, 1,1,0, 0,1,0)
 			local fps_color = RGBPercToHex(fr, fg, fb)
