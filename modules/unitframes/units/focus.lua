@@ -25,24 +25,27 @@ mod.custom_layout["focus"] = function(self, unit)
 	self.Curpp:SetPoint("CENTER")
 	self.Curpp:SetFontObject(bdUI:get_font(11))
 
-	self.Debuffs.initialAnchor = "TOPLEFT"
-	self.Debuffs['growth-x'] = "RIGHT"
+	self.Debuffs.initialAnchor = "TOPRIGHT"
+	self.Debuffs['growth-x'] = "LEFT"
 	self.Debuffs.size = 20
 	self.Debuffs:SetSize(config.focuswidth, config.focusheight)
 	self.Debuffs:ClearAllPoints()
-	self.Debuffs:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, 0)
+	self.Debuffs:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -4, 0)
 	self.Debuffs.CustomFilter  = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		if (not castByPlayer or not source or isBossDebuff) then -- this may have been casted by no one or by a boss
+		if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+			return false
+		end
+
+		if (is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or not source or isBossDebuff) then -- this may have been casted by no one or by a boss
 			return true
 		end
-		if (not castByMe) then return false end
 
-		if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		if (not castByMe) then 
 			return false
 		end
 
@@ -50,13 +53,13 @@ mod.custom_layout["focus"] = function(self, unit)
 	end
 
 
-	self.Buffs.initialAnchor = "TOPRIGHT"
-	self.Buffs['growth-x'] = "LEFT"
+	self.Buffs.initialAnchor = "TOPLEFT"
+	self.Buffs['growth-x'] = "RIGHT"
 	self.Buffs['growth-y'] = "DOWN"
 	self.Buffs.size = 20
 	self.Buffs:SetSize(config.focuswidth, config.focusheight)
 	self.Buffs:ClearAllPoints()
-	self.Buffs:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -4, 0)
+	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, 0)
 	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
@@ -79,7 +82,7 @@ mod.custom_layout["focus"] = function(self, unit)
 			return true
 		end
 
-		
+		return not castByPlayer or not source or not UnitIsPlayer(source)
 	end
 	
 	-- config callback

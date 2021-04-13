@@ -21,7 +21,7 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 		return true
 	end
 
-	return bdUI:is_whitelist_nameplate(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+	return bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)
 end
 
 mod.custom_layout["player"] = function(self, unit)

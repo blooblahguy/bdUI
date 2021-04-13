@@ -54,10 +54,7 @@ end
 --===============================================
 -- Nameplates
 --===============================================
-local is_whitelist_nameplate = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-	-- auras = auras or mod.config
-	name = name:lower()
-
+local is_whitelist_nameplate = function(self, castByMe, nameplateShowPersonal, nameplateShowAll)
 	if ((nameplateShowPersonal and castByMe) or nameplateShowAll) then
 		return true
 	end

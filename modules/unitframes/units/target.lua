@@ -11,7 +11,7 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 	if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return false
 	end
-	if (bdUI:is_whitelist_nameplate(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
 		return true
 	end
 
@@ -83,7 +83,6 @@ mod.custom_layout["target"] = function(self, unit)
 	-- aurabar debuffs
 	self.AuraBars.CustomFilter = debuff_filter
 	
-
 	-- mod.align_text(self, "right")
 	mod:display_text(self, unit, "right")
 
