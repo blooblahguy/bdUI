@@ -1,69 +1,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
 
--- replace tooltip lines with cleaned up information
-local function replace_tooltip_lines(self, unit)
-	if (not unit) then return end
-
-	-- unit info
-	local creatureType = UnitCreatureType(unit)
-	local replacedClass = false
-
-	-- Color level by difficulty
-	local level = UnitLevel(unit)
-	self.levelColor = GetQuestDifficultyColor(level)
-	if level == -1 then
-		level = '??'
-		self.levelColor = {r = 1, g = 0, b = 0}
-	end
-
-	-- Friend / Enemy coloring
-	local isFriend = UnitIsFriend("player", unit)
-	local friendColor = (factionGroup == "Horde" or not isFriend) and {r = 1, g = 0.15, b = 0} or {r = 0, g = 0.55, b = 1}
-
-	-- delete lines in the "hide" table
-	local hide = {}
-	hide["Horde"] = true
-	hide["Alliance"] = true
-	hide["PvE"] = true
-	hide["PvP"] = true
-	for k, v in pairs(hide) do
-		GameTooltip:DeleteLine(k, true)
-	end
-
-	-- Set Name
-
-	if UnitIsPlayer(unit) then
-		
-		
-		-- update guild and level
-		if (guild) then
-			-- GameTooltipTextLeft2:SetFormattedText('%s <%s>', rank, guild)
-			-- GameTooltipTextLeft3:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), race)
-		else
-			-- GameTooltipTextLeft2:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), race)
-		end
-	else
-		-- get in here to update level and creature 
-		local minwidth = 0
-		for i = 2, self:NumLines() do
-			local line = _G['GameTooltipTextLeft'..i]
-			local text = line:GetText();
-			if (not line or not line:GetText()) then break end
-			minwidth = math.max(minwidth, strlen(text) * 6.7)
-
-			if (not replacedClass and (level and line:GetText():find('Level '..level) or (creatureType and line:GetText():find('^'..creatureType)))) then
-				replacedClass = true
-				line:SetFormattedText('|cff%s%s|r |cff%s%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), creatureType or 'Unknown')
-			end
-		end
-
-		minwidth = math.min(minwidth, 200)
-
-		self:SetMinimumWidth(minwidth)
-	end
-end
-
 local function kill_texture(tex)
 	if (not tex) then return end
 	-- tex:Hide()
@@ -148,7 +85,17 @@ local function update_unit_tooltip(self)
 		mod:npc_tooltip(self, unit)
 	end
 
-	
+	-- update width
+	-- get in here to update level and creature 
+	local minwidth = 0
+	for i = 2, self:NumLines() do
+		local line = _G['GameTooltipTextLeft'..i]
+		local text = line and line:GetText();
+		if (not text) then break end
+
+		minwidth = math.max(minwidth, strlen(text) * 6.65)
+	end
+	self:SetMinimumWidth(math.min(minwidth, 150))
 end
 
 function mod:create_tooltips()

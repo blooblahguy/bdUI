@@ -15,7 +15,7 @@ mod.custom_layout["boss"] = function(self, unit)
 
 	self.Name:SetPoint("CENTER", self.Health)
 	self.Name:SetFontObject(bdUI:get_font(12))
-	self.Name:SetWidth(config.bosswidth - self.Perpp:GetWidth() - self.Perhp:GetWidth() - 16)
+	-- self.Name:SetWidth(config.bosswidth - self.Perpp:GetWidth() - self.Perhp:GetWidth() - 16)
 
 	self.Debuffs.initialAnchor = "TOPRIGHT"
 	self.Debuffs['growth-x'] = "LEFT"

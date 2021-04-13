@@ -52,16 +52,25 @@ end
 --==============================================
 -- Useful Functions
 --==============================================
--- function bdUI:truncate_text(textObject, targetWidth)
--- 	BDUI_SAVE.truncates = BDUI_SAVE.truncates or {}
--- 	local width = textObject:GetTextWidth()
--- 	if (width <= targetWidth) then return end
--- 	local text = textObject:GetText()
+local trunc_parent = CreateFrame("frame", nil)
+local truncator = trunc_parent:CreateFontString(nil, "OVERLAY")
+function bdUI:truncate_text(text, fontObject, targetWidth)
+	-- BDUI_SAVE.truncates = BDUI_SAVE.truncates or {}
+	truncator:SetFontObject(fontObject)
+	truncator:SetText(text)
+	local width = truncator:GetStringWidth()
 
--- 	local auto = {"of", "the", "and"}
+	-- print(text, width, targetWidth)
 
--- 	local words = strsplit()
--- end
+	-- if (width <= targetWidth) then return end
+
+	local auto = {"Elysian", "of", "the", "and"}
+
+	local words = {strsplit(" ", text)}
+	for k, word in pairs(words) do
+		print(word)
+	end
+end
 
 function bdUI:hide_protected(frame)
 	frame:Hide()

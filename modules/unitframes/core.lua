@@ -5,10 +5,11 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 local oUF = bdUI.oUF
 local config
-mod.padding = 2
+mod.padding = bdUI.border
 mod.units = {}
 mod.custom_layout = {}
 mod.additional_elements = {}
+mod.tags = {}
 
 --===============================================
 -- Config callback
@@ -143,92 +144,20 @@ local function layout(self, unit)
 	self.TextHolder = CreateFrame('frame', nil, self.Health)
 	self.TextHolder:SetAllPoints()
 
-	self.Name = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Name:SetFontObject(bdUI:get_font(13))
-
-	self.Status = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Status:SetFontObject(bdUI:get_font(10))
-	self.Status:SetPoint("CENTER", self.TextHolder, "CENTER")
-	
-	self.Curhp = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Curhp:SetFontObject(bdUI:get_font(10))
-
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 7)
-	self.RaidTargetIndicator:SetSize(12, 12)
-	self.RaidTargetIndicator:SetPoint('CENTER', self, 0, 0)
-
-	
+	self.RaidTargetIndicator:SetSize(13, 13)
+	self.RaidTargetIndicator:SetPoint('CENTER', self.Health, 0, 0)
 
 	-- Tags
-	oUF.Tags.Events['name'] = 'UNIT_NAME_UPDATE'
-	oUF.Tags.Methods["name"] = function(unit)
-		local c = UnitClassification(u)
-		-- print(c)
-		if(c == 'rare') then
-			c = 'R'
-		elseif(c == 'rareelite') then
-			c = 'R+'
-		elseif(c == 'elite') then
-			c = '+'
-		elseif(c == 'worldboss') then
-			c = 'B'
-		elseif(c == 'minus' or c == 'trivial') then
-			c = '-'
-		else
-			c = ""
-		end
-
-		c = c or ""
-		unit = UnitName(unit) or ""
-		local name = unit.." "..c
-
-		if (IsActiveBattlefieldArena()) then
-			for i = 1, 5 do
-				if UnitIsUnit(unit, "arena"..i) then
-					name = i
-				end
-			end
-		end
-
-		return unit.." "..c
-	end
-
-
-	oUF.Tags.Events['curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
-	oUF.Tags.Methods['curhp'] = function(unit)
-		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
-		if (bdUI.mobhealth) then
-			hp, hpMax, IsFound = bdUI.mobhealth:GetUnitHealth(unit)
-		end
-
-		local hpPercent = hp / hpMax
-		if hpMax == 0 then return end
-		local r, g, b = bdUI:ColorGradient(hpPercent, 1,0,0, 1,1,0, 1,1,1)
-		local hex = RGBPercToHex(r, g, b)
-		local perc = table.concat({"|cFF", hex, bdUI:round(hpPercent * 100, 1), "|r"}, "")
-
-		if (perc == 0 or perc == "0") then
-			return "0 / "..numberize(UnitHealthMax(unit))
-		end
-
-		return table.concat({bdUI:numberize(hp), "-", perc}, " ")
-	end
-
-	oUF.Tags.Events["status"] = "UNIT_HEALTH  UNIT_CONNECTION  CHAT_MSG_SYSTEM"
-	oUF.Tags.Methods["status"] = function(unit)
-		if not UnitIsConnected(unit) then
-			return "offline"		
-		elseif UnitIsDead(unit) then
-			return "dead"		
-		elseif UnitIsGhost(unit) then
-			return "ghost"
-		end
-	end
-
-	self:Tag(self.Curhp, '[curhp]')
-	self:Tag(self.Name, '[name]')
-	self:Tag(self.Status, '[status]')
+	-- name
+	mod.tags.name(self, unit)
+	
+	-- status
+	mod.tags.status(self, unit)
+	
+	-- hp
+	mod.tags.hp(self, unit)
 
 	-- frame specific layouts
 	local func = unit

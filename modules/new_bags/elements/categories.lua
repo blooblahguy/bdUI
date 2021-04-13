@@ -486,12 +486,26 @@ function mod:get_visible_categories()
 	
 	-- add to normal array
 	for k, category in pairs(mod.categories) do
+		
+		-- print(#category.items)
+		if (#category.items == 0) then
+			category.alt_order = 1000
+		else
+			category.alt_order = false
+		end
+
 		all_cats[#all_cats + 1] = category
+		-- 2000
 	end
 
 	-- sort and reset index
 	table.sort(all_cats, function(a, b)
-		return a.order < b.order
+		-- if (a.alt_order) then 
+		return (a.alt_order or a.order) < (b.alt_order or b.order)
+		-- end
+		-- if (b.items == 0) then return b.items < a.items end
+		-- print(#a.items, #b.items)
+		-- return a.order < b.order
 	end)
 
 	-- now sort in new order, and add to new array to return for visible

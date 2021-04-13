@@ -10,12 +10,10 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 - unattached castbars
 - better focus
 - better personal nameplate display
-- add full EN localization to get things going on more international locale
+- add full EN localization to get things going on more international
 - rebuild config library to be usable as a neater module
 - add elite indicator
 - add mouseover tooltip on raidframes
-- add config to disable emojis
-- remove case sensitivy from auras
 - add back dot in middle of screen
 - multirow button frame
 - add expressway font

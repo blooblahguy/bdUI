@@ -198,7 +198,7 @@ local function update_threat(self, event, unit)
 		healthbar:SetStatusBarColor(unpack(self.smartColors))
 	elseif (((cur / max) * 100) <= config.executerange) then
 		healthbar:SetStatusBarColor(unpack(config.executecolor))
-	elseif (config.specialunits[UnitName(unit)]) then
+	elseif (config.specialunits[UnitName(unit):lower()]) then
 		healthbar:SetStatusBarColor(unpack(config.specialcolor))
 	else
 		healthbar:SetStatusBarColor(unpack(self.smartColors))

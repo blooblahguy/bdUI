@@ -31,20 +31,8 @@ GameTooltip["LastLine"] = function(self)
 	end
 end
 
--- reset all lines
-GameTooltip["ClearLines"] = function(self)
-	local lines = self:NumLines(true)
-	for i = 1, lines do
-		local text = line and line:GetText()
-		if (not text) then
-			return
-		end
 
-		line:SetText("")
-	end
-end
-
--- if there are blank lines in the middle, move everything up and put them at the end
+-- -- if there are blank lines in the middle, move everything up and put them at the end
 GameTooltip["ArrangeLines"] = function(self)
 	local lines = self:NumLines(true)
 	local lastline = ""

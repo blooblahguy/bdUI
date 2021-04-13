@@ -32,10 +32,10 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
 	mod.additional_elements.buffs(self, unit)
-	mod.additional_elements.resting(self, unit)
-	mod.additional_elements.combat(self, unit)
+	-- mod.additional_elements.resting(self, unit)
+	-- mod.additional_elements.combat(self, unit)
 	mod.additional_elements.aurabars(self, unit)
-	mod.additional_elements.perhp(self, unit)
+	-- mod.additional_elements.perhp(self, unit)
 
 	self.Buffs.CustomFilter = buff_filter
 	self.AuraBars.CustomFilter = buff_filter
@@ -47,22 +47,24 @@ mod.custom_layout["player"] = function(self, unit)
 	self.callback = function(self, unit, config)
 		self:SetSize(config.playertargetwidth, config.playertargetheight)
 
-		-- text
-		if (config.hideplayertext) then
-			self.Name:Hide()
-			self.Curhp:Hide()
-		else
-			mod.align_text(self)
-			self.Name:Show()
-			self.Curhp:Show()
-		end
+		mod:display_text(self, unit, "left")
 
-		if (config.textlocation == "Minimal") then
-			self.Perhp:ClearAllPoints()
-			self.Perpp:ClearAllPoints()
-			self.Perhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
-			self.Perpp:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
-		end
+		-- text
+		-- if (config.hideplayertext) then
+		-- 	self.Name:Hide()
+		-- 	self.Curhp:Hide()
+		-- else
+		-- 	mod.align_text(self)
+		-- 	self.Name:Show()
+		-- 	self.Curhp:Show()
+		-- end
+
+		-- if (config.textlocation == "Minimal") then
+		-- 	self.Perhp:ClearAllPoints()
+		-- 	self.Perpp:ClearAllPoints()
+		-- 	self.Perhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
+		-- 	self.Perpp:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
+		-- end
 
 		-- auras
 		if (config.aurastyle == "Bars") then
@@ -93,30 +95,30 @@ mod.custom_layout["player"] = function(self, unit)
 		end
 
 		-- resting
-		if (config.enable_rested_indicator) then
-			self:EnableElement("RestingIndicator")
-			self.RestingIndicator:ClearAllPoints()
-			if (config.textlocation == "Outside") then
-				self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
-			elseif (config.textlocation == "Inside") then
-				self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
-			end
-		else
-			self:DisableElement("RestingIndicator")
-		end
+		-- if (config.enable_rested_indicator) then
+		-- 	self:EnableElement("RestingIndicator")
+		-- 	self.RestingIndicator:ClearAllPoints()
+		-- 	if (config.textlocation == "Outside") then
+		-- 		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
+		-- 	elseif (config.textlocation == "Inside") then
+		-- 		self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
+		-- 	end
+		-- else
+		-- 	self:DisableElement("RestingIndicator")
+		-- end
 
 		-- combat
-		if (config.enable_combat_indicator) then
-			self:EnableElement("CombatIndicator")
-			self.CombatIndicator:ClearAllPoints()
-			if (config.textlocation == "Outside") then
-				self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
-			elseif (config.textlocation == "Inside") then
-				self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
-			end
-		else
-			self:DisableElement("CombatIndicator")
-		end
+		-- if (config.enable_combat_indicator) then
+		-- 	self:EnableElement("CombatIndicator")
+		-- 	self.CombatIndicator:ClearAllPoints()
+		-- 	if (config.textlocation == "Outside") then
+		-- 		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
+		-- 	elseif (config.textlocation == "Inside") then
+		-- 		self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
+		-- 	end
+		-- else
+		-- 	self:DisableElement("CombatIndicator")
+		-- end
 
 	end
 end

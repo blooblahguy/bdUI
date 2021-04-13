@@ -199,12 +199,12 @@ local config = {
 				type = "range",
 				label = "Castbar Icon Size"
 			},
-			{
-				key = "hideplayertext",
-				type = "toggle",
-				value = false,
-				label = "Hide player text"
-			},
+			-- {
+			-- 	key = "hideplayertext",
+			-- 	type = "toggle",
+			-- 	value = false,
+			-- 	label = "Hide player text"
+			-- },
 			--=========================================
 			-- BUFFS
 			--=========================================

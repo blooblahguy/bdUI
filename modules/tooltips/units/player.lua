@@ -48,7 +48,13 @@ function mod:player_tooltip(self, unit)
 	-- add guild rank
 	if (guild) then
 		local guild_line, guild_line_index = GameTooltip:FindLine(guild)
-		guild_line:SetFormattedText('<|cff00FF00%s|r> |cffBBBBBB%s|r', guild, rank)
+		if (not guild_line) then
+			self:AddLine(guild)
+			guild_line, guild_line_index = GameTooltip:FindLine(guild)
+		end
+		if (guild_line) then
+			guild_line:SetFormattedText('<|cff00FF00%s|r> |cffBBBBBB%s|r', guild, rank)
+		end
 	end
 
 	-- add realm
@@ -57,5 +63,8 @@ function mod:player_tooltip(self, unit)
 
 	-- color leveling, color faction, add realm
 	local level_line, level_line_index = GameTooltip:FindLine("Level %d")
+	if (not level_line) then
+		level_line, level_line_index = GameTooltip:FindLine("Level ??")
+	end
 	level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), race, realm)
 end

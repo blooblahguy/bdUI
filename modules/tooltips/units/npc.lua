@@ -4,7 +4,7 @@ local mod = bdUI:get_module("Tooltips")
 function mod:npc_tooltip(self, unit)
 	local race = UnitRace(unit) or ""
 	local factionGroup = select(1, UnitFactionGroup(unit))
-	local creatureType = UnitCreatureType(unit)
+	local creatureType = UnitCreatureType(unit) or ""
 	local classification = UnitClassification(unit)
 	local classification_names = {
 		["worldboss"] = "Boss",
@@ -37,8 +37,9 @@ function mod:npc_tooltip(self, unit)
 			local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = GetFactionInfo(factionIndex)
 				if (not isHeader and name == faction:GetText() and standingId > 0) then
 					local info, color = unpack(standings[standingId + 1])
-					faction:SetText(name.." (|cff"..color..info..")|r")
-					-- DEFAULT_CHAT_FRAME:AddMessage("Faction: " .. name .. " - " .. standingId, bottomValue, topValue, earnedValue)
+					faction:SetText(name.." (|cff"..color..info.."|r)")
+
+					break
 				end
 		  end
 	end
@@ -55,9 +56,24 @@ function mod:npc_tooltip(self, unit)
 		end
 
 		-- Friend / Enemy coloring
-		local friendColor = factionGroup == "Horde" and {r = 1, g = 0.15, b = 0} or {r = 0, g = 0.55, b = 1}
-		level_line:SetFormattedText('|cff%s%s|r |cff%s|r%s |cffFFFF00%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), creatureType, classification)
+		local r, g, b = _G['GameTooltipTextLeft1']:GetTextColor()
+		local friendColor = {r = r, g = g, b = b}
+		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffFFFF00%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), creatureType, classification)
 	end
 
-	
+	-- hide quest things in raid
+	-- local lines = self:NumLines(true)
+	-- for i = 1, lines do
+	-- 	local text = line and line:GetText()
+	-- 	if (not text) then
+	-- 		return
+	-- 	end
+
+	-- 	local textOffset = select(4, text:GetPoint(2)) or 0
+	-- 	local isQuestText = textOffset == 28
+
+	-- 	if (isQuestText) then
+	-- 		GameTooltip:DeleteLine(i)
+	-- 	end
+	-- end
 end

@@ -3,10 +3,15 @@ local fpmod = mod
 local mod = bdUI:get_module("Bags (beta)")
 
 -- format money string
-local function return_money(money)
+local function break_money(money)
 	local gold = floor(abs(money / 10000))
 	local silver = floor(abs(fpmod(money / 100, 100)))
 	local copper = floor(abs(fpmod(money, 100)))
+
+	return gold, silver, copper
+end
+local function return_money(money)
+	local gold, silver, copper = break_money(money)
 
 	local moneyString = "";
 	if (gold > 0) then
@@ -60,6 +65,23 @@ local methods = {
 		mod.gold = BDUI_SAVE.persistent.goldtrack
 
 		local money = GetMoney()
+
+		local gold, silver, copper = break_money(money)
+		
+
+		local moneyString = ""
+		-- if (gold > 100) then
+			-- moneyString = "|cffF0D440"..BreakUpLargeNumbers(gold).."|r"
+		-- else
+			-- moneyString = "|"...."|r"
+			moneyString = BreakUpLargeNumbers(gold).."|cffF0D440g|r"
+			moneyString = moneyString.." "..silver.."|cffC0C0C0s|r"
+			moneyString = moneyString.." "..copper.."|cffFF8F32c|r"
+		-- end
+
+		self.text:SetText(moneyString)
+		self:SetWidth(self.text:GetStringWidth() + 8)
+
 		local name, r = UnitName("player")
 		local class, classFileName = UnitClass("player")
 		local color = RAID_CLASS_COLORS[classFileName]
@@ -76,20 +98,20 @@ local methods = {
 }
 
 function mod:create_money(name, parent)
-	local money = CreateFrame("button", "bd"..name.."Money", parent, "SmallMoneyFrameTemplate")
+	local money = CreateFrame("button", "bd"..name.."Money", parent)
+	money:SetSize(200, 10)
 	Mixin(money, methods)
+
+	money.text = money:CreateFontString(nil, "OVERLAY")
+	money.text:SetFontObject(bdUI:get_font(13))
+	money.text:SetPoint("LEFT", money)
+
 	money:RegisterEvent("PLAYER_ENTERING_WORLD")
 	money:RegisterEvent("PLAYER_MONEY")
 	money:HookScript("OnEvent", money.update)
 	money:HookScript("OnEnter", money.onenter)
 	money:HookScript("OnLeave", money.onleave)
 	money:HookScript("OnClick", money.click)
-
-	for k, v in pairs({"Gold", "Silver", "Copper"}) do
-		_G[money:GetName()..v.."ButtonText"]:SetFontObject(bdUI:get_font(12))
-		_G[money:GetName()..v.."Button"]:EnableMouse(false)
-		_G[money:GetName()..v.."Button"]:SetFrameLevel(8)
-	end
 
 	return money
 end

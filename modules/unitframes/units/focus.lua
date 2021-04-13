@@ -15,7 +15,7 @@ mod.custom_layout["focus"] = function(self, unit)
 
 	self.Name:SetPoint("CENTER", self.Health)
 	self.Name:SetFontObject(bdUI:get_font(12))
-	self.Name:SetWidth(config.focuswidth - self.Perpp:GetWidth() - self.Perhp:GetWidth() - 16)
+	-- self.Name:SetWidth(config.focuswidth - self.Perpp:GetWidth() - self.Perhp:GetWidth() - 16)
 
 	self.Debuffs.initialAnchor = "TOPLEFT"
 	self.Debuffs['growth-x'] = "RIGHT"
