@@ -118,8 +118,8 @@ local is_whitelist_raid = function(self, name, spellID, castByMe, isBossDebuff, 
 end
 
 -- bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras)
-bdUI.is_whitelisted = memoize(is_whitelisted, bdUI.caches.auras.white)
-bdUI.is_blacklisted = memoize(is_blacklisted, bdUI.caches.auras.black)
+bdUI.is_whitelisted = is_whitelisted --, bdUI.caches.auras.white)
+bdUI.is_blacklisted = is_blacklisted --, bdUI.caches.auras.black)
 bdUI.is_whitelist_nameplate = memoize(is_whitelist_nameplate, bdUI.caches.auras.nameplate)
 bdUI.is_whitelist_mine = is_whitelist_mine --, bdUI.caches.auras.mine)
 bdUI.is_whitelist_class = is_whitelist_class --, bdUI.caches.auras.class)

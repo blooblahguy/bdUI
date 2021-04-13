@@ -479,7 +479,7 @@ local function nameplate_create(self, unit)
 	self.specialExpiration = 0
 	self.enrageExpiration = 0
 	
-	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
@@ -493,7 +493,7 @@ local function nameplate_create(self, unit)
 			return true
 		end
 
-		return mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
+		return mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowPersonal, nameplateShowAll)
 	end
 	
 	self.Auras.PostCreateIcon = function(self, button)

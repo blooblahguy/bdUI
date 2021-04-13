@@ -11,16 +11,16 @@ local config = {
 		type = "tab",
 		label = "Style",
 		args = {
-			-- {
-			-- 	key = "font",
-			-- 	type = "select",
-			-- 	value = bdUI.media.font,
-			-- 	options = fonts,
-			-- 	label = "Font",
-			-- 	size = "full",
-			-- 	action = "bdUI/fonts",
-			-- 	lookup = bdUI.get_fonts
-			-- },
+			{
+				key = "font",
+				type = "select",
+				value = bdUI.media.font,
+				options = fonts,
+				label = "Font",
+				size = "full",
+				action = "bdUI/fonts",
+				lookup = bdUI.get_fonts
+			},
 			{
 				key = "change_fonts",
 				type = "toggle",
