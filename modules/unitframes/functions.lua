@@ -14,6 +14,7 @@ function mod:display_text(self, unit, align)
 	self.Name:ClearAllPoints()
 	self.Curhp:ClearAllPoints()
 	self.Status:ClearAllPoints()
+	self.Curpp:ClearAllPoints()
 
 	local LEFT = "LEFT"
 	local RIGHT = "RIGHT"
@@ -40,6 +41,7 @@ function mod:display_text(self, unit, align)
 		
 		self.Name:SetPoint("TOP"..RIGHT, self.TextHolder, "TOP"..LEFT, -offset, 0)
 		self.Curhp:SetPoint("TOP"..RIGHT, self.Name, "BOTTOM"..RIGHT, 0, -mod.padding)
+		self.Curpp:SetPoint(LEFT, offset, 0)
 
 		self.Status:SetPoint(RIGHT, -offset, 0)
 	elseif (config.textlocation == "Minimal") then

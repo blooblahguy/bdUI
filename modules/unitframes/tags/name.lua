@@ -5,7 +5,10 @@ local oUF = bdUI.oUF
 mod.tags.name = function(self, unit)
 	if (self.Name) then return end
 
-	local update_name = function(unit, r)
+	self.Name = self.TextHolder:CreateFontString(nil, "OVERLAY")
+	self.Name:SetFontObject(bdUI:get_font(13))
+	oUF.Tags.Events["bdUI:name"] = "UNIT_NAME_UPDATE"
+	oUF.Tags.Methods["bdUI:name"] = function(unit, r)
 		local name = UnitName(r or unit)
 		local c = UnitClassification(r or unit)
 		
@@ -33,12 +36,7 @@ mod.tags.name = function(self, unit)
 		else
 			return name 
 		end
-	end
-
-	self.Name = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Name:SetFontObject(bdUI:get_font(13))
-	oUF.Tags.Events["bdUI:name"] = "UNIT_NAME_UPDATE"
-	oUF.Tags.Methods["bdUI:name"] = update_name	
+	end	
 	
 	self:Tag(self.Name, '[bdUI:name]')
 end

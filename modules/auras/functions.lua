@@ -9,7 +9,7 @@ local auras
 -- Whitelist
 --===============================================
 local is_whitelisted = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-	-- auras = auras or mod.config
+	auras = auras or mod.auras
 	name = name:lower()
 
 	

@@ -12,6 +12,8 @@ mod.custom_layout.arena = function(self, unit)
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit)
 	mod.additional_elements.auras(self, unit)
+	-- power
+	mod.tags.pp(self, unit)
 	
 	self.Power:SetHeight(config.bosspower)
 	self.Power:Show()

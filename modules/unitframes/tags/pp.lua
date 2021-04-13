@@ -7,14 +7,33 @@ mod.tags.pp = function(self, unit)
 
 	self.Curpp = self.TextHolder:CreateFontString(nil, "OVERLAY")
 	self.Curpp:SetFontObject(bdUI:get_font(11))
-	self.Curpp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
+	self.Curpp:SetPoint("LEFT", -4, 0)
 	self.Curpp:SetTextColor(self.Power:GetStatusBarColor())
 
-	oUF.Tags.Events['bdUI:Curpp'] = 'UNIT_POWER_UPDATE UNIT_MAXPOWER'
+	-- self.pp_color = CreateFrame("frame", nil)
+	-- self.pp_color:RegisterEvent("UNIT_POWER_UPDATE")
+	-- self.pp_color:RegisterEvent("UNIT_MAXPOWER")
+	-- self.pp_color:RegisterEvent("PLAYER_TARGET_CHANGED")
+	-- self.pp_color:RegisterEvent("UNIT_NAME_UPDATE")
+	-- self.pp_color:SetScript("OnEvent", function()
+	-- 	self.Curpp:SetTextColor(self.Power:GetStatusBarColor())
+	-- end)
+	
+	local curpp = self.Curpp
+	self.Power.PostUpdateColor = function(self, unit, r, g, b)
+		curpp:SetTextColor(r, g, b)
+		-- print(unit, r, g, b)
+	end
+	
+	oUF.Tags.Events['bdUI:Curpp'] = 'UNIT_POWER_UPDATE UNIT_MAXPOWER PLAYER_TARGET_CHANGED'
 	oUF.Tags.Methods['bdUI:Curpp'] = function(unit)
 		local pp, ppMax = UnitPower(unit), UnitPowerMax(unit)
 
-		return bdUI:round(hp / hpMax * 100)
+		-- if (pp == 0) then return "" end
+
+		
+
+		return bdUI:round(pp / ppMax * 100)
 		-- local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
 		-- if (bdUI.mobhealth) then -- foir classic
 		-- 	hp, hpMax = bdUI.mobhealth:GetUnitHealth(unit)

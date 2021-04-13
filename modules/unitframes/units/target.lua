@@ -28,6 +28,8 @@ mod.custom_layout["target"] = function(self, unit)
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 	mod.additional_elements.aurabars(self, unit)
+	-- power
+	mod.tags.pp(self, unit)
 
 	-- icon buffs
 	self.Buffs:ClearAllPoints()
@@ -58,38 +60,11 @@ mod.custom_layout["target"] = function(self, unit)
 			return true
 		end
 
-		return duration > 0 and castByPlayer
+		if (duration > 0 and castByPlayer) then -- cast by a player, but not a mount or an aura
+			return true
+		end
 
-		-- return true
-
-		-- allow it if it's tracked in the ui and not blacklisted
-		
-		
-
-		-- return true
-
-		-- return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-		-- if ( bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll) ) then
-		-- 	return true
-		-- end
-
-		-- if (InCombatLockdown()) then
-		-- 	if (duration ~= 0 and duration > 300) then
-		-- 		return true
-		-- 	end
-		-- else
-		-- 	if (castByPlayer) then return true end
-		-- 	if (source) then return true end
-		-- 	if (isBossDebuff) then return true end
-		-- end
-
-		
-
-		-- return true
-		-- look for non player casters
-		-- if (not strfind(source, "raid") and not strfind(source, "party") and not source == "player") then
-		-- 	return true
-		-- end
+		return not castByPlayer or not source -- this may have been casted by no one or by a boss
 	end
 
 	-- icon debuffs
