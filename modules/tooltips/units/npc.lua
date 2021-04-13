@@ -46,6 +46,9 @@ function mod:npc_tooltip(self, unit)
 
 	-- color leveling
 	local level_line, level_line_index = GameTooltip:FindLine("Level %d")
+	if (not level_line) then
+		level_line, level_line_index = GameTooltip:FindLine("Level ??")
+	end
 	if (level_line) then
 		-- Color level by difficulty
 		local level = UnitLevel(unit)
