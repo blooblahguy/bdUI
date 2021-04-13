@@ -13,10 +13,6 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 		return false
 	end
 
-	-- if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
-	-- 	return true
-	-- end
-
 	if (castByMe and duration ~= 0 and duration < 300) then
 		return true
 	end
@@ -32,11 +28,7 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
 	mod.additional_elements.buffs(self, unit)
-	-- mod.additional_elements.resting(self, unit)
-	-- mod.additional_elements.combat(self, unit)
 	mod.additional_elements.aurabars(self, unit)
-	-- mod.additional_elements.perhp(self, unit)
-	-- power
 	mod.tags.pp(self, unit)
 
 	self.Buffs.CustomFilter = buff_filter
@@ -50,23 +42,6 @@ mod.custom_layout["player"] = function(self, unit)
 		self:SetSize(config.playertargetwidth, config.playertargetheight)
 
 		mod:display_text(self, unit, "left")
-
-		-- text
-		-- if (config.hideplayertext) then
-		-- 	self.Name:Hide()
-		-- 	self.Curhp:Hide()
-		-- else
-		-- 	mod.align_text(self)
-		-- 	self.Name:Show()
-		-- 	self.Curhp:Show()
-		-- end
-
-		-- if (config.textlocation == "Minimal") then
-		-- 	self.Perhp:ClearAllPoints()
-		-- 	self.Perpp:ClearAllPoints()
-		-- 	self.Perhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
-		-- 	self.Perpp:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
-		-- end
 
 		-- auras
 		if (config.aurastyle == "Bars") then
@@ -95,32 +70,5 @@ mod.custom_layout["player"] = function(self, unit)
 		else
 			self:DisableElement("Power")
 		end
-
-		-- resting
-		-- if (config.enable_rested_indicator) then
-		-- 	self:EnableElement("RestingIndicator")
-		-- 	self.RestingIndicator:ClearAllPoints()
-		-- 	if (config.textlocation == "Outside") then
-		-- 		self.RestingIndicator:SetPoint("LEFT", self.Health, mod.padding, 1)
-		-- 	elseif (config.textlocation == "Inside") then
-		-- 		self.RestingIndicator:SetPoint("LEFT", self.Health, "CENTER", mod.padding, 1)
-		-- 	end
-		-- else
-		-- 	self:DisableElement("RestingIndicator")
-		-- end
-
-		-- combat
-		-- if (config.enable_combat_indicator) then
-		-- 	self:EnableElement("CombatIndicator")
-		-- 	self.CombatIndicator:ClearAllPoints()
-		-- 	if (config.textlocation == "Outside") then
-		-- 		self.CombatIndicator:SetPoint("RIGHT", self.Health, -mod.padding, 1)
-		-- 	elseif (config.textlocation == "Inside") then
-		-- 		self.CombatIndicator:SetPoint("RIGHT", self.Health, "CENTER", -mod.padding, 1)
-		-- 	end
-		-- else
-		-- 	self:DisableElement("CombatIndicator")
-		-- end
-
 	end
 end

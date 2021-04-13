@@ -29,9 +29,7 @@ mod.tags.pp = function(self, unit)
 	oUF.Tags.Methods['bdUI:Curpp'] = function(unit)
 		local pp, ppMax = UnitPower(unit), UnitPowerMax(unit)
 
-		-- if (pp == 0) then return "" end
-
-		
+		if (ppMax == 0) then return "" end
 
 		return bdUI:round(pp / ppMax * 100)
 		-- local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)

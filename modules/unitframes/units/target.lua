@@ -15,7 +15,7 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 		return true
 	end
 
-	return castByMe and duration ~= 0 and duration < 300
+	return castByMe and duration < 300
 end
 
 -- target specific elements
@@ -38,10 +38,6 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Buffs.size = 14
 	self.Buffs['growth-x'] = "LEFT"
 	self.Buffs.initialAnchor  = "BOTTOMRIGHT"
-	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-	end
 	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
@@ -75,10 +71,6 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Debuffs.initialAnchor = "BOTTOMLEFT"
 	self.Debuffs['growth-x'] = "RIGHT"
 	self.Debuffs.CustomFilter = debuff_filter
-	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-	end
 
 	-- aurabar debuffs
 	self.AuraBars.CustomFilter = debuff_filter
@@ -126,22 +118,8 @@ mod.custom_layout["target"] = function(self, unit)
 		if (config.playertargetpowerheight == 0) then
 			self.Power:Hide()
 		end
+
 		-- auras
-		-- self.Buffs:ClearAllPoints()
-
-		-- if (config.uf_buff_target_match_player) then
-		-- 	self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
-		-- 	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-		-- 	self.Buffs:SetSize(config.playertargetwidth, 60)
-		-- 	self.Buffs.size = config.uf_buff_size
-		-- 	self.Buffs['growth-x'] = "RIGHT"
-		-- 	self.Buffs.initialAnchor  = "BOTTOMLEFT"
-		-- else
-		-- 	self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 7, 2)
-		-- 	self.Buffs:SetSize(80, 60)
-		-- 	self.Buffs.size = 12
-		-- end
-
 		if (config.aurastyle == "Bars") then
 			self.Debuffs:Hide()
 			self.DisabledDebuffs = self.Debuffs

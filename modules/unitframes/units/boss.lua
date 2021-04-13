@@ -18,10 +18,6 @@ mod.custom_layout["boss"] = function(self, unit)
 	self.Debuffs['growth-y'] = "DOWN"
 	self.Debuffs:ClearAllPoints()
 	self.Debuffs:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -5, 0)
-	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-	end
 	-- debuff filter for both icons and bars
 	self.Debuffs.CustomFilter  = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -43,10 +39,6 @@ mod.custom_layout["boss"] = function(self, unit)
 	self.Auras['growth-y'] = "DOWN"
 	self.Auras:ClearAllPoints()
 	self.Auras:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, 0)
-	self.Auras.PostUpdateIcon = function(self, unit, button, index, position)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-	end
 	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false

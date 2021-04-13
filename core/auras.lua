@@ -3,7 +3,7 @@ local bdUI, c, l = unpack(select(2, ...))
 
 -- for classic cooldown spirals
 function bdUI:update_duration(cd_frame, unit, spellID, caster, name, duration, expiration)
-	if (not bdUI.spell_durations) then
+	if (not bdUI.spell_durations or duration ~= 0 or expiration ~= 0) then
 		return duration, expiration
 	end
 

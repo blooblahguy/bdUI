@@ -12,15 +12,16 @@ if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
 bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
 
 -- classic spell durations
+local UnitAura = _G.UnitAura
 bdUI.spell_durations = LibStub("LibClassicDurations")
 bdUI.spell_durations:Register("bdUI")
+UnitAura = bdUI.spell_durations
 
-local UnitAura = _G.UnitAura
-local LibClassicDurations = LibStub("LibClassicDurations", true)
-if LibClassicDurations then
-	LibClassicDurations:Register("YourAddon")
-	UnitAura = LibClassicDurations.UnitAuraWrapper
-end
+-- local LibClassicDurations = LibStub("LibClassicDurations", true)
+-- if LibClassicDurations then
+-- 	LibClassicDurations:Register("bdUI")
+-- 	UnitAura = LibClassicDurations.UnitAuraWrapper
+-- end
 
 -- globals
 ATTACK_BUTTON_FLASH_TIME = ATTACK_BUTTON_FLASH_TIME or 0.4
