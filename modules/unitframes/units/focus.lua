@@ -41,7 +41,7 @@ mod.custom_layout["focus"] = function(self, unit)
 			return false
 		end
 
-		if (is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or not source or isBossDebuff) then -- this may have been casted by no one or by a boss
+		if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or not source or isBossDebuff) then -- this may have been casted by no one or by a boss
 			return true
 		end
 

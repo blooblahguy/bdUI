@@ -8,14 +8,15 @@ mod.additional_elements.aurabars = function(self, unit)
 	local config = mod.config
 
 	self.AuraBars = CreateFrame("Frame", "bdUF_AuraBars", self)
-	self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, bdUI.border * 3)
-	self.AuraBars:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border * 3)
+	self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", bdUI.border * 2, bdUI.border)
+	-- self.AuraBars:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border)
 	self.AuraBars:SetHeight(60)
-	self.AuraBars.width = config.playertargetwidth
+	self.AuraBars:SetWidth(config.playertargetwidth - (bdUI.border * 2))
+	self.AuraBars.width = config.playertargetwidth - (bdUI.border * 2)
 	self.AuraBars.height = 16
 	self.AuraBars.sparkDisabled = true
-	self.AuraBars.spacing = bdUI.border * 3
-	self.AuraBars.fontObject = "BDUI_UF_AURAS"
+	self.AuraBars.spacing = bdUI.border
+	self.AuraBars.fontObject = bdUI:get_font(10)
 	self.AuraBars.texture = bdUI.media.smooth
 	self.AuraBars.baseColor = bdUI.media.blue
 

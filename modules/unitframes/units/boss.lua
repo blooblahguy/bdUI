@@ -53,7 +53,7 @@ mod.custom_layout["boss"] = function(self, unit)
 			return true
 		end
 
-		return is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or not source or not UnitIsPlayer(source) -- this may have been casted by no one or by a boss
+		return bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or not source or not UnitIsPlayer(source) -- this may have been casted by no one or by a boss
 	end
 
 	

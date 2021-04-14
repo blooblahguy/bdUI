@@ -67,10 +67,12 @@ local function createAuraBar(element, index)
 	icon:SetPoint('RIGHT', statusBar, 'LEFT', -(element.gap or 2), 0)
 	icon:SetSize(element.height, element.height)
 
-	local nameText = statusBar:CreateFontString(nil, 'OVERLAY', element.fontObject)
+	local nameText = statusBar:CreateFontString(nil, 'OVERLAY')
+	nameText:SetFontObject(element.fontObject)
 	nameText:SetPoint('LEFT', statusBar, 'LEFT', 2, 0)
 
-	local timeText = statusBar:CreateFontString(nil, 'OVERLAY', element.fontObject)
+	local timeText = statusBar:CreateFontString(nil, 'OVERLAY')
+	timeText:SetFontObject(element.fontObject)
 	timeText:SetPoint('RIGHT', statusBar, 'RIGHT', -2, 0)
 
 	statusBar.icon = icon

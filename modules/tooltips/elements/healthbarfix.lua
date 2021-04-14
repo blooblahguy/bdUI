@@ -5,10 +5,19 @@ function mod:fix_healthbars()
 	GameTooltip:HookScript('OnTooltipSetUnit', function(self, unit)
 		if (self._healthbars) then return end
 
+		local function update_color(self)
+			if (UnitIsPlayer("mouseover")) then
+				self:SetStatusBarColor( mod:getUnitColor() )
+			else
+				self:SetStatusBarColor( GameTooltipTextLeft1:GetTextColor() )
+			end
+		end
+
 		GameTooltipStatusBar:ClearAllPoints()
 		GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, bdUI.border)
 		GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 6)
 		GameTooltipStatusBar:SetStatusBarTexture(bdUI.media.smooth)
+		hooksecurefunc(GameTooltipStatusBar, "SetValue", update_color)
 		GameTooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 		GameTooltipStatusBar:RegisterEvent("UNIT_HEALTH")
 		GameTooltipStatusBar:SetScript("OnEvent", function(self)
@@ -17,11 +26,6 @@ function mod:fix_healthbars()
 			local hp, hpmax = UnitHealth("mouseover"), UnitHealthMax("mouseover")
 			self:SetMinMaxValues(0, hpmax)
 			self:SetValue(hp)
-			if (UnitIsPlayer("mouseover")) then
-				self:SetStatusBarColor( mod:getUnitColor() )
-			else
-				self:SetStatusBarColor( GameTooltipTextLeft1:GetTextColor() )
-			end
 
 			local perc = 0
 			if (hp > 0 and hpmax > 0) then

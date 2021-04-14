@@ -10,9 +10,12 @@ mod.friendly_style = function(self, event, unit)
 	if (self.currentStyle and self.currentStyle == "friendly") then return end
 	self.currentStyle = "friendly"
 
+	-- print(unit)
+
 	-- auras
 	self.Auras:Show()
 
+	self.Name:Show()
 	-- names
 	if (config.hidefriendnames) then
 		self.Name:Hide()
