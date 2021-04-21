@@ -2,6 +2,11 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Buffs and Debuffs")
 local config
 
+local function round(num, numDecimalPlaces)
+	local mult = 10^(numDecimalPlaces or 0)
+	return math.floor(num * mult + 0.5) / mult
+end
+
 local total = 0
 local debuff_colors = {
 	['Magic'] = { 0.20, 0.60, 1.00 },
@@ -38,9 +43,9 @@ local debufffont = bdUI:get_font(12)
 -- Time Function
 --===============================================
 local function set_time(button, duration)
-	local seconds = Round(duration)
-	local mins = Round(seconds/60);
-	local hours = Round(mins/60, 1);
+	local seconds = round(duration)
+	local hours = round(seconds / 60 / 60, 1)
+	local mins = math.floor(seconds / 60)
 
 	if(duration <= 0) then
 		button.duration:SetText('')

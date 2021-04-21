@@ -95,7 +95,7 @@ local function update_unit_tooltip(self)
 
 		minwidth = math.max(minwidth, strlen(text) * 6.65)
 	end
-	self:SetMinimumWidth(math.min(minwidth, 150))
+	self:SetMinimumWidth(math.min(minwidth, 110))
 end
 
 function mod:create_tooltips()
