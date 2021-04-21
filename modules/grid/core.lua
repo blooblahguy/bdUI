@@ -751,11 +751,11 @@ function mod:disable_blizzard()
 
 		if (CompactUnitFrameProfiles) then
 			-- CompactUnitFrameProfiles:UnregisterAllEvents()
-			CompactRaidFrameManagerContainerResizeFrame:Hide()
+			-- CompactRaidFrameManagerContainerResizeFrame:Hide()
 		end
 		if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
-			CompactRaidFrameManager:UnregisterAllEvents() 
-			CompactRaidFrameContainer:UnregisterAllEvents() 
+			-- CompactRaidFrameManager:UnregisterAllEvents() 
+			-- CompactRaidFrameContainer:UnregisterAllEvents() 
 		end
 		-- addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	end)
