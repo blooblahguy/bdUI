@@ -7,6 +7,18 @@ local bdUI, c, l = unpack(select(2, ...))
 local defaultwhitelist = {}
 defaultwhitelist['Arcane Torrent'] = true
 defaultwhitelist['War Stomp'] = true
+-- CC
+defaultwhitelist['Banish'] = true
+defaultwhitelist['Repentance'] = true
+defaultwhitelist['Polymorph: Sheep'] = true
+defaultwhitelist['Polymorph'] = true
+defaultwhitelist['Blind'] = true
+defaultwhitelist['Paralyze'] = true
+defaultwhitelist['Imprison'] = true
+defaultwhitelist['Sap'] = true
+defaultwhitelist['Hammer of Justice'] = true
+defaultwhitelist['Fear'] = true
+defaultwhitelist['Intimidating Shout'] = true
 
 local fixateMobs = {}
 fixateMobs['Tormented Fragment'] = true
@@ -494,7 +506,7 @@ local config = {
 				tooltip = "Units who's name are in this list will have a fixate icon when they target you."
 			},
 			{
-				key = "specialSpells ",
+				key = "specialSpells",
 				type = "list",
 				value = specialSpells,
 				label = "Special Spell List",

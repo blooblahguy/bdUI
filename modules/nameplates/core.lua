@@ -44,6 +44,15 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
 	if (not config.enabled) then return false end
+
+	-- store lowercase tables
+	mod.lists = {}
+	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
+	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
+	-- mod.lists.specialSpells = bdUI:lowercase_table(config.specialSpells) -- not using these at all right now?
+	-- mod.lists.selfwhitelist = bdUI:lowercase_table(config.selfwhitelist) -- not using these at all right now?
+	-- mod.lists.whitelist = bdUI:lowercase_table(config.whitelist) -- not using these at all right now?
+	-- mod.lists.blacklist = bdUI:lowercase_table(config.blacklist) -- not using these at all right now?
 	
 	-- Update nameplate sizing
 	mod:nameplate_size()
@@ -198,7 +207,7 @@ local function update_threat(self, event, unit)
 		healthbar:SetStatusBarColor(unpack(self.smartColors))
 	elseif (((cur / max) * 100) <= config.executerange) then
 		healthbar:SetStatusBarColor(unpack(config.executecolor))
-	elseif (config.specialunits[UnitName(unit):lower()]) then
+	elseif (mod.lists.specialunits[UnitName(unit):lower()]) then
 		healthbar:SetStatusBarColor(unpack(config.specialcolor))
 	else
 		healthbar:SetStatusBarColor(unpack(self.smartColors))
@@ -445,7 +454,7 @@ local function nameplate_create(self, unit)
 
 		if (not UnitExists(target)) then return end
 
-		if (config.fixateMobs[UnitName(unit)]) then
+		if (mod.lists.fixateMobs[UnitName(unit):lower()]) then
 			self:Show()
 			self:SetText(UnitName(target))
 		elseif (isTargeting) then
