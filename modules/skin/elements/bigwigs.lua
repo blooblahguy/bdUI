@@ -13,8 +13,8 @@ local function BW_Style()
 	BigWigsAPI:RegisterBarStyle("Big Dumb", {
 		apiVersion = 1,
 		version = 1,
-		barHeight = 16,
-		GetSpacing = function(bar) return 10 end,
+		-- barHeight = 16,
+		GetSpacing = function(bar) return 8 end,
 		ApplyStyle = function(bar) 			
 			bar.bg = CreateFrame('frame', nil, bar)
 			bar.bg:SetFrameStrata("BACKGROUND")
@@ -25,35 +25,41 @@ local function BW_Style()
 			bar.ibg:SetFrameStrata("BACKGROUND")
 			bar.ibg:SetAllPoints(bar.candyBarIconFrame)
 			bdUI:set_backdrop(bar.ibg)
+
+			bar.candyBarIconFrame:ClearAllPoints()
+			bar.candyBarIconFrame:SetPoint("BOTTOMLEFT", bar, "BOTTOMLEFT", 0, 0)
+			bar.candyBarIconFrame:SetSize(20, 20)
+			bar.candyBarIconFrame:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+
+			-- bar
+			bar.candyBarBar:ClearAllPoints()
+			-- bar.candyBarBar:SetPoint("TOPLEFT", bar, "BOTTOMLEFT", 0, 6)
+			bar.candyBarBar:SetPoint("BOTTOMLEFT", bar.candyBarIconFrame, "BOTTOMRIGHT", 6, 0)
+			bar.candyBarBar:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0)
+			bar.candyBarBar:SetHeight(6)
+			bar.candyBarBar:SetStatusBarTexture(bdUI.media.flat)
 			
 			bar.candyBarDuration:SetFont(bdUI.media.font, 14, "THINOUTLINE")
 			bar.candyBarDuration:SetShadowOffset(0,0)
 			bar.candyBarDuration:SetJustifyH("RIGHT")
 			bar.candyBarDuration:ClearAllPoints()
-			bar.candyBarDuration:SetPoint("RIGHT", bar, "RIGHT", 2, 4)
+			bar.candyBarDuration:SetPoint("BOTTOMRIGHT", bar.candyBarBar, "TOPRIGHT", 2, 2)
 			
 			bar.candyBarLabel:SetFont(bdUI.media.font, 13, "THINOUTLINE")
 			bar.candyBarLabel:SetShadowOffset(0,0)
 			bar.candyBarLabel:SetJustifyH("LEFT")
 			bar.candyBarLabel:ClearAllPoints()
-			bar.candyBarLabel:SetPoint("LEFT", bar, "LEFT", -2, 4)
+			bar.candyBarLabel:SetPoint("BOTTOMLEFT", bar.candyBarBar, "TOPLEFT", -2, 2)
 					
-			bar.candyBarBar:SetStatusBarTexture(bdUI.media.flat)
 			bar.candyBarBackground:SetTexture(bdUI.media.flat)
 			bar.candyBarBackground:SetVertexColor(.1,.1,.1,.4)
-			bar.candyBarBackground.SetVertexColor = function() return end
+			-- bar.candyBarBackground.SetVertexColor = function() return end
 			
-			bar.candyBarBar:ClearAllPoints()
-			bar.candyBarBar:SetPoint("TOPLEFT", bar, "BOTTOMLEFT", 0, 6)
-			bar.candyBarBar:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0)
-			bar.candyBarBar.OldSetPoint = bar.candyBarBar.SetPoint
-			bar.candyBarBar.SetPoint = function() return end
 			
-			bar.candyBarIconFrame:ClearAllPoints()
-			bar.candyBarIconFrame:SetPoint("BOTTOMLEFT", bar, "BOTTOMLEFT", -26, 0)
-			bar.candyBarIconFrame:SetSize(20, 20)
-			bar.candyBarIconFrame.SetWidth = function() return end
-			bar.candyBarIconFrame:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+			-- bar.candyBarBar.OldSetPoint = bar.candyBarBar.SetPoint
+			-- bar.candyBarBar.SetPoint = function() return end
+			
+			
 		end,
 		BarStopped = function(bar) 
 			bar.candyBarBar.SetPoint = bar.candyBarBar.OldSetPoint
