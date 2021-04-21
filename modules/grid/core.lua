@@ -82,6 +82,8 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
 	if (not config.enabled) then return false end
+
+	mod.highlights = bdUI:lowercase_table(config.specialalerts)
 	
 	-- prevent case where callback is called before frameHeader initialization
 	if (not mod.frameHeader) then return end

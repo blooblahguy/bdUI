@@ -27,7 +27,7 @@ mod.custom_layout["boss"] = function(self, unit)
 
 		if (not castByMe) then return false end
 
-		if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		if (bdUI:is_blacklisted(name)) then
 			return false
 		end
 
@@ -45,7 +45,7 @@ mod.custom_layout["boss"] = function(self, unit)
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		if (bdUI:is_blacklisted(name)) then
 			return false
 		end
 

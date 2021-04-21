@@ -1,6 +1,31 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
+local buff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	isBossDebuff = isBossDebuff or false
+	nameplateShowAll = nameplateShowAll or false
+	nameplateShowPersonal = nameplateShowPersonal or false
+	local castByMe = source and UnitIsUnit(source, "player") or false
+
+	if (bdUI:is_blacklisted(name)) then
+		return false
+	end
+	
+	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		return true
+	end
+
+	if (isStealable or isBossDebuff) then
+		return true
+	end
+
+	if (duration > 0 and castByPlayer) then -- cast by a player, but not a mount or an aura
+		return true
+	end
+
+	return not castByPlayer or not source -- this may have been casted by no one or by a boss
+end
+
 -- debuff filter for both icons and bars
 local debuff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 	isBossDebuff = isBossDebuff or false
@@ -8,7 +33,7 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 	nameplateShowPersonal = nameplateShowPersonal or false
 	local castByMe = source and UnitIsUnit(source, "player") or false
 
-	if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
 	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
@@ -38,30 +63,7 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Buffs.size = 14
 	self.Buffs['growth-x'] = "LEFT"
 	self.Buffs.initialAnchor  = "BOTTOMRIGHT"
-	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
-		isBossDebuff = isBossDebuff or false
-		nameplateShowAll = nameplateShowAll or false
-		nameplateShowPersonal = nameplateShowPersonal or false
-		local castByMe = source and UnitIsUnit(source, "player") or false
-
-		if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
-			return false
-		end
-		
-		if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
-			return true
-		end
-
-		if (isStealable or isBossDebuff) then
-			return true
-		end
-
-		if (duration > 0 and castByPlayer) then -- cast by a player, but not a mount or an aura
-			return true
-		end
-
-		return not castByPlayer or not source -- this may have been casted by no one or by a boss
-	end
+	-- self.Buffs.CustomFilter = buff_filter
 
 	-- icon debuffs
 	self.Debuffs:ClearAllPoints()
@@ -73,6 +75,7 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Debuffs.CustomFilter = debuff_filter
 
 	-- aurabar debuffs
+	self.AuraBars.filter = "HARMFUL"
 	self.AuraBars.CustomFilter = debuff_filter
 	
 	-- mod.align_text(self, "right")
@@ -121,15 +124,52 @@ mod.custom_layout["target"] = function(self, unit)
 
 		-- auras
 		if (config.aurastyle == "Bars") then
-			self.Debuffs:Hide()
-			self.DisabledDebuffs = self.Debuffs
-			self.Debuffs = nil
+			self.DisabledDebuffs = self.Buffs or self.DisabledDebuffs
+			if (self.Debuffs) then
+				self.Debuffs:Hide()
+				self.Debuffs = nil
+			end
+
 			self:EnableElement("AuraBars")
 			self.AuraBars:Show()
-		else
+
+			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
+			self.Buffs = self.DisabledBuffs or self.Buffs
+			self.Buffs:Show()
+			self.Buffs:ClearAllPoints()
+			self.Buffs:SetPoint("BOTTOMLEFT", self.Name, "TOPLEFT", 2, 4)
+			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+			self.Buffs.initialAnchor  = "BOTTOMLEFT"
+			self.Buffs["growth-x"] = "RIGHT"
+		elseif (config.aurastyle == "Icons") then
 			self.Debuffs = self.DisabledDebuffs or self.Debuffs
 			self.Debuffs.size = config.uf_buff_size
 			self.Debuffs:Show()
+
+			self:DisableElement("AuraBars")
+			self.AuraBars:Hide()
+			
+			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
+			self.Buffs = self.DisabledBuffs or self.Buffs
+			self.Buffs:Show()
+			self.Buffs:ClearAllPoints()
+			self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
+			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+			self.Buffs.initialAnchor = "BOTTOMRIGHT"
+			self.Buffs["growth-x"] = "LEFT"
+		else
+			self.DisabledDebuffs = self.Buffs or self.DisabledDebuffs
+			if (self.Debuffs) then
+				self.Debuffs:Hide()
+				self.Debuffs = nil
+			end
+
+			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
+			if (self.Buffs) then
+				self.Buffs:Hide()
+				self.Buffs = nil
+			end
+
 			self:DisableElement("AuraBars")
 			self.AuraBars:Hide()
 		end

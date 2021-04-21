@@ -32,6 +32,18 @@ local function sanitize(str)
 	return str
 end
 
+function bdUI:lowercase_table(t)
+	local new = {}
+
+	for k, v in pairs(t) do
+		k = type(k) == "string" and sanitize(k) or k
+		v = type(v) == "string" and sanitize(v) or v
+		new[k] = v
+	end
+
+	return new
+end
+
 function mod:store_lowercase_auras()
 	mod.config = mod:get_save()
 

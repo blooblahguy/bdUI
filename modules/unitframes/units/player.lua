@@ -9,7 +9,7 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 	-- classic
 	duration, expirationTime = bdUI:update_duration(button.cd, unit, spellId, source, name, duration, expirationTime)
 
-	if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
 
@@ -52,10 +52,18 @@ mod.custom_layout["player"] = function(self, unit)
 			end
 			self:EnableElement("AuraBars")
 			self.AuraBars:Show()
-		else
+		elseif (config.aurastyle == "Icons") then
 			self.Buffs = self.DisabledBuffs or self.Buffs
 			self.Buffs:Show()
 			self.Buffs.size = config.uf_buff_size
+			self:DisableElement("AuraBars")
+			self.AuraBars:Hide()
+		else
+			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
+			if (self.Buffs) then
+				self.Buffs:Hide()
+				self.Buffs = nil
+			end
 			self:DisableElement("AuraBars")
 			self.AuraBars:Hide()
 		end

@@ -130,7 +130,7 @@ local filter_aura = function(self, name, spellID, castByMe, isBossDebuff, namepl
 	name = name:lower()
 	-- print(name)
 
-	if (bdUI.is_blacklisted(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+	if (bdUI.is_blacklisted(self, name)) then
 		return false
 	end
 
