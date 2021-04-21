@@ -33,11 +33,12 @@ local function BW_Style()
 
 			-- bar
 			bar.candyBarBar:ClearAllPoints()
-			-- bar.candyBarBar:SetPoint("TOPLEFT", bar, "BOTTOMLEFT", 0, 6)
 			bar.candyBarBar:SetPoint("BOTTOMLEFT", bar.candyBarIconFrame, "BOTTOMRIGHT", 6, 0)
 			bar.candyBarBar:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 0, 0)
 			bar.candyBarBar:SetHeight(6)
 			bar.candyBarBar:SetStatusBarTexture(bdUI.media.flat)
+			bar.candyBarBar.OldSetPoint = bar.candyBarBar.SetPoint
+			bar.candyBarBar.SetPoint = function() return end
 			
 			bar.candyBarDuration:SetFont(bdUI.media.font, 14, "THINOUTLINE")
 			bar.candyBarDuration:SetShadowOffset(0,0)
@@ -53,12 +54,7 @@ local function BW_Style()
 					
 			bar.candyBarBackground:SetTexture(bdUI.media.flat)
 			bar.candyBarBackground:SetVertexColor(.1,.1,.1,.4)
-			-- bar.candyBarBackground.SetVertexColor = function() return end
-			
-			
-			-- bar.candyBarBar.OldSetPoint = bar.candyBarBar.SetPoint
-			-- bar.candyBarBar.SetPoint = function() return end
-			
+			bar.candyBarBackground.SetVertexColor = function() return end
 			
 		end,
 		BarStopped = function(bar) 

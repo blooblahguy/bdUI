@@ -63,7 +63,7 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Buffs.size = 14
 	self.Buffs['growth-x'] = "LEFT"
 	self.Buffs.initialAnchor  = "BOTTOMRIGHT"
-	-- self.Buffs.CustomFilter = buff_filter
+	self.Buffs.CustomFilter = buff_filter
 
 	-- icon debuffs
 	self.Debuffs:ClearAllPoints()
