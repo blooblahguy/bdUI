@@ -319,6 +319,20 @@ local function layout(self, unit)
 
 	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+
+		local dispelColors = {
+			['Magic'] = {.16, .5, .81, 1},
+			['Poison'] = {.12, .76, .36, 1},
+			['Disease'] = {.76, .46, .12, 1},
+			['Curse'] = {.80, .33, .95, 1},
+		}
+
+		if (dispelColors[debuffType]) then
+			button:set_border_color(dispelColors[debuffType])
+		else
+			button:set_border_color(unpack(bdUI.media.border))
+		end
+
 		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
 	end
 

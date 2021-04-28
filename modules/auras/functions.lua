@@ -9,10 +9,8 @@ local auras
 -- Whitelist
 --===============================================
 local is_whitelisted = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-	auras = auras or mod.auras
+	auras = mod.auras
 	name = name:lower()
-
-	
 
 	-- whitelisted if in raid
 	if (bdUI:is_whitelist_raid(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
@@ -41,7 +39,7 @@ end
 -- Blacklists
 --===============================================
 local is_blacklisted = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-	-- auras = auras or mod.config
+	auras = mod.auras
 	name = name:lower()
 
 	if (auras and auras["blacklist"][name]) then
@@ -55,6 +53,7 @@ end
 -- Nameplates
 --===============================================
 local is_whitelist_nameplate = function(self, castByMe, nameplateShowPersonal, nameplateShowAll)
+	-- auras = mod.auras
 	if ((nameplateShowPersonal and castByMe) or nameplateShowAll) then
 		return true
 	end
@@ -67,7 +66,7 @@ end
 -- Personal
 --===============================================
 local is_whitelist_mine = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-	-- auras = auras or mod.config
+	auras = mod.auras
 	name = name:lower()
 
 	-- print(name, auras["mine"][name])
@@ -87,7 +86,7 @@ end
 -- Class
 --===============================================
 local is_whitelist_class = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-	-- auras = auras or mod.config
+	auras = mod.auras
 	name = name:lower()
 
 	if (auras and auras[bdUI.class][name]) then	
@@ -101,7 +100,7 @@ end
 -- Raid
 --===============================================
 local is_whitelist_raid = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
-	-- auras = auras or mod.config
+	auras = mod.auras
 	name = name:lower()
 
 	local inInstance, instanceType = IsInInstance()
@@ -128,7 +127,6 @@ bdUI.is_whitelist_raid = is_whitelist_raid --, bdUI.caches.auras.raid)
 local filter_aura = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = mod.auras
 	name = name:lower()
-	-- print(name)
 
 	if (bdUI.is_blacklisted(self, name)) then
 		return false

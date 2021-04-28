@@ -45,7 +45,7 @@ mod.custom_layout["boss"] = function(self, unit)
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		if (bdUI:is_blacklisted(name)) then
+		if (bdUI:is_blacklisted(name) or castByPlayer) then
 			return false
 		end
 
@@ -58,15 +58,15 @@ mod.custom_layout["boss"] = function(self, unit)
 
 	
 	-- text
-	self.Name:SetPoint("LEFT", 4, 0)
+	self.Name:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 2)
 	self.Name:SetFontObject(bdUI:get_font(13))
 	
 	self.Curhp:ClearAllPoints()
-	self.Curhp:SetPoint("RIGHT", -4, 0)
+	self.Curhp:SetPoint("LEFT", 4, 0)
 	self.Curhp:SetFontObject(bdUI:get_font(11))
 	
 	self.Curpp:ClearAllPoints()
-	self.Curpp:SetPoint("CENTER")
+	self.Curpp:SetPoint("RIGHT", -4, 0)
 	self.Curpp:SetFontObject(bdUI:get_font(11))
 
 	-- self.Auras.initialAnchor = "TOPLEFT"

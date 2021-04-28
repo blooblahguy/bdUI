@@ -21,6 +21,8 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	bdUI.caches.auras = {}
 
+	collectgarbage()
+
 	mod:store_lowercase_auras()
 end
 
