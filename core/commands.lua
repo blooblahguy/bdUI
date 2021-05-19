@@ -107,7 +107,7 @@ end
 --======================================
 -- World Marker Buttons
 --======================================
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+if not bdUI:isClassicAny() then
 	local marks_table = {
 		[1] = {"Blue", "0496ff", 6}
 		, [2] = {"Green", "119c0c", 4}

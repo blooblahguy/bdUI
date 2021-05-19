@@ -78,7 +78,7 @@ A default texture will be applied to the Texture widgets if they don't have a te
     }
 --]]
 
-if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then return end
+if (bdUI:isClassicAny()) then return end
 
 local _, ns = ...
 local oUF = ns.oUF

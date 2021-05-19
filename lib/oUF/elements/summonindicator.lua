@@ -22,7 +22,7 @@ This element updates by changing the texture.
     self.SummonIndicator = SummonIndicator
 --]]
 
-if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then return end
+if (bdUI:isClassicAny()) then return end
 
 local _, ns = ...
 local oUF = ns.oUF

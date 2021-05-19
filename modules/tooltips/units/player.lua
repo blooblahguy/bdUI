@@ -8,6 +8,8 @@ local function unit_name(self, unit)
 		name = UnitPVPName(unit)
 	end
 
+	name = name and name or UnitName(unit) -- for classic 
+
 	-- color by class
 	self.namecolor = {mod:getUnitColor(unit)}
 	local namehex = RGBPercToHex(unpack(self.namecolor))
@@ -30,7 +32,7 @@ function mod:player_tooltip(self, unit)
 
 	GameTooltipTextLeft1:SetFormattedText('%s%s', name, dnd)
 
-	if (IsShiftKeyDown() and WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC) then
+	if (IsShiftKeyDown() and not bdUI:isClassicAny()) then
 		mod:getAverageItemLevel(self, self.unit)
 	end
 

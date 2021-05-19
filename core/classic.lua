@@ -6,16 +6,19 @@ local noob = CreateFrame("frame", nil, UIParent)
 --====================================================
 -- VANILLA
 --====================================================
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
+
+if not bdUI:isClassicAny() then return end
 
 -- mod health
 bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
 
 -- classic spell durations
-local UnitAura = _G.UnitAura
-bdUI.spell_durations = LibStub("LibClassicDurations")
-bdUI.spell_durations:Register("bdUI")
-UnitAura = bdUI.spell_durations
+if (bdUI:isClassicVanilla()) then
+	local UnitAura = _G.UnitAura
+	bdUI.spell_durations = LibStub("LibClassicDurations")
+	bdUI.spell_durations:Register("bdUI")
+	UnitAura = bdUI.spell_durations
+end
 
 -- local LibClassicDurations = LibStub("LibClassicDurations", true)
 -- if LibClassicDurations then

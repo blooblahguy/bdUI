@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
 
 function mod:create_unit_info()
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
+	if bdUI:isClassicAny() then return end
 
 	GameTooltip:HookScript('OnTooltipSetUnit', function(self, unit)
 		local name, unit = self:GetUnit()
@@ -44,7 +44,7 @@ function mod:create_unit_info()
 	end)
 end
 
-if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
+if bdUI:isClassicAny() then return end
 
 local inspector = CreateFrame("frame", nil, UIParent)
 inspector:RegisterEvent("INSPECT_READY")

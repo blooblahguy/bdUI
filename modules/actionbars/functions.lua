@@ -64,7 +64,7 @@ function mod:HideMainMenuBar()
 		BackpackTokenFrame_Update()
 	end
 	v.hidden:SetScript("OnEvent", OnEvent)
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then 
+	if not bdUI:isClassicAny() then 
 		v.hidden:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	end
 	for i, frame in next, framesToHide do

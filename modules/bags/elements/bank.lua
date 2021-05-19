@@ -141,7 +141,7 @@ end
 -- REAGENT/TABS
 --==============================================
 function mod:create_bank_tabs()
-	if (bdUI:get_game_version() == "vanilla") then return end
+	if (bdUI:isClassicAny()) then return end
 	mod.bank.tab1 = CreateFrame("frame", nil, mod.bank)
 	mod.bank.tab2 = CreateFrame("frame", nil, mod.bank)
 

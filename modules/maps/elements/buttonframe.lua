@@ -207,7 +207,7 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
 	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("MAIL_CLOSED")
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	if not bdUI:isClassicAny() then
 		Minimap.buttonFrame:RegisterEvent("GARRISON_SHOW_LANDING_PAGE");
 		Minimap.buttonFrame:RegisterEvent("GARRISON_HIDE_LANDING_PAGE");
 		Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE");
@@ -229,10 +229,10 @@ function mod:create_button_frame()
 	if (bdUI.version >= 60000) then
 		Minimap.buttonFrame:RegisterEvent("GARRISON_UPDATE")
 	end
-	if (bdUI:get_game_version() == "shadowlands") then
+	if (not bdUI:isClassicAny()) then
 		Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
 	end
-	if (WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC) then
+	if (not bdUI:isClassicAny()) then
 		Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_LIST_UPDATE")
 	end
 

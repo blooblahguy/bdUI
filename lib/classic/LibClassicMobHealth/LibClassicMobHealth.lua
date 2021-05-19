@@ -8,7 +8,7 @@ License: LGPL v2.1
 ]]
 
 -- only load in classic
-if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
+if not bdUI:isClassicAny() then return end
 
 local MAJOR_VERSION = "LibClassicMobHealth-1.0"
 local MINOR_VERSION = 1

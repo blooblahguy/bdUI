@@ -265,7 +265,7 @@ end
 -- Vehicle Exit
 --===============================================================
 function mod:create_vehicle()
-	if (bdUI:get_game_version() == "vanilla") then return end
+	if (bdUI:isClassicAny()) then return end
 	cfg = {}
 	cfg.cfg = "vehiclebar"
 	cfg.frameName = "bdActionbars_VehicleExitBar"
@@ -309,7 +309,7 @@ end
 -- Possess Exit
 --===============================================================
 function mod:create_possess()
-	if (bdUI:get_game_version() == "vanilla") then return end
+	if (bdUI:isClassicAny()) then return end
 	cfg = {}
 	cfg.cfg = "possessbar"
 	cfg.blizzardBar = PossessBarFrame

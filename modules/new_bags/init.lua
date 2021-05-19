@@ -133,7 +133,7 @@ local config = {
 local hide = false
 if (not developer) then 
 	-- hide = true
-elseif (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then
+elseif (bdUI:isClassicAny()) then
 	hide = true
 end
 

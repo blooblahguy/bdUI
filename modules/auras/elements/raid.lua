@@ -694,6 +694,17 @@ local auras = {
 	["Indignation"] = true,
 	["Scorn"] = true,
 	["Fatal Finesse"] = true,
+	
+	
+	
+	-- Sanctum of Domination
+
+	-- the nine
+	["Fragments of Destiny"] = true,
+	["Shard of Destiny"] = true,
+	["Link Essence"] = true,
+	["Pierce Soul"] = true,
+	["Arthura's Crushing Gaze"] = true,
 }
 
 bdUI.aura_lists.raid = auras

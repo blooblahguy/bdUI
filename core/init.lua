@@ -88,3 +88,18 @@ function bdUI:get_game_version()
 
 	return game
 end
+bdUI:get_game_version()
+
+function bdUI:isRetail()
+	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return true end
+end
+function bdUI:isClassicVanilla()
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return true end
+end
+function bdUI:isClassicBC()
+	if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then return true end
+end
+function bdUI:isClassicAny()
+	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return true end
+	if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then return true end
+end

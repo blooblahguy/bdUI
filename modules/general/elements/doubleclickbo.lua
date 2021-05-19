@@ -3,8 +3,8 @@ local mod = bdUI:get_module("General")
 
 
 function mod:create_dcbo(event, addon)
-	if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then return end
-	local config = mod.saconfig
+	if not bdUI:isClassicAny() then return end
+	local config = mod.config
 	local dcbo = CreateFrame('frame')
 	dcbo:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
 	dcbo:RegisterEvent("ADDON_LOADED")

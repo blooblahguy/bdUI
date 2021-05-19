@@ -35,7 +35,7 @@ end
 
 -- Mega resource display
 mod.create_resources = function(self, unit)
-	if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then return end
+	if (bdUI:isClassicAny()) then return end
 	if (unit ~= "player") then return end
 	config = mod.save
 

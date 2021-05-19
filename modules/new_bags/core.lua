@@ -21,7 +21,7 @@ SetInsertItemsLeftToRight(false)
 function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return end
+	if bdUI:isClassicAny() then return end
 	if (not config.enabled) then return end
 
 	-- store saved variable for messing with

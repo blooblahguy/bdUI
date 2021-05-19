@@ -59,6 +59,7 @@ lib\oUF_Plugins\oUF_TotemBar.lua
 lib\oUF_Plugins\oUF_QuestProgress.lua
 lib\oUF_Plugins\oUF_bdHealthPredict.lua
 lib\oUF_Plugins\oUF_bdClassicHealthPredict.lua
+lib\oUF_Plugins\oUF_bdSCT.lua
 
 # Custom
 lib\memoize.lua

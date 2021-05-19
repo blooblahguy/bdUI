@@ -34,7 +34,7 @@ function mod:create_objective_tracker()
 		elseif (event == "ENCOUNTER_END" and not IsInRaid()) then
 			ObjectiveTracker_Expand()
 		else
-			if (IsAddOnLoaded("Blizzard_ObjectiveTracker") or bdUI:get_game_version() == "vanilla") then
+			if (IsAddOnLoaded("Blizzard_ObjectiveTracker") or bdUI:isClassicAny()) then
 				move_objective_tracker()
 				hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
 					if (not ignore_point) then
