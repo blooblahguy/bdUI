@@ -8,7 +8,6 @@ License: LGPL v2.1
 ]]
 
 -- only load in classic
-if not bdUI:isClassicAny() then return end
 
 local MAJOR_VERSION = "LibClassicMobHealth-1.0"
 local MINOR_VERSION = 1
@@ -27,6 +26,8 @@ if oldMinor then
 		lib[k] = nil
 	end
 end
+
+if not bdUI:isClassicAny() then return end
 
 local _G = _G
 local UnitLevel = _G.UnitLevel

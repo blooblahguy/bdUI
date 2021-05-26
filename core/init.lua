@@ -90,6 +90,14 @@ function bdUI:get_game_version()
 end
 bdUI:get_game_version()
 
+function bdUI:VersionLessThan()
+	-- print(WOW_PROJECT_MAINLINE)
+	-- print(WOW_PROJECT_CLASSIC)
+	-- print(WOW_PROJECT_BURNING_CRUSADE_CLASSIC)
+end
+
+bdUI:VersionLessThan()
+
 function bdUI:isRetail()
 	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return true end
 end

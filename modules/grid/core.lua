@@ -598,16 +598,17 @@ function mod:get_attributes()
 		[171] = 5, -- Path of Ascension: Humility	scenario
 	}
 
+	
 	num_groups = config.num_groups
 	if (config.intel_groups) then
 		local diff = select(3, GetInstanceInfo())
-		if (IsInInstance() == "none") then
+		local size = select(5, GetInstanceInfo())
+		if (not select(1, IsInInstance())) then
 			num_groups = 8
 		elseif (difficultySize[diff]) then
 			num_groups = difficultySize[diff] / 5
 		end
 	end
-	-- print(difficultySize[diff], num_groups)
 
 	xOffset = bdUI.pixel * (xOffset or 2)
 	yOffset = bdUI.pixel * (yOffset or 2)

@@ -238,6 +238,13 @@ local function nameplate_callback(self, event, unit)
 	-- store these values for reuse
 	store_unit_information(self, unit)
 
+	local frame = C_NamePlate.GetNamePlateForUnit(unit)
+	if (frame and frame.UnitFrame and frame.UnitFrame.WidgetContainer) then
+		frame.UnitFrame.WidgetContainer:SetParent(self)
+		frame.UnitFrame.WidgetContainer:ClearAllPoints()
+		frame.UnitFrame.WidgetContainer:SetPoint("TOP", self, "BOTTOM", 0, 0)
+	end
+
 	--==========================================
 	-- Style by unit type
 	--==========================================
@@ -262,7 +269,7 @@ end
 local function nameplate_create(self, unit)
 	local border = bdUI:get_border(self)
 	nameplates[self] = self
-
+	
 	self:SetPoint("BOTTOMLEFT", 0, math.floor(config.targetingBottomPadding))
 	self:SetPoint("BOTTOMRIGHT", 0, math.floor(config.targetingBottomPadding))
 	self:SetPoint("TOPLEFT", 0, -math.floor(config.targetingTopPadding))
@@ -395,8 +402,9 @@ local function nameplate_create(self, unit)
 		if (config.hptext == "None") then return '' end
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
 		if (bdUI.mobhealth) then
-			local hp, hpMax, found = bdUI.mobhealth:GetUnitHealth(unit)
+			hp, hpMax, found = bdUI.mobhealth:GetUnitHealth(unit)
 		end
+
 		local hpPercent = bdUI:round(hp / hpMax * 100,1)
 		hp = bdUI:numberize(hp)
 		
@@ -570,8 +578,19 @@ function mod:initialize()
 	disable_class_power()
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
+	-- oUF:RegisterStyle("bdNameplates", function() return end)
 	oUF:SetActiveStyle("bdNameplates")
 	oUF:SpawnNamePlates("bdNameplates", nameplate_callback)
+	-- oUF:SpawnNamePlates("bdNameplates", function(frame, event, unit)
+	-- 	local frame = C_NamePlate.GetNamePlateForUnit(unit)
+	-- 	if (frame and frame.UnitFrame) then
+	-- 		print(frame.UnitFrame)
+	-- 		frame:SetParent(UIParent)
+	-- 		frame:Show()
+	-- 		frame.UnitFrame:Show()
+	-- 		frame.UnitFrame.WidgetContainer:Show()
+	-- 	end
+	-- end)
 
 	mod:config_callback()
 

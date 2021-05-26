@@ -6,11 +6,11 @@ local noob = CreateFrame("frame", nil, UIParent)
 --====================================================
 -- VANILLA
 --====================================================
+bdUI.mobhealth = bdUI:isClassicAny() and LibStub("LibClassicMobHealth-1.0")
 
 if not bdUI:isClassicAny() then return end
 
 -- mod health
-bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
 
 -- classic spell durations
 if (bdUI:isClassicVanilla()) then
@@ -46,6 +46,7 @@ CanExitVehicle = CanExitVehicle or noop
 SortBags = SortBags or noop
 UnitPhaseReason = UnitPhaseReason or noop
 GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
+ObjectiveTracker_Collapse = ObjectiveTracker_Collapse or noop
 
 -- frames
 MiniMapTrackingDropDown = MiniMapTrackingDropDown or noob
