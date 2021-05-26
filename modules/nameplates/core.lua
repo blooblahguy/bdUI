@@ -36,6 +36,10 @@ function mod:nameplate_size()
 	C_NamePlate.SetNamePlateSelfClickThrough(true)
 end
 
+local ooc = CreateFrame("frame", nil)
+ooc:RegisterEvent("PLAYER_REGEN_ENABLED")
+ooc:SetScript("OnEvent", mod.nameplate_size)
+
 -- local function pixel_perfect(self)
 -- 	local border = bdUI:get_border(self)
 -- end
