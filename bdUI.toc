@@ -28,7 +28,6 @@ lib\ace\ChatThrottleLib.lua
 lib\ace\AceComm-3.0.lua
 lib\ace\AceSerializer-3.0.lua
 lib\ace\AceTimer-3.0.lua
-# lib\ace\LibButtonGlow-1.0.lua
 lib\ace\LibCustomGlow-1.0.lua
 lib\ace\LibSharedMedia-3.0.lua
 lib\ace\LibSimpleSticky.lua
@@ -36,18 +35,8 @@ lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
 lib\LibChatAnims.lua
 
-# Classic
-lib\classic\LibClassicCasterino\LibClassicCasterino.lua
-lib\classic\LibClassicDurations\LibClassicDurations.xml
-lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
-lib\classic\LibHealComm\LibHealComm-4.0.lua
-
-# For all versions of game
-core\classic.lua
-
 # oUF
 lib\oUF\oUF.xml
-lib\oUF_Plugins\oUF_castbar_classic.lua
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
 lib\oUF_Plugins\oUF_Fader.lua
@@ -59,7 +48,6 @@ lib\oUF_Plugins\oUF_Smooth.lua
 lib\oUF_Plugins\oUF_TotemBar.lua
 lib\oUF_Plugins\oUF_QuestProgress.lua
 lib\oUF_Plugins\oUF_bdHealthPredict.lua
-lib\oUF_Plugins\oUF_bdClassicHealthPredict.lua
 lib\oUF_Plugins\oUF_bdSCT.lua
 
 # Custom
