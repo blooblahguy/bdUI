@@ -13,9 +13,9 @@ lib\fixes\InspectFix.lua
 lib\fixes\LibStrataFix.lua
 
 # Locales
-lib\ace\AceLocale-3.0.lua
-core\locales\enUS.lua
-core\locales\deDE.lua
+locales\AceLocale-3.0.lua
+locales\enUS.lua
+locales\deDE.lua
 
 # Ace
 lib\ace\utf8data.lua
