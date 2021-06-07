@@ -17,7 +17,7 @@ local config = {
 	{
 		key = "skinchatbubbles",
 		type = "select",
-		value = "Removed",
+		value = "Skinned",
 		options={"Default", "Skinned"},
 		label = "Chat Bubbles Skin",
 	},

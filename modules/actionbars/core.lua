@@ -344,7 +344,7 @@ function mod:SkinButton(button)
 	if (button.SetHighlightTexture) then
 		local hover = button:CreateTexture()
 		hover:SetTexture(bdUI.media.flat)
-		hover:SetVertexColor(1, 1, 1, 0.1)
+		hover:SetVertexColor(1, 1, 1, 0.2)
 		hover:SetAllPoints(button)
 		button:SetHighlightTexture(hover)
 	end
@@ -353,7 +353,7 @@ function mod:SkinButton(button)
 	if (button.SetPushedTexture) then
 		local pushed = button:CreateTexture()
 		pushed:SetTexture(bdUI.media.flat)
-		pushed:SetVertexColor(1, 1, 1, 0.2)
+		pushed:SetVertexColor(1, 1, 1, 0.3)
 		pushed:SetAllPoints(button)
 		button:SetPushedTexture(pushed)
 	end
@@ -362,7 +362,7 @@ function mod:SkinButton(button)
 	if (button.SetCheckedTexture) then
 		local new_checked = button:CreateTexture()
 		new_checked:SetAllPoints()
-		new_checked:SetColorTexture(1, 1, 1, 0.2)
+		new_checked:SetColorTexture(1, 1, 1, 0.5)
 		button:SetCheckedTexture(new_checked)
 	end
 

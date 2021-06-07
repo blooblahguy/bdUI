@@ -1,10 +1,27 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
-
 function mod:format_channels()
+	-- Channels
+	CHAT_WHISPER_GET              = "|cffB19CD9From:|r %s "
+	CHAT_WHISPER_INFORM_GET       = "|cff966FD6To:|r %s "
+	CHAT_BN_WHISPER_GET           = "|cffB19CD9From:|r %s "
+	CHAT_BN_WHISPER_INFORM_GET    = "|cff966FD6To:|r %s "
+	CHAT_BATTLEGROUND_GET         = "|Hchannel:Battleground|hBG.|h %s: "
+	CHAT_BATTLEGROUND_LEADER_GET  = "|Hchannel:Battleground|hBGL.|h %s: "
+	CHAT_GUILD_GET                = "|Hchannel:Guild|hG.|h %s: "
+	CHAT_OFFICER_GET              = "|Hchannel:Officer|hO.|h %s: "
+	CHAT_PARTY_GET                = "|Hchannel:Party|hP.|h %s: "
+	CHAT_PARTY_LEADER_GET         = "|Hchannel:Party|hPL.|h %s: "
+	CHAT_PARTY_GUIDE_GET          = "|Hchannel:Party|hPG.|h %s: "
+	CHAT_RAID_GET                 = "|Hchannel:Raid|hR.|h %s: "
+	CHAT_RAID_LEADER_GET          = "|Hchannel:Raid|hRL.|h %s: "
+	CHAT_RAID_WARNING_GET         = "|Hchannel:RaidWarning|hRW.|h %s: "
+	CHAT_INSTANCE_CHAT_GET        = "|Hchannel:Battleground|hI.|h %s: "
+	CHAT_INSTANCE_CHAT_LEADER_GET = "|Hchannel:Battleground|hIL.|h %s: "
 
-	local function filter(chatFrame, event, msg, ...)
+	local function filter(self, msg, ...)
+		
 		local newMsg = msg
 
 		if (not mod.config.pastureschatconfig) then
@@ -29,22 +46,15 @@ function mod:format_channels()
 			
 		--channel replace (Trade and custom)
 		newMsg = newMsg:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
-
-		return false, newMsg, ...
+		
+		return self.DefaultAddMessage(self, newMsg, ...)
 	end
 
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", filter)
+	for i = 1, NUM_CHAT_WINDOWS do
+		local chatframe = _G["ChatFrame"..i]
+		if (i ~= 2) then
+			chatframe.DefaultAddMessage = chatframe.AddMessage
+			chatframe.AddMessage = filter
+		end
+	end
 end

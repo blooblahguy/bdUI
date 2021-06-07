@@ -131,25 +131,6 @@ function mod:skin_chat()
 	LOOT_MONEY_SPLIT = "+%s";
 	YOU_LOOT_MONEY_GUILD = YOU_LOOT_MONEY
 	LOOT_MONEY_SPLIT_GUILD = LOOT_MONEY_SPLIT
-
-
-	-- Channels
-	CHAT_WHISPER_GET              = "|cffB19CD9From:|r %s "
-	CHAT_WHISPER_INFORM_GET       = "|cff966FD6To:|r %s "
-	CHAT_BN_WHISPER_GET           = "|cffB19CD9From:|r %s "
-	CHAT_BN_WHISPER_INFORM_GET    = "|cff966FD6To:|r %s "
-	CHAT_BATTLEGROUND_GET         = "|Hchannel:Battleground|hBG.|h %s: "
-	CHAT_BATTLEGROUND_LEADER_GET  = "|Hchannel:Battleground|hBGL.|h %s: "
-	CHAT_GUILD_GET                = "|Hchannel:Guild|hG.|h %s: "
-	CHAT_OFFICER_GET              = "|Hchannel:Officer|hO.|h %s: "
-	CHAT_PARTY_GET                = "|Hchannel:Party|hP.|h %s: "
-	CHAT_PARTY_LEADER_GET         = "|Hchannel:Party|hPL.|h %s: "
-	CHAT_PARTY_GUIDE_GET          = "|Hchannel:Party|hPG.|h %s: "
-	CHAT_RAID_GET                 = "|Hchannel:Raid|hR.|h %s: "
-	CHAT_RAID_LEADER_GET          = "|Hchannel:Raid|hRL.|h %s: "
-	CHAT_RAID_WARNING_GET         = "|Hchannel:RaidWarning|hRW.|h %s: "
-	CHAT_INSTANCE_CHAT_GET        = "|Hchannel:Battleground|hI.|h %s: "
-	CHAT_INSTANCE_CHAT_LEADER_GET = "|Hchannel:Battleground|hIL.|h %s: "
 	
 	-- Skin chats
 	-- Hide side buttons

@@ -120,9 +120,9 @@ function mod:setup(frame)
 	end)
 	frame.sort:SetScript("OnMouseDown", function(self, delta)
 		if (frame:GetName() == "bdBags") then 
-			SortBags();
+			SortBags()
 		else
-			BankItemAutoSortButton:Click()
+			SortBankBags()
 		end
 	end)
 	frame.sort.text = frame.sort:CreateFontString(nil, "OVERLAY")
