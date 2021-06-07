@@ -33,19 +33,14 @@ lib\ace\LibSharedMedia-3.0.lua
 lib\ace\LibSimpleSticky.lua
 lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
-lib\LibChatAnims.lua
 
 # Classic
-classic\lib\LibClassicCasterino\LibClassicCasterino.lua
-classic\lib\LibClassicDurations\LibClassicDurations.xml
-classic\lib\LibClassicMobHealth\LibClassicMobHealth.lua
-classic\lib\LibHealComm\LibHealComm-4.0.lua
-
-# For all versions of game
-classic\classic.lua
+classic\tbc\lib\LibClassicMobHealth\LibClassicMobHealth.lua
+classic\tbc\lib\LibHealComm\LibHealComm-4.0.lua
+classic\tbc\tbc.lua
 
 # oUF
-classic\libs\oUF_Classic\oUF.xml
+classic\tbc\lib\oUF_TBC\oUF.xml
 # lib\oUF_Plugins\oUF_castbar_classic.lua
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
