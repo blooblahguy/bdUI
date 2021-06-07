@@ -19,26 +19,20 @@ local callback, objects, headers = {}, {}, {}
 local elements = {}
 local activeElements = {}
 
-local PetBattleFrameHider = CreateFrame('Frame', (global or parent) .. '_PetBattleFrameHider', UIParent, 'SecureHandlerStateTemplate')
-PetBattleFrameHider:SetAllPoints()
-PetBattleFrameHider:SetFrameStrata('LOW')
-RegisterStateDriver(PetBattleFrameHider, 'visibility', '[petbattle] hide; show')
-
 -- updating of "invalid" units.
 local function enableTargetUpdate(object)
-	object.onUpdateFrequency = object.onUpdateFrequency or .5
+	object.onUpdateFrequency = object.onUpdateFrequency or .1
 	object.__eventless = true
 
-	local total = 0
 	object:SetScript('OnUpdate', function(self, elapsed)
 		if(not self.unit) then
 			return
-		elseif(total > self.onUpdateFrequency) then
+		elseif self.elapsed and (self.elapsed > self.onUpdateFrequency) then
 			self:UpdateAllElements('OnUpdate')
-			total = 0
+			self.elapsed = 0
 		end
 
-		total = total + elapsed
+		self.elapsed = (self.elapsed or 0) + elapsed
 	end)
 end
 Private.enableTargetUpdate = enableTargetUpdate
@@ -52,10 +46,6 @@ local function updateActiveUnit(self, event, unit)
 		realUnit = 'pet'
 	elseif(realUnit == 'playertarget') then
 		realUnit = 'target'
-	end
-
-	if(modUnit == 'pet' and realUnit ~= 'pet') then
-		modUnit = 'vehicle'
 	end
 
 	if(not unitExists(modUnit)) then return end
@@ -281,11 +271,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 		end
 
 		if(not (suffix == 'target' or objectUnit and objectUnit:match('target'))) then
-			if (not bdUI:isClassicAny()) then
-				object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit)
-				object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit)
-			end
-
 			-- We don't need to register UNIT_PET for the player unit. We register it
 			-- mainly because UNIT_EXITED_VEHICLE and UNIT_ENTERED_VEHICLE doesn't always
 			-- have pet information when they fire for party and raid units.
@@ -298,11 +283,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 			-- No header means it's a frame created through :Spawn().
 			object:SetAttribute('*type1', 'target')
 			object:SetAttribute('*type2', 'togglemenu')
-
-			-- No need to enable this for *target frames.
-			if(not (unit:match('target') or suffix == 'target')) then
-				object:SetAttribute('toggleForVehicle', true)
-			end
 
 			-- Other boss and target units are handled by :HandleUnit().
 			if(suffix == 'target') then
@@ -328,6 +308,8 @@ local function initObject(unit, style, styleFunc, header, ...)
 			end
 		end
 
+		activeElements[object] = {} -- ElvUI: styleFunc on headers break before this is set when they try to enable elements before it's set.
+
 		Private.UpdateUnits(object, objectUnit)
 
 		styleFunc(object, objectUnit, not header)
@@ -340,7 +322,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 			object:SetScript('OnShow', onShow)
 		end
 
-		activeElements[object] = {}
 		for element in next, elements do
 			object:EnableElement(element, objectUnit)
 		end
@@ -640,7 +621,7 @@ do
 
 		local isPetHeader = template:match('PetHeader')
 		local name = overrideName or generateName(nil, ...)
-		local header = CreateFrame('Frame', name, PetBattleFrameHider, template)
+		local header = CreateFrame('Frame', name, UIParent, template)
 
 		header:SetAttribute('template', 'SecureUnitButtonTemplate, SecureHandlerStateTemplate, SecureHandlerEnterLeaveTemplate')
 		for i = 1, select('#', ...), 2 do
@@ -658,7 +639,7 @@ do
 
 		-- We set it here so layouts can't directly override it.
 		header:SetAttribute('initialConfigFunction', initialConfigFunction)
-		header:SetAttribute('_initialAttributeNames', '_onenter,_onleave,refreshUnitChange,_onstate-vehicleui')
+		header:SetAttribute('_initialAttributeNames', '_onenter,_onleave')
 		header:SetAttribute('_initialAttribute-_onenter', [[
 			local snippet = self:GetAttribute('clickcast_onenter')
 			if(snippet) then
@@ -669,22 +650,6 @@ do
 			local snippet = self:GetAttribute('clickcast_onleave')
 			if(snippet) then
 				self:Run(snippet)
-			end
-		]])
-		header:SetAttribute('_initialAttribute-refreshUnitChange', [[
-			local unit = self:GetAttribute('unit')
-			if(unit) then
-				RegisterStateDriver(self, 'vehicleui', '[@' .. unit .. ',unithasvehicleui]vehicle; novehicle')
-			else
-				UnregisterStateDriver(self, 'vehicleui')
-			end
-		]])
-		header:SetAttribute('_initialAttribute-_onstate-vehicleui', [[
-			local unit = self:GetAttribute('unit')
-			if(newstate == 'vehicle' and unit and UnitPlayerOrPetInRaid(unit) and not UnitTargetsVehicleInRaidUI(unit)) then
-				self:SetAttribute('toggleForVehicle', false)
-			else
-				self:SetAttribute('toggleForVehicle', true)
 			end
 		]])
 		header:SetAttribute('oUF-headerType', isPetHeader and 'pet' or 'group')
@@ -725,14 +690,14 @@ oUF implements some of its own attributes. These can be supplied by the layout, 
 
 * oUF-enableArenaPrep - can be used to toggle arena prep support. Defaults to true (boolean)
 --]]
-function oUF:Spawn(unit, overrideName)
+function oUF:Spawn(unit, overrideName, overrideTemplate) -- ElvUI adds overrideTemplate
 	argcheck(unit, 2, 'string')
 	if(not style) then return error('Unable to create frame. No styles have been registered.') end
 
 	unit = unit:lower()
 
 	local name = overrideName or generateName(unit)
-	local object = CreateFrame('Button', name, PetBattleFrameHider, 'SecureUnitButtonTemplate')
+	local object = CreateFrame('Button', name, UIParent, overrideTemplate or 'SecureUnitButtonTemplate')
 	Private.UpdateUnits(object, unit)
 
 	self:DisableBlizzard(unit)

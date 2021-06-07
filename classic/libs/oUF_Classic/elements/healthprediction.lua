@@ -47,41 +47,19 @@ A default texture will be applied to the Texture widgets if they don't have a te
     absorbBar:SetPoint('LEFT', otherBar:GetStatusBarTexture(), 'RIGHT')
     absorbBar:SetWidth(200)
 
-    local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    healAbsorbBar:SetPoint('TOP')
-    healAbsorbBar:SetPoint('BOTTOM')
-    healAbsorbBar:SetPoint('RIGHT', self.Health:GetStatusBarTexture())
-    healAbsorbBar:SetWidth(200)
-    healAbsorbBar:SetReverseFill(true)
-
-    local overAbsorb = self.Health:CreateTexture(nil, "OVERLAY")
-    overAbsorb:SetPoint('TOP')
-    overAbsorb:SetPoint('BOTTOM')
-    overAbsorb:SetPoint('LEFT', self.Health, 'RIGHT')
-    overAbsorb:SetWidth(10)
-
-	local overHealAbsorb = self.Health:CreateTexture(nil, "OVERLAY")
-    overHealAbsorb:SetPoint('TOP')
-    overHealAbsorb:SetPoint('BOTTOM')
-    overHealAbsorb:SetPoint('RIGHT', self.Health, 'LEFT')
-    overHealAbsorb:SetWidth(10)
-
     -- Register with oUF
     self.HealthPrediction = {
         myBar = myBar,
         otherBar = otherBar,
         absorbBar = absorbBar,
-        healAbsorbBar = healAbsorbBar,
-        overAbsorb = overAbsorb,
-        overHealAbsorb = overHealAbsorb,
         maxOverflow = 1.05,
     }
 --]]
 
-if (bdUI:isClassicAny()) then return end
-
 local _, ns = ...
 local oUF = ns.oUF
+local myGUID = UnitGUID('player')
+local HealComm = LibStub("LibHealComm-4.0")
 
 local function Update(self, event, unit)
 	if(self.unit ~= unit) then return end
@@ -98,45 +76,21 @@ local function Update(self, event, unit)
 		element:PreUpdate(unit)
 	end
 
-	local myIncomingHeal = UnitGetIncomingHeals(unit, 'player') or 0
-	local allIncomingHeal = UnitGetIncomingHeals(unit) or 0
-	local absorb = UnitGetTotalAbsorbs(unit) or 0
-	local healAbsorb = UnitGetTotalHealAbsorbs(unit) or 0
+	local guid = UnitGUID(unit)
+
+	local allIncomingHeal = HealComm:GetHealAmount(guid, element.healType) or 0
+	local myIncomingHeal = (HealComm:GetHealAmount(guid, element.healType, nil, myGUID) or 0) * (HealComm:GetHealModifier(myGUID) or 1)
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 	local otherIncomingHeal = 0
-	local hasOverHealAbsorb = false
 
-	if(healAbsorb > allIncomingHeal) then
-		healAbsorb = healAbsorb - allIncomingHeal
-		allIncomingHeal = 0
-		myIncomingHeal = 0
-
-		if(health < healAbsorb) then
-			hasOverHealAbsorb = true
-			healAbsorb = health
-		end
-	else
-		allIncomingHeal = allIncomingHeal - healAbsorb
-		healAbsorb = 0
-
-		if(health + allIncomingHeal > maxHealth * element.maxOverflow) then
-			allIncomingHeal = maxHealth * element.maxOverflow - health
-		end
-
-		if(allIncomingHeal < myIncomingHeal) then
-			myIncomingHeal = allIncomingHeal
-		else
-			otherIncomingHeal = allIncomingHeal - myIncomingHeal
-		end
+	if(health + allIncomingHeal > maxHealth * element.maxOverflow) then
+		allIncomingHeal = maxHealth * element.maxOverflow - health
 	end
 
-	local hasOverAbsorb = false
-	if(health + allIncomingHeal + absorb >= maxHealth) then
-		if(absorb > 0) then
-			hasOverAbsorb = true
-		end
-
-		absorb = math.max(0, maxHealth - health - allIncomingHeal)
+	if(allIncomingHeal < myIncomingHeal) then
+		myIncomingHeal = allIncomingHeal
+	else
+		otherIncomingHeal = HealComm:GetOthersHealAmount(guid, HealComm.ALL_HEALS) or 0
 	end
 
 	if(element.myBar) then
@@ -150,7 +104,7 @@ local function Update(self, event, unit)
 		element.otherBar:SetValue(otherIncomingHeal)
 		element.otherBar:Show()
 	end
-
+--[[
 	if(element.absorbBar) then
 		element.absorbBar:SetMinMaxValues(0, maxHealth)
 		element.absorbBar:SetValue(absorb)
@@ -178,7 +132,7 @@ local function Update(self, event, unit)
 			element.overHealAbsorb:Hide()
 		end
 	end
-
+]]
 	--[[ Callback: HealthPrediction:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
 	Called after the element has been updated.
 
@@ -186,13 +140,10 @@ local function Update(self, event, unit)
 	* unit              - the unit for which the update has been triggered (string)
 	* myIncomingHeal    - the amount of incoming healing done by the player (number)
 	* otherIncomingHeal - the amount of incoming healing done by others (number)
-	* absorb            - the amount of damage the unit can absorb without losing health (number)
-	* healAbsorb        - the amount of healing the unit can absorb without gaining health (number)
-	* hasOverAbsorb     - indicates if the amount of damage absorb is higher than the unit's missing health (boolean)
-	* hasOverHealAbsorb - indicates if the amount of heal absorb is higher than the unit's current health (boolean)
 	--]]
 	if(element.PostUpdate) then
-		return element:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
+		-- return element:PostUpdate(unit, myIncomingHeal, otherIncomingHeal, absorb, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
+		return element:PostUpdate(unit, myIncomingHeal, otherIncomingHeal)
 	end
 end
 
@@ -216,12 +167,35 @@ local function Enable(self)
 	if(element) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
+		element.healType = element.healType or HealComm.ALL_HEALS
 
-		self:RegisterEvent('UNIT_HEALTH', Path)
+		self:RegisterEvent('UNIT_HEALTH_FREQUENT', Path)
 		self:RegisterEvent('UNIT_MAXHEALTH', Path)
-		self:RegisterEvent('UNIT_HEAL_PREDICTION', Path)
-		self:RegisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
-		self:RegisterEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', Path)
+
+		local function HealCommUpdate(...)
+			if self.HealthPrediction and self:IsVisible() then
+				for i = 1, select('#', ...) do
+					if self.unit and UnitGUID(self.unit) == select(i, ...) then
+						Path(self, nil, self.unit)
+					end
+				end
+			end
+		end
+
+		local function HealComm_Heal_Update(event, casterGUID, spellID, healType, _, ...)
+			HealCommUpdate(...)
+		end
+
+		local function HealComm_Modified(event, guid)
+			HealCommUpdate(guid)
+		end
+
+		HealComm.RegisterCallback(element, 'HealComm_HealStarted', HealComm_Heal_Update)
+		HealComm.RegisterCallback(element, 'HealComm_HealUpdated', HealComm_Heal_Update)
+		HealComm.RegisterCallback(element, 'HealComm_HealDelayed', HealComm_Heal_Update)
+		HealComm.RegisterCallback(element, 'HealComm_HealStopped', HealComm_Heal_Update)
+		HealComm.RegisterCallback(element, 'HealComm_ModifierChanged', HealComm_Modified)
+		HealComm.RegisterCallback(element, 'HealComm_GUIDDisappeared', HealComm_Modified)
 
 		if(not element.maxOverflow) then
 			element.maxOverflow = 1.05
@@ -296,11 +270,15 @@ local function Disable(self)
 			element.overHealAbsorb:Hide()
 		end
 
-		self:UnregisterEvent('UNIT_HEALTH', Path)
+		HealComm.UnregisterCallback(element, 'HealComm_HealStarted')
+		HealComm.UnregisterCallback(element, 'HealComm_HealUpdated')
+		HealComm.UnregisterCallback(element, 'HealComm_HealDelayed')
+		HealComm.UnregisterCallback(element, 'HealComm_HealStopped')
+		HealComm.UnregisterCallback(element, 'HealComm_ModifierChanged')
+		HealComm.UnregisterCallback(element, 'HealComm_GUIDDisappeared')
+
 		self:UnregisterEvent('UNIT_MAXHEALTH', Path)
-		self:UnregisterEvent('UNIT_HEAL_PREDICTION', Path)
-		self:UnregisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
-		self:UnregisterEvent('UNIT_HEAL_ABSORB_AMOUNT_CHANGED', Path)
+		self:UnregisterEvent('UNIT_HEALTH_FREQUENT', Path)
 	end
 end
 

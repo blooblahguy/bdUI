@@ -22,8 +22,6 @@ This element updates by changing the texture.
     self.SummonIndicator = SummonIndicator
 --]]
 
-if (bdUI:isClassicAny()) then return end
-
 local _, ns = ...
 local oUF = ns.oUF
 

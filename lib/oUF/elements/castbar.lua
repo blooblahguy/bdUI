@@ -86,8 +86,6 @@ A default texture will be applied to the StatusBar and Texture widgets if they d
     self.Castbar = Castbar
 --]]
 
-if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then return false end
-
 local _, ns = ...
 local oUF = ns.oUF
 

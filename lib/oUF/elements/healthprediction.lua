@@ -78,8 +78,6 @@ A default texture will be applied to the Texture widgets if they don't have a te
     }
 --]]
 
-if (bdUI:isClassicAny()) then return end
-
 local _, ns = ...
 local oUF = ns.oUF
 

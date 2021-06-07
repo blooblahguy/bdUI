@@ -45,8 +45,8 @@ classic\lib\LibHealComm\LibHealComm-4.0.lua
 classic\classic.lua
 
 # oUF
-lib\oUF\oUF.xml
-lib\oUF_Plugins\oUF_castbar_classic.lua
+classic\libs\oUF_Classic\oUF.xml
+# lib\oUF_Plugins\oUF_castbar_classic.lua
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
 lib\oUF_Plugins\oUF_Fader.lua
