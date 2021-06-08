@@ -9,11 +9,10 @@ local config
 --=============================================
 function mod:initialize()
 	mod.config = mod:get_save()
-	
-	mod:create_objective_tracker()
 
 	if (not mod.config.enabled) then return end
 
+	mod:create_objective_tracker()
 	mod:create_minimap()
 	mod:create_button_frame()
 	mod:worldmap_coords()
