@@ -68,5 +68,7 @@ function mod:player_tooltip(self, unit)
 	if (not level_line) then
 		level_line, level_line_index = GameTooltip:FindLine("Level ??")
 	end
-	level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), race, realm)
+	if (level_line ~= nil) then
+		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), race, realm)
+	end
 end
