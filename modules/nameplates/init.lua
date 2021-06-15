@@ -192,7 +192,7 @@ local config = {
 				value = 50,
 				min = 10,
 				max = 100,
-				step = 2,
+				step = 1,
 				label = "Nameplates Draw Distance",
 			},
 			{

@@ -3,6 +3,7 @@ local mod = bdUI:get_module("General")
 
 local orig = UIErrorsFrame:GetScript("OnEvent")
 
+
 local filter = {
 	[ERR_OUT_OF_CHI] = true,						-- Not enough chi
 	[ERR_OUT_OF_RAGE] = true,						-- Not enough rage
@@ -38,15 +39,15 @@ local filter = {
 function mod:create_errorblock()
 	local config = mod.config
 	
-	UIErrorsFrame:SetScript("OnEvent", function(self, event, msg, ...)
+	UIErrorsFrame:SetScript("OnEvent", function(self, event, id, msg, ...)
 		if (event ~= "UI_ERROR_MESSAGE") then 
-			return orig(self, event, msg, ...)
+			return orig(self, event, id, msg, ...)
 		end
 		
 		if (config.errorblock and filter[msg]) then
 			return false
 		else
-			return orig(self, event, msg, ...)
+			return orig(self, event, id, msg, ...)
 		end
 	end)
 end

@@ -55,7 +55,7 @@ mod.custom_layout["player"] = function(self, unit)
 		elseif (config.aurastyle == "Icons") then
 			self.Buffs = self.DisabledBuffs or self.Buffs
 			self.Buffs:Show()
-			self.Buffs.size = config.uf_buff_size
+			self.Buffs.size = config.player_uf_buff_size
 			self:DisableElement("AuraBars")
 			self.AuraBars:Hide()
 		else

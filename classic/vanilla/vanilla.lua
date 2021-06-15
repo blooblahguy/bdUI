@@ -47,6 +47,7 @@ SortBags = SortBags or noop
 UnitPhaseReason = UnitPhaseReason or noop
 GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 ObjectiveTracker_Collapse = ObjectiveTracker_Collapse or noop
+ObjectiveTracker_Expand = ObjectiveTracker_Expand or noop
 
 -- frames
 MiniMapTrackingDropDown = MiniMapTrackingDropDown or noob

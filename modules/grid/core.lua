@@ -111,11 +111,18 @@ local function layout(self, unit)
 	else
 		self.unit = unit
 	end
-
-	-- Disable tooltips
-	self:SetScript("OnEnter", function()
+	
+	-- Disable tooltips			
+	self:SetScript('OnEnter', function(self)
+		-- self.Health.highlight:Show()
 		if (not config.hidetooltips) then
 			UnitFrame_OnEnter(self)
+		end
+	end)
+	self:SetScript('OnLeave', function(self)
+		-- self.Health.highlight:Hide()
+		if (not config.hidetooltips) then
+			UnitFrame_OnLeave(self)
 		end
 	end)
 
@@ -603,8 +610,12 @@ function mod:get_attributes()
 	if (config.intel_groups) then
 		local diff = select(3, GetInstanceInfo())
 		local size = select(5, GetInstanceInfo())
+
+		-- print(diff, size)
 		if (not select(1, IsInInstance())) then
 			num_groups = 8
+		elseif (size > 0) then
+			num_groups = math.ceil(size / 5)
 		elseif (difficultySize[diff]) then
 			num_groups = difficultySize[diff] / 5
 		end

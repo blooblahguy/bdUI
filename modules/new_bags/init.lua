@@ -134,7 +134,7 @@ local hide = false
 if (not developer) then 
 	-- hide = true
 elseif (bdUI:isClassicAny()) then
-	hide = true
+	-- hide = true
 end
 
 local mod = bdUI:register_module("Bags (beta)", config, {

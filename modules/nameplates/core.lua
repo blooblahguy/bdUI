@@ -128,7 +128,7 @@ function mod:config_callback()
 		, ['nameplateOccludedAlphaMult'] = config.occludedalpha
 
 		-- misc
-		, ['nameplateMaxDistance'] = config.nameplatedistance+6 -- for some reason there is a 6yd diff
+		, ['nameplateMaxDistance'] = config.nameplatedistance -- for some reason there is a 6yd diff
 		, ['nameplateShowDebuffsOnFriendly'] = 0
 		, ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
 	}
@@ -330,9 +330,9 @@ local function nameplate_create(self, unit)
     }
 
 	function self.HealthPrediction.PostUpdate(self, unit, myIncomingHeal, otherIncomingHeal, absorba, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
-		if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
+		-- if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
 		
-		local absorb = UnitGetTotalAbsorbs(unit) or 0
+		local absorb = UnitGetTotalAbsorbs and UnitGetTotalAbsorbs(unit) or 0
 		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 
 		local overA = 0

@@ -40,7 +40,15 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 		return true
 	end
 
-	return castByMe and duration < 300
+	if (duration > 0 and castByPlayer) then -- cast by a player, but not a mount or an aura
+		return true
+	end
+
+	if (duration < 300 and castByMe) then -- cast by a player, but not a mount or an aura
+		return true
+	end
+
+	return not castByPlayer or not source
 end
 
 -- target specific elements
@@ -60,7 +68,7 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Buffs:ClearAllPoints()
 	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
 	self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
-	self.Buffs.size = 14
+	self.Buffs.size = config.target_uf_buff_size
 	self.Buffs['growth-x'] = "LEFT"
 	self.Buffs.initialAnchor  = "BOTTOMRIGHT"
 	self.Buffs.CustomFilter = buff_filter
@@ -69,7 +77,7 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Debuffs:ClearAllPoints()
 	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
 	self.Debuffs:SetWidth(config.playertargetwidth / 2)
-	self.Debuffs.size = 22
+	self.Debuffs.size = config.target_uf_debuff_size
 	self.Debuffs.initialAnchor = "BOTTOMLEFT"
 	self.Debuffs['growth-x'] = "RIGHT"
 	self.Debuffs.CustomFilter = debuff_filter
@@ -139,13 +147,14 @@ mod.custom_layout["target"] = function(self, unit)
 			self.Buffs:ClearAllPoints()
 			self.Buffs:SetPoint("BOTTOMLEFT", self.Name, "TOPLEFT", 2, 4)
 			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+			self.Buffs.size = config.target_uf_buff_size
 			self.Buffs.initialAnchor  = "BOTTOMLEFT"
 			self.Buffs["growth-x"] = "RIGHT"
 		elseif (config.aurastyle == "Icons") then
 			self.Debuffs = self.DisabledDebuffs or self.Debuffs
-			self.Debuffs.size = config.uf_buff_size
+			self.Debuffs.size = config.target_uf_debuff_size
 			self.Debuffs:Show()
-
+			
 			self:DisableElement("AuraBars")
 			self.AuraBars:Hide()
 			
@@ -155,6 +164,7 @@ mod.custom_layout["target"] = function(self, unit)
 			self.Buffs:ClearAllPoints()
 			self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
 			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+			self.Buffs.size = config.target_uf_buff_size
 			self.Buffs.initialAnchor = "BOTTOMRIGHT"
 			self.Buffs["growth-x"] = "LEFT"
 		else

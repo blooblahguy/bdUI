@@ -214,20 +214,51 @@ local config = {
 				label = "Buffs",
 				args = {
 					{
-						key = "uf_buff_size",
-						value = 20,
+						key = "player_uf_buff_size",
+						value = 22,
 						step = 1,
 						min = 6,
 						max = 50,
 						type = "range",
-						label = "Icon size"
+						label = "Player Buff size"
 					},
+
 					{
-						key = "uf_buff_target_match_player",
-						type = "toggle",
-						value = false,
-						label = "target buffs match player"
-					}
+						key = "target_uf_debuff_size",
+						value = 22,
+						step = 1,
+						min = 6,
+						max = 50,
+						type = "range",
+						label = "Target debuff size"
+					},
+
+					{
+						key = "target_uf_buff_size",
+						value = 14,
+						step = 1,
+						min = 6,
+						max = 50,
+						type = "range",
+						label = "Target Buff size"
+					},
+					
+					-- {
+					-- 	key = "uf_buff_target_match_player",
+					-- 	type = "toggle",
+					-- 	value = false,
+					-- 	label = "target buffs match player"
+					-- }
+
+					-- {
+					-- 	key = "uf_buff_size",
+					-- 	value = 20,
+					-- 	step = 1,
+					-- 	min = 6,
+					-- 	max = 50,
+					-- 	type = "range",
+					-- 	label = "Debuff Icon size"
+					-- },
 				}
 			}
 			
