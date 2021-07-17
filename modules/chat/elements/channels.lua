@@ -1,12 +1,26 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
+local escapes = {
+    ["|c%x%x%x%x%x%x%x%x"] = "", -- color start
+    ["|r"] = "", -- color end
+    ["|H.-|h(.-)|h"] = "%1", -- links
+    ["|T.-|t"] = "", -- textures
+    ["{.-}"] = "", -- raid target icons
+}
+local function unescape(str)
+    for k, v in pairs(escapes) do
+        str = gsub(str, k, v)
+    end
+    return str
+end
+
 function mod:format_channels()
 	-- Channels
-	CHAT_WHISPER_GET              = "|cffB19CD9From:|r %s "
-	CHAT_WHISPER_INFORM_GET       = "|cff966FD6To:|r %s "
-	CHAT_BN_WHISPER_GET           = "|cffB19CD9From:|r %s "
-	CHAT_BN_WHISPER_INFORM_GET    = "|cff966FD6To:|r %s "
+	CHAT_WHISPER_GET              = "|cffB19CD9From|r %s: "
+	CHAT_WHISPER_INFORM_GET       = "|cff966FD6To|r %s: "
+	CHAT_BN_WHISPER_GET           = "|cffB19CD9From|r %s: "
+	CHAT_BN_WHISPER_INFORM_GET    = "|cff966FD6To|r %s: "
 	CHAT_BATTLEGROUND_GET         = "|Hchannel:Battleground|hBG.|h %s: "
 	CHAT_BATTLEGROUND_LEADER_GET  = "|Hchannel:Battleground|hBGL.|h %s: "
 	CHAT_GUILD_GET                = "|Hchannel:Guild|hG.|h %s: "
@@ -19,9 +33,10 @@ function mod:format_channels()
 	CHAT_RAID_WARNING_GET         = "|Hchannel:RaidWarning|hRW.|h %s: "
 	CHAT_INSTANCE_CHAT_GET        = "|Hchannel:Battleground|hI.|h %s: "
 	CHAT_INSTANCE_CHAT_LEADER_GET = "|Hchannel:Battleground|hIL.|h %s: "
+	
+	SetCVar("chatClassColorOverride", 0)
 
 	local function filter(self, msg, ...)
-		
 		local newMsg = msg
 
 		if (not mod.config.pastureschatconfig) then
@@ -47,6 +62,8 @@ function mod:format_channels()
 		--channel replace (Trade and custom)
 		newMsg = newMsg:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
 		
+		-- local esc = unescape(msg)
+
 		return self.DefaultAddMessage(self, newMsg, ...)
 	end
 

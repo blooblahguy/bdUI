@@ -7,19 +7,23 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 	nameplateShowPersonal = nameplateShowPersonal or false
 	local castByMe = source and UnitIsUnit(source, "player") or false
 
+	-- don't show if blacklisted
 	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
 	
+	-- force show if whitelisted
 	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return true
 	end
 
+	-- always show boss or stealable buffs
 	if (isStealable or isBossDebuff) then
 		return true
 	end
 
-	if (duration > 0 and castByPlayer) then -- cast by a player, but not a mount or an aura
+	-- now show my stuff
+	if (castByPlayer) then -- cast by a player, but not a mount or an aura
 		return true
 	end
 
@@ -33,17 +37,22 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 	nameplateShowPersonal = nameplateShowPersonal or false
 	local castByMe = source and UnitIsUnit(source, "player") or false
 
+	-- don't show if blacklisted
 	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
+
+	-- check if this is a nameplate whitelist thing from blizzard
 	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
 		return true
 	end
 
-	if (duration > 0 and castByPlayer) then -- cast by a player, but not a mount or an aura
+	-- force show if whitelisted
+	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return true
 	end
 
+	-- if its cast by me and isn't permanent
 	if (duration < 300 and castByMe) then -- cast by a player, but not a mount or an aura
 		return true
 	end

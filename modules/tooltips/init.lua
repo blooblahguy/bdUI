@@ -102,6 +102,15 @@ function mod:initialize()
 
 	-- now do the rest
 	mod:create_tooltips()
+
+	-- disable quest tracking in combat
+	local f = CreateFrame("Frame")
+	f:RegisterEvent("GROUP_ROSTER_UPDATE")
+	f:RegisterEvent("PLAYER_ENTERING_WORLD")
+	f:SetScript("OnEvent", function(self, event)
+		SetCVar("showQuestTrackingTooltips", IsInRaid() and 0 or 1)
+	end)
+
 end
 
 function mod:config_callback()

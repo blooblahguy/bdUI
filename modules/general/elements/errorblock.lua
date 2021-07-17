@@ -34,6 +34,7 @@ local filter = {
 	[SPELL_FAILED_CUSTOM_ERROR_159] = true,			-- Both Frost Fever and Blood Plague must be present on the target.
 	[SPELL_FAILED_SPELL_IN_PROGRESS] = true,		-- Another action is in progress	
 	["Interrupted"] = true,							-- Self interrupted
+	["Must have a thrown equipepd"] = true,							-- Self interrupted
 }
 
 function mod:create_errorblock()

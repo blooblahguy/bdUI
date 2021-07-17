@@ -245,7 +245,7 @@ function mod:SkinEditBox(frame)
 end
 
 function mod:skin(frame)
-	frame:SetFrameStrata("TOOLTIP")
+	frame:SetFrameStrata("HIGH")
 	frame:SetFrameLevel(3)
 
 	if (frame.skinned) then return end
