@@ -420,7 +420,7 @@ local config = {
 			{
 				key = "othertankcolor",
 				type = "color",
-				value = {.79, .2, .61, 1},
+				value = {.83, .2, .51, 1},
 				label = "Another Tank has Aggro Color"
 			},
 			{

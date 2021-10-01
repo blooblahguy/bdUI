@@ -5,6 +5,8 @@ local mod = bdUI:get_module("Bags (beta)")
 -- Create bank frames
 --===================================
 function mod:create_reagents()
+	if (bdUI:isClassicAny()) then return end
+
 	local config = mod.config
 	local reagents = CreateFrame("Frame", nil, mod.bank)
 	reagents.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)

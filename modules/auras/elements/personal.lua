@@ -84,5 +84,8 @@ local mine = {
 	["Power Word: Shield"] = true,
 }
 
-bdUI.aura_lists.mine = mine
-bdUI.aura_lists.class = class
+-- bdUI.aura_lists.mine = mine
+-- bdUI.aura_lists.class = class
+--  merge auras
+for k,v in pairs(mine) do bdUI.aura_lists.mine[k] = v end
+for k,v in pairs(class) do bdUI.aura_lists.class[k] = v end

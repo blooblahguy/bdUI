@@ -85,3 +85,13 @@ local config = {
 }
 
 local mod = bdUI:register_module("Bags", config)
+
+-- classic fix
+if (not BagItemSearchBox) then
+	BagItemSearchBox = CreateFrame("EditBox", "bdUI_BagItemSearchBox", ContainerFrame1, "BagSearchBoxTemplate")
+	BagItemSearchBox:SetSize(110, 18)
+	BagItemSearchBox:SetMaxLetters(15)
+	BankItemSearchBox = CreateFrame("EditBox", "bdUI_BankItemSearchBox", BankFrame, "BagSearchBoxTemplate")
+	BankItemSearchBox:SetSize(110, 18)
+	BankItemSearchBox:SetMaxLetters(15)
+end

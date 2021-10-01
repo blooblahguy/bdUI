@@ -27,37 +27,65 @@ local methods = {
 	-- update border information
 	["update_border"] = function(self)
 		local count = _G[self:GetName().."Count"]
+		count:ClearAllPoints()
+		count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
+
 		-- local quest = _G[self:GetName().."IconQuestTexture"] or self.IconQuestTexture
 		local isQuestItem, questId, isActive = GetContainerItemQuestInfo(self.bag, self.slot)
 
-		if (not self.texture) then
-			self.IconBorder:Hide()
-			self.quality_border:Hide()
-			return
-		end
+		-- if (not self.texture) then
+		-- 	-- self.IconBorder:Hide()
+		-- 	-- self.quality_border:Hide()
+		-- 	return
+		-- end
 
-		self.IconBorder:SetTexture(bdUI.media.flat)
-		self.IconBorder:ClearAllPoints()
-		self.IconBorder:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 0, 0)
-		self.IconBorder:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, mod.border*3)
+		-- self.IconBorder:SetTexture(bdUI.media.flat)
+		-- self.IconBorder:ClearAllPoints()
+		-- self.IconBorder:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 0, 0)
+		-- self.IconBorder:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, mod.border*3)
 
 		-- quest
+		-- if (isQuestItem) then
+		-- 	self.IconBorder:SetVertexColor(1, 1, 0.2, 1)
+		-- end
+
+		
+
+		local ItemLink = GetContainerItemLink(self.bag, self.slot)
+		self.quality_border:Hide()
+		self:set_border_color(unpack(bdUI.media.border))
+		
+		if (ItemLink) then
+			local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(ItemLink)
+			if (itemRarity and itemRarity > 1) then
+				-- print("showq", ItemLink)
+				local r, g, b, hex = GetItemQualityColor(itemRarity)
+				self.quality_border:set_border_color(r, g, b, 1)
+				self.quality_border:Show()
+				-- self:set_border_color(r, g, b)
+				-- self:set_draw_layer("ARTWORK")
+			end
+		end
 		if (isQuestItem) then
-			self.IconBorder:SetVertexColor(1, 1, 0.2, 1)
+			-- print("showq", ItemLink)
+			self.quality_border:set_border_color(1, 1, 0.2, 1)
+			self.quality_border:Show()
+			-- self:set_draw_layer("BACKGROUND")
 		end
 
-		count:ClearAllPoints()
-		local r, g, b = self.IconBorder:GetVertexColor()
-		local color = bdUI:round(r, 1)..bdUI:round(g, 1)..bdUI:round(b, 1)
-		if (color == "111" or color == "0.70.70.7" or color == "000") then
-			self.IconBorder:Hide()
-			self.quality_border:Hide()
-			count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
-		else
-			self.IconBorder:Show()
-			self.quality_border:Show()
-			count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, mod.border*3)
-		end
+		-- local r, g, b = self.IconBorder:GetVertexColor()
+		
+		-- print(r, g, b)
+		-- local color = bdUI:round(r, 1)..bdUI:round(g, 1)..bdUI:round(b, 1)
+		-- if (color == "111" or color == "0.70.70.7" or color == "000") then
+		-- 	self.IconBorder:Hide()
+		-- 	self.quality_border:Hide()
+		-- 	count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
+		-- else
+		-- 	self.IconBorder:Show()
+		-- 	self.quality_border:Show()
+		-- 	count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, mod.border*3)
+		-- end
 	end,
 
 	-- lock item if its in transit
@@ -104,7 +132,7 @@ local methods = {
 		-- end
 
 		SetItemButtonTexture(self, self.texture)
-		SetItemButtonQuality(self, self.quality, self.itemLink)
+		SetItemButtonQuality(self, self, self.itemLink)
 		SetItemButtonCount(self, self.itemCount)
 
 		self:skin()
@@ -129,18 +157,20 @@ local methods = {
 		if (self.skinned) then return end
 		bdUI:set_backdrop(self)
 
+		local border = bdUI:get_border(self)
+
 		local normal = _G[self:GetName().."NormalTexture"]
 		local count = _G[self:GetName().."Count"]
 		local icon = _G[self:GetName().."IconTexture"]
 		local quest = _G[self:GetName().."IconQuestTexture"]
 
 		-- border
-		local quality_border = self:CreateTexture(self:GetName().."QualityBorder", "OVERLAY")
-		quality_border:SetPoint("BOTTOMLEFT", self.IconBorder, "TOPLEFT", 0, 0)
-		quality_border:SetPoint("TOPRIGHT", self.IconBorder, "TOPRIGHT", 0, 1)
-		quality_border:SetTexture(bdUI.media.flat)
-		quality_border:SetVertexColor(0, 0, 0, 1)
-		quality_border:Hide()
+		local quality_border = CreateFrame("frame", self:GetName().."QualityBorder", self)
+		quality_border:SetPoint("TOPLEFT", self, "TOPLEFT", border, -border)
+		quality_border:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -border, border)
+		bdUI:set_backdrop(quality_border)
+		quality_border:set_border_color(1, 0, 0, 1)
+		quality_border._background:Hide()
 		self.quality_border = quality_border
 
 		-- icon
@@ -182,7 +212,7 @@ local methods = {
 local item_num = 0
 mod.item_pool_create = function(self)
 	item_num = item_num + 1
-	local button = CreateFrame("ItemButton", "bdBags_Item_"..item_num, mod.current_parent, "ContainerFrameItemButtonTemplate")
+	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_Item_"..item_num, mod.current_parent, "ContainerFrameItemButtonTemplate")
 	button:SetHeight(30)
 	button:SetWidth(30)
 	button:RegisterForDrag("LeftButton")

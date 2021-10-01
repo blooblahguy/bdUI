@@ -12,4 +12,5 @@ local special = {
 	["Soul Infusion"] = true,
 }
 
-bdUI.aura_lists.special = special
+for k,v in pairs(special) do bdUI.aura_lists.special[k] = v end
+-- bdUI.aura_lists.special = special

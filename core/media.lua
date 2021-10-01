@@ -161,7 +161,7 @@ end
 	end
 
 	local function border_gen(parent)
-		local frame = parent:CreateTexture(nil, "BACKGROUND", nil, -5)
+		local frame = parent:CreateTexture(nil, "BORDER", nil, -5)
 		frame:SetTexture(bdUI.media.flat)
 		frame:SetVertexColor(unpack(bdUI.media.border))
 		frame.protected = true
@@ -206,10 +206,23 @@ end
 		end
 
 		frame.set_border_color = function(self, r, g, b, a)
-			frame._border:SetVertexColor(r, g, b, a)
+			self._border:SetVertexColor(r, g, b, a)
 		end
 		frame.reset_border_color = function(self, r, g, b, a)
-			frame._border:SetVertexColor(unpack(bdUI.media.border))
+			self._border:SetVertexColor(unpack(bdUI.media.border))
+		end
+		frame.set_draw_layer = function(self, layer)
+			-- BACKGROUND
+			-- BORDER
+			-- ARTWORK
+			-- OVERLAY
+			-- HIGHLIGHT
+			-- self:SetDrawLayer(layer)
+			
+			self.t:SetDrawLayer(layer)
+			self.b:SetDrawLayer(layer)
+			self.l:SetDrawLayer(layer)
+			self.r:SetDrawLayer(layer)
 		end
 		frame.set_border_size = function(self, size)
 			frame.t:SetHeight(size)

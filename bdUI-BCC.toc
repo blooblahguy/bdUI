@@ -38,6 +38,7 @@ lib\ace\LibDBIcon-1.0.lua
 classic\tbc\lib\LibClassicMobHealth\LibClassicMobHealth.lua
 classic\tbc\lib\LibHealComm\LibHealComm-4.0.lua
 classic\tbc\tbc.lua
+classic\tbc\tbc_auras.lua
 
 # oUF
 classic\tbc\lib\oUF_TBC\oUF.xml

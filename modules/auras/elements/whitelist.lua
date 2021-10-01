@@ -110,4 +110,5 @@ local auras = {
 	['Sanguine Ichor'] = true,
 }
 
-bdUI.aura_lists.whitelist = auras
+for k,v in pairs(auras) do bdUI.aura_lists.whitelist[k] = v end
+-- bdUI.aura_lists.whitelist = auras

@@ -102,6 +102,7 @@ end
 -- search boxes
 local function position_search(self, id)
 	if (not BagItemSearchBox) then return end
+	
 	BagItemSearchBox:ClearAllPoints()
 	BagItemSearchBox:SetPoint("LEFT", ContainerFrame1MoneyFrame, "RIGHT", 8, 0)
 	-- BagItemSearchBox.ClearAllPoints = noop

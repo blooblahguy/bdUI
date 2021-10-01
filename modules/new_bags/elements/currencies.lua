@@ -1,17 +1,12 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags (beta)")
 
-if bdUI:isClassicAny() then return end
+-- if bdUI:isClassicAny() then return end
 
 --============================================
 -- allow for tracking beyond 3
 --============================================
 MAX_WATCHED_TOKENS = 10
-for i = 3, MAX_WATCHED_TOKENS do
-	local frame = CreateFrame("button", "BackpackTokenFrameToken"..i, BackpackTokenFrame, "BackpackTokenTemplate")
-	BackpackTokenFrame.Tokens[i] = frame
-end
-
 
 --============================================
 -- Currency object
@@ -23,8 +18,15 @@ currencies.watchers = {}
 -- Currency updates
 --============================================
 function mod:currencies_update()
+	if (bdUI:isClassicAny()) then 
+		currencies:SetHeight(10)
+		return
+	end
+
 	for i = 1, MAX_WATCHED_TOKENS do
-		currencies.watchers[i]:Hide()
+		if (currencies.watchers[i]) then
+			currencies.watchers[i]:Hide()
+		end
 	end
 
 	local index = 1
@@ -81,11 +83,18 @@ end
 --============================================
 function mod:create_currencies(name, parent)
 	currencies = CreateFrame("frame", nil, parent)
+	currencies.watchers = {}
+	
+	if (bdUI:isClassicAny()) then return currencies end
+
+	for i = 3, MAX_WATCHED_TOKENS do
+		local frame = CreateFrame("button", "BackpackTokenFrameToken"..i, BackpackTokenFrame, "BackpackTokenTemplate")
+		BackpackTokenFrame.Tokens[i] = frame
+	end
 	currencies:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	currencies:RegisterEvent("PLAYER_ENTERING_WORLD")
 	currencies:SetScript("OnEvent", mod.currencies_update)
 	currencies:SetSize(200, 30)
-	currencies.watchers = {}
 
 	local last = nil
 	for i = 1, MAX_WATCHED_TOKENS do

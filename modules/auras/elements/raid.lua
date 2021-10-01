@@ -707,4 +707,6 @@ local auras = {
 	["Arthura's Crushing Gaze"] = true,
 }
 
-bdUI.aura_lists.raid = auras
+-- bdUI.aura_lists.raid = auras
+-- merge tables
+for k,v in pairs(auras) do bdUI.aura_lists.raid[k] = v end

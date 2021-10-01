@@ -2,11 +2,55 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags (beta)")
 
 
-if bdUI:isClassicAny() then return end
+-- if bdUI:isClassicAny() then return end
 
 mod.bank = mod:create_container("Bank")
 mod.bank.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 mod.bank.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
+
+local function hide_blizzard_bank()
+	for i = 1, 5 do				
+		select(i, _G['BankFrame']:GetRegions()):Hide()
+	end
+	for i = 1, 5 do
+		if (not select(i, _G['BankFrame']:GetChildren())) then break end	
+		select(i, _G['BankFrame']:GetChildren()):Hide()
+	end
+	for i = 1, 5 do
+		local child = select(i, _G['BankFrameMoneyFrameInset']:GetChildren())
+		if (child) then
+			child:Hide()
+		end
+	end
+	-- _G['BankFrame'].NineSlice:Hide()
+	if (_G["BackpackTokenFrame"]:GetRegions()) then
+		_G["BackpackTokenFrame"]:GetRegions():SetAlpha(0)
+	end
+
+	BankFrameCloseButton:Hide()
+	BankFrameMoneyFrame:Hide()
+	bdUI:strip_textures(BankFrameMoneyFrameInset)
+	bdUI:strip_textures(BankFrameMoneyFrameBorder)
+	bdUI:strip_textures(BankFrameMoneyFrame)
+	bdUI:strip_textures(BankFrame)
+	bdUI:strip_textures(BankSlotsFrame, true)
+
+	BankSlotsFrame:SetFrameStrata("HIGH")
+	BankSlotsFrame:SetFrameLevel(8)
+	BankSlotsFrame:SetParent(mod.bank)
+
+	-- reagant frame
+	ReagentBankFrame:SetFrameStrata("HIGH")
+	ReagentBankFrame:SetFrameLevel(3)
+	ReagentBankFrame:SetParent(mod.bank)
+	bdUI:strip_textures(ReagentBankFrame)
+	ReagentBankFrame:DisableDrawLayer("BACKGROUND")
+	ReagentBankFrame:DisableDrawLayer("ARTWORK")
+	BankPortraitTexture:Hide()
+	BankFrame:EnableMouse(false)
+	BankSlotsFrame:EnableMouse(false)
+	-- mod:killShowable(BagHelpBox)
+end
 
 --===================================
 -- Create bank frames
@@ -32,6 +76,7 @@ function mod:create_bank()
 			self.paused = false
 		elseif (event == "BANKFRAME_OPENED") then
 			mod.bank:Show()
+			hide_blizzard_bank()
 			-- BankFrame:SetAlpha(0)
 			-- BankFrame:EnableMouse(0)
 			-- BankFrame:SetParent(bdUI.hidden)
@@ -53,6 +98,8 @@ end
 -- Filter bank and update
 --===================================
 function mod:update_bank()
+	if (not mod.bank:IsShown()) then return end
+
 	local items = {}
 	local free_slot = {}
 	local remove = {}
@@ -68,6 +115,7 @@ function mod:update_bank()
 		for slot = 1, GetContainerNumSlots(bag) do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot);
 			local itemID = mod:item_id(itemLink)
+
 			if (texture) then 
 				-- print(itemLink, bag, slot)
 				items[#items + 1] = {itemLink, bag, slot, itemID}

@@ -48,6 +48,7 @@ UnitPhaseReason = UnitPhaseReason or noop
 GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
 ObjectiveTracker_Collapse = ObjectiveTracker_Collapse or noop
 ObjectiveTracker_Expand = ObjectiveTracker_Expand or noop
+GetContainerItemQuestInfo = GetContainerItemQuestInfo or noop
 
 -- frames
 MiniMapTrackingDropDown = MiniMapTrackingDropDown or noob
@@ -66,7 +67,7 @@ MiniMapTracking = MiniMapTracking or MiniMapTrackingFrame or noob
 -- BagItemSearchBox = BagItemSearchBox or noob
 BagItemAutoSortButton = BagItemAutoSortButton or noob
 BankItemAutoSortButton = BankItemAutoSortButton or noob
-BankItemSearchBox = BankItemSearchBox or noob
+-- BankItemSearchBox = BankItemSearchBox or noob
 ReagentBankFrame = ReagentBankFrame or noob
 BankFrameMoneyFrameInset = BankFrameMoneyFrameInset or noob
 BackpackTokenFrame = BackpackTokenFrame or noob

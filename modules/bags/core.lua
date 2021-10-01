@@ -86,8 +86,10 @@ end
 -- Set Up Frames
 mod.bags = CreateFrame("frame","bdBags", UIParent)
 mod.bags:SetPoint("BOTTOMRIGHT", bdParent, "BOTTOMRIGHT", -14, 80)
+mod.bags:Hide()
 mod.bank = CreateFrame("frame","bdBank", UIParent)
 mod.bank:SetPoint("LEFT", bdParent, "LEFT", 14, 40)
+mod.bank:Hide()
 
 function mod:resetTracker()
 	bdUI.config.persistent.goldtrack = {}
@@ -294,7 +296,9 @@ end
 function mod:Draw(frame, size, id)
 	-- bdUI:profile_start("Bags", "draw", 3)
 
-	BagItemSearchBox:ClearAllPoints()
+	if (BagItemSearchBox) then
+		BagItemSearchBox:ClearAllPoints()
+	end
 	frame.size = size;
 	for i = 1, size do
 		local index = size - i + 1;

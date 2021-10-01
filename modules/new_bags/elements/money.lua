@@ -32,6 +32,8 @@ local methods = {
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -147, 10)
 		mod.gold = BDUI_SAVE.persistent.goldtrack
 
+		if (#mod.gold == 0) then return end
+
 		local total = 0;
 		for name, stored in pairs(mod.gold) do
 			local money, cc, name = unpack(stored)

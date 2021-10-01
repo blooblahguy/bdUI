@@ -10,6 +10,14 @@ bdUI.name = addonName
 bdUI.class = select(2, UnitClass("player"))
 bdUI.classColor = RAID_CLASS_COLORS[bdUI.class]
 bdUI.colorString = '|cffA02C2Fbd|r'
+-- auras
+bdUI.aura_lists = {}
+bdUI.aura_lists.raid = {}
+bdUI.aura_lists.class = {}
+bdUI.aura_lists.mine = {}
+bdUI.aura_lists.blacklist = {}
+bdUI.aura_lists.whitelist = {}
+bdUI.aura_lists.special = {}
 
 --===================================================================
 -- Basic Config

@@ -217,7 +217,7 @@ local category_methods = {
 		local name = "bdBagsCategoryDragger"..mod.draggers
 		mod.draggers = mod.draggers + 1
 
-		local dragger = CreateFrame("ItemButton", name, self, "ContainerFrameItemButtonTemplate")
+		local dragger = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", name, self, "ContainerFrameItemButtonTemplate")
 		dragger:ClearAllPoints()
 		dragger:SetPoint("LEFT", self.text, "RIGHT", 4, 0)
 		dragger:SetSize(22, 22)
@@ -227,7 +227,7 @@ local category_methods = {
 		dragger:Hide()
 		dragger.BattlepayItemTexture:Hide()
 		dragger.UpgradeIcon:Hide()
-		dragger.IconBorder:Hide()
+		-- dragger.IconBorder:Hide()
 		dragger:SetNormalTexture("")
 		dragger:SetPushedTexture("")
 		dragger.flash:SetAllPoints()

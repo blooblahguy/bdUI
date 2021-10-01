@@ -8,6 +8,8 @@ local config
 local nameplates = {}
 mod.elements = {}
 
+local tanks = {}
+
 -- Fonts we use
 mod.font = bdUI:get_font(14)
 mod.font_friendly = bdUI:get_font(14)
@@ -39,6 +41,12 @@ end
 local ooc = CreateFrame("frame", nil)
 ooc:RegisterEvent("PLAYER_REGEN_ENABLED")
 ooc:SetScript("OnEvent", mod.nameplate_size)
+
+-- local role_collection = CreateFrame("frame", nil)
+-- role_collection:RegisterEvent("PLAYER_REGEN_ENABLED")
+-- role_collection:SetScript("OnEvent", function()
+-- 	local MTs = GetPartyAssignment("assignment" [,"raidmember", exactMatch])
+-- end)
 
 -- local function pixel_perfect(self)
 -- 	local border = bdUI:get_border(self)
@@ -207,8 +215,13 @@ local function update_threat(self, event, unit)
 	healthbar:SetMinMaxValues(0, max)
 	healthbar:SetValue(cur)
 
+	local meTank = UnitGroupRolesAssigned("player") == "TANK" or GetPartyAssignment("MAINTANK", "player")
+	local themTank = not UnitIsUnit(unit.."target", "player") and UnitIsPlayer(unit.."target") and (UnitGroupRolesAssigned(unit.."target") == "TANK" or GetPartyAssignment("MAINTANK", unit.."target")) and UnitThreatSituation(unit.."target") > 1
+
 	if (self.tapDenied) then
 		healthbar:SetStatusBarColor(unpack(self.smartColors))
+	elseif (meTank and themTank) then
+		healthbar:SetStatusBarColor(unpack(config.othertankcolor))
 	elseif (((cur / max) * 100) <= config.executerange) then
 		healthbar:SetStatusBarColor(unpack(config.executecolor))
 	elseif (mod.lists.specialunits[UnitName(unit):lower()]) then

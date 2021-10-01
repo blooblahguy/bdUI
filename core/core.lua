@@ -49,6 +49,16 @@ function spairs(t, order)
     end
 end
 
+-- swaps keys and values in table
+function bdUI:swaptable(table)
+	local newtable = {}
+	for k, v in pairs(table) do
+		newtable[v] = k
+	end
+
+	return swaptable
+end
+
 --==============================================
 -- Useful Functions
 --==============================================

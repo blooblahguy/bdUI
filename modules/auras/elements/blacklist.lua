@@ -50,4 +50,5 @@ local auras = {
 	["Beacon's Tribute"] = true
 }
 
-bdUI.aura_lists.blacklist = auras
+for k,v in pairs(auras) do bdUI.aura_lists.blacklist[k] = v end
+-- bdUI.aura_lists.blacklist = auras

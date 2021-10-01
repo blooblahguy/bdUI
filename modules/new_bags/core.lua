@@ -22,11 +22,38 @@ function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
 	-- if bdUI:isClassicAny() then return end
+
+	config.enabled = false
+	
 	if (not config.enabled) then return end
 
 	-- store saved variable for messing with
 	config.categories = config.categories or {}
 	mod.categories = config.categories
+
+	GameTooltip:HookScript("OnTooltipSetItem", function(tooltip)
+		local _, link = tooltip:GetItem()
+		if not link then return end
+		
+		local itemString = string.match(link, "item[%-?%d:]+")
+		local _, itemId = strsplit(":", itemString)
+
+		local name, link, rarity, ilvl, minlevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(link)
+
+		local lcolor = {0.6, 0.6, 0.6}
+		local rcolor = {1, 1, 1}
+
+		-- print(GetItemInfo(link))
+
+		-- local itemType = 
+		tooltip:AddDoubleLine("itemId", itemId, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("itemType", itemType, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("itemSubType", itemSubType, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("ilvl", ilvl, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("minlevel", minlevel, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("itemId", itemId, unpack(lcolor), unpack(rcolor))
+	end)
 
 	-- forced categories
 	mod:create_category("Free", {
@@ -43,7 +70,7 @@ function mod:initialize()
 	})
 
 	-- default categories
-	if (not config.first_run_complete) then
+	-- if (not config.first_run_complete) then
 		mod:create_category("Armor", {
 			["type"] = mod.types["Armor"],
 			["default"] = true,
@@ -77,7 +104,7 @@ function mod:initialize()
 		})
 		mod:create_category("Tradeskill", {
 			["type"] = tMerge(mod.types["Tradeskill"], mod.types["Gems"], mod.types["Recipes"]),
-			["subtype"] = tMerge(mod.subtypes["Generic Weapons"]),
+			-- ["subtype"] = tMerge(mod.subtypes["Generic Weapons"]),
 			["default"] = true,
 		})
 		mod:create_category("Misc", {
@@ -86,7 +113,7 @@ function mod:initialize()
 		})
 
 		config.first_run_complete = true
-	end
+	-- end
 
 	-- Create Frames
 	mod:create_bags()
@@ -195,9 +222,9 @@ function mod:create_container(name, ids, bagids)
 	sort_bags.text:SetText("S")
 	sort_bags:SetPoint("RIGHT", close_button, "LEFT", -4, 0)
 	if(name == "Bags") then
-		sort_bags.callback = SortBags
+		sort_bags.callback = function() if (SortBags) then SortBags() else noop() end end
 	elseif (name == "Bank") then
-		sort_bags.callback = function() BankItemAutoSortButton:Click() end
+		sort_bags.callback = function() if (SortBankBags) then SortBankBags() else noop() end end
 	end
 	bags.sorter = sort_bags
 
@@ -331,34 +358,60 @@ end
 -- Replace blizzard functions to open our bags
 --===============================================
 function mod:hook_blizzard_functions()
+	-- bags
 	local function close_all()
 		mod.bags:Hide()
+		mod.bank:Hide()
 	end
-	local function open_all()
-		mod.bags:Show()
-	end
+	-- local function open_all()
+	-- 	mod.bags:Show()
+	-- end
 
-	local function close_bag()
+	local function close_bags()
 		mod.bags:Hide()
 	end
 
-	local function open_bag()
+	local function open_bags()
 		mod.bags:Show()
 	end
 
-	local function toggle_bag()
+	local function toggle_bags()
 		mod.bags:SetShown(not mod.bags:IsShown())
 	end
 
-	mod:RawHook("ToggleBackpack", toggle_bag, true)
-	mod:RawHook("ToggleAllBags", toggle_bag, true)
-	mod:RawHook("ToggleBag", toggle_bag, true)
-	mod:RawHook("OpenAllBags", open_all, true)
-	mod:RawHook("OpenBackpack", open_bag, true)
-	mod:RawHook("OpenBag", open_bag, true)
-	mod:RawHook("CloseBag", close_bag, true)
-	mod:RawHook("CloseBackpack", close_bag, true)
+	-- local function open_bank()
+	-- 	mod.bags:Show()
+	-- 	mod.bank:Show()
+
+	-- 	if (not mod.bank.paused) then
+	-- 		mod:update_bank()
+	-- 	end
+	-- end
+
+	-- local function close_bank()
+	-- 	mod.bags:Hide()
+	-- 	mod.bank:Hide()
+
+	-- 	-- BankFrame:Hide()
+
+	-- 	-- if (not mod.bank.paused) then
+	-- 		-- mod:update_bank()
+	-- 	-- end
+	-- end
+
+	mod:RawHook("ToggleBackpack", toggle_bags, true)
+	mod:RawHook("ToggleAllBags", toggle_bags, true)
+	mod:RawHook("ToggleBag", toggle_bags, true)
+	mod:RawHook("OpenAllBags", open_bags, true)
+	mod:RawHook("OpenBackpack", open_bags, true)
+	mod:RawHook("OpenBag", open_bags, true)
+	mod:RawHook("CloseBag", close_bags, true)
+	mod:RawHook("CloseBackpack", close_bags, true)
 	mod:RawHook("CloseAllBags", close_all, true)
 	hooksecurefunc("CloseSpecialWindows", close_all)
 
+	-- mod:RawHook(BankFrame, "Show", open_bank, true)
+	-- mod:RawHook(BankFrame, "Hide", close_bank, true)
+
+	-- bank
 end

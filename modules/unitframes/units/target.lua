@@ -41,23 +41,30 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
-
+	
 	-- check if this is a nameplate whitelist thing from blizzard
 	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("whitelisted nameplate", name)
 		return true
 	end
-
+	
 	-- force show if whitelisted
 	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("whitelisted", name)
 		return true
 	end
-
+	
 	-- if its cast by me and isn't permanent
 	if (duration < 300 and castByMe) then -- cast by a player, but not a mount or an aura
+		-- print("me", name)
 		return true
 	end
-
-	return not castByPlayer or not source
+	
+	
+	if (not castByPlayer and not source) then
+		-- print("else", name, castByPlayer, source, nameplateShowPersonal, nameplateShowAll)
+		return true
+	end
 end
 
 -- target specific elements
