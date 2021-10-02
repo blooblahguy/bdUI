@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Package bdUI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - master
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+env:
+  CF_API_KEY: ${{ secrets.CF_API_KEY }}
+  WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
+  WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+  # automatically populated
+  GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout addon
+        uses: actions/checkout@v2
+
+      # Package for Retail
+      - name: Package Retail
+        uses: BigWigsMods/packager@master
+      
+      # Package for Classic
+      - name: Package Classic
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g classic -m .pkgmeta-classic
+        
+     # Package for TBC
+      - name: Package BCC
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g bc -m .pkgmeta-bcc
