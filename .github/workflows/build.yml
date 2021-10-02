@@ -32,12 +32,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout addon
         uses: actions/checkout@v2
-        
-      # Rename Tocs
-      - name: Rename Classic tocc
-        run: |
-          mv bdUI-classic.toc bdUI-classic.txt
-          mv bdUI-bcc.toc bdUI-bcc.txt
 
       # Package for Retail
       - name: Package Retail
@@ -47,7 +41,7 @@ jobs:
       - name: Rename Classic tocc
         run: |
           rm bdUI.toc
-          mv bdUI-classic.txt bdUI.toc
+          mv bdUI-classic.toc bdUI.toc
       
       # Package for Classic
       - name: Package Classic
@@ -59,7 +53,7 @@ jobs:
       - name: Rename TBC tocc
         run: |
           rm bdUI.toc
-          mv bdUI-bcc.txt bdUI.toc
+          mv bdUI-bcc.toc bdUI.toc
         
       # Package for TBC
       - name: Package BCC
