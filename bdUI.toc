@@ -12,8 +12,8 @@
 ## X-Website: https://github.com/blooblahguy/bdUI
 
 ## X-Curse-Project-ID: 336600
-## X-Wago-ID: VBNBxKx5
-## X-WoWI-ID: 24910
+## X-Wago-ID: R4N2m4GL
+## X-WoWI-ID: 21052
 
 # Initialize
 core\init.lua
