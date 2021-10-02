@@ -1,8 +1,19 @@
-## Interface: 20501
+## Interface: 20502
+
 ## Title: |cffA02C2Fbd|rUI |cffABD473[TBC]|r
 ## Author: Blooblahguy
+## Version: @project-version@
 ## SavedVariables: BDUI_SAVE
+## DefaultState: Enabled
+## LoadOnDemand: 0
+
 ## X-oUF: bdUF
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Website: https://github.com/blooblahguy/bdUI
+
+## X-Curse-Project-ID: 336600
+## X-Wago-ID: VBNBxKx5
+## X-WoWI-ID: 24910
 
 # Initialize
 core\init.lua

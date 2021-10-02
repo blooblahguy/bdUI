@@ -1,0 +1,9 @@
+package-as: bdUI-classic
+
+ignore:
+  - .gitignore
+  - .luacheckrc
+  - README.md
+  - TODO.md
+  - bdUI-bcc.toc
+  - bdUI.toc
