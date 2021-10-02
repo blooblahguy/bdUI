@@ -308,9 +308,9 @@ end
 			icon = icon or frame
 			local highlight = frame:CreateTexture(nil, "HIGHLIGHT")
 			local border = bdUI:get_border(frame)
-			highlight:SetTexture(1, 1, 1, 0.1)
-			highlight:SetPoint("TOPLEFT", icon, border, -border)
-			highlight:SetPoint("BOTTOMRIGHT", icon, -border, border)
+			highlight:SetTexture(bdUI.media.flat)
+			highlight:SetVertexColor(1, 1, 1, 0.1)
+			highlight:SetAllPoints(icon)
 
 			frame.highlighter = highlight
 			frame.hover = highlight

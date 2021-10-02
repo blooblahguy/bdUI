@@ -123,6 +123,7 @@ modules\bags\core.lua
 modules\bags\elements\bag.lua
 modules\bags\elements\bank.lua
 modules\bags\elements\loot.lua
+modules\bags\elements\quality.lua
 
 # Buffs & Debuffs
 modules\buffs_debuffs\template.xml

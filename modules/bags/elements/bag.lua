@@ -195,7 +195,8 @@ end
 
 function mod:bag_generation(...)
 	if (mod.disabled) then return end
-	local bordersize = bdUI.border
+	local bordersize = bdUI:get_border(mod.bags)
+	config = mod:get_save()
 
 	local numrows, lastrowitem, numitems, lastitem = 0, nil, 0, nil
 	for bagID = 0, 4 do
@@ -221,10 +222,10 @@ function mod:bag_generation(...)
 					item:SetPoint("TOPLEFT", mod.bags, "TOPLEFT", 10, -30)
 					lastrowitem = item
 				else
-					item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
+					item:SetPoint("LEFT", lastitem, "RIGHT", bordersize, 0)
 					if (numitems == config.buttonsperrow) then
 						item:ClearAllPoints()
-						item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
+						item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, -bordersize)
 						lastrowitem = item
 						numrows = numrows + 1
 						numitems = 0
@@ -237,7 +238,7 @@ function mod:bag_generation(...)
 	end
 	
 	-- set bag and bank height
-	mod.bags:SetHeight(64+(config.buttonsize-bordersize)*(numrows+1))
-	mod.bags:SetWidth(20+(config.buttonsize-bordersize)*(config.buttonsperrow))
+	mod.bags:SetHeight(64+(config.buttonsize+bordersize)*(numrows+1))
+	mod.bags:SetWidth(20+(config.buttonsize+bordersize)*(config.buttonsperrow))
 end
 

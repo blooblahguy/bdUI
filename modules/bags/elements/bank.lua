@@ -333,6 +333,7 @@ end
 
 function mod:bank_generation(...)
 	local numrows, lastrowitem, numitems, lastitem = 0, nil, 0, nil
+	local bordersize = bdUI:get_border(mod.bank)
 	
 	-- bank frames
 	for index = 1, 28 do
@@ -349,10 +350,10 @@ function mod:bank_generation(...)
 			item:SetPoint("TOPLEFT", mod.bank, "TOPLEFT", 10, -30)
 			lastrowitem = item
 		else
-			item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
+			item:SetPoint("LEFT", lastitem, "RIGHT", bordersize, 0)
 			if (numitems == config.bankbuttonsperrow) then
 				item:ClearAllPoints()
-				item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
+				item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, -bordersize)
 				lastrowitem = item
 				numrows = numrows + 1
 				numitems = 0
@@ -374,10 +375,10 @@ function mod:bank_generation(...)
 			item:Show()
 			mod:skin(item)
 			
-			item:SetPoint("LEFT", lastitem, "RIGHT", -bordersize,0)
+			item:SetPoint("LEFT", lastitem, "RIGHT", bordersize, 0)
 			if (numitems == config.bankbuttonsperrow) then
 				item:ClearAllPoints()
-				item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, bordersize)
+				item:SetPoint("TOP", lastrowitem, "BOTTOM", 0, -bordersize)
 				lastrowitem = item
 				numrows = numrows + 1
 				numitems = 0
@@ -386,6 +387,6 @@ function mod:bank_generation(...)
 			lastitem = item
 		end
 	end
-	mod.bank:SetHeight(40+(config.bankbuttonsize-bordersize)*(numrows+1))
-	mod.bank:SetWidth(20+(config.bankbuttonsize-bordersize)*(config.bankbuttonsperrow))
+	mod.bank:SetHeight(40+(config.bankbuttonsize+bordersize)*(numrows+1))
+	mod.bank:SetWidth(20+(config.bankbuttonsize+bordersize)*(config.bankbuttonsperrow))
 end

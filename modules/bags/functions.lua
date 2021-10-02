@@ -20,7 +20,7 @@ function mod:comma_value(amount)
 end
 
 function mod:killShowable(frame)
-	if (not frame) then return end
+	if (not frame or not frame.Hide) then return end
 	frame:Hide()
 	frame.Show = function() return end
 	frame.Hide = function() return end

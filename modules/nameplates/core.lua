@@ -9,6 +9,7 @@ local nameplates = {}
 mod.elements = {}
 
 local tanks = {}
+local meTank = false
 
 -- Fonts we use
 mod.font = bdUI:get_font(14)
@@ -42,11 +43,29 @@ local ooc = CreateFrame("frame", nil)
 ooc:RegisterEvent("PLAYER_REGEN_ENABLED")
 ooc:SetScript("OnEvent", mod.nameplate_size)
 
--- local role_collection = CreateFrame("frame", nil)
--- role_collection:RegisterEvent("PLAYER_REGEN_ENABLED")
--- role_collection:SetScript("OnEvent", function()
--- 	local MTs = GetPartyAssignment("assignment" [,"raidmember", exactMatch])
--- end)
+local function store_tanks()
+	-- store a list of the tanks in the group
+	tanks = {}
+	for i = 1, IsInRaid() and 25 or 5 do
+		local unit = IsInRaid() and "raid"..i or "party"..i
+		if (UnitExists(unit)) then
+			if UnitGroupRolesAssigned(unit) == "TANK" or GetPartyAssignment("MAINTANK", unit) then
+				tanks[select(1, UnitName(unit))] = true
+			end
+		end
+	end
+
+	-- don't include me in other tanks for comparison
+	meTank = tanks[select(1, UnitName("player"))]
+	tanks[select(1, UnitName("player"))] = nil
+end
+local role_collection = CreateFrame("frame", nil)
+role_collection:RegisterEvent("PLAYER_ENTERING_WORLD")
+role_collection:RegisterEvent("PLAYER_REGEN_ENABLED")
+role_collection:RegisterEvent("PLAYER_REGEN_DISABLED")
+role_collection:RegisterEvent("PLAYER_ROLES_ASSIGNED")
+role_collection:RegisterEvent("GROUP_ROSTER_UPDATE")
+role_collection:SetScript("OnEvent", store_tanks)
 
 -- local function pixel_perfect(self)
 -- 	local border = bdUI:get_border(self)
@@ -183,15 +202,27 @@ end
 --==============================================
 local function store_unit_information(self, unit)
 	self.tapDenied = UnitIsTapDenied(unit) or false
+
 	self.status = UnitThreatSituation("player", unit)
 	if (self.status == nil) then
+		self.inCombat = false
 		self.status = false
 	end
+	self.inCombat = true
 	self.isPlayer = UnitIsPlayer(unit) and select(2, UnitClass(unit)) or false
-	self.reaction = UnitReaction(unit, "player") or false
-	self.targetRole = self.isPlayer and UnitGroupRolesAssigned(unit.."target") or "NONE"
-	if (UnitGroupRolesAssigned("player") ~= "TANK") then
-		self.targetRole = "NONE"
+	self.reaction = UnitReaction(unit, "player") or false -- faction reaction
+
+	-- I'm a tank
+	-- self.meTank = tanks[select(1, UnitName("player"))]
+	
+	-- Tank has aggro
+	self.themTank = false
+	for player, v in pairs(tanks) do
+		local threat = UnitThreatSituation(player, unit)
+		if (threat ~= nil and threat >= 2) then
+			self.themTank = player
+			break
+		end
 	end
 
 	self.smartColors = mod:unitColor(self.tapDenied, self.isPlayer, self.reaction, self.status)
@@ -215,12 +246,9 @@ local function update_threat(self, event, unit)
 	healthbar:SetMinMaxValues(0, max)
 	healthbar:SetValue(cur)
 
-	local meTank = UnitGroupRolesAssigned("player") == "TANK" or GetPartyAssignment("MAINTANK", "player")
-	local themTank = not UnitIsUnit(unit.."target", "player") and UnitIsPlayer(unit.."target") and (UnitGroupRolesAssigned(unit.."target") == "TANK" or GetPartyAssignment("MAINTANK", unit.."target")) and UnitThreatSituation(unit.."target") > 1
-
 	if (self.tapDenied) then
 		healthbar:SetStatusBarColor(unpack(self.smartColors))
-	elseif (meTank and themTank) then
+	elseif (meTank and self.themTank) then
 		healthbar:SetStatusBarColor(unpack(config.othertankcolor))
 	elseif (((cur / max) * 100) <= config.executerange) then
 		healthbar:SetStatusBarColor(unpack(config.executecolor))
@@ -265,13 +293,14 @@ local function nameplate_callback(self, event, unit)
 	--==========================================
 	-- Style by unit type
 	--==========================================
-	if (get_unit_type(self, unit) == "enemy") then
+	local unit_type = get_unit_type(self, unit)
+	if (unit_type == "enemy") then
 		mod.enemy_style(self, event, unit)
-	elseif (get_unit_type(self, unit) == "personal") then
+	elseif (unit_type == "personal") then
 		mod.personal_style(self, event, unit)
-	elseif (get_unit_type(self, unit) == "friendly") then
+	elseif (unit_type == "friendly") then
 		mod.friendly_style(self, event, unit)
-	elseif (get_unit_type(self, unit) == "npc") then
+	elseif (unit_type == "npc") then
 		mod.npc_style(self, event, unit)
 	end
 
@@ -308,12 +337,13 @@ local function nameplate_create(self, unit)
 	self.Health.frequentUpdates = true
 	bdUI:create_shadow(self.Health, 10)
 	self.Health._shadow:SetColor(unpack(config.glowcolor))
+
 	-- THREAT
-	self.Health.UpdateColor = noop--update_threat
+	self.Health.UpdateColor = noop -- this is done by update_threat
 	local total = 0
 	self:HookScript("OnUpdate", function(self, elapsed)
 		total = total + elapsed
-		if (total < 0.1) then return end
+		if (total < 0.2) then return end
 		if (self.currentStyle ~= "enemy") then return end
 		
 		total = 0

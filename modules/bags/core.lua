@@ -12,10 +12,12 @@ local bordersize = 2
 --===============================================
 function mod:initialize()
 	config = mod:get_save()
+
 	if (not config.enabled) then mod.disabled = true; return end
 
 	BACKPACK_HEIGHT = BACKPACK_HEIGHT or 22
 
+	mod:create_quality()
 	mod:create_bags()
 	mod:create_bank()
 	mod:create_loot()
@@ -69,7 +71,8 @@ end
 --===============================================
 -- CONFIG CALLBACK
 --===============================================
-function mod:callback()
+function mod:config_callback()
+	-- print("regen")
 	if (mod.bags:IsShown()) then
 		mod:bag_generation()
 	end
@@ -199,7 +202,7 @@ function mod:icon_border(border)
 	-- flash/glow/newitem are a pain
 	mod:killShowable(flash)
 	mod:killShowable(glow)
-	mod:killShowable(newitem)
+	-- mod:killShowable(newitem)
 	mod:killShowable(battlepay)
 	parent.hover:SetTexture(bdUI.media.flat)
 	parent.hover:SetVertexColor(1, 1, 1, .1)
@@ -246,50 +249,64 @@ function mod:SkinEditBox(frame)
 	bdUI:set_backdrop(frame)
 end
 
+-- for word in string.gmatch("BagFrame2Item15", "%d+") do print(word) end
+
 function mod:skin(frame)
 	frame:SetFrameStrata("HIGH")
 	frame:SetFrameLevel(3)
 
 	if (frame.skinned) then return end
-	local border = bdUI.border
+	frame.skinned = true
+	
+	local borderSize = bdUI:get_border(frame)
 	frame:SetNormalTexture("")
 	frame:SetPushedTexture("")
 	frame:SetAlpha(1)
-	if (not frame.SetBackdrop) then
-		Mixin(frame, BackdropTemplateMixin)
-	end
-	frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
-	local r, g, b, a = unpack(bdUI.media.backdrop)
-	frame:SetBackdropColor(r, g, b, 0.8)
-	frame:SetBackdropBorderColor(unpack(bdUI.media.border))
+
+	bdUI:set_backdrop(frame)
 	bdUI:set_highlight(frame)
 
 	local normal = _G[frame:GetName().."NormalTexture"]
-	local count = _G[frame:GetName().."Count"]
-	local cooldown = _G[frame:GetName().."Cooldown"]
-	local icon = _G[frame:GetName().."IconTexture"]
-	local flash = frame.flash
 	normal:SetAllPoints(frame)
-	
-	count:SetFontObject(bdUI:get_font(13))
-	count:SetJustifyH("RIGHT")
-	count:SetAlpha(.9)	
-	
+
+	local flash = frame.flash
+	if (flash) then
+		flash:SetAllPoints()
+	end
+
+	local icon = _G[frame:GetName().."IconTexture"]
 	icon:SetAllPoints(frame)
-	icon:SetPoint("TOPLEFT", frame, 2, -2)
-	icon:SetPoint("BOTTOMRIGHT", frame, -2, 2)
+	icon:SetPoint("TOPLEFT", frame)
+	icon:SetPoint("BOTTOMRIGHT", frame)
 	icon:SetTexCoord(.1, .9, .1, .9)
 	
+	local count = _G[frame:GetName().."Count"]
+	count:SetFontObject(bdUI:get_font(13))
+	count:ClearAllPoints()
+	count:SetPoint("BOTTOMRIGHT", -borderSize, borderSize)
+	count:SetJustifyH("RIGHT")
+	count:SetAlpha(.9)
+	
+	local cooldown = _G[frame:GetName().."Cooldown"]
 	cooldown:GetRegions():SetFontObject(bdUI:get_font(14))
 	cooldown:GetRegions():SetJustifyH("Center")
 	cooldown:GetRegions():ClearAllPoints()
 	cooldown:GetRegions():SetAllPoints(cooldown)
 	cooldown:SetParent(frame)
 	cooldown:SetAllPoints(frame)
+
+	local quest = _G[frame:GetName().."IconQuestTexture"] or frame.IconQuestTexture
+	local flash = frame.flashAnim;
+	local glow = frame.newitemglowAnim;
+	local newitem = frame.NewItemTexture;
+	local battlepay = frame.BattlepayItemTexture;
 	
-	hooksecurefunc(frame.IconBorder, "SetVertexColor", function() mod:icon_border(frame.IconBorder) end)
-	mod:icon_border(frame.IconBorder)
-	frame.skinned = true
+	mod:killShowable(frame.IconBorder)
+	mod:killShowable(flash)
+	mod:killShowable(glow)
+	mod:killShowable(quest)
+	mod:killShowable(newitem)
+	mod:killShowable(battlepay)
 end
 
 -- Calls when each bag is opened
@@ -384,12 +401,7 @@ function mod:Draw(frame, size, id)
 	BankFrame:EnableMouse(false)
 	BankSlotsFrame:EnableMouse(false)
 	mod:killShowable(BagHelpBox)
-
-	-- bdUI:profile_stop("Bags", "draw", 3)
 end
-
-
-
 
 local evHandler = CreateFrame("frame")
 evHandler:RegisterEvent("BAG_NEW_ITEMS_UPDATED")

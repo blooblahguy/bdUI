@@ -75,7 +75,7 @@ raidauras["Conflagaration"] = true
 raidauras["Silence"] = true
 raidauras["Remote Toy"] = true
 raidauras["Flamestrike"] = true
-sepcial["Flamestrike"] = true
+special["Flamestrike"] = true
 raidauras["Nether Vapor"] = true
 
 -- SSC

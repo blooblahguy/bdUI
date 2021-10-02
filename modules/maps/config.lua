@@ -24,7 +24,7 @@ local config = {
 				min = 50,
 				max = 500,
 				step = 5,
-				value = 210
+				value = 240
 			},
 			{
 				key = "scale",
@@ -33,7 +33,7 @@ local config = {
 				min = 0.1,
 				max = 3,
 				step = .1,
-				value = 1.3
+				value = 1.5
 			},
 			{
 				key = "shape",

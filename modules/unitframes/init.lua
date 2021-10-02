@@ -51,7 +51,7 @@ local config = {
 			},
 			{
 				key = "textlocation",
-				value = "Minimal",
+				value = "Outside",
 				type = "select",
 				options = {"Outside", "Inside", "Minimal"},
 				label = "Text Display"

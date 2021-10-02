@@ -161,7 +161,7 @@ local config = {
 			{
 				key = "highlightEnrage",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Auto whitelist enrage auras on units.",
 			},
 			{
@@ -302,7 +302,7 @@ local config = {
 				min = -20,
 				max = 20,
 				step = 1,
-				label = "HP Text offset",
+				label = "Name Text offset",
 			},
 			{
 				key = "hptext",
@@ -426,13 +426,13 @@ local config = {
 			{
 				key = "nothreatcolor",
 				type = "color",
-				value = {0.3, 1, 0.3,1},
+				value = {0.3, 1, 0.3, 1},
 				label = "No Aggro Color"
 			},
 			{
 				key = "threatdangercolor",
 				type = "color",
-				value = {1, .55, 0.3,1},
+				value = {.1, .8, 0.3, 1},
 				label = "Danger Aggro Color"
 			},
 			{
