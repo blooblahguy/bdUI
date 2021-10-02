@@ -5,5 +5,3 @@ ignore:
   - .luacheckrc
   - README.md
   - TODO.md
-  - bdUI-bcc.toc
-  - bdUI-classic.toc
