@@ -5,7 +5,7 @@ name: Package bdUI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  push:
+  release:
     branches:
       - master
 
@@ -15,7 +15,7 @@ on:
 env:
   CF_API_KEY: ${{ secrets.CF_API_KEY }}
   WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
-  WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+  # WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
   # automatically populated
   GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
 
