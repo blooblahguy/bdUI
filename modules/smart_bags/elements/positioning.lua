@@ -16,7 +16,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 
 	-- loop through categories first
 	for categoryID, items in spairs(categories, function(a, b)
-		return a < b
+		return tonumber(a) < tonumber(b)
 	end) do
 		local cat = mod.current_parent.cat_pool:Acquire()
 		cat:Show()
@@ -95,7 +95,7 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 	local max_cols = 0
 
 	for categoryID, items in spairs(categories, function(a, b)
-		return a < b
+		return tonumber(a) < tonumber(b)
 	end) do
 		local cat = last_draw[categoryID]
 

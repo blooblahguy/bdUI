@@ -149,15 +149,17 @@ modules\smart_bags\elements\bank.lua
 modules\smart_bags\elements\reagents.lua
 modules\smart_bags\elements\loot.lua
 modules\smart_bags\elements\positioning.lua
+modules\smart_bags\elements\filters.lua
+modules\smart_bags\elements\containers.lua
 
 # Bags
-modules\bags\init.lua
-modules\bags\functions.lua
-modules\bags\core.lua
-modules\bags\elements\bag.lua
-modules\bags\elements\bank.lua
-modules\bags\elements\loot.lua
-modules\bags\elements\quality.lua
+# modules\bags\init.lua
+# modules\bags\functions.lua
+# modules\bags\core.lua
+# modules\bags\elements\bag.lua
+# modules\bags\elements\bank.lua
+# modules\bags\elements\loot.lua
+# modules\bags\elements\quality.lua
 
 # Buffs & Debuffs
 modules\buffs_debuffs\template.xml

@@ -26,7 +26,7 @@ function mod:initialize()
 		local itemString = string.match(link, "item[%-?%d:]+")
 		local _, itemId = strsplit(":", itemString)
 
-		local name, link, rarity, ilvl, minlevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(link)
+		local name, link, rarity, ilvl, minlevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(link)
 
 		local lcolor = {0.6, 0.6, 0.6}
 		local rcolor = {1, 1, 1}
@@ -34,7 +34,9 @@ function mod:initialize()
 		-- local itemType = 
 		tooltip:AddDoubleLine("itemId", itemId, unpack(lcolor), unpack(rcolor))
 		tooltip:AddDoubleLine("itemType", itemType, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("itemTypeID", itemTypeID, unpack(lcolor), unpack(rcolor))
 		tooltip:AddDoubleLine("itemSubType", itemSubType, unpack(lcolor), unpack(rcolor))
+		tooltip:AddDoubleLine("itemSubTypeID", itemSubTypeID, unpack(lcolor), unpack(rcolor))
 		tooltip:AddDoubleLine("ilvl", ilvl, unpack(lcolor), unpack(rcolor))
 		tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc, unpack(lcolor), unpack(rcolor))
 	end)

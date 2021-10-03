@@ -42,27 +42,32 @@ function mod:update_bags()
 				categories[-2] = categories[-2] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemSubClassID, bag})
+				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemSubTypeID, bag})
 			elseif (itemLink and quality > 0) then
-				local name, link, rarity, ilvl, minlevel, itemtype, subtype, count, itemEquipLoc, icon, price, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 				local itemString = string.match(itemLink, "item[%-?%d:]+")
 				local _, itemID = strsplit(":", itemString)
+
+				-- run through filters to see where i truly belong
+				itemType, itemTypeID = mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, itemEquipLoc)
 
 				-- store new items seperately
 				if (C_NewItems.IsNewItem(bag, slot)) then
 					itemTypeID = -1
-					itemtype = "New"
+					itemType = "New"
 				end
 
+				-- print(itemLink, itemTypeID, itemType)
+
 				-- store these for later
-				mod.categoryIDtoNames[itemTypeID] = itemtype
-				mod.categoryNamestoID[itemtype] = itemTypeID
+				mod.categoryIDtoNames[itemTypeID] = itemType
+				mod.categoryNamestoID[itemType] = itemTypeID
 
 				-- store it in a category
 				categories[itemTypeID] = categories[itemTypeID] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemSubClassID, bag})
+				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemSubTypeID, bag})
 			end		
 		end
 	end
