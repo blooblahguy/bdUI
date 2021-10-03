@@ -466,7 +466,7 @@ local config = {
 			{
 				key = "executerange",
 				type = "range",
-				value = 20,
+				value = 0,
 				min = 0,
 				max = 40,
 				step = 5,

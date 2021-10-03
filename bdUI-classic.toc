@@ -121,19 +121,19 @@ modules\actionbars\elements\zoneability.lua
 modules\actionbars\elements\hotkeys.lua
 
 # Bags
-modules\new_bags\init.lua
-modules\new_bags\functions.lua
-modules\new_bags\core.lua
-modules\new_bags\elements\containers.lua
-modules\new_bags\elements\currencies.lua
-modules\new_bags\elements\money.lua
-modules\new_bags\elements\filters.lua
-modules\new_bags\elements\categories.lua
-modules\new_bags\elements\button_lib.lua
-modules\new_bags\elements\bags.lua
-modules\new_bags\elements\bank.lua
-modules\new_bags\elements\reagents.lua
-modules\new_bags\elements\loot.lua
+# modules\new_bags\init.lua
+# modules\new_bags\functions.lua
+# modules\new_bags\core.lua
+# modules\new_bags\elements\containers.lua
+# modules\new_bags\elements\currencies.lua
+# modules\new_bags\elements\money.lua
+# modules\new_bags\elements\filters.lua
+# modules\new_bags\elements\categories.lua
+# modules\new_bags\elements\button_lib.lua
+# modules\new_bags\elements\bags.lua
+# modules\new_bags\elements\bank.lua
+# modules\new_bags\elements\reagents.lua
+# modules\new_bags\elements\loot.lua
 
 modules\bags\init.lua
 modules\bags\functions.lua

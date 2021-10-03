@@ -155,7 +155,7 @@ end
 		local scale = 768 / screenheight
 		local frame_scale = frame:GetEffectiveScale()
 		local pixel = scale / frame_scale
-		local border = pixel * bdUI:get_border_size()
+		local border = pixel * (bdUI:get_border_size() or 2)
 
 		return border
 	end
