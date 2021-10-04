@@ -69,8 +69,6 @@ function mod:update_bags()
 					itemType = "New"
 				end
 
-				-- print(itemLink, itemTypeID, itemType)
-
 				-- store these for later
 				mod.categoryIDtoNames[itemTypeID] = itemType
 				mod.categoryNamestoID[itemType] = itemTypeID

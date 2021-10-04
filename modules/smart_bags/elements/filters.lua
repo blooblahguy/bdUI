@@ -12,7 +12,7 @@ custom_categories["Rings:5.6"] = {
 custom_categories["Miscellaneous:15"] = {
 	{"4.0", nil, false},
 }
-custom_categories["Tools:0.5"] = {
+custom_categories["Tools:20.5"] = {
 	{"0.0", false, false},
 	{"2.14", false, false},
 	{"2.20", false, false},
