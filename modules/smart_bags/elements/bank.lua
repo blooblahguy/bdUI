@@ -12,7 +12,7 @@ function mod:create_bank()
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_START')
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_UPDATE')
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_FAILURE')
-	mod.bank:RegisterEvent('BAG_UPDATE')
+	mod.bank:RegisterEvent('BAG_UPDATE_DELAYED')
 	mod.bank:RegisterEvent('BANKFRAME_OPENED')
 	mod.bank:RegisterEvent('BANKFRAME_CLOSED')
 
@@ -20,12 +20,12 @@ function mod:create_bank()
 		if (event == "BANKFRAME_OPENED") then
 			mod.bank:Show()
 			mod:update_bank()
+			-- mod:create_bank_bagslots()
 		elseif (event == "BANKFRAME_CLOSED") then
 			mod.bank:Hide()
 		else
 			mod:update_bank()
 		end
-		
 	end)
 end
 
@@ -90,7 +90,7 @@ function mod:draw_bank()
 	mod:position_items(categories, config.bankbuttonsize, config.bankbuttonsperrow)
 	mod:position_categories(categories, config.bankbuttonsize, config.bankbuttonsperrow)
 
-	mod:hide_blizzard_bank()
+	-- mod:hide_blizzard_bank()
 end
 
 function mod:hide_blizzard_bank()

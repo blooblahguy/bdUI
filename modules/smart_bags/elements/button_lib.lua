@@ -5,11 +5,12 @@ local events = {}
 events["BAG_UPDATE_COOLDOWN"] = "update_cooldown"
 events["ITEM_LOCK_CHANGED"] = "update_lock"
 events["ITEM_UNLOCKED"] = "update_lock"
-events["BAG_UPDATE_DELAYED"] = "update_lock"
+events["BAG_UPDATE_DELAYED"] = "update"
 events["BAG_NEW_ITEMS_UPDATED"] = "update_new"
 events["INVENTORY_SEARCH_UPDATE"] = "update_search"
-events["BAG_UPDATE"] = "update"
+events["BAG_UPDATE"] = "update_lock"
 events["PLAYERBANKSLOTS_CHANGED"] = "update"
+events["PLAYER_ENTERING_WORLD"] = "update_cooldown"
 
 local methods = {}
 methods["update_quality"] = function(self)
@@ -65,7 +66,7 @@ methods["update"] = function(self)
 	self:update_quality()
 end
 
-local function skin(self)
+function mod:skin(self)
 	bdUI:set_backdrop(self)
 
 	local normal = _G[self:GetName().."NormalTexture"]
@@ -142,7 +143,7 @@ mod.item_pool_create = function(self)
 		end
 	end)
 
-	skin(button)
+	mod:skin(button)
 	Mixin(button, methods)
 	mod:register_events(button, events)
 

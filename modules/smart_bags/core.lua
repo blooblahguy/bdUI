@@ -11,11 +11,14 @@ function mod:initialize()
 
 	if (not mod.config.enabled) then return end
 
+	mod.border = bdUI:get_border(UIParent)
+
 	mod:create_bags() -- bags first
 	mod:create_bank() -- now bank
+	-- mod:create_bagslot_frames() -- bagslot holders
 	-- lastly reagents
 
-	mod.border = bdUI:get_border(mod.bags)
+	
 
 	mod:hook_blizzard_functions()
 

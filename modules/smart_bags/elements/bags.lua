@@ -10,15 +10,23 @@ function mod:create_bags()
 	mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 
+	
+
 	-- mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	-- mod.bags:RegisterEvent('PLAYER_EQUIPMENT_CHANGED')
 	-- mod.bags:RegisterEvent('AUCTION_MULTISELL_START')
 	-- mod.bags:RegisterEvent('AUCTION_MULTISELL_UPDATE')
 	-- mod.bags:RegisterEvent('AUCTION_MULTISELL_FAILURE')
-	mod.bags:RegisterEvent('BAG_UPDATE')
+	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
+	mod.bags:RegisterEvent('PLAYER_ENTERING_WORLD')
 
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
-		mod:update_bags()
+		if (event == "PLAYER_ENTERING_WORLD") then
+			-- create container items for bigger and better bags
+			mod:create_bag_bagslots()
+		else
+			mod:update_bags()
+		end
 	end)
 end
 
