@@ -20,12 +20,16 @@ function mod:create_bags()
 	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
 	mod.bags:RegisterEvent('PLAYER_ENTERING_WORLD')
 
+	local run_bag_holder = 0
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "PLAYER_ENTERING_WORLD") then
 			-- create container items for bigger and better bags
-			mod:create_bag_bagslots()
 		else
 			mod:update_bags()
+			if (run_bag_holder == 0) then
+				run_bag_holder = 1
+				mod:create_bag_bagslots()
+			end
 		end
 	end)
 end

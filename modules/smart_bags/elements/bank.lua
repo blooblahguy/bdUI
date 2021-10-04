@@ -90,7 +90,7 @@ function mod:draw_bank()
 	mod:position_items(categories, config.bankbuttonsize, config.bankbuttonsperrow)
 	mod:position_categories(categories, config.bankbuttonsize, config.bankbuttonsperrow)
 
-	-- mod:hide_blizzard_bank()
+	mod:hide_blizzard_bank()
 end
 
 function mod:hide_blizzard_bank()
