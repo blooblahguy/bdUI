@@ -65,6 +65,7 @@ local auras = {
 	-- Warlocks
 	["Dark Bargain"] = true,
 	["Unending Resolve"] = true,
+	['Banish'] = true,
 	
 	-- Paladins
 	["Divine Shield"] = true,

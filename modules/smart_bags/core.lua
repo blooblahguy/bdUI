@@ -20,27 +20,28 @@ function mod:initialize()
 
 	mod:hook_blizzard_functions()
 
-	GameTooltip:HookScript("OnTooltipSetItem", function(tooltip)
-		local _, link = tooltip:GetItem()
-		if not link then return end
+	-- debug tooltips
+	-- GameTooltip:HookScript("OnTooltipSetItem", function(tooltip)
+	-- 	local _, link = tooltip:GetItem()
+	-- 	if not link then return end
 		
-		local itemString = string.match(link, "item[%-?%d:]+")
-		local _, itemId = strsplit(":", itemString)
+	-- 	local itemString = string.match(link, "item[%-?%d:]+")
+	-- 	local _, itemId = strsplit(":", itemString)
 
-		local name, link, rarity, ilvl, minlevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(link)
+	-- 	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(link)
 
-		local lcolor = {0.6, 0.6, 0.6}
-		local rcolor = {1, 1, 1}
+	-- 	local lcolor = {0.6, 0.6, 0.6}
+	-- 	local rcolor = {1, 1, 1}
 
-		-- local itemType = 
-		tooltip:AddDoubleLine("itemId", itemId, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemType", itemType, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemTypeID", itemTypeID, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemSubType", itemSubType, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemSubTypeID", itemSubTypeID, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("ilvl", ilvl, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc, unpack(lcolor), unpack(rcolor))
-	end)
+	-- 	-- local itemType = 
+	-- 	tooltip:AddDoubleLine("itemId", itemId, unpack(lcolor), unpack(rcolor))
+	-- 	tooltip:AddDoubleLine("itemType", itemType, unpack(lcolor), unpack(rcolor))
+	-- 	tooltip:AddDoubleLine("itemTypeID", itemTypeID, unpack(lcolor), unpack(rcolor))
+	-- 	tooltip:AddDoubleLine("itemSubType", itemSubType, unpack(lcolor), unpack(rcolor))
+	-- 	tooltip:AddDoubleLine("itemSubTypeID", itemSubTypeID, unpack(lcolor), unpack(rcolor))
+	-- 	tooltip:AddDoubleLine("ilvl", ilvl, unpack(lcolor), unpack(rcolor))
+	-- 	tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc, unpack(lcolor), unpack(rcolor))
+	-- end)
 end
 
 function mod:config_callback()

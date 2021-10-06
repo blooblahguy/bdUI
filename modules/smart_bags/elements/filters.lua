@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Smart Bags (beta)")
 
 local custom_categories = {}
 -- {itemTypes_filter, equipSlot_filter, subType_filter}
-custom_categories["Trinkets:5.5"] = {
+custom_categories["Trinkets & Rings:5.5"] = {
 	{"4.", "INVTYPE_TRINKET", false},
 	{"4.", "INVTYPE_FINGER", false},
 }

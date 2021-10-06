@@ -49,7 +49,7 @@ function mod:update_bank()
 				categories[-2] = categories[-2] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemSubTypeID, bag})
+				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
 			elseif (itemLink and quality > 0) then
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 				local itemString = string.match(itemLink, "item[%-?%d:]+")

@@ -343,7 +343,7 @@ local function nameplate_create(self, unit)
 	local total = 0
 	self:HookScript("OnUpdate", function(self, elapsed)
 		total = total + elapsed
-		if (total < 0.2) then return end
+		if (total < 0.1) then return end
 		if (self.currentStyle ~= "enemy") then return end
 		
 		total = 0

@@ -100,6 +100,7 @@ raidauras["Static Charge"] = true
 raidauras["Entangle"] = true
 raidauras["Persuasion"] = true
 raidauras["Howl of Terror"] = true
+raidauras["Persuasion"] = true
 special["Persuasion"] = true
 raidauras["Paralyze"] = true
 special["Paralyze"] = true
