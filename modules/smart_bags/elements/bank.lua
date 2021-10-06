@@ -72,7 +72,7 @@ function mod:update_bank()
 				categories[itemTypeID] = categories[itemTypeID] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemSubTypeID, bag})
+				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
 			end
 		end
 	end

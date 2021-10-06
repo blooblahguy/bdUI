@@ -5,10 +5,11 @@ local custom_categories = {}
 -- {itemTypes_filter, equipSlot_filter, subType_filter}
 custom_categories["Trinkets:5.5"] = {
 	{"4.", "INVTYPE_TRINKET", false},
-}
-custom_categories["Rings:5.6"] = {
 	{"4.", "INVTYPE_FINGER", false},
 }
+-- custom_categories["Rings:5.6"] = {
+-- 	{"4.", "INVTYPE_FINGER", false},
+-- }
 custom_categories["Miscellaneous:15"] = {
 	{"4.0", nil, false},
 }

@@ -266,13 +266,16 @@ function mod:create_bag_bagslots()
 	local config = mod.config
 	local size = config.buttonsize
 
-	local holder = CreateFrame("frame", nil, mod.bags)
-	holder:SetPoint("BOTTOMRIGHT", mod.bags, "TOPRIGHT", 0, mod.border)
-	bdUI:set_backdrop(holder)
-	holder:SetSize(200, size + size * .5)
-	holder:Hide()
+	if (not mod.bags.bagslot_holder) then
+		local holder = CreateFrame("frame", nil, mod.bags)
+		holder:SetPoint("BOTTOMRIGHT", mod.bags, "TOPRIGHT", 0, mod.border)
+		bdUI:set_backdrop(holder)
+		holder:SetSize(200, size + size * .5)
+		holder:Hide()
+		mod.bags.bagslot_holder = holder
+		mod.bags.bagslot_holder.items = {}
+	end
 
-	mod.bags.bagslot_holder = holder
 
 	local bagslots = {"0.0", "0.-1", "0.-2", "0.-3"}
 
@@ -281,7 +284,8 @@ function mod:create_bag_bagslots()
 
 	for k, ids in pairs(bagslots) do
 		local bagID, slot = strsplit(".", ids)
-		local bag = create_bagslot_item(mod.bags.bagslot_holder, "ContainerFrameItemButtonTemplate")
+		local bag = mod.bags.bagslot_holder.items[k] or create_bagslot_item(mod.bags.bagslot_holder, "ContainerFrameItemButtonTemplate")
+		mod.bags.bagslot_holder.items[k] = bag
 
 		bag.bag = tonumber(bagID)
 		bag.bagID = tonumber(bagID)
@@ -296,23 +300,30 @@ function mod:create_bag_bagslots()
 
 		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemLink)
 
-		local itemString = string.match(itemLink, "item[%-?%d:]+")
-		local _, itemID = strsplit(":", itemString)
-		
-		bag.itemLink = itemLink
-		bag.itemCount = 0
-		bag.texture = itemTexture
-		bag.itemID = itemID
-		bag:update()
-			
-		if (not last_bag) then
-			bag:SetPoint("RIGHT", mod.bags.bagslot_holder, "RIGHT", -size/4, 0)
-		else
-			bag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
-		end
+		if (itemLink) then
 
-		last_bag = bag
-		num_bags = num_bags + 1
+			local itemString = string.match(itemLink, "item[%-?%d:]+")
+			local _, itemID = strsplit(":", itemString)
+			
+			bag.itemLink = itemLink
+			bag.itemCount = 0
+			bag.texture = itemTexture
+			bag.itemID = itemID
+			bag:update()
+				
+			if (not last_bag) then
+				bag:SetPoint("RIGHT", mod.bags.bagslot_holder, "RIGHT", -size/4, 0)
+			else
+				bag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
+			end
+
+			last_bag = bag
+			num_bags = num_bags + 1
+		else
+			C_Timer.After(2, function()
+				mod:create_bag_bagslots()
+			end)
+		end
 	end
 
 	mod.bags.bagslot_holder:SetWidth(((num_bags * (size + mod.border))) + (size / 2))

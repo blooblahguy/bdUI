@@ -115,5 +115,10 @@ function mod:create_money(name, parent)
 	money:HookScript("OnLeave", money.onleave)
 	money:HookScript("OnClick", money.click)
 
+	money:RegisterForDrag("LeftButton","RightButton")
+	money:RegisterForDrag("LeftButton","RightButton")
+	money:SetScript("OnDragStart", function(self) self:GetParent():StartMoving() end)
+	money:SetScript("OnDragStop", function(self) self:GetParent():StopMovingOrSizing() end)
+
 	return money
 end

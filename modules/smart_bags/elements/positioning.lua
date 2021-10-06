@@ -45,7 +45,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 
 		-- now position items inside of frame
 		for itemname, iteminfo in pairs(items) do
-			local name, bag, slot, itemLink, itemID, texture, itemCount, itemSubClassID, bagID = unpack(iteminfo)
+			local name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubClassID, bagID = unpack(iteminfo)
 			local item = mod.current_parent.item_pool:Acquire()
 			item:Show()
 			item:SetSize(buttonsize, buttonsize)

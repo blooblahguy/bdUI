@@ -46,10 +46,10 @@ methods["update_cooldown"] = function(self)
 end
 
 methods["update_new"] = function(self)
-	self.BattlepayItemTexture:SetShown(IsBattlePayItem(self.bag, self.slot))
-	self.NewItemTexture:SetShown(C_NewItems.IsNewItem(self.bag, self.slot))
+	self.BattlepayItemTexture:SetShown(C_NewItems.IsNewItem(self.bag, self.slot))
+	-- self.new_item:SetShown(C_NewItems.IsNewItem(self.bag, self.slot))
 
-	self:update()
+	-- self:update()
 end
 
 methods["update"] = function(self)
@@ -63,6 +63,7 @@ methods["update"] = function(self)
 
 	self.blank:SetShown(not self.hasItem)
 
+	self:update_new()
 	self:update_quality()
 end
 
@@ -105,11 +106,21 @@ function mod:skin(self)
 
 	-- battleplay
 	self.BattlepayItemTexture:SetAllPoints()
-	self.BattlepayItemTexture:Hide()
-
+	self.BattlepayItemTexture:SetTexCoord(.25, .75, .25, .75)
+	
 	-- New Item
 	self.NewItemTexture:SetAllPoints()
 	self.NewItemTexture:Hide()
+	-- 902180
+	-- local new_item = CreateFrame("frame", self:GetName().."NewBorder", self)
+	-- new_item:SetPoint("TOPLEFT", self, "TOPLEFT")
+	-- new_item:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT")
+	-- new_item:SetAlpha(0.4)
+	-- new_item:Hide()
+	-- bdUI:set_backdrop(new_item)
+	-- new_item._background:SetVertexColor(0.4, 0.5, 1, 1)
+	-- new_item:set_border_size(0)
+	-- self.new_item = new_item
 
 	-- quality
 	local quality = CreateFrame("frame", self:GetName().."QualityBorder", self)

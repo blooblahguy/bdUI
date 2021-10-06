@@ -8,9 +8,7 @@ mod.categoryNamestoID = {}
 function mod:create_bags()
 	mod.bags = mod:create_container("Bags")
 	mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
-	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
-
-	
+	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)	
 
 	-- mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	-- mod.bags:RegisterEvent('PLAYER_EQUIPMENT_CHANGED')
@@ -24,6 +22,13 @@ function mod:create_bags()
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "PLAYER_ENTERING_WORLD") then
 			-- create container items for bigger and better bags
+			for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+				local min, max, step = GetContainerNumSlots(bag), 1, -1
+				
+				for slot = min, max, step do
+					local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+				end
+			end
 		else
 			mod:update_bags()
 			if (run_bag_holder == 0) then
@@ -54,7 +59,7 @@ function mod:update_bags()
 				categories[-2] = categories[-2] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemSubTypeID, bag})
+				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
 			elseif (itemLink and quality > 0) then
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 				local itemString = string.match(itemLink, "item[%-?%d:]+")
@@ -65,8 +70,17 @@ function mod:update_bags()
 
 				-- store new items seperately
 				if (C_NewItems.IsNewItem(bag, slot)) then
-					itemTypeID = -1
-					itemType = "New"
+
+					-- store these for later
+					mod.categoryIDtoNames[-1] = "New"
+					mod.categoryNamestoID["New"] = -1
+
+					-- store it in a category
+					categories[-1] = categories[-1] or {}
+
+					-- then store by categoryID with lots of info
+					table.insert(categories[-1], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
+
 				end
 
 				-- store these for later
@@ -77,7 +91,7 @@ function mod:update_bags()
 				categories[itemTypeID] = categories[itemTypeID] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemSubTypeID, bag})
+				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
 			end		
 		end
 	end

@@ -18,8 +18,6 @@ function mod:initialize()
 	-- mod:create_bagslot_frames() -- bagslot holders
 	-- lastly reagents
 
-	
-
 	mod:hook_blizzard_functions()
 
 	GameTooltip:HookScript("OnTooltipSetItem", function(tooltip)
