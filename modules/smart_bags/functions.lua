@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Smart Bags (beta)")
+local mod = bdUI:get_module("Bags")
 
 --===============================================
 -- Bag Frames

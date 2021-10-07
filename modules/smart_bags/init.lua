@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Smart Bags (beta)")
+local mod = bdUI:get_module("Bags")
 
 local developer_names = {}
 developer_names["Padder"] = true
@@ -13,7 +13,7 @@ local config = {
 	{
 		key = "enabled",
 		type = "toggle",
-		label = "Enable Smart Bag Code (in beta)",
+		label = "Enable Bags",
 		value = false,
 	},
 	{
@@ -69,39 +69,4 @@ local config = {
 	},
 }
 
-local hide = true
-if (developer) then 
-	hide = false
-end
-
-local mod = bdUI:register_module("Smart Bags (beta)", config, {
-	hide_ui = hide
-})
-
-function mod:initialize()
-	mod.config = mod:get_save()
-
-	GameTooltip:HookScript("OnTooltipSetItem", function(tooltip)
-		local _, link = tooltip:GetItem()
-		if not link then return end
-		
-		local itemString = string.match(link, "item[%-?%d:]+")
-		local _, itemId = strsplit(":", itemString)
-
-		local name, link, rarity, ilvl, minlevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, itemTypeID, itemSubClassID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(link)
-
-		local lcolor = {0.6, 0.6, 0.6}
-		local rcolor = {1, 1, 1}
-
-		-- print(GetItemInfo(link))
-
-		-- local itemType = 
-		tooltip:AddDoubleLine("itemId", itemId, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemType", itemType, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemSubType", itemSubType, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("ilvl", ilvl, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("minlevel", minlevel, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc, unpack(lcolor), unpack(rcolor))
-		tooltip:AddDoubleLine("itemId", itemId, unpack(lcolor), unpack(rcolor))
-	end)
-end
+local mod = bdUI:register_module("Bags", config)

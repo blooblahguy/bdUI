@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Smart Bags (beta)")
+local mod = bdUI:get_module("Bags")
 
 local ace_hook = LibStub("AceHook-3.0")
 ace_hook:Embed(mod)
@@ -10,7 +10,7 @@ function mod:initialize()
 	mod.config = mod:get_save()
 
 	if (not mod.config.enabled) then return end
-
+	mod.initialized = true
 	mod.border = bdUI:get_border(UIParent)
 
 	mod:create_bags() -- bags first
@@ -45,8 +45,11 @@ function mod:initialize()
 end
 
 function mod:config_callback()
-	mod:update_bags()
-	mod:position_bag_categories()
+	if (not mod.initialized and mod.config.enabled) then
+		mod:initialize()
+		mod:update_bags()
+		-- mod:position_bag_categories()
+	end
 end
 
 function mod:hook_blizzard_functions()
