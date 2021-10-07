@@ -23,7 +23,7 @@ local config = {
 			{
 				key = "powerdisplay",
 				type = "select",
-				value = "Healers",
+				value = "All",
 				options = {"None","Healers","All"},
 				label = "Power Bar Display",
 				tooltip = "Show mana/energy/rage bars on frames.",

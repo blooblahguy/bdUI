@@ -13,11 +13,34 @@ function mod:create_button(parent)
 	button.text:SetJustifyH("CENTER")
 	button.text:SetTextColor(.4, .4, .4)
 
+	function button:ToggleActive()
+		if (self.active) then
+			self:SetInactive()
+		else
+			self:SetActive()
+		end
+	end
+
+	function button:SetActive()
+		if (not self._background) then return end
+		self._background:SetVertexColor(unpack(bdUI.media.blue))
+		self.text:SetTextColor(1, 1, 1)
+		self.active = true
+	end
+	function button:SetInactive()
+		if (not self._background) then return end
+		self._background:SetVertexColor(unpack(bdUI.media.backdrop))
+		self.text:SetTextColor(.4, .4, .4)
+		self.active = false
+	end
+
 	button:SetScript("OnEnter", function(self)
 		self.text:SetTextColor(1, 1, 1)
 	end)
 	button:SetScript("OnLeave", function(self)
-		self.text:SetTextColor(.4, .4, .4)
+		if (not self.active) then
+			self.text:SetTextColor(.4, .4, .4)
+		end
 	end)
 
 	button:SetScript("OnClick", function(self)

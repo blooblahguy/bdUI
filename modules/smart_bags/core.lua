@@ -16,7 +16,7 @@ function mod:initialize()
 	mod:create_bags() -- bags first
 	mod:create_bank() -- now bank
 	-- mod:create_bagslot_frames() -- bagslot holders
-	-- lastly reagents
+	mod:create_reagents() -- lastly reagents
 
 	mod:hook_blizzard_functions()
 

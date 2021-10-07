@@ -10,11 +10,6 @@ function mod:create_bags()
 	mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)	
 
-	-- mod.bags:RegisterEvent('EQUIPMENT_SWAP_PENDING')
-	-- mod.bags:RegisterEvent('PLAYER_EQUIPMENT_CHANGED')
-	-- mod.bags:RegisterEvent('AUCTION_MULTISELL_START')
-	-- mod.bags:RegisterEvent('AUCTION_MULTISELL_UPDATE')
-	-- mod.bags:RegisterEvent('AUCTION_MULTISELL_FAILURE')
 	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
 	mod.bags:RegisterEvent('PLAYER_ENTERING_WORLD')
 
@@ -100,8 +95,11 @@ function mod:update_bags()
 	mod:draw_bag()
 end
 
-local last_draw = {}
-local last_free = 0
+-- don't mess with categories or releasing frames, just show or hide items that have been used but leave category positions
+-- this should be used only when we reduce items in the bag, so that when selling things frames aren't jumping around
+function mod:bag_only_update_item_positions()
+
+end
 
 function mod:draw_bag()
 	local config = mod.config

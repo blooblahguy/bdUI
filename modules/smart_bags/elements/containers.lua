@@ -1,19 +1,21 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Smart Bags (beta)")
 
-function mod:create_container(name)
+function mod:create_container(name, nomove)
 	local frame = CreateFrame("frame", "bdBags_"..name, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	bdUI:set_backdrop(frame)
 
 	frame:SetSize(500, 400)
 	frame:EnableMouse(true)
-	frame:SetMovable(true)
-	frame:SetUserPlaced(true)
-	frame:SetFrameStrata("HIGH")
-	frame:RegisterForDrag("LeftButton","RightButton")
-	frame:RegisterForDrag("LeftButton","RightButton")
-	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-	frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+	if (not nomove) then
+		frame:SetMovable(true)
+		frame:SetUserPlaced(true)
+		frame:SetFrameStrata("HIGH")
+		frame:RegisterForDrag("LeftButton","RightButton")
+		frame:RegisterForDrag("LeftButton","RightButton")
+		frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+		frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+	end
 	if (name == "Bags") then
 		frame:SetPoint("BOTTOMRIGHT", -20, 20)
 	else
@@ -51,6 +53,8 @@ function mod:create_container(name)
 			sort_bags.callback = function() if (SortBags) then SortBags() else noop() end end
 		elseif (name == "Bank") then
 			sort_bags.callback = function() if (SortBankBags) then SortBankBags() else noop() end end
+		elseif (name == "Reagents") then
+			sort_bags.callback = function() if (SortReagentBankBags) then SortReagentBankBags() else noop() end end
 		end
 		frame.sorter = sort_bags
 	end

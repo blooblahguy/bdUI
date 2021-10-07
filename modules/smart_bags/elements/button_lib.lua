@@ -149,6 +149,10 @@ mod.item_pool_create = function(self)
 			self.GetInventorySlot = ButtonInventorySlot;
 			self.UpdateTooltip = BankFrameItemButton_OnEnter;
 			BankFrameItemButton_OnEnter(self)
+		elseif (self.bag == -3) then
+			self.GetInventorySlot = ReagentButtonInventorySlot
+			self.UpdateTooltip = BankFrameItemButton_OnEnter;
+			BankFrameItemButton_OnEnter(self)
 		else
 			self.UpdateTooltip = ContainerFrameItemButton_OnUpdate;
 		end

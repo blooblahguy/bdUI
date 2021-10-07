@@ -4,6 +4,7 @@ local mod = bdUI:get_module("Smart Bags (beta)")
 -- bank
 function mod:create_bank()
 	mod.bank = mod:create_container("Bank")
+	
 	mod.bank.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 	mod.bank.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 
