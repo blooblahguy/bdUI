@@ -15,7 +15,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 	last_draw = {}
 
 	-- loop through categories first
-	for categoryID, items in spairs(categories, function(a, b)
+	for categoryID, items in bdUI:spairs(categories, function(a, b)
 		return tonumber(a) < tonumber(b)
 	end) do
 		local cat = mod.current_parent.cat_pool:Acquire()
@@ -42,25 +42,24 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 
 		cat.rows = 1
 		cat.columns = 0
+		
+		-- sort automatically, we don't need no stinking manual sort
+		table.sort(items, function(a, b)
+			if (a.itemLink == nil and b.itemLink == nil) then return end
+			-- sort by equip
+			if (a.itemEquipLoc ~= b.itemEquipLoc) then return a.itemEquipLoc < b.itemEquipLoc end
+			-- sort by subTypeID
+			if (a.itemSubTypeID ~= b.itemSubTypeID) then return a.itemSubTypeID < b.itemSubTypeID end
+			-- sort by name
+			if (a.name ~= b.name) then return a.name < b.name end
+			-- sort by stacks
+			if (a.itemCount ~= b.itemCount) then return a.itemCount > b.itemCount end
+
+			return a.name < b.name
+		end)
 
 		-- now position items inside of frame
-		for itemName, itemInfo in spairs(items, function(a, b)
-			-- local a_table = {unpack(items[a])}
-			-- local b_table = {unpack(items[b])}
-
-			-- -- name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubClassID, itemEquipLoc, bagID
-			-- if (a_table[5] == nil or b_table[5] == nil) then 
-			-- 	return a < b
-			-- end
-			-- -- sort by equip
-			-- if (a_table[10] < b_table[10]) then return a_table[10] < b_table[10] end
-			-- -- sort by itemid
-			-- if (a_table[5] < b_table[5]) then return a_table[5] < b_table[5] end
-			-- -- sort by stacks
-			-- if (a_table[7] < b_table[7]) then return a_table[7] < b_table[7] end
-			-- print(a, b)
-		end) do
-			-- local name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubClassID, itemEquipLoc, bagID = unpack(itemInfo)
+		for itemName, itemInfo in pairs(items) do
 			local item = mod.current_parent.item_pool:Acquire()
 			item:Show()
 			item:SetSize(buttonsize, buttonsize)
@@ -73,6 +72,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			item.texture = itemInfo.texture
 			item.itemID = itemInfo.itemID
 
+			-- now update the button appearance with new info
 			item:update()
 
 			if (not last_item) then
@@ -114,7 +114,7 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 	local cat_rows = 0
 	local max_cols = 0
 
-	for categoryID, items in spairs(categories, function(a, b)
+	for categoryID, items in bdUI:spairs(categories, function(a, b)
 		return tonumber(a) < tonumber(b)
 	end) do
 		local cat = last_draw[categoryID]

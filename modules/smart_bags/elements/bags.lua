@@ -50,9 +50,11 @@ function mod:update_bags()
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
 
-			local itemInfo = mod:get_item_table(bag, slot, bag, itemLink)
-
 			if (not itemLink) then
+				-- make this table consistent from one place
+				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
+
+				-- combine free space into one "item"
 				if (not config.showfreespaceasone) then
 					mod.categoryIDtoNames[-2] = "Bag"
 					mod.categoryNamestoID["Bag"] = -2
@@ -66,9 +68,11 @@ function mod:update_bags()
 					freeslot = itemInfo
 				end
 			elseif (itemLink and quality > 0) then
+				-- make this table consistent from one place
+				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
+
+				-- detailed info
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
-				-- local itemString = string.match(itemLink, "item[%-?%d:]+")
-				-- local _, itemID = strsplit(":", itemString)
 
 				-- run through filters to see where i truly belong
 				itemType, itemTypeID = mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, itemEquipLoc)
@@ -79,9 +83,6 @@ function mod:update_bags()
 
 				-- store it in a category
 				categories[itemTypeID] = categories[itemTypeID] or {}
-
-				-- make this table consistent from one place
-				local itemInfo = mod:get_item_table(bag, slot, bag, itemLink)
 
 				-- then store by categoryID with lots of info
 				table.insert(categories[itemTypeID], itemInfo)
@@ -97,7 +98,7 @@ function mod:update_bags()
 		categories[200] = categories[200] or {}
 
 		-- then store by categoryID with lots of info
-		freeslot[7] = freeslots -- change item count of this one slot
+		freeslot.itemCount = freeslots -- change item count of this one slot
 		table.insert(categories[200], freeslot)
 	end
 

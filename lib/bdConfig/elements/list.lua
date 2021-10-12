@@ -50,7 +50,7 @@ local methods = {
 		local height = 0;
 		local save = self:get()
 
-		for k, v in spairs(save, function(a, b)
+		for k, v in bdUI:spairs(save, function(a, b)
 			return sanitize(b) > sanitize(a)
 			-- a.wantLevel = a.wantLevel or 0
 			-- b.wantLevel = b.wantLevel or 0

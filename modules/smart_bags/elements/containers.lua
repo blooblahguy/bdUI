@@ -38,25 +38,9 @@ function mod:create_container(name, nomove)
 	-- close
 	local close_button = mod:create_button(header)
 	close_button.text:SetText("X")
-	close_button:SetPoint("RIGHT", header, "RIGHT", -4, 0)
+	close_button:SetPoint("RIGHT", header, "RIGHT", 0, 0)
 	close_button.callback = function(self)
 		frame:Hide()
-	end
-
-	-- sort
-	local sort_bags
-	if (SortBags) then
-		sort_bags = mod:create_button(header)
-		sort_bags.text:SetText("S")
-		sort_bags:SetPoint("RIGHT", close_button, "LEFT", -4, 0)
-		if(name == "Bags") then
-			sort_bags.callback = function() if (SortBags) then SortBags() else noop() end end
-		elseif (name == "Bank") then
-			sort_bags.callback = function() if (SortBankBags) then SortBankBags() else noop() end end
-		elseif (name == "Reagents") then
-			sort_bags.callback = function() if (SortReagentBankBags) then SortReagentBankBags() else noop() end end
-		end
-		frame.sorter = sort_bags
 	end
 
 	-- bags
@@ -69,8 +53,8 @@ function mod:create_container(name, nomove)
 
 	-- money
 	local money = mod:create_money(name, frame)
-	money:SetPoint("LEFT", header, "LEFT", mod.spacing, -1)
-
+	money:SetPoint("LEFT", header, "LEFT", mod.spacing - 4, -1)
+ 
 	-- search
 	local searchBox = CreateFrame("EditBox", "bd"..name.."SearchBox", frame, "BagSearchBoxTemplate")
 	searchBox:SetHeight(20)

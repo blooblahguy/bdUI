@@ -117,3 +117,8 @@ function mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSu
 
 	return itemType_return, tonumber(itemTypeID_return)
 end
+
+function mod:categorize_items(bag, slot, config)
+
+	return categories, freeslot
+end

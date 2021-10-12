@@ -45,6 +45,9 @@ function mod:update_bank()
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
 
 			if (not itemLink) then
+				-- make this table consistent from one place
+				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
+
 				mod.categoryIDtoNames[-2] = "Bag"
 				mod.categoryNamestoID["Bag"] = -2
 
@@ -52,20 +55,15 @@ function mod:update_bank()
 				categories[-2] = categories[-2] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
+				table.insert(categories[-2], itemInfo)
 			elseif (itemLink and quality > 0) then
+				-- make this table consistent from one place
+				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
+
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
-				local itemString = string.match(itemLink, "item[%-?%d:]+")
-				local _, itemID = strsplit(":", itemString)
 
 				-- run through filters to see where i truly belong
 				itemType, itemTypeID = mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, itemEquipLoc)
-
-				-- store new items seperately
-				if (C_NewItems.IsNewItem(bag, slot)) then
-					itemTypeID = -1
-					itemType = "New"
-				end
 
 				-- store these for later
 				mod.categoryIDtoNames[itemTypeID] = itemType
@@ -75,7 +73,7 @@ function mod:update_bank()
 				categories[itemTypeID] = categories[itemTypeID] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, itemEquipLoc, bag})
+				table.insert(categories[itemTypeID], itemInfo)
 			end
 		end
 	end
