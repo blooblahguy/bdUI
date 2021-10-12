@@ -143,6 +143,11 @@ mod.item_pool_create = function(self)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
 
+	-- mouseover update new
+	button:HookScript("OnEnter", function(self)
+		self:update_new()
+	end)
+
 	-- really surprising that i have to do this, itembuttons dont come with tooltip functionality in the bank main bag
 	button:HookScript("OnEnter", function(self, ...)
 		if (self.bag == -1) then

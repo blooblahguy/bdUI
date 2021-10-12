@@ -36,47 +36,42 @@ end
 
 local categories = {}
 function mod:update_bags()
+	local config = mod.config
+	local freeslots = 0
+	local freeslot = nil
 	categories = {}
-
+	
 	-- first gather all items up
 	for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 		local min, max, step = GetContainerNumSlots(bag), 1, -1
-		local freeslots, bagtype = GetContainerNumFreeSlots(bag)
+		local free, bagtype = GetContainerNumFreeSlots(bag)
+		freeslots = freeslots + free
 		
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
 
+			local itemInfo = mod:get_item_table(bag, slot, bag, itemLink)
+
 			if (not itemLink) then
-				mod.categoryIDtoNames[-2] = "Bag"
-				mod.categoryNamestoID["Bag"] = -2
-
-				-- store it in a category
-				categories[-2] = categories[-2] or {}
-
-				-- then store by categoryID with lots of info
-				table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
+				if (not config.showfreespaceasone) then
+					mod.categoryIDtoNames[-2] = "Bag"
+					mod.categoryNamestoID["Bag"] = -2
+					
+					-- store it in a category
+					categories[-2] = categories[-2] or {}
+					
+					-- then store by categoryID with lots of info
+					table.insert(categories[-2], itemInfo)
+				elseif (not freeslot) then
+					freeslot = itemInfo
+				end
 			elseif (itemLink and quality > 0) then
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
-				local itemString = string.match(itemLink, "item[%-?%d:]+")
-				local _, itemID = strsplit(":", itemString)
+				-- local itemString = string.match(itemLink, "item[%-?%d:]+")
+				-- local _, itemID = strsplit(":", itemString)
 
 				-- run through filters to see where i truly belong
 				itemType, itemTypeID = mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, itemEquipLoc)
-
-				-- store new items seperately
-				if (C_NewItems.IsNewItem(bag, slot)) then
-
-					-- store these for later
-					mod.categoryIDtoNames[-1] = "New"
-					mod.categoryNamestoID["New"] = -1
-
-					-- store it in a category
-					categories[-1] = categories[-1] or {}
-
-					-- then store by categoryID with lots of info
-					table.insert(categories[-1], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
-
-				end
 
 				-- store these for later
 				mod.categoryIDtoNames[itemTypeID] = itemType
@@ -85,10 +80,25 @@ function mod:update_bags()
 				-- store it in a category
 				categories[itemTypeID] = categories[itemTypeID] or {}
 
+				-- make this table consistent from one place
+				local itemInfo = mod:get_item_table(bag, slot, bag, itemLink)
+
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
-			end		
+				table.insert(categories[itemTypeID], itemInfo)
+			end
 		end
+	end
+
+	if (config.showfreespaceasone) then
+		mod.categoryIDtoNames[200] = "Bag"
+		mod.categoryNamestoID["Bag"] = -2
+
+		-- store it in a category
+		categories[200] = categories[200] or {}
+
+		-- then store by categoryID with lots of info
+		freeslot[7] = freeslots -- change item count of this one slot
+		table.insert(categories[200], freeslot)
 	end
 
 	-- now loop through and display items

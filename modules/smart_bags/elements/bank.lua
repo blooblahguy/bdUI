@@ -32,6 +32,8 @@ end
 
 local categories = {}
 function mod:update_bank()
+	if (not mod.bank:IsShown()) then return end
+	
 	categories = {}
 	local bank_bags = {BANK_CONTAINER, 5, 6, 7, 8, 9, 10, 11}
 
@@ -73,7 +75,7 @@ function mod:update_bank()
 				categories[itemTypeID] = categories[itemTypeID] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
+				table.insert(categories[itemTypeID], {name, bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, itemEquipLoc, bag})
 			end
 		end
 	end

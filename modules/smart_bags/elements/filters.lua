@@ -3,16 +3,53 @@ local mod = bdUI:get_module("Bags")
 
 local custom_categories = {}
 -- {itemTypes_filter, equipSlot_filter, subType_filter}
-custom_categories["Trinkets & Rings:5.5"] = {
-	{"4.", "INVTYPE_TRINKET", false},
+
+custom_categories["Jewelry:5.5"] = {
 	{"4.", "INVTYPE_FINGER", false},
+	{"4.", "INVTYPE_NECK", false},
 }
--- custom_categories["Rings:5.6"] = {
--- 	{"4.", "INVTYPE_FINGER", false},
--- }
+
+custom_categories["Trinkets:5.4"] = {
+	{"4.", "INVTYPE_TRINKET", false},
+}
+
+custom_categories["Potions:5.6"] = {
+	{"0.1", false, false},
+}
+
+custom_categories["Food:5.7"] = {
+	{"0.5", false, false},
+}
+
+-- separate out professions a little bit
+custom_categories["Mining:7.1"] = {
+	{"7.7", false, false},
+}
+custom_categories["Enchanting:7.2"] = {
+	{"7.12", false, false},
+}
+custom_categories["Tailoring:7.3"] = {
+	{"7.5", false, false},
+}
+custom_categories["Leatherworking:7.4"] = {
+	{"7.6", false, false},
+}
+custom_categories["Inscription:7.5"] = {
+	{"7.16", false, false},
+}
+custom_categories["Jewelcrafting:7.6"] = {
+	{"7.4", false, false},
+}
+custom_categories["Herbalism:7.7"] = {
+	{"7.9", false, false},
+}
+
+-- generic weapons should go here too
 custom_categories["Miscellaneous:15"] = {
 	{"4.0", nil, false},
 }
+
+-- add things like blacksmithing hammers etc
 custom_categories["Tools:20.5"] = {
 	{"0.0", false, false},
 	{"2.14", false, false},

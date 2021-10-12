@@ -17,10 +17,17 @@ local config = {
 		value = false,
 	},
 	{
+		key = "showfreespaceasone",
+		type = "toggle",
+		label = "Show free bag space as one icon",
+		value = false,
+	},
+	{
 		key = "dbgroup",
 		type = "group",
 		heading = "Bags",
 		args = {
+			
 			{
 				key = "buttonsize",
 				type = "range",
@@ -30,6 +37,24 @@ local config = {
 				min = 20,
 				max = 40,
 			},
+			-- {
+			-- 	key = "categorycolumns",
+			-- 	type = "range",
+			-- 	value = 2,
+			-- 	min = 1,
+			-- 	max = 6,
+			-- 	step = 1,
+			-- 	label = "Categories per row",
+			-- },
+			-- {
+			-- 	key = "itemcolumns",
+			-- 	type = "range",
+			-- 	value = 5,
+			-- 	min = 1,
+			-- 	max = 16,
+			-- 	step = 1,
+			-- 	label = "Items per row",
+			-- },
 			{
 				key = "buttonsperrow",
 				type = "range",

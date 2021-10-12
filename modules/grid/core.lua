@@ -728,6 +728,12 @@ function mod:create_container()
 	mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
 	mod.raidpartyholder:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
+		if (event == "PLAYER_ENTERING_WORLD") then
+			C_Timer.After(2, function()
+				mod:update_header()
+				mod:config_callback()
+			end)
+		end
 		mod:update_header()
 		mod:config_callback()
 	end)
@@ -769,20 +775,20 @@ end
 -- Disable blizzard raid frames
 --==============================================
 function mod:disable_blizzard()
-	local addonDisabler = CreateFrame("frame", nil)
-	addonDisabler:RegisterEvent("ADDON_LOADED")
-	addonDisabler:RegisterEvent("PLAYER_REGEN_ENABLED")
-	addonDisabler:SetScript("OnEvent", function(self, event, addon)
-		if (InCombatLockdown()) then return end
+	-- local addonDisabler = CreateFrame("frame", nil)
+	-- addonDisabler:RegisterEvent("ADDON_LOADED")
+	-- addonDisabler:RegisterEvent("PLAYER_REGEN_ENABLED")
+	-- addonDisabler:SetScript("OnEvent", function(self, event, addon)
+	-- 	if (InCombatLockdown()) then return end
 
-		if (CompactUnitFrameProfiles) then
-			-- CompactUnitFrameProfiles:UnregisterAllEvents()
-			-- CompactRaidFrameManagerContainerResizeFrame:Hide()
-		end
-		if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
-			-- CompactRaidFrameManager:UnregisterAllEvents() 
-			-- CompactRaidFrameContainer:UnregisterAllEvents() 
-		end
-		-- addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
-	end)
+	-- 	if (CompactUnitFrameProfiles) then
+	-- 		-- CompactUnitFrameProfiles:UnregisterAllEvents()
+	-- 		-- CompactRaidFrameManagerContainerResizeFrame:Hide()
+	-- 	end
+	-- 	if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
+	-- 		-- CompactRaidFrameManager:UnregisterAllEvents() 
+	-- 		-- CompactRaidFrameContainer:UnregisterAllEvents() 
+	-- 	end
+	-- 	-- addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	-- end)
 end

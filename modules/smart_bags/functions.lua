@@ -2,6 +2,39 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
 --===============================================
+-- Item / Filter Helpers
+--===============================================
+function mod:get_item_table(bag, slot, bagID, itemLink)
+	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent
+	if (itemLink) then
+		name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+	end
+
+
+	local itemID
+	if (itemLink) then
+		local itemString = string.match(itemLink, "item[%-?%d:]+")
+		itemID = select(2, strsplit(":", itemString))
+	end
+	
+	-- print(itemLink, icon, count)
+	local t = {}
+	t.name = name
+	t.bag = bag
+	t.slot = slot
+	t.itemLink = itemLink
+	t.itemID = itemID
+	t.texture = icon
+	t.itemCount = count
+	t.itemTypeID = itemTypeID
+	t.itemSubTypeID = itemSubTypeID
+	t.itemEquipLoc = itemEquipLoc
+	t.bagID = bagID
+
+	return t
+end
+
+--===============================================
 -- Bag Frames
 --===============================================
 function mod:create_button(parent)
