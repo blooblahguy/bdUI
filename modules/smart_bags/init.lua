@@ -20,7 +20,7 @@ local config = {
 		key = "showfreespaceasone",
 		type = "toggle",
 		label = "Show free bag space as one icon",
-		value = false,
+		value = true,
 	},
 	{
 		key = "dbgroup",
