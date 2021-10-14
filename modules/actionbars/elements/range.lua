@@ -11,14 +11,17 @@ local total = 0
 local throttle = 0.15
 local buttons = {}
 local buttonColors = {}
+
 local colors = {}
 colors['normal'] = {1, 1, 1}
 colors['outmana'] = {0.3, 0.3, 0.8}
 colors['outrange'] = {0.8, 0.1, 0.1}
 colors['unusable'] = {0.3, 0.3, 0.3}
+
 local text_colors = {}
 text_colors[3] = {0.8, 0.1, 0.1}
 text_colors[60] = {0.8, 0.7, 0.1}
+
 local updater = CreateFrame("frame")
 updater:Hide()
 
@@ -113,9 +116,11 @@ updater:Hide()
 --=====================================================
 hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange, inRange)
 	if (not mod.config.enabled) then return end
+
 	if (not checksRange) then 
 		return 
 	end
+	
 	local action = button.action
 	if (not action) then return end
 	local isUsable, notEnoughMana = IsUsableAction(action)

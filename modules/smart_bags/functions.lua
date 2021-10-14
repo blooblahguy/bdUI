@@ -30,6 +30,7 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 	t.itemSubTypeID = itemSubTypeID
 	t.itemEquipLoc = itemEquipLoc
 	t.bagID = bagID
+	t.rarity = rarity
 
 	return t
 end

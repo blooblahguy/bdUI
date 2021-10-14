@@ -46,6 +46,8 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 		-- sort automatically, we don't need no stinking manual sort
 		table.sort(items, function(a, b)
 			if (a.itemLink == nil and b.itemLink == nil) then return end
+			-- sort by rarity
+			if (a.rarity ~= b.rarity) then return a.rarity > b.rarity end
 			-- sort by equip
 			if (a.itemEquipLoc ~= b.itemEquipLoc) then return a.itemEquipLoc < b.itemEquipLoc end
 			-- sort by subTypeID
