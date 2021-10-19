@@ -4,7 +4,7 @@ local mod = bdUI:get_module("Bags")
 local ace_hook = LibStub("AceHook-3.0")
 ace_hook:Embed(mod)
 
-mod.spacing = 20 --config.buttonsize
+mod.spacing = 14
 
 function mod:initialize()
 	mod.config = mod:get_save()

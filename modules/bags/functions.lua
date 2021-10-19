@@ -110,9 +110,9 @@ function mod:measure(relativeA, A, relativeB, B)
 	return measure:GetSize()
 end
 
-function mod:frame_size(size, rows, columns)
-	local width = ((size + mod.border) * columns) - mod.border
-	local height = ((size + mod.border) * rows) - mod.border
+function mod:frame_size(btn_size, rows, columns)
+	local width = ((btn_size + mod.border) * columns) - mod.border
+	local height = ((btn_size + mod.border) * rows) - mod.border
 
 	return width, height
 end

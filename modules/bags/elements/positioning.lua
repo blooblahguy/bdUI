@@ -78,7 +78,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			item:update()
 
 			if (not last_item) then
-				item:SetPoint("TOPLEFT", cat, mod.spacing/3, -mod.spacing/3)
+				item:SetPoint("TOPLEFT", cat)
 				first_item = item
 			elseif (row_items >= buttonsperrow) then
 				item:SetPoint("TOPLEFT", last_row or first_item, "BOTTOMLEFT", 0, -mod.border)
@@ -114,52 +114,52 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 	local last_cat = nil
 	local last_cat_row = nil
 	local cat_rows = 0
-	local max_cols = 0
+	local longest_row = 0
+	local current_row = 0
 
 	for categoryID, items in bdUI:spairs(categories, function(a, b)
 		return tonumber(a) < tonumber(b)
 	end) do
 		local cat = last_draw[categoryID]
 
-		-- too see how wide we should make the total bag
-		max_cols = math.max(max_cols, cat.columns)
-
 		-- size this category based on item dimensions
 		local category_width, category_height = mod:frame_size(buttonsize, cat.rows, cat.columns)
 		cat:SetSize(category_width, category_height)
 
 		-- store how wide this row is ending up
-		row_width = row_width + category_width + buttonsize + (mod.border * 2.5)
+		row_width = row_width + category_width + buttonsize + (mod.spacing * 2)
 
 		-- now position based on if we can stack
 		if (not last_cat) then
-			if config.showfreespaceasone then
-				cat:SetPoint("TOPLEFT", mod.current_parent, mod.spacing/2, -mod.spacing * 2.5)
-			else
-				cat:SetPoint("TOPLEFT", mod.current_parent, mod.spacing/2, -mod.spacing * 1.5)
-			end
+			cat:SetPoint("TOPLEFT", mod.current_parent, mod.spacing, -mod.spacing * 3.5)
 			last_cat_row = cat
 			first_cat = cat
 			cat_rows = cat_rows + 1
+
+			current_row = category_width
 		elseif (row_width < max_width) then
 			cat:SetPoint("LEFT", last_cat, "RIGHT", buttonsize + (mod.border * 2), 0)
+			current_row = current_row + category_width + buttonsize
 		else
 			cat:SetPoint("TOPLEFT", last_cat_row, "BOTTOMLEFT", 0, -24)
 			last_cat_row = cat
 			row_width = category_width + (mod.spacing / 2)
 			cat_rows = cat_rows + 1
+			current_row = category_width
 		end
 
 		last_cat = cat
+
+		-- too see how wide we should make the total bag
+		longest_row = math.max(current_row, longest_row)
 	end
 
 	if (mod.current_parent.currencies) then
-		extraheight = extraheight + mod.current_parent.currencies:GetHeight()
+		extraheight = extraheight + mod.current_parent.currencies:GetHeight() + mod.spacing - mod.border
 	end
 
-	mod.current_parent:SetWidth(max_cols * (buttonsize + mod.border) + mod.spacing + (mod.spacing / 2) + mod.border)
+	-- mod.current_parent:SetWidth(max_cols * (buttonsize + mod.border) + mod.spacing + (mod.spacing / 2) + mod.border)
+	mod.current_parent:SetWidth(longest_row + (mod.spacing * 2))
 	local bag_width, categories_height = mod:measure("TOPLEFT", first_cat, "BOTTOMRIGHT", last_cat)
 	mod.current_parent:SetHeight(categories_height + mod.spacing + (mod.spacing / 2) + mod.border + (mod.spacing) + extraheight)
-
-	
 end
