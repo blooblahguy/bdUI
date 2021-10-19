@@ -269,7 +269,7 @@ local config = {
 	-- PET
 	addBarConf("Pet", "petbar", {
 		scale = 0.5,
-		buttons = 6
+		buttons = 10
 	})
 }
 
