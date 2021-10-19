@@ -34,12 +34,17 @@ local categories = {}
 function mod:update_bank()
 	if (not mod.bank:IsShown()) then return end
 	
+	local config = mod.config
+	local freeslots = 0
+	local freeslot = nil
 	categories = {}
+
 	local bank_bags = {BANK_CONTAINER, 5, 6, 7, 8, 9, 10, 11}
 
 	for k, bag in pairs(bank_bags) do
-		local freeslots, bagtype = GetContainerNumFreeSlots(bag)
 		local min, max, step = GetContainerNumSlots(bag), 1, -1
+		local free, bagtype = GetContainerNumFreeSlots(bag)
+		freeslots = freeslots + free
 
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
@@ -48,14 +53,19 @@ function mod:update_bank()
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
 
-				mod.categoryIDtoNames[-2] = "Bag"
-				mod.categoryNamestoID["Bag"] = -2
-
-				-- store it in a category
-				categories[-2] = categories[-2] or {}
-
-				-- then store by categoryID with lots of info
-				table.insert(categories[-2], itemInfo)
+				-- combine free space into one "item"
+				if (not config.showfreespaceasone) then
+					mod.categoryIDtoNames[-2] = "Bag"
+					mod.categoryNamestoID["Bag"] = -2
+					
+					-- store it in a category
+					categories[-2] = categories[-2] or {}
+					
+					-- then store by categoryID with lots of info
+					table.insert(categories[-2], itemInfo)
+				elseif (not freeslot) then
+					freeslot = itemInfo
+				end
 			elseif (itemLink and quality > 0) then
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
@@ -76,6 +86,18 @@ function mod:update_bank()
 				table.insert(categories[itemTypeID], itemInfo)
 			end
 		end
+	end
+
+	if (config.showfreespaceasone) then
+		mod.categoryIDtoNames[200] = "Bag"
+		mod.categoryNamestoID["Bag"] = -2
+
+		-- store it in a category
+		categories[200] = categories[200] or {}
+
+		-- then store by categoryID with lots of info
+		freeslot.itemCount = freeslots -- change item count of this one slot
+		table.insert(categories[200], freeslot)
 	end
 
 	-- now loop through and display items
