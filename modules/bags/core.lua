@@ -14,6 +14,7 @@ function mod:initialize()
 	mod.border = bdUI:get_border(UIParent)
 
 	mod:create_bags() -- bags first
+	mod:create_currencies()
 	mod:create_bank() -- now bank
 	-- mod:create_bagslot_frames() -- bagslot holders
 	mod:create_reagents() -- lastly reagents

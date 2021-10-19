@@ -153,7 +153,13 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 		last_cat = cat
 	end
 
+	if (mod.current_parent.currencies) then
+		extraheight = extraheight + mod.current_parent.currencies:GetHeight()
+	end
+
 	mod.current_parent:SetWidth(max_cols * (buttonsize + mod.border) + mod.spacing + (mod.spacing / 2) + mod.border)
 	local bag_width, categories_height = mod:measure("TOPLEFT", first_cat, "BOTTOMRIGHT", last_cat)
 	mod.current_parent:SetHeight(categories_height + mod.spacing + (mod.spacing / 2) + mod.border + (mod.spacing) + extraheight)
+
+	
 end

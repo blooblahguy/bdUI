@@ -63,7 +63,6 @@ function mod:create_reagents()
 
 	mod.bank_reagent_tabs:SetSize(rtab:GetWidth() + btab:GetWidth() + mod.border, btab:GetHeight())
 	mod.bank_reagent_tabs:SetPoint("BOTTOM", mod.bank, "TOP", 0, mod.border)
-	-- bdUI:set_backdrop(mod.bank_reagent_tabs)
 
 	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
 	mod.bags:RegisterEvent('PLAYERREAGENTBANKSLOTS_CHANGED')
@@ -83,6 +82,8 @@ end
 
 local categories = {}
 function mod:update_reagents()
+	if (not mod.bank:IsShown()) then return end
+
 	categories = {}
 	local bag = REAGENTBANK_CONTAINER
 	local min, max, step = GetContainerNumSlots(bag), 1, -1
@@ -90,7 +91,8 @@ function mod:update_reagents()
 	for slot = min, max, step do
 		local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
 
-		local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+		-- make this table consistent from one place
+		local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
 
 		mod.categoryIDtoNames[-2] = "Bag"
 		mod.categoryNamestoID["Bag"] = -2
@@ -98,7 +100,7 @@ function mod:update_reagents()
 		-- store it in a category
 		categories[-2] = categories[-2] or {}
 
-		table.insert(categories[-2], {"", bag, slot, itemLink, itemID, texture, itemCount, itemTypeID, itemSubTypeID, bag})
+		table.insert(categories[-2], itemInfo)
 	end
 
 	mod:draw_reagents()

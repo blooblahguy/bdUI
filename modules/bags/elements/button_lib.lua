@@ -139,7 +139,7 @@ mod.item_pool_create = function(self)
 	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_Item_"..item_num, parent, "ContainerFrameItemButtonTemplate")
 	button:SetHeight(36)
 	button:SetWidth(36)
-	button:SetFrameStrata("HIGH")
+	-- button:SetFrameStrata("HIGH")
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
 

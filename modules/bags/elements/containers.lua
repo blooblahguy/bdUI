@@ -7,10 +7,10 @@ function mod:create_container(name, nomove)
 
 	frame:SetSize(500, 400)
 	frame:EnableMouse(true)
+	frame:SetFrameStrata("DIALOG")
 	if (not nomove) then
 		frame:SetMovable(true)
 		frame:SetUserPlaced(true)
-		frame:SetFrameStrata("HIGH")
 		frame:RegisterForDrag("LeftButton","RightButton")
 		frame:RegisterForDrag("LeftButton","RightButton")
 		frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
