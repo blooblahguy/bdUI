@@ -103,17 +103,13 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 	local config = mod.config
 	-- figure out how wide the bag can be
 	local max_width = ((buttonsize + mod.border) * buttonsperrow) - mod.border
-	local extraheight = 0
-	if (config.showfreespaceasone) then
-		extraheight = mod.spacing 
-	end
+	local extraheight = mod.spacing
 
 	-- loop through categories first
 	local row_width = 0
 	local first_cat = nil
 	local last_cat = nil
 	local last_cat_row = nil
-	local cat_rows = 0
 	local longest_row = 0
 	local current_row = 0
 
@@ -131,10 +127,13 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 
 		-- now position based on if we can stack
 		if (not last_cat) then
-			cat:SetPoint("TOPLEFT", mod.current_parent, mod.spacing, -mod.spacing * 3.5)
+			if config.showfreespaceasone then
+				cat:SetPoint("TOPLEFT", mod.current_parent, mod.spacing, -mod.spacing * 3.5)
+			else
+				cat:SetPoint("TOPLEFT", mod.current_parent, mod.spacing, -mod.spacing * 2.5)
+			end
 			last_cat_row = cat
 			first_cat = cat
-			cat_rows = cat_rows + 1
 
 			current_row = category_width
 		elseif (row_width < max_width) then
@@ -144,7 +143,6 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 			cat:SetPoint("TOPLEFT", last_cat_row, "BOTTOMLEFT", 0, -24)
 			last_cat_row = cat
 			row_width = category_width + (mod.spacing / 2)
-			cat_rows = cat_rows + 1
 			current_row = category_width
 		end
 
@@ -160,6 +158,6 @@ function mod:position_categories(categories, buttonsize, buttonsperrow)
 
 	-- mod.current_parent:SetWidth(max_cols * (buttonsize + mod.border) + mod.spacing + (mod.spacing / 2) + mod.border)
 	mod.current_parent:SetWidth(longest_row + (mod.spacing * 2))
-	local bag_width, categories_height = mod:measure("TOPLEFT", first_cat, "BOTTOMRIGHT", last_cat)
-	mod.current_parent:SetHeight(categories_height + mod.spacing + (mod.spacing / 2) + mod.border + (mod.spacing) + extraheight)
+	local bag_width, categories_height = mod:measure("TOPLEFT", mod.current_parent.header, "BOTTOMRIGHT", last_cat)
+	mod.current_parent:SetHeight(categories_height + extraheight)
 end

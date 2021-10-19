@@ -18,7 +18,7 @@ currencies.watchers = {}
 -- Currency updates
 --============================================
 function mod:currencies_update()
-	if (not C_CurrencyInfo) then 
+	if (not C_CurrencyInfo.GetCurrencyListSize) then 
 		currencies:SetHeight(10)
 		return
 	end
@@ -37,7 +37,7 @@ function mod:currencies_update()
 	local rowwidth = 0
 	currencies:SetSize(maxwidth, 30)
 
-	for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
+	for i = 1, C_CurrencyInfo..GetCurrencyListSize() do
 		local currency = C_CurrencyInfo.GetCurrencyListInfo(i)
 
 		if (currency.isShowInBackpack) then
@@ -87,7 +87,7 @@ function mod:create_currencies()
 	currencies = CreateFrame("frame", "bdBags_Currencies", mod.bags)
 	currencies.watchers = {}
 	
-	if (not C_CurrencyInfo) then return currencies end
+	if (not C_CurrencyInfo.GetCurrencyListSize) then return currencies end
 
 	for i = 3, MAX_WATCHED_TOKENS do
 		local frame = CreateFrame("button", "BackpackTokenFrameToken"..i, BackpackTokenFrame, "BackpackTokenTemplate")

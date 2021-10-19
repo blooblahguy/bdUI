@@ -24,9 +24,11 @@ function mod:create_container(name, nomove)
 	frame:Hide()
 
 	-- header
-	local header = CreateFrame("frame", nil, frame)
-	header:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
-	header:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", -mod.spacing / 2, -mod.spacing * 1.75)
+	local header = CreateFrame("frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
+	-- bdUI:set_backdrop(header)
+	header:SetPoint("TOPLEFT", frame)
+	header:SetPoint("TOPRIGHT", frame)
+	header:SetHeight(mod.spacing * 2)
 	frame.header = header
 
 	-- footer
@@ -38,7 +40,7 @@ function mod:create_container(name, nomove)
 	-- close
 	local close_button = mod:create_button(header)
 	close_button.text:SetText("X")
-	close_button:SetPoint("RIGHT", header, "RIGHT", 0, 0)
+	close_button:SetPoint("RIGHT", header, "RIGHT", -4, 0)
 	close_button.callback = function(self)
 		frame:Hide()
 	end
