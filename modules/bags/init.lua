@@ -1,14 +1,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
-local developer_names = {}
-developer_names["Padder"] = true
-developer_names["Nodis"] = true
-developer_names["Bloo"] = true
-developer_names["Redh"] = true
-developer_names["Update"] = true
-local developer = developer_names[select(1, UnitName("player"))]
-
 local config = {
 	{
 		key = "enabled",

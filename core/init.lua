@@ -65,6 +65,15 @@ bdUI.hidden:SetAlpha(0)
 bdUI.hidden:SetScale(0.001)
 bdUI.hidden.Show = function() return end
 
+-- developer stuff
+local developer_names = {}
+developer_names["Padder"] = true
+developer_names["Nodis"] = true
+developer_names["Bloo"] = true
+developer_names["Redh"] = true
+developer_names["Update"] = true
+bdUI.developer = developer_names[select(1, UnitName("player"))]
+
 --===================================================================
 --Return game version, so that we can have cross version compatibility when possible
 --===================================================================
