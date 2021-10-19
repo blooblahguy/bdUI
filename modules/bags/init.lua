@@ -1,97 +1,97 @@
---===============================================
--- INIT
---===============================================
 local bdUI, c, l = unpack(select(2, ...))
+local mod = bdUI:get_module("Bags")
 
--- Config Table
+local developer_names = {}
+developer_names["Padder"] = true
+developer_names["Nodis"] = true
+developer_names["Bloo"] = true
+developer_names["Redh"] = true
+developer_names["Update"] = true
+local developer = developer_names[select(1, UnitName("player"))]
+
 local config = {
 	{
 		key = "enabled",
 		type = "toggle",
 		label = "Enable Bags",
-		value = true,
+		value = false,
 	},
 	{
-		key = "clear",
-		type = "clear"	
-	},
-	{
-		key = "buttonsize",
-		type = "range",
-		label = "Bag Buttons Size",
-		value = 32,
-		step = 2,
-		min = 20,
-		max = 40,
-	},
-	{
-		key = "buttonsperrow",
-		type = "range",
-		value = 16,
-		min = 8,
-		max = 30,
-		step = 1,
-		label = "Bag Buttons Per Row",
-	},
-	{
-		key = "bankbuttonsize",
-		type = "range",
-		label = "Bank Buttons Size",
-		value = 30,
-		step = 2,
-		min = 20,
-		max = 50,
-	},
-	{
-		key = "bankbuttonsperrow",
-		type = "range",
-		value = 16,
-		min = 8,
-		max = 30,
-		step = 1,
-		label = "Bank Buttons Per Row",
-	},
-	{
-		key = "skinloot",
+		key = "showfreespaceasone",
 		type = "toggle",
+		label = "Show free bag space as one icon",
 		value = true,
-		label = "Skin the Loot Windows",
 	},
 	{
-		key = "autorepair",
-		type = "toggle",
-		value = true,
-		label = "Automatically repair",
+		key = "dbgroup",
+		type = "group",
+		heading = "Bags",
+		args = {
+			
+			{
+				key = "buttonsize",
+				type = "range",
+				label = "Bag Buttons Size",
+				value = 36,
+				step = 2,
+				min = 20,
+				max = 40,
+			},
+			-- {
+			-- 	key = "categorycolumns",
+			-- 	type = "range",
+			-- 	value = 2,
+			-- 	min = 1,
+			-- 	max = 6,
+			-- 	step = 1,
+			-- 	label = "Categories per row",
+			-- },
+			-- {
+			-- 	key = "itemcolumns",
+			-- 	type = "range",
+			-- 	value = 5,
+			-- 	min = 1,
+			-- 	max = 16,
+			-- 	step = 1,
+			-- 	label = "Items per row",
+			-- },
+			{
+				key = "buttonsperrow",
+				type = "range",
+				value = 16,
+				min = 8,
+				max = 30,
+				step = 1,
+				label = "Bag Buttons Per Row",
+			},
+		},
 	},
+
 	{
-		key = "sellgreys",
-		type = "toggle",
-		value = true,
-		label = "Automatically sell trash at vendor.",
+		key = "dbgroup",
+		type = "group",
+		heading = "Bank",
+		args = {
+			{
+				key = "bankbuttonsize",
+				type = "range",
+				label = "Bank Buttons Size",
+				value = 32,
+				step = 2,
+				min = 20,
+				max = 40,
+			},
+			{
+				key = "bankbuttonsperrow",
+				type = "range",
+				value = 16,
+				min = 8,
+				max = 30,
+				step = 1,
+				label = "Bank Buttons Per Row",
+			},
+		},
 	},
-	{
-		key = "fastloot",
-		type = "toggle",
-		value = true,
-		label = "Fast Loot",
-		tooltip="Loots items automatically and much faster than the default UI.",
-	},
-	{
-		key = "resetgold",
-		type = "button",
-		value = "Reset Gold Tracker",
-		callback = function(self) core:resetTracker() end
-	}
 }
 
 local mod = bdUI:register_module("Bags", config)
-
--- classic fix
-if (not BagItemSearchBox) then
-	BagItemSearchBox = CreateFrame("EditBox", "bdUI_BagItemSearchBox", ContainerFrame1, "BagSearchBoxTemplate")
-	BagItemSearchBox:SetSize(110, 18)
-	BagItemSearchBox:SetMaxLetters(15)
-	BankItemSearchBox = CreateFrame("EditBox", "bdUI_BankItemSearchBox", BankFrame, "BagSearchBoxTemplate")
-	BankItemSearchBox:SetSize(110, 18)
-	BankItemSearchBox:SetMaxLetters(15)
-end
