@@ -7,7 +7,7 @@ function mod:create_container(name, nomove)
 
 	frame:SetSize(500, 400)
 	frame:EnableMouse(true)
-	frame:SetFrameStrata("DIALOG")
+	frame:SetFrameStrata("HIGH")
 	if (not nomove) then
 		frame:SetMovable(true)
 		frame:SetUserPlaced(true)
