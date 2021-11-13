@@ -10,6 +10,12 @@ function mod:initialize()
 	mod.config = mod:get_save()
 
 	if (not mod.config.enabled) then return end
+
+	--============================================
+	-- allow for tracking beyond 3 currencies for /elements/currencies.lua
+	--============================================
+	MAX_WATCHED_TOKENS = 10
+	
 	mod.initialized = true
 	mod.border = bdUI:get_border(UIParent)
 
