@@ -4,11 +4,6 @@ local mod = bdUI:get_module("Bags")
 -- if bdUI:isClassicAny() then return end
 
 --============================================
--- allow for tracking beyond 3
---============================================
-MAX_WATCHED_TOKENS = 10
-
---============================================
 -- Currency object
 --============================================
 local currencies = {}
@@ -84,6 +79,9 @@ end
 -- Create the appropriate # of currency trackers
 --============================================
 function mod:create_currencies()
+	-- allow for tracking beyond 3
+	MAX_WATCHED_TOKENS = 10
+
 	currencies = CreateFrame("frame", "bdBags_Currencies", mod.bags)
 	currencies.watchers = {}
 	
