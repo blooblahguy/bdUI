@@ -57,13 +57,6 @@ end
 
 -- hide mainmenu bar
 function mod:HideMainMenuBar()
-	--bring back the currency
-	local function OnEvent(self,event)
-		TokenFrame_LoadUI()
-		TokenFrame_Update()
-		BackpackTokenFrame_Update()
-	end
-	v.hidden:SetScript("OnEvent", OnEvent)
 	if not bdUI:isClassicAny() then 
 		v.hidden:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	end

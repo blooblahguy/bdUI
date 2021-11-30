@@ -37,7 +37,7 @@ function mod:currencies_update()
 	local rowwidth = 0
 	currencies:SetSize(maxwidth, 30)
 
-	for i = 1, C_CurrencyInfo..GetCurrencyListSize() do
+	for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
 		local currency = C_CurrencyInfo.GetCurrencyListInfo(i)
 
 		if (currency.isShowInBackpack) then
