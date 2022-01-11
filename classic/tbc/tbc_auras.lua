@@ -108,6 +108,53 @@ special["Paralyze"] = true
 -- Hyjal
 
 -- BT
+raidauras["Vile Slime"] = true
+raidauras["Sludge Nova"] = true
+
+raidauras["Impaling Spine"] = true
+special["Impaling Spine"] = true
+
+raidauras["Molten Flame"] = true
+raidauras["Volcanic Geyser"] = true
+special["Fixate"] = true
+
+raidauras["Shadow of Death"] = true
+special["Shadow of Death"] = true
+raidauras["Incinerate"] = true
+special["Incinerate"] = true
+
+raidauras["Soul Drain"] = true
+special["Soul Drain"] = true
+raidauras["Deaden"] = true
+special["Deaden"] = true
+raidauras["Seathe"] = true
+raidauras["Spite"] = true
+special["Spite"] = true
+
+raidauras["Bloodboil"] = true
+raidauras["Bewildering Strike"] = true
+raidauras["Fel Rage"] = true
+raidauras["Fel-Acid Breath"] = true
+
+raidauras["Fatal Attraction"] = true
+
+raidauras["Flamestrike"] = true
+raidauras["Blizzard"] = true
+raidauras["Consecration"] = true
+raidauras["Judgement of Blood"] = true
+raidauras["Envenom"] = true
+special["Envenom"] = true
+
+raidauras["Draw Soul"] = true
+raidauras["Shear"] = true
+special["Shear"] = true
+raidauras["Flame Crash"] = true
+raidauras["Parasitic Shadowfiend"] = true
+raidauras["Blaze"] = true
+raidauras["Dark Barrage"] = true
+special["Dark Barrage"] = true
+special["Agonizing Flames"] = true
+special["Aura of Dread"] = true
 
 -- merge tables
 for k,v in pairs(raidauras) do bdUI.aura_lists.raid[k] = v end
