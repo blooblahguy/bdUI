@@ -432,7 +432,7 @@ local config = {
 			{
 				key = "threatdangercolor",
 				type = "color",
-				value = {.1, .8, 0.5, 1},
+				value = {1, .8, 0.5, 1},
 				label = "Danger Aggro Color"
 			},
 			{
