@@ -90,7 +90,7 @@ function mod:update_bags()
 		end
 	end
 
-	if (config.showfreespaceasone) then
+	if (config.showfreespaceasone and freeslot) then
 		mod.categoryIDtoNames[200] = "Bag"
 		mod.categoryNamestoID["Bag"] = -2
 
