@@ -106,6 +106,29 @@ raidauras["Paralyze"] = true
 special["Paralyze"] = true
 
 -- Hyjal
+raidauras["Death and Decay"] = true
+special["Death and Decay"] = true
+raidauras["Icebolt"] = true
+special["Icebolt"] = true
+raidauras["Frost Nova"] = true
+
+raidauras["Carrion Swarm"] = true
+raidauras["Sleep"] = true
+raidauras["Inferno"] = true
+
+raidauras["Mark of Kaz'rogal"] = true
+special["Mark of Kaz'rogal"] = true
+
+raidauras["Rain of Fire"] = true
+raidauras["Howl of Azgalor"] = true
+raidauras["Doom"] = true
+
+raidauras["Air Burst"] = true
+raidauras["Tears of the Goddess"] = true
+raidauras["Doomfire"] = true
+raidauras["Fear"] = true
+raidauras["Grip of the Legion"] = true
+raidauras["Soul Charge"] = true
 
 -- BT
 raidauras["Vile Slime"] = true
