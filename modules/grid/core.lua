@@ -43,10 +43,6 @@ local function update_frame(self)
 	self.Short:SetWidth(config.width)
 	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
 
-	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
-	self.Buffs:SetFrameLevel(27)
-	self.Buffs:SetSize(64, 16)
-
 	self.Debuffs:SetPoint("CENTER", self.Health, "CENTER")
 	self.Debuffs:SetFrameLevel(27)
 	self.Debuffs:SetSize(44, 22)
@@ -305,9 +301,10 @@ local function layout(self, unit)
 	
 	-- Buffs
 	self.Buffs = CreateFrame("Frame", nil, self.Health)
-	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT", border * 2, -border * 2)
 	self.Buffs:SetFrameLevel(21)
 	self.Buffs:EnableMouse(false)
+	self.Buffs:SetSize(64, 16)
 	self.Buffs.disableMouse = true
 	self.Buffs.initialAnchor  = "TOPLEFT"
 	self.Buffs.size = config.buffSize
@@ -370,11 +367,12 @@ local function layout(self, unit)
 	self.Glow:SetFrameLevel(3)
 
 	-- Dispels
+	local dispel_size = bdUI.pixel * 2
 	self.Dispel = CreateFrame('frame', nil, self.Health, BackdropTemplateMixin and "BackdropTemplate")
 	self.Dispel:SetFrameLevel(100)
-	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", border, border)
-	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", -border, -border)
-	self.Dispel:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
+	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", -0, -0)
+	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", 0, 0)
+	self.Dispel:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = dispel_size})
 	self.Dispel:SetBackdropBorderColor(1, 1, 1, 1)
 	self.Dispel:SetBackdropColor(0, 0, 0, 0)
 	self.Dispel:Hide()
@@ -383,46 +381,45 @@ local function layout(self, unit)
 	self:RegisterEvent("UNIT_AURA", mod.dispel_glow);
 
 	-- overlays if there are multiple dispells
-	-- self.Dispel.Magic = self.Dispel:CreateTexture(nil, "OVERLAY")
-	-- self.Dispel.Magic:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
-	-- self.Dispel.Magic:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
-	-- self.Dispel.Magic:SetWidth(border)
-	-- self.Dispel.Magic:SetTexture(bdUI.media.flat)
-	-- self.Dispel.Magic:SetVertexColor(unpack(dispelColors['Magic']))
-	-- self.Dispel.Magic:Hide()
+	self.Dispel.Magic = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Magic:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Dispel.Magic:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
+	self.Dispel.Magic:SetWidth(dispel_size)
+	self.Dispel.Magic:SetTexture(bdUI.media.flat)
+	self.Dispel.Magic:SetVertexColor(unpack(dispelColors['Magic']))
+	self.Dispel.Magic:Hide()
 
 	-- -- overlays if there are multiple dispells
-	-- self.Dispel.Disease = self.Dispel:CreateTexture(nil, "OVERLAY")
-	-- self.Dispel.Disease:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
-	-- self.Dispel.Disease:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
-	-- self.Dispel.Disease:SetHeight(border)
-	-- self.Dispel.Disease:SetTexture(bdUI.media.flat)
-	-- self.Dispel.Disease:SetVertexColor(unpack(dispelColors['Disease']))
-	-- self.Dispel.Disease:Hide()
+	self.Dispel.Disease = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Disease:SetPoint("TOPLEFT", self.Health, "TOPLEFT")
+	self.Dispel.Disease:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
+	self.Dispel.Disease:SetHeight(dispel_size)
+	self.Dispel.Disease:SetTexture(bdUI.media.flat)
+	self.Dispel.Disease:SetVertexColor(unpack(dispelColors['Disease']))
+	self.Dispel.Disease:Hide()
 
 	-- -- overlays if there are multiple dispells
-	-- self.Dispel.Poison = self.Dispel:CreateTexture(nil, "OVERLAY")
-	-- self.Dispel.Poison:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
-	-- self.Dispel.Poison:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
-	-- self.Dispel.Poison:SetWidth(border)
-	-- self.Dispel.Poison:SetTexture(bdUI.media.flat)
-	-- self.Dispel.Poison:SetVertexColor(unpack(dispelColors['Poison']))
-	-- self.Dispel.Poison:Hide()
+	self.Dispel.Poison = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Poison:SetPoint("TOPRIGHT", self.Health, "TOPRIGHT")
+	self.Dispel.Poison:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
+	self.Dispel.Poison:SetWidth(dispel_size)
+	self.Dispel.Poison:SetTexture(bdUI.media.flat)
+	self.Dispel.Poison:SetVertexColor(unpack(dispelColors['Poison']))
+	self.Dispel.Poison:Hide()
 
 	-- -- overlays if there are multiple dispells
-	-- self.Dispel.Curse = self.Dispel:CreateTexture(nil, "OVERLAY")
-	-- self.Dispel.Curse:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
-	-- self.Dispel.Curse:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
-	-- self.Dispel.Curse:SetHeight(border)
-	-- self.Dispel.Curse:SetTexture(bdUI.media.flat)
-	-- self.Dispel.Curse:SetVertexColor(unpack(dispelColors['Curse']))
-	-- self.Dispel.Curse:Hide()
+	self.Dispel.Curse = self.Dispel:CreateTexture(nil, "OVERLAY")
+	self.Dispel.Curse:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT")
+	self.Dispel.Curse:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT")
+	self.Dispel.Curse:SetHeight(dispel_size)
+	self.Dispel.Curse:SetTexture(bdUI.media.flat)
+	self.Dispel.Curse:SetVertexColor(unpack(dispelColors['Curse']))
+	self.Dispel.Curse:Hide()
 	
 	-- Debuffs
 	self.Debuffs = CreateFrame("Frame", nil, self.Health)
 	self.Debuffs:SetFrameLevel(21)
 	self.Debuffs:SetPoint("CENTER")
-	
 	self.Debuffs.initialAnchor = "CENTER"
 	self.Debuffs.size = config.debuffSize
 	self.Debuffs:EnableMouse(false)
@@ -431,7 +428,6 @@ local function layout(self, unit)
 	self.Debuffs.num = 4
 	self.Debuffs['growth-y'] = "DOWN"
 	self.Debuffs['growth-x'] = "RIGHT"
-
 
 	self.Debuffs.PostUpdate = function(self, unit)
 		local offset =  (config.debuffSize / 2) * (self.visibleDebuffs - 1)

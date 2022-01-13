@@ -73,13 +73,13 @@ mod.dispel_glow = function(self, event, unit)
 		self.Dispel:SetBackdropBorderColor(unpack(primaryDispel))
 
 		-- show priority overlays
-		-- for k, v in pairs(dispelColors) do
-			-- if (found[k]) then
-			-- 	self.Dispel[k]:Show()
-			-- else
-			-- 	self.Dispel[k]:Hide()
-			-- end
-		-- end
+		for k, v in pairs(dispelColors) do
+			if (found[k]) then
+				self.Dispel[k]:Show()
+			else
+				self.Dispel[k]:Hide()
+			end
+		end
 	else
 		self.Dispel:Hide()
 	end
