@@ -47,6 +47,7 @@ mod.dispel_glow = function(self, event, unit)
 				end
 			end
 		end
+		
 
 		if (mod.highlights[debuff:lower()]) then -- or bdUI:isGlow(debuff)) then
 			glow = true
