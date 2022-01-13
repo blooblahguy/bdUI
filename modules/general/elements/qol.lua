@@ -6,6 +6,8 @@ function mod:create_qol()
 	-- increase equipment sets per player
 	setglobal("MAX_EQUIPMENT_SETS_PER_PLAYER", 100)
 
+	-- max camera distance (classic/tbc)
+	SetCVar("cameraDistanceMaxZoomFactor", 4)
 
 	if (config.autodismount) then
 

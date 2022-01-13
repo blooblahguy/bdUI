@@ -218,10 +218,12 @@ local function store_unit_information(self, unit)
 	-- Tank has aggro
 	self.themTank = false
 	for player, v in pairs(tanks) do
-		local threat = UnitThreatSituation(player, unit)
-		if (threat ~= nil and threat >= 2) then
-			self.themTank = player
-			break
+		if (player and unit and UnitExists(player) and UnitExists(unit)) then
+			local threat = UnitThreatSituation(player, unit)
+			if (threat ~= nil and threat >= 2) then
+				self.themTank = player
+				break
+			end
 		end
 	end
 

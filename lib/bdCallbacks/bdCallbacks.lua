@@ -38,10 +38,10 @@ function lib:New(object)
 	end
 
 	-- unhook a given action callback
-	object["remove_action"] = function(self, action, callback, priority)
-		for k, fn in pairs(lib.actions[action][priority]) do
+	object["remove_filter"] = function(self, action, callback, priority)
+		for k, fn in pairs(lib.filters[action][priority]) do
 			if (fn == callback) then 
-				lib.actions[action][priority][k] = nil
+				lib.filters[action][priority][k] = nil
 			end
 		end
 	end

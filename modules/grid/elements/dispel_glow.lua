@@ -42,7 +42,7 @@ mod.dispel_glow = function(self, event, unit)
 			if (dispelColors[debuffType] and not bdUI:is_blacklisted(debuff)) then
 				found[debuffType] = true
 				dispel = true
-				if (dispelClass[class] and dispelClass[class][debuffType]) then
+				if ((dispelClass[class] and dispelClass[class][debuffType]) or not dispelClass[class]) then
 					primaryDispel = dispelColors[debuffType]
 				end
 			end
@@ -73,13 +73,13 @@ mod.dispel_glow = function(self, event, unit)
 		self.Dispel:SetBackdropBorderColor(unpack(primaryDispel))
 
 		-- show priority overlays
-		for k, v in pairs(dispelColors) do
-			if (found[k]) then
-				self.Dispel[k]:Show()
-			else
-				self.Dispel[k]:Hide()
-			end
-		end
+		-- for k, v in pairs(dispelColors) do
+			-- if (found[k]) then
+			-- 	self.Dispel[k]:Show()
+			-- else
+			-- 	self.Dispel[k]:Hide()
+			-- end
+		-- end
 	else
 		self.Dispel:Hide()
 	end
