@@ -16,6 +16,12 @@ function mod:create_actionbar1()
 	cfg.moveName = "Actionbar 1"
 	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.actionPage = "[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
+
+	if (bdUI:isClassicBC()) then
+-- 		AB.barDefaults.bar1.conditions = '[bonusbar:5] 11; [shapeshift] 13; [form,noform] 0; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6;'
+-- 	else
+	end
+
 	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 80}
 
 	local buttonName = "ActionButton"

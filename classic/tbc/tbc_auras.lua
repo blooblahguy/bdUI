@@ -104,6 +104,7 @@ raidauras["Persuasion"] = true
 special["Persuasion"] = true
 raidauras["Paralyze"] = true
 special["Paralyze"] = true
+special["Toxic Spores"] = true
 
 -- Hyjal
 raidauras["Death and Decay"] = true
@@ -157,6 +158,7 @@ special["Spite"] = true
 raidauras["Bloodboil"] = true
 raidauras["Bewildering Strike"] = true
 raidauras["Fel Rage"] = true
+special["Fel Rage"] = true
 raidauras["Fel-Acid Breath"] = true
 
 raidauras["Fatal Attraction"] = true

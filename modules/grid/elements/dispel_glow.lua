@@ -24,7 +24,6 @@ local class = select(2, UnitClass("player"))
 mod.dispel_glow = function(self, event, unit)
 	local config = mod.config
 	if (unit ~= self.unit) then return end
-	-- if (not dispelClass[class]) then return end
 
 	local found = {}
 	local primaryDispel = {0, 0, 0, 0}
