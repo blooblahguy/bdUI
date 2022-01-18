@@ -22,6 +22,10 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
     self.CombatIndicator = CombatIndicator
 --]]
 
+if (true) then
+return false
+end
+
 local _, ns = ...
 local oUF = ns.oUF
 
@@ -39,7 +43,7 @@ local function Update(self, event, unit)
 	end
 
 	local inCombat = UnitAffectingCombat(unit)
-	if (event == "PLAYER_REGEN_DISABLED" or inCombat) then
+	if(inCombat) then
 		element:Show()
 	else
 		element:Hide()
@@ -76,8 +80,8 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		-- self:RegisterEvent('UNIT_COMBAT', Path)
-		-- self:RegisterEvent('UNIT_FLAGS', Path)
+		self:RegisterEvent('UNIT_COMBAT', Path)
+		self:RegisterEvent('UNIT_FLAGS', Path)
 		self:RegisterEvent('PLAYER_REGEN_DISABLED', Path, true)
 		self:RegisterEvent('PLAYER_REGEN_ENABLED', Path, true)
 
@@ -95,8 +99,8 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
-		-- self:UnregisterEvent('UNIT_COMBAT', Path)
-		-- self:UnregisterEvent('UNIT_FLAGS', Path)
+		self:UnregisterEvent('UNIT_COMBAT', Path)
+		self:UnregisterEvent('UNIT_FLAGS', Path)
 		self:UnregisterEvent('PLAYER_REGEN_DISABLED', Path)
 		self:UnregisterEvent('PLAYER_REGEN_ENABLED', Path)
 	end

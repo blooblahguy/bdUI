@@ -420,9 +420,7 @@ local function Enable(self, unit)
 			self:RegisterEvent('UNIT_SPELLCAST_FAILED', CastFail)
 			self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', CastFail)
 		end
-		-- ElvUI block
 		self:RegisterEvent('UNIT_SPELLCAST_SENT', UNIT_SPELLCAST_SENT, true)
-		-- end block
 
 		element.holdTime = 0
 

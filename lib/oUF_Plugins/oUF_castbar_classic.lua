@@ -94,8 +94,6 @@ local _, ns = ...
 local oUF = ns.oUF
 
 local FALLBACK_ICON = 136243 -- Interface\ICONS\Trade_Engineering
-
--- ElvUI block
 local select = select
 local FAILED = FAILED
 local INTERRUPTED = INTERRUPTED
@@ -117,7 +115,6 @@ local UNIT_SPELLCAST_SENT = function (self, event, unit, target, castID, spellID
 		castbar.tradeSkillCastId = castID
 	end
 end
--- end block
 
 local function resetAttributes(self)
 	self.castID = nil
@@ -166,8 +163,6 @@ local function CastStart(self, real, unit, castGUID)
 	else
 		element.duration = endTime - GetTime()
 	end
-
-	-- ElvUI block
 	if(mergeTradeskill and isTradeSkill and UnitIsUnit(unit, "player")) then
 		element.duration = element.duration + (element.max * tradeskillCurrent);
 		element.max = element.max * tradeskillTotal;
@@ -177,7 +172,6 @@ local function CastStart(self, real, unit, castGUID)
 			tradeskillCurrent = tradeskillCurrent + 1;
 		end
 	end
-	-- end block
 
 	element:SetMinMaxValues(0, element.max)
 	element:SetValue(element.duration)
@@ -283,14 +277,11 @@ local function CastStop(self, event, unit, castID, spellID)
 	if(not element:IsShown() or element.castID ~= castID or element.spellID ~= spellID) then
 		return
 	end
-
-	-- ElvUI block
 	if mergeTradeskill and UnitIsUnit(unit, "player") then
 		if tradeskillCurrent == tradeskillTotal then
 			mergeTradeskill = false
 		end
 	end
-	-- end block
 
 	resetAttributes(element)
 
@@ -321,13 +312,10 @@ local function CastFail(self, event, unit, castID, spellID)
 	if(element.Spark) then element.Spark:Hide() end
 
 	element.holdTime = element.timeToHold or 0
-
-	-- ElvUI block
 	if mergeTradeskill and UnitIsUnit(unit, "player") then
 		mergeTradeskill = false
 		element.tradeSkillCastId = nil
 	end
-	-- end block
 
 	resetAttributes(element)
 	element:SetValue(element.max)
@@ -447,10 +435,7 @@ local function Enable(self, unit)
 		self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', CastFail)
 		--self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
 		--self:RegisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
-
-		-- ElvUI block
 		self:RegisterEvent('UNIT_SPELLCAST_SENT', UNIT_SPELLCAST_SENT, true)
-		-- end block
 
 		element.holdTime = 0
 
@@ -510,13 +495,10 @@ local function Disable(self)
 		end
 	end
 end
-
--- ElvUI block
 --hooksecurefunc(C_TradeSkillUI, "CraftRecipe", function(_, num)
 --	tradeskillCurrent = 0
 --	tradeskillTotal = num or 1
 --	mergeTradeskill = true
 --end)
--- end block
 
 oUF:AddElement('Castbar', Update, Enable, Disable)

@@ -309,7 +309,6 @@ local function SetPowerUpdateMethod(self, state, force)
 		end
 	end
 end
--- end block
 
 local function Enable(self)
 	local element = self.Power
@@ -324,7 +323,6 @@ local function Enable(self)
 		self.SetPowerUpdateSpeed = SetPowerUpdateSpeed
 		self.SetPowerUpdateMethod = SetPowerUpdateMethod
 		SetPowerUpdateMethod(self, self.effectivePower, true)
-		-- end block
 
 		if(element.colorDisconnected) then
 			self:RegisterEvent('UNIT_CONNECTION', ColorPath)

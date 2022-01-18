@@ -43,6 +43,10 @@ A default texture will be applied if the widget is a StatusBar and doesn't have 
 local _, ns = ...
 local oUF = ns.oUF
 
+-- sourced from FrameXML/AlternatePowerBar.lua
+local ADDITIONAL_POWER_BAR_INDEX = _G.ADDITIONAL_POWER_BAR_INDEX or 0
+local ALT_MANA_BAR_PAIR_DISPLAY_INFO = _G.ALT_MANA_BAR_PAIR_DISPLAY_INFO
+
 local _, playerClass = UnitClass('player')
 
 local function Update(self, event, unit)
@@ -64,6 +68,8 @@ local function Update(self, event, unit)
 	local mainType = UnitPowerType(unit)
 	local mainMax = UnitPowerMax(unit, mainType)
 	local isPlayer = UnitIsUnit('player', unit)
+	local altManaInfo = isPlayer and oUF.isRetail and ALT_MANA_BAR_PAIR_DISPLAY_INFO[playerClass]
+	local hasAltManaBar = altManaInfo and altManaInfo[mainType]
 	local _, _, _, startTime, endTime, _, _, _, spellID = UnitCastingInfo(unit)
 
 	if(event == 'UNIT_SPELLCAST_START' and startTime ~= endTime) then
@@ -79,6 +85,11 @@ local function Update(self, event, unit)
 				if checkSpec and ctype == mainType then
 					mainCost = ((isPlayer or cost < mainMax) and cost) or (mainMax * cperc) / 100
 					element.mainCost = mainCost
+
+					break
+				elseif hasAltManaBar and checkSpec and ctype == ADDITIONAL_POWER_BAR_INDEX then
+					altCost = cost
+					element.altCost = altCost
 
 					break
 				end
@@ -99,6 +110,12 @@ local function Update(self, event, unit)
 		element.mainBar:Show()
 	end
 
+	if(element.altBar and hasAltManaBar) then
+		element.altBar:SetMinMaxValues(0, UnitPowerMax(unit, ADDITIONAL_POWER_BAR_INDEX))
+		element.altBar:SetValue(altCost)
+		element.altBar:Show()
+	end
+
 	--[[ Callback: PowerPrediction:PostUpdate(unit, mainCost, altCost, hasAltManaBar)
 	Called after the element has been updated.
 
@@ -109,7 +126,7 @@ local function Update(self, event, unit)
 	* hasAltManaBar - indicates if the unit has a secondary power bar (boolean)
 	--]]
 	if(element.PostUpdate) then
-		return element:PostUpdate(unit, mainCost, altCost)
+		return element:PostUpdate(unit, mainCost, altCost, hasAltManaBar)
 	end
 end
 

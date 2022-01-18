@@ -31,6 +31,20 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.aurabars(self, unit)
 	mod.tags.pp(self, unit)
 
+	local size = math.restrict(config.playertargetheight * 0.75, 8, config.playertargetheight)
+
+	-- Combat indicator
+	-- self.CombatIndicator = self.TextHolder:CreateTexture(nil, "OVERLAY")
+	-- self.CombatIndicator:SetSize(size, size)
+	-- self.CombatIndicator:SetTexture([[Interface\CharacterFrame\UI-StateIcon]])
+	-- self.CombatIndicator:SetTexCoord(.5, 1, 0, .49)
+
+	-- if (config.textlocation == "Outside") then
+	-- 	self.CombatIndicator:SetPoint("RIGHT", self.TextHolder, -mod.padding, 1)
+	-- elseif (config.textlocation == "Inside") then
+	-- 	self.CombatIndicator:SetPoint("RIGHT", self.TextHolder, "CENTER", -mod.padding, 1)
+	-- end
+
 	self.Buffs.CustomFilter = buff_filter
 	self.AuraBars.CustomFilter = buff_filter
 

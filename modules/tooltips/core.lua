@@ -18,6 +18,16 @@ local function hook_and_skin(self)
 
 	bdUI:set_backdrop(self)
 
+	kill_texture(self.NineSlice.Center)
+	kill_texture(self.NineSlice.TopEdge)
+	kill_texture(self.NineSlice.LeftEdge)
+	kill_texture(self.NineSlice.RightEdge)
+	kill_texture(self.NineSlice.BottomEdge)
+	kill_texture(self.NineSlice.TopLeftCorner)
+	kill_texture(self.NineSlice.TopRightCorner)
+	kill_texture(self.NineSlice.BottomLeftCorner)
+	kill_texture(self.NineSlice.BottomRightCorner)
+
 	kill_texture(self.Center)
 	kill_texture(self.TopEdge)
 	kill_texture(self.LeftEdge)

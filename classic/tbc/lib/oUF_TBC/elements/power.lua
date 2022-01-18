@@ -18,82 +18,103 @@ A default texture will be applied if the widget is a StatusBar and doesn't have 
 ## Options
 
 .frequentUpdates                  - Indicates whether to use UNIT_POWER_FREQUENT instead UNIT_POWER_UPDATE to update the
-									bar (boolean)
+                                    bar (boolean)
 .displayAltPower                  - Use this to let the widget display alternative power, if the unit has one.
-									By default, it does so only for raid and party units. If none, the display will fall
-									back to the primary power (boolean)
+                                    By default, it does so only for raid and party units. If none, the display will fall
+                                    back to the primary power (boolean)
 .useAtlas                         - Use this to let the widget use an atlas for its texture if an atlas is present in
-									`self.colors.power` for the appropriate power type (boolean)
+                                    `self.colors.power` for the appropriate power type (boolean)
 .smoothGradient                   - 9 color values to be used with the .colorSmooth option (table)
 .considerSelectionInCombatHostile - Indicates whether selection should be considered hostile while the unit is in
-									combat with the player (boolean)
+                                    combat with the player (boolean)
 
 The following options are listed by priority. The first check that returns true decides the color of the bar.
 
 .colorDisconnected - Use `self.colors.disconnected` to color the bar if the unit is offline (boolean)
 .colorTapping      - Use `self.colors.tapping` to color the bar if the unit isn't tapped by the player (boolean)
 .colorThreat       - Use `self.colors.threat[threat]` to color the bar based on the unit's threat status. `threat` is
-					 defined by the first return of [UnitThreatSituation](https://wow.gamepedia.com/API_UnitThreatSituation) (boolean)
+                     defined by the first return of [UnitThreatSituation](https://wow.gamepedia.com/API_UnitThreatSituation) (boolean)
 .colorPower        - Use `self.colors.power[token]` to color the bar based on the unit's power type. This method will
-					 fall-back to `:GetAlternativeColor()` if it can't find a color matching the token. If this function
-					 isn't defined, then it will attempt to color based upon the alternative power colors returned by
-					 [UnitPowerType](http://wowprogramming.com/docs/api/UnitPowerType.html). If these aren't
-					 defined, then it will attempt to color the bar based upon `self.colors.power[type]`. In case of
-					 failure it'll default to `self.colors.power.MANA` (boolean)
+                     fall-back to `:GetAlternativeColor()` if it can't find a color matching the token. If this function
+                     isn't defined, then it will attempt to color based upon the alternative power colors returned by
+                     [UnitPowerType](http://wowprogramming.com/docs/api/UnitPowerType.html). If these aren't
+                     defined, then it will attempt to color the bar based upon `self.colors.power[type]`. In case of
+                     failure it'll default to `self.colors.power.MANA` (boolean)
 .colorClass        - Use `self.colors.class[class]` to color the bar based on unit class. `class` is defined by the
-					 second return of [UnitClass](http://wowprogramming.com/docs/api/UnitClass.html) (boolean)
+                     second return of [UnitClass](http://wowprogramming.com/docs/api/UnitClass.html) (boolean)
 .colorClassNPC     - Use `self.colors.class[class]` to color the bar if the unit is a NPC (boolean)
 .colorClassPet     - Use `self.colors.class[class]` to color the bar if the unit is player controlled, but not a player
-					 (boolean)
+                     (boolean)
 .colorSelection    - Use `self.colors.selection[selection]` to color the bar based on the unit's selection color.
-					 `selection` is defined by the return value of Private.unitSelectionType, a wrapper function
-					 for [UnitSelectionType](https://wow.gamepedia.com/API_UnitSelectionType) (boolean)
+                     `selection` is defined by the return value of Private.unitSelectionType, a wrapper function
+                     for [UnitSelectionType](https://wow.gamepedia.com/API_UnitSelectionType) (boolean)
 .colorReaction     - Use `self.colors.reaction[reaction]` to color the bar based on the player's reaction towards the
-					 unit. `reaction` is defined by the return value of
-					 [UnitReaction](http://wowprogramming.com/docs/api/UnitReaction.html) (boolean)
+                     unit. `reaction` is defined by the return value of
+                     [UnitReaction](http://wowprogramming.com/docs/api/UnitReaction.html) (boolean)
 .colorSmooth       - Use `smoothGradient` if present or `self.colors.smooth` to color the bar with a smooth gradient
-					 based on the player's current power percentage (boolean)
+                     based on the player's current power percentage (boolean)
 
 ## Sub-Widget Options
 
 .multiplier - A multiplier used to tint the background based on the main widgets R, G and B values. Defaults to 1
-			  (number)[0-1]
+              (number)[0-1]
 
 ## Examples
 
-	-- Position and size
-	local Power = CreateFrame('StatusBar', nil, self)
-	Power:SetHeight(20)
-	Power:SetPoint('BOTTOM')
-	Power:SetPoint('LEFT')
-	Power:SetPoint('RIGHT')
+    -- Position and size
+    local Power = CreateFrame('StatusBar', nil, self)
+    Power:SetHeight(20)
+    Power:SetPoint('BOTTOM')
+    Power:SetPoint('LEFT')
+    Power:SetPoint('RIGHT')
 
-	-- Add a background
-	local Background = Power:CreateTexture(nil, 'BACKGROUND')
-	Background:SetAllPoints(Power)
-	Background:SetTexture(1, 1, 1, .5)
+    -- Add a background
+    local Background = Power:CreateTexture(nil, 'BACKGROUND')
+    Background:SetAllPoints(Power)
+    Background:SetTexture(1, 1, 1, .5)
 
-	-- Options
-	Power.frequentUpdates = true
-	Power.colorTapping = true
-	Power.colorDisconnected = true
-	Power.colorPower = true
-	Power.colorClass = true
-	Power.colorReaction = true
+    -- Options
+    Power.frequentUpdates = true
+    Power.colorTapping = true
+    Power.colorDisconnected = true
+    Power.colorPower = true
+    Power.colorClass = true
+    Power.colorReaction = true
 
-	-- Make the background darker.
-	Background.multiplier = .5
+    -- Make the background darker.
+    Background.multiplier = .5
 
-	-- Register it with oUF
-	Power.bg = Background
-	self.Power = Power
+    -- Register it with oUF
+    Power.bg = Background
+    self.Power = Power
 --]]
 
 local _, ns = ...
 local oUF = ns.oUF
+local Private = oUF.Private
+
+local unitSelectionType = Private.unitSelectionType
 
 -- sourced from FrameXML/UnitPowerBarAlt.lua
 local ALTERNATE_POWER_INDEX = Enum.PowerType.Alternate or 10
+
+--[[ Override: Power:GetDisplayPower()
+Used to get info on the unit's alternative power, if any.
+Should return the power type index (see [Enum.PowerType.Alternate](https://wow.gamepedia.com/Enum_Unit.PowerType))
+and the minimum value for the given power type (see [info.minPower](https://wow.gamepedia.com/API_GetUnitPowerBarInfo))
+or nil if the unit has no alternative (alternate) power or it should not be
+displayed. In case of a nil return, the element defaults to the primary power
+type and zero for the minimum value.
+
+* self - the Power element
+--]]
+local function GetDisplayPower(element)
+	local unit = element.__owner.unit
+	local barInfo = GetUnitPowerBarInfo(unit)
+	if(barInfo and barInfo.showOnRaid and (UnitInParty(unit) or UnitInRaid(unit))) then
+		return ALTERNATE_POWER_INDEX, barInfo.minPower
+	end
+end
 
 local function UpdateColor(self, event, unit)
 	if(self.unit ~= unit) then return end
@@ -107,7 +128,7 @@ local function UpdateColor(self, event, unit)
 	elseif(element.colorTapping and not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then
 		t = self.colors.tapped
 	elseif(element.colorThreat and not UnitPlayerControlled(unit) and UnitThreatSituation('player', unit)) then
-		t = self.colors.threat[UnitThreatSituation('player', unit)]
+		t =  self.colors.threat[UnitThreatSituation('player', unit)]
 	elseif(element.colorPower) then
 		if(element.displayType ~= ALTERNATE_POWER_INDEX) then
 			t = self.colors.power[pToken]
@@ -136,6 +157,8 @@ local function UpdateColor(self, event, unit)
 		or (element.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
 		local _, class = UnitClass(unit)
 		t = self.colors.class[class]
+	elseif(element.colorSelection and unitSelectionType(unit, element.considerSelectionInCombatHostile)) then
+		t = self.colors.selection[unitSelectionType(unit, element.considerSelectionInCombatHostile)]
 	elseif(element.colorReaction and UnitReaction(unit, 'player')) then
 		t = self.colors.reaction[UnitReaction(unit, 'player')]
 	elseif(element.colorSmooth) then
@@ -201,6 +224,9 @@ local function Update(self, event, unit)
 	end
 
 	local displayType, min
+	if(oUF.isRetail and element.displayAltPower) then
+		displayType, min = element:GetDisplayPower()
+	end
 
 	local cur, max = UnitPower(unit, displayType), UnitPowerMax(unit, displayType)
 	if not min then min = 0 end
@@ -344,44 +370,6 @@ local function SetFrequentUpdates(element, state, isForced)
 	end
 end
 
--- ElvUI changed block
-local onUpdateElapsed, onUpdateWait = 0, 0.25
-local function onUpdatePower(self, elapsed)
-	if onUpdateElapsed > onUpdateWait then
-		Path(self.__owner, 'OnUpdate', self.__owner.unit)
-
-		onUpdateElapsed = 0
-	else
-		onUpdateElapsed = onUpdateElapsed + elapsed
-	end
-end
-
-local function SetPowerUpdateSpeed(self, state)
-	onUpdateWait = state
-end
-
-local function SetPowerUpdateMethod(self, state, force)
-	if self.effectivePower ~= state or force then
-		self.effectivePower = state
-
-		if state then
-			self.Power:SetScript('OnUpdate', onUpdatePower)
-			self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
-			self:UnregisterEvent('UNIT_POWER_UPDATE', Path)
-			self:UnregisterEvent('UNIT_MAXPOWER', Path)
-		else
-			self.Power:SetScript('OnUpdate', nil)
-			self:RegisterEvent('UNIT_MAXPOWER', Path)
-			if self.Power.frequentUpdates then
-				self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
-			else
-				self:RegisterEvent('UNIT_POWER_UPDATE', Path)
-			end
-		end
-	end
-end
--- end block
-
 local function Enable(self)
 	local element = self.Power
 	if(element) then
@@ -393,11 +381,13 @@ local function Enable(self)
 		element.SetColorThreat = SetColorThreat
 		element.SetFrequentUpdates = SetFrequentUpdates
 
-		-- ElvUI changed block
-		self.SetPowerUpdateSpeed = SetPowerUpdateSpeed
-		self.SetPowerUpdateMethod = SetPowerUpdateMethod
-		SetPowerUpdateMethod(self, self.effectivePower, true)
-		-- end block
+		self:RegisterEvent('UNIT_MAXPOWER', Path)
+
+		if(element.frequentUpdates) then
+			self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
+		else
+			self:RegisterEvent('UNIT_POWER_UPDATE', Path)
+		end
 
 		if(element.colorDisconnected) then
 			self:RegisterEvent('UNIT_CONNECTION', ColorPath)
@@ -423,6 +413,10 @@ local function Enable(self)
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
 
+		if(oUF.isRetail and not element.GetDisplayPower) then
+			element.GetDisplayPower = GetDisplayPower
+		end
+
 		element:Show()
 
 		return true
@@ -434,7 +428,6 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
-		element:SetScript('OnUpdate', nil) -- ElvUI changed
 		self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
 		self:UnregisterEvent('UNIT_MAXPOWER', Path)
 		self:UnregisterEvent('UNIT_POWER_BAR_HIDE', Path)

@@ -71,8 +71,6 @@ local Private = oUF.Private
 
 local xpcall = Private.xpcall
 local unitExists = Private.unitExists
-
--- ElvUI block
 local _G = _G
 local CreateFrame = CreateFrame
 local hooksecurefunc = hooksecurefunc
@@ -81,7 +79,6 @@ local rawget, rawset, select = rawget, rawset, select
 local format, tinsert, tremove = format, tinsert, tremove
 local next, type, pcall, unpack = next, type, pcall, unpack
 local error, assert, loadstring = error, assert, loadstring
--- end block
 
 local _PATTERN = '%[..-%]+'
 
@@ -94,12 +91,9 @@ local _ENV = {
 				r, g, b = unpack(r)
 			end
 		end
-
-		-- ElvUI block
 		if not r or type(r) == 'string' then --wtf?
 			return '|cffFFFFFF'
 		end
-		-- end block
 
 		return format('|cff%02x%02x%02x', r * 255, g * 255, b * 255)
 	end,
@@ -523,8 +517,6 @@ local function Update(self)
 		end
 	end
 end
-
--- ElvUI block
 local onEnter = function(self) for fs in next, self.__mousetags do fs:SetAlpha(1) end end
 local onLeave = function(self) for fs in next, self.__mousetags do fs:SetAlpha(0) end end
 local onUpdateDelay = {}
@@ -534,7 +526,6 @@ local escapeSequences = {
 	["||T"] = "|T",
 	["||t"] = "|t",
 }
--- end block
 
 local tagPool = {}
 local funcPool = {}
@@ -606,7 +597,6 @@ local function getTagFunc(tagstr)
 					self:SetText(bracket)
 				end
 			end
-			-- end block
 		end
 
 		-- ElvUI changed
@@ -630,7 +620,6 @@ local function getTagFunc(tagstr)
 
 			tagPool[tagstr] = func
 		end
-		-- end block
 	end
 
 	return func
@@ -772,7 +761,6 @@ local function Tag(self, fs, tagstr, ...)
 			containsOnUpdate = onUpdateDelay[tag] or 0.15;
 		end
 	end
-	-- end block
 
 	fs.parent = self
 	fs.UpdateTag = getTagFunc(tagstr)
@@ -784,7 +772,6 @@ local function Tag(self, fs, tagstr, ...)
 		-- ElvUI added check
 		elseif containsOnUpdate then
 			timer = containsOnUpdate
-		-- end block
 		else
 			timer = .5
 		end

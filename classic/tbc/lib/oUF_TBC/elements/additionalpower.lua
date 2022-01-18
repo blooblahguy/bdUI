@@ -58,20 +58,18 @@ local _, ns = ...
 local oUF = ns.oUF
 
 local _, playerClass = UnitClass('player')
-
--- ElvUI block
 local unpack = unpack
 local CopyTable = CopyTable
 local UnitIsUnit = UnitIsUnit
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
+local UnitHasVehicleUI = UnitHasVehicleUI
 local UnitPowerType = UnitPowerType
--- end block
 
 -- sourced from FrameXML/AlternatePowerBar.lua
-local ADDITIONAL_POWER_BAR_NAME = ADDITIONAL_POWER_BAR_NAME or 'MANA'
-local ADDITIONAL_POWER_BAR_INDEX = ADDITIONAL_POWER_BAR_INDEX or 0
-local ALT_MANA_BAR_PAIR_DISPLAY_INFO = ALT_MANA_BAR_PAIR_DISPLAY_INFO
+local ADDITIONAL_POWER_BAR_NAME = _G.ADDITIONAL_POWER_BAR_NAME or 'MANA'
+local ADDITIONAL_POWER_BAR_INDEX = _G.ADDITIONAL_POWER_BAR_INDEX or 0
+local ALT_MANA_BAR_PAIR_DISPLAY_INFO = _G.ALT_MANA_BAR_PAIR_DISPLAY_INFO
 
 local function UpdateColor(self, event, unit, powerType)
 	if(not (unit and UnitIsUnit(unit, 'player') and powerType == ADDITIONAL_POWER_BAR_NAME)) then return end
@@ -204,13 +202,14 @@ local function Visibility(self, event, unit)
 	local element = self.AdditionalPower
 	local shouldEnable
 
-	if(UnitPowerMax(unit, ADDITIONAL_POWER_BAR_INDEX) ~= 0) then
-		if(element.displayPairs[playerClass]) then
-			local powerType = UnitPowerType(unit)
-			shouldEnable = element.displayPairs[playerClass][powerType]
+	if(not UnitHasVehicleUI('player')) then
+		if(UnitPowerMax(unit, ADDITIONAL_POWER_BAR_INDEX) ~= 0) then
+			if(element.displayPairs[playerClass]) then
+				local powerType = UnitPowerType(unit)
+				shouldEnable = element.displayPairs[playerClass][powerType]
+			end
 		end
 	end
-
 
 	local isEnabled = element.__isEnabled
 

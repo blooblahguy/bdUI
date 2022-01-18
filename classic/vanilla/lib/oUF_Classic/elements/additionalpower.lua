@@ -57,15 +57,12 @@ if(select(2, UnitClass('player')) ~= 'DRUID') then return end
 
 local _, ns = ...
 local oUF = ns.oUF
-
--- ElvUI block
 local unpack = unpack
 local UnitIsPlayer = UnitIsPlayer
 local UnitClass = UnitClass
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local UnitPowerType = UnitPowerType
--- end block
 
 
 local function UpdateColor(self, event, unit, powertype)
@@ -180,14 +177,11 @@ local function ElementEnable(self)
 	self:RegisterEvent('UNIT_MAXPOWER', Path)
 
 	element:Show()
-
-	-- ElvUI block
 	if element.PostUpdateVisibility then
 		element:PostUpdateVisibility(true, not element.isEnabled)
 	end
 
 	element.isEnabled = true
-	-- end block
 
 	Path(self, 'ElementEnable', 'player', 'MANA')
 end
@@ -204,14 +198,11 @@ local function ElementDisable(self)
 	self:UnregisterEvent('UNIT_MAXPOWER', Path)
 
 	self.AdditionalPower:Hide()
-
-	-- ElvUI block
 	if element.PostUpdateVisibility then
 		element:PostUpdateVisibility(false, element.isEnabled)
 	end
 
 	element.isEnabled = nil
-	-- end block
 
 	Path(self, 'ElementDisable', 'player', 'MANA')
 end

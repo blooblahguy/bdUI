@@ -6,7 +6,7 @@ mod.additional_elements.debuffs = function(self, unit)
 	local config = mod.config
 
 	-- Auras
-	self.Debuffs = CreateFrame("Frame", nil, self)
+	self.Debuffs = CreateFrame("Frame", "bdUF_Debuffs", self)
 	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
 	self.Debuffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
 	self.Debuffs:SetHeight(60)

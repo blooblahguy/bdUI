@@ -257,7 +257,6 @@ local function SetHealthUpdateMethod(self, state, force)
 		end
 	end
 end
--- end block
 
 local function Enable(self, unit)
 	local element = self.Health
@@ -271,7 +270,6 @@ local function Enable(self, unit)
 		self.SetHealthUpdateSpeed = SetHealthUpdateSpeed
 		self.SetHealthUpdateMethod = SetHealthUpdateMethod
 		SetHealthUpdateMethod(self, self.effectiveHealth, true)
-		-- end block
 
 		if(element.colorDisconnected) then
 			self:RegisterEvent('UNIT_CONNECTION', ColorPath)

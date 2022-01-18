@@ -45,7 +45,6 @@ local function Update(self, event)
 	else
 		isLeader = UnitLeadsAnyGroup(unit)
 	end
-	-- end block
 
 	if(isLeader) then
 		element:Show()

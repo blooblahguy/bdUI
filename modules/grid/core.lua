@@ -300,7 +300,7 @@ local function layout(self, unit)
 	self.ThreatLite:Hide()
 	
 	-- Buffs
-	self.Buffs = CreateFrame("Frame", nil, self.Health)
+	self.Buffs = CreateFrame("Frame", "bdGrid_buffs", self.Health)
 	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT", border * 2, -border * 2)
 	self.Buffs:SetFrameLevel(21)
 	self.Buffs:EnableMouse(false)
@@ -379,6 +379,7 @@ local function layout(self, unit)
 	
 	-- look / color / show dispels and glows
 	self:RegisterEvent("UNIT_AURA", mod.dispel_glow);
+	self:RegisterEvent("PLAYER_ENTERING_WORLD", mod.dispel_glow);
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Magic = self.Dispel:CreateTexture(nil, "OVERLAY")
@@ -417,7 +418,7 @@ local function layout(self, unit)
 	self.Dispel.Curse:Hide()
 	
 	-- Debuffs
-	self.Debuffs = CreateFrame("Frame", nil, self.Health)
+	self.Debuffs = CreateFrame("Frame", "bdGrid_debuffs", self.Health)
 	self.Debuffs:SetFrameLevel(21)
 	self.Debuffs:SetPoint("CENTER")
 	self.Debuffs.initialAnchor = "CENTER"

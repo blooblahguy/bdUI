@@ -528,7 +528,7 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- AURAS
 	--==========================================
-	self.Auras = CreateFrame("Frame", nil, self)
+	self.Auras = CreateFrame("Frame", "bdNameplates_Auras", self)
 	self.Auras:SetFrameLevel(0)
 	self.Auras:ClearAllPoints()
 	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24+config.hpoffset)

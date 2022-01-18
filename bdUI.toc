@@ -247,7 +247,6 @@ modules\unitframes\elements\auras.lua
 modules\unitframes\elements\buffs.lua
 modules\unitframes\elements\debuffs.lua
 modules\unitframes\elements\castbar.lua
-modules\unitframes\elements\combat.lua
 modules\unitframes\elements\power.lua
 modules\unitframes\elements\resting.lua
 modules\unitframes\elements\solocastbar.lua

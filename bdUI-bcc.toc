@@ -1,4 +1,4 @@
-## Interface: 20502
+## Interface: 20503
 
 ## Title: |cffA02C2Fbd|rUI |cffABD473[TBC]|r
 ## Author: Blooblahguy
@@ -52,7 +52,7 @@ classic\tbc\tbc.lua
 classic\tbc\tbc_auras.lua
 
 # oUF
-classic\tbc\lib\oUF_TBC\oUF.xml
+classic\tbc\lib\oUF_TBC\oUF_TBC.xml
 # lib\oUF_Plugins\oUF_castbar_classic.lua
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
@@ -254,7 +254,6 @@ modules\unitframes\elements\auras.lua
 modules\unitframes\elements\buffs.lua
 modules\unitframes\elements\debuffs.lua
 modules\unitframes\elements\castbar.lua
-modules\unitframes\elements\combat.lua
 modules\unitframes\elements\power.lua
 modules\unitframes\elements\resting.lua
 modules\unitframes\elements\solocastbar.lua

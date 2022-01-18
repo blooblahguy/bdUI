@@ -88,7 +88,6 @@ local LCD = LibStub('LibClassicDurations', true)
 local myClass = select(2, UnitClass('player'))
 
 -- GLOBALS: GameTooltip
--- end block
 
 local function UpdateTooltip(self)
 	if GameTooltip:IsForbidden() then return end
@@ -178,8 +177,6 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 	else
 		name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = UnitAura(unit, index, filter)
 	end
-
-	-- ElvUI block
 	if element.forceShow or element.forceCreate then
 		spellID = 9853
 		name, _, texture = GetSpellInfo(spellID)
@@ -187,7 +184,6 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 			count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, isBossDebuff = 5, "Magic", 0, 60, "player", nil, nil, nil
 		end
 	end
-	-- end Block
 
 	if(name) then
 		local position = visible + offset + 1
@@ -234,7 +230,6 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 				count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID,
 				canApply, isBossDebuff, casterIsPlayer, nameplateShowAll,timeMod, effect1, effect2, effect3)
 		end
-		-- end block
 
 		if(show) then
 			-- We might want to consider delaying the creation of an actual cooldown
@@ -307,7 +302,6 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 			end
 
 			return CREATED
-		-- end block
 		else
 			return HIDDEN
 		end
@@ -342,7 +336,6 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 	local hidden = 0
 	-- ElvUI changed block
 	local created = 0
-	-- end block
 	while(visible < limit) do
 		local result = updateIcon(element, unit, index, offset, filter, isDebuff, visible)
 		if(not result) then
@@ -355,7 +348,6 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 		elseif result == CREATED then
 			visible = visible + 1
 			created = created + 1
-		-- end block
 		end
 
 		index = index + 1
@@ -363,7 +355,6 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 
 	-- ElvUI changed block
 	visible = visible - created
-	-- end block
 
 	if(not dontHide) then
 		for i = visible + offset + 1, #element do
@@ -578,7 +569,6 @@ local function SetAuraUpdateMethod(self, state, force)
 		end
 	end
 end
--- end block
 
 local function Enable(self)
 	-- ElvUI changed block
@@ -586,14 +576,12 @@ local function Enable(self)
 		self.updateAurasFrame = CreateFrame('Frame', nil, self)
 		self.updateAurasFrame.__owner = self
 	end
-	-- end block
 
 	if(self.Buffs or self.Debuffs or self.Auras) then
 		-- ElvUI changed block
 		self.SetAuraUpdateSpeed = SetAuraUpdateSpeed
 		self.SetAuraUpdateMethod = SetAuraUpdateMethod
 		SetAuraUpdateMethod(self, self.effectiveAura, true)
-		-- end block
 
 		local buffs = self.Buffs
 		if(buffs) then
@@ -670,7 +658,6 @@ local function Disable(self)
 	if self.updateAurasFrame then
 		self.updateAurasFrame:SetScript('OnUpdate', nil)
 	end
-	-- end block
 
 	if(self.Buffs or self.Debuffs or self.Auras) then
 		self:UnregisterEvent('UNIT_AURA', UpdateAuras)

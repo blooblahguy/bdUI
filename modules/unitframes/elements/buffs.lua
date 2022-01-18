@@ -6,7 +6,7 @@ mod.additional_elements.buffs = function(self, unit)
 	local config = mod.config
 
 	-- Auras
-	self.Buffs = CreateFrame("Frame", nil, self)
+	self.Buffs = CreateFrame("Frame", "bdUF_Buffs", self)
 	self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
 	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
 	self.Buffs:SetHeight(60)

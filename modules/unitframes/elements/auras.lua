@@ -6,7 +6,7 @@ mod.additional_elements.auras = function(self, unit)
 	local config = mod.config
 
 	-- Auras
-	self.Auras = CreateFrame("Frame", nil, self)
+	self.Auras = CreateFrame("Frame", "bdUF_Auras", self)
 	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
 	self.Auras:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
 	self.Auras:SetSize(config.playertargetwidth, 60)

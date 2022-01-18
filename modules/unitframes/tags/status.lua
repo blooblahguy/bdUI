@@ -9,7 +9,7 @@ mod.tags.status = function(self, unit)
 	self.Status:SetFontObject(bdUI:get_font(10))
 	self.Status:SetAlpha(0.7)
 	self.Status:SetPoint("CENTER", self.TextHolder)
-	oUF.Tags.Events["bdUI:status"] = "PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED PLAYER_UPDATE_RESTING UNIT_HEALTH UNIT_CONNECTION"
+	oUF.Tags.Events["bdUI:status"] = "PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED PLAYER_UPDATE_RESTING UNIT_HEALTH UNIT_CONNECTION UNIT_COMBAT UNIT_FLAGS"
 	oUF.Tags.Methods["bdUI:status"] = function(unit)
 		local config = mod:get_save()
 		local size = math.restrict(config.playertargetheight * 0.75, 8, config.playertargetheight)
@@ -34,9 +34,9 @@ mod.tags.status = function(self, unit)
 			local xoffset = 0
 			local yoffset = 0
 
-			local texture = CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
+			self.combat = self.combat or CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
 
-			return texture
+			return self.combat
 			-- return "z"
 		elseif (unit == "player" and IsResting()) then
 			local fileWidth = 100
@@ -50,9 +50,9 @@ mod.tags.status = function(self, unit)
 			local xoffset = 0
 			local yoffset = 0
 
-			local texture = CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
+			self.resting = self.resting or CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
 
-			return texture
+			return self.resting
 		end
 
 		return ""
