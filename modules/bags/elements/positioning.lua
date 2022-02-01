@@ -53,7 +53,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 		-- end
 
 		local new_cat = true
-		if (row.num_items ~= 0) then
+		if (row.num_items > 0) then
 			row.num_items = row.num_items + 1
 		end
 		
@@ -93,8 +93,8 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 
 			-- start positioning
 			if (not last_item) then
-				local top_spacing = config.showlabels and mod.spacing * 3.5 or mod.spacing * 2.5
-				item:SetPoint("TOPLEFT", mod.current_parent, mod.spacing, -top_spacing)
+				local top_spacing = config.showlabels and mod.spacing * 1.5 or mod.spacing * 0.5
+				item:SetPoint("TOPLEFT", mod.current_parent.header, "BOTTOMLEFT", mod.spacing, -top_spacing)
 				if (not cat.positioned) then
 					cat:SetPoint("TOPLEFT", item)
 					cat.positioned = true
