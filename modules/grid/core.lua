@@ -159,6 +159,7 @@ local function layout(self, unit)
 	--===============================================
 	-- Tags
 	--===============================================
+	self.name_holder = CreateFrame("frame", nil, self.Health)
 	mod.add_tags(self, unit)
 
 	--===============================================

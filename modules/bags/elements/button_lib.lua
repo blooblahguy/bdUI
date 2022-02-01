@@ -143,6 +143,13 @@ mod.item_pool_create = function(self)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
 
+	button.text = button:CreateFontString(nil, "OVERLAY")
+	button.text:SetFontObject(bdUI:get_font(13))
+	button.text:SetPoint("BOTTOMLEFT", button, "TOPLEFT", -2, 4)
+	button.text:SetAlpha(1)
+	button.text:SetTextColor(1, 1, 1)
+	button.text:Hide()
+
 	-- mouseover update new
 	button:HookScript("OnEnter", function(self)
 		self:update_new()
@@ -172,4 +179,5 @@ end
 mod.item_pool_reset = function(self, frame)
 	frame:ClearAllPoints()
 	frame:Hide()
+	frame.text:Hide()
 end

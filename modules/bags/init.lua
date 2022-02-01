@@ -14,6 +14,14 @@ local config = {
 		label = "Show free bag space as one icon",
 		value = true,
 	},
+
+	{
+		key = "showlabels",
+		type = "toggle",
+		label = "Show category labels",
+		value = true,
+	},
+
 	{
 		key = "dbgroup",
 		type = "group",

@@ -6,7 +6,11 @@ local mod = bdUI:get_module("Bags")
 -- CATEGORY POOL FUNCTIONS
 --===============================================
 mod.category_pool_create = function(self)
-	local frame = CreateFrame("frame", nil, mod.current_parent)
+	local frame = CreateFrame("frame", nil, mod.current_parent, BackdropTemplateMixin and "BackdropTemplate")
+
+	-- frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
+	-- frame:SetBackdropColor(1, 1, 0, 0.4)
+	-- frame:SetBackdropBorderColor(0, 0, 0, 0.8)
 
 	-- Mixin(frame, category_methods)
 

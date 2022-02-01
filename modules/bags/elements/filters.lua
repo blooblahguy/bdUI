@@ -13,13 +13,18 @@ custom_categories["Trinkets:5.4"] = {
 	{"4.", "INVTYPE_TRINKET", false},
 }
 
-custom_categories["Potions:5.6"] = {
+custom_categories["Potions:1.6"] = {
 	{"0.1", false, false},
+	{"5.6", false, false},
 }
 
-custom_categories["Food:5.7"] = {
-	{"0.5", false, false},
-}
+-- custom_categories["Food:5.7"] = {
+-- 	{"0.5", false, false},
+-- }
+
+-- custom_categories["Consumables:0.4"] = {
+-- 	{"0.5", false, false},
+-- }
 
 -- separate out professions a little bit
 custom_categories["Mining:7.1"] = {

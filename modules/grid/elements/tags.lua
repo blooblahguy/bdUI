@@ -47,22 +47,21 @@ mod.add_tags = function(self, unit)
 	end
 
 	-- Status (offline/dead)
-	self.Status = self.Health:CreateFontString(nil)
+	self.Status = self.name_holder:CreateFontString(nil)
 	self.Status:SetFontObject(bdUI:get_font(12))
 	self.Status:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", 0, 0)
 	
 	-- shortname
-	self.Short = self.Health:CreateFontString(nil, "OVERLAY")
+	self.Short = self.name_holder:CreateFontString(nil, "OVERLAY")
 	self.Short:SetFontObject(bdUI:get_font(12))
 	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
 	self.Short:SetJustifyH("RIGHT")
 
 	-- group number
-	self.Group = self.Health:CreateFontString(nil)
+	self.Group = self.name_holder:CreateFontString(nil)
 	self.Group:SetFontObject(bdUI:get_font(12))
 	self.Group:SetPoint('TOPRIGHT', self, "TOPRIGHT", -2, -2)
 	self.Group:Hide()
-	
 	
 	-- register tags
 	self:Tag(self.Short, '[bdGrid.short]')

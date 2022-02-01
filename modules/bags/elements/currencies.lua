@@ -71,7 +71,9 @@ function mod:currencies_update()
 
 	currencies:SetHeight(newheight)
 
-	mod:update_bags()
+	if (mod.bags:IsShown()) then
+		mod:update_bags()
+	end
 end
 
 
