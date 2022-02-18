@@ -9,6 +9,8 @@ mod.spacing = 14
 function mod:initialize()
 	mod.config = mod:get_save()
 
+	BDUI_SAVE.persistent.goldtrack = BDUI_SAVE.persistent.goldtrack or {}
+
 	if (not mod.config.enabled) then return end
 	mod.initialized = true
 	mod.border = bdUI:get_border(UIParent)

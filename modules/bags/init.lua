@@ -6,7 +6,7 @@ local config = {
 		key = "enabled",
 		type = "toggle",
 		label = "Enable Bags",
-		value = false,
+		value = true,
 	},
 	{
 		key = "showfreespaceasone",
@@ -58,8 +58,8 @@ local config = {
 			{
 				key = "buttonsperrow",
 				type = "range",
-				value = 16,
-				min = 8,
+				value = 12,
+				min = 6,
 				max = 30,
 				step = 1,
 				label = "Bag Buttons Per Row",
