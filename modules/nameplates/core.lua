@@ -43,6 +43,14 @@ local ooc = CreateFrame("frame", nil)
 ooc:RegisterEvent("PLAYER_REGEN_ENABLED")
 ooc:SetScript("OnEvent", mod.nameplate_size)
 
+function bdUI:get_nameplate(unit)
+	for k, self in pairs(nameplates) do
+		if (UnitIsUnit(self.unit, unit)) then
+			return self
+		end
+	end
+end
+
 local function store_tanks()
 	-- store a list of the tanks in the group
 	tanks = {}
@@ -76,10 +84,6 @@ function mod:config_callback()
 	config = mod.config
 	if (not config.enabled) then return false end
 
-	if (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE) then
-		config.nameplatedistance = 41
-	end
-	
 	-- store lowercase tables
 	mod.lists = {}
 	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
@@ -285,6 +289,7 @@ end
 local function nameplate_callback(self, event, unit)
 	if (not self) then return end
 	nameplates[self] = self
+	-- self.unit = unit
 
 	-- store these values for reuse
 	store_unit_information(self, unit)
@@ -556,22 +561,14 @@ local function nameplate_create(self, unit)
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		-- first lets gtfo if its blacklisted
-		if (bdUI:is_blacklisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
-			return false
-		end
-
 		local allow = false
-		-- if this is marked by blizzard to show on nameplates, that's good
-		if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
-			return true
-		end
-		-- if this is whitelisted in any other way, that's good too
 		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 			return true
 		end
+		if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
+			return true
+		end
 
-		-- lastly we'll see if its an enrage or purge or anything
 		return mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowPersonal, nameplateShowAll)
 	end
 	
@@ -632,7 +629,7 @@ function mod:initialize()
 
 	if (not config.enabled) then return end
 
-	bdUI.nameplatesEnabled = true
+	bdUI.using_nameplates = true
 
 	hooksecurefunc(C_NamePlate, "SetNamePlateEnemySize", mod.force_size)
 	hooksecurefunc(C_NamePlate, "SetNamePlateSelfSize", mod.force_size)

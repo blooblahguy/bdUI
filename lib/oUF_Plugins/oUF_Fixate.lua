@@ -25,7 +25,7 @@ local function Update(self, event, unit)
 	end
 
 	local target = unit.."target"
-	local isTargeting = UnitExists(target) and UnitIsPlayer(target)
+	local isTargeting = UnitExists(target) --and UnitIsPlayer(target)
 	local isTargetingPlayer = UnitIsUnit(target, "player")
 
 	if (isTargeting and isTargetingPlayer) then
@@ -77,9 +77,11 @@ local function Enable(self, unit)
 			local color = RGBPercToHex(cc.r, cc.g, cc.b)
 			if (unit and UnitIsUnit(unit, "player")) then
 				self:SetAlpha(1)
-				self:SetText_Old("|T"..self.icon..":16:16:0:0:60:60:4:56:4:56|t ".."|cff"..color..unit.."|r")
+				-- self:SetText_Old("|T"..self.icon..":16:16:0:0:60:60:4:56:4:56|t ".."|cff"..color..unit.."|r")
+				self:SetText_Old("|cffFF0000-->|r |cff"..color..unit.."|r |cffFF0000<--|r")
 			else
 				self:SetAlpha(0.8)
+				-- self:SetText_Old("|cff"..color..unit.."|r")
 				self:SetText_Old("|cff"..color..unit.."|r")
 			end
 		end

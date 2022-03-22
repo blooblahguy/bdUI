@@ -70,7 +70,7 @@ function mod:create_reagents()
 	mod.bags:RegisterEvent('BANKFRAME_CLOSED')
 
 	local run_bag_holder = 0
-	mod.bags:SetScript("OnEvent", function(self, event, arg1)
+	mod.bags:HookScript("OnEvent", function(self, event, arg1)
 		if (event == "BANKFRAME_CLOSED") then
 			mod.reagent:Hide()
 			return

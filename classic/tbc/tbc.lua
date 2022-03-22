@@ -79,6 +79,7 @@ MiniMapTrackingButtonShine = MiniMapTrackingButtonShine or noob
 QueueStatusMinimapButton = QueueStatusMinimapButton or noob
 QueueStatusMinimapButtonIcon = QueueStatusMinimapButtonIcon or noob
 
+
 -- threat functions
 local threatcolors = {
 	[0] = {0.69, 0.69, 0.69},
