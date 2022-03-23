@@ -35,10 +35,16 @@ the unit.
 local _, ns = ...
 local oUF = ns.oUF
 
+-- ElvUI block
+local UnitIsUnit = UnitIsUnit
+local UnitGUID = UnitGUID
+local UnitIsConnected = UnitIsConnected
+local UnitIsVisible = UnitIsVisible
+local SetPortraitTexture = SetPortraitTexture
+-- end block
+
 local function Update(self, event, unit)
 	if(not unit or not UnitIsUnit(self.unit, unit)) then return end
-
-	local element = self.Portrait
 
 	--[[ Callback: Portrait:PreUpdate(unit)
 	Called before the element has been updated.
@@ -46,13 +52,20 @@ local function Update(self, event, unit)
 	* self - the Portrait element
 	* unit - the unit for which the update has been triggered (string)
 	--]]
+
+	local element = self.Portrait
 	if(element.PreUpdate) then element:PreUpdate(unit) end
 
 	local guid = UnitGUID(unit)
 	local isAvailable = UnitIsConnected(unit) and UnitIsVisible(unit)
-	if(event ~= 'OnUpdate' or element.guid ~= guid or element.state ~= isAvailable) then
-		if(element:IsObjectType('PlayerModel')) then
-			if(not isAvailable) then
+	element.stateChanged = event ~= 'OnUpdate' or element.guid ~= guid or element.state ~= isAvailable
+	if element.stateChanged then -- ElvUI changed
+		element.playerModel = element:IsObjectType('PlayerModel')
+		element.state = isAvailable
+		element.guid = guid
+
+		if element.playerModel then
+			if not isAvailable then
 				element:SetCamDistanceScale(0.25)
 				element:SetPortraitZoom(0)
 				element:SetPosition(0, 0, 0.25)
@@ -65,12 +78,9 @@ local function Update(self, event, unit)
 				element:ClearModel()
 				element:SetUnit(unit)
 			end
-		else
+		elseif not element.customTexture then -- ElvUI changed
 			SetPortraitTexture(element, unit)
 		end
-
-		element.guid = guid
-		element.state = isAvailable
 	end
 
 	--[[ Callback: Portrait:PostUpdate(unit)
@@ -80,7 +90,7 @@ local function Update(self, event, unit)
 	* unit - the unit for which the update has been triggered (string)
 	--]]
 	if(element.PostUpdate) then
-		return element:PostUpdate(unit)
+		return element:PostUpdate(unit, event)
 	end
 end
 

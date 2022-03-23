@@ -47,6 +47,13 @@ if(select(2, UnitClass('player')) ~= 'DEATHKNIGHT') then return end
 local _, ns = ...
 local oUF = ns.oUF
 
+local sort, next = sort, next
+local UnitHasVehicleUI = UnitHasVehicleUI
+local GetSpecialization = GetSpecialization
+local GetRuneCooldown = GetRuneCooldown
+local UnitIsUnit = UnitIsUnit
+local GetTime = GetTime
+
 local runemap = {1, 2, 3, 4, 5, 6}
 local hasSortOrder = false
 
@@ -131,35 +138,43 @@ end
 local function Update(self, event)
 	local element = self.Runes
 
-	if(element.sortOrder == 'asc') then
-		table.sort(runemap, ascSort)
+	if element.sortOrder == 'asc' then
+		sort(runemap, ascSort)
 		hasSortOrder = true
-	elseif(element.sortOrder == 'desc') then
-		table.sort(runemap, descSort)
+	elseif element.sortOrder == 'desc' then
+		sort(runemap, descSort)
 		hasSortOrder = true
-	elseif(hasSortOrder) then
-		table.sort(runemap)
+	elseif hasSortOrder then
+		sort(runemap)
 		hasSortOrder = false
 	end
 
-	local rune, start, duration, runeReady
+	local allReady = true
+	local currentTime = GetTime()
+	local hasVehicle = UnitHasVehicleUI('player')
 	for index, runeID in next, runemap do
-		rune = element[index]
-		if(not rune) then break end
+		local rune = element[index]
+		if not rune then break end
 
-		if(UnitHasVehicleUI('player')) then
+		if hasVehicle then
 			rune:Hide()
+
+			allReady = false
 		else
-			start, duration, runeReady = GetRuneCooldown(runeID)
-			if(runeReady) then
+			local start, duration, runeReady = GetRuneCooldown(runeID)
+			if runeReady then
 				rune:SetMinMaxValues(0, 1)
 				rune:SetValue(1)
 				rune:SetScript('OnUpdate', nil)
-			elseif(start) then
-				rune.duration = GetTime() - start
+			elseif start then
+				rune.duration = currentTime - start
 				rune:SetMinMaxValues(0, duration)
 				rune:SetValue(0)
 				rune:SetScript('OnUpdate', onUpdate)
+			end
+
+			if not runeReady then
+				allReady = false
 			end
 
 			rune:Show()
@@ -173,7 +188,7 @@ local function Update(self, event)
 	* runemap - the ordered list of runes' indices (table)
 	--]]
 	if(element.PostUpdate) then
-		return element:PostUpdate(runemap)
+		return element:PostUpdate(runemap, hasVehicle, allReady)
 	end
 end
 
@@ -211,6 +226,12 @@ local function Enable(self, unit)
 			end
 		end
 
+		-- ElvUI block
+		if element.IsObjectType and element:IsObjectType("Frame") then
+			element:Show()
+		end
+		-- end block
+
 		self:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED', ColorPath)
 		self:RegisterEvent('RUNE_POWER_UPDATE', Path, true)
 
@@ -224,6 +245,12 @@ local function Disable(self)
 		for i = 1, #element do
 			element[i]:Hide()
 		end
+
+		-- ElvUI block
+		if element.IsObjectType and element:IsObjectType("Frame") then
+			element:Hide()
+		end
+		-- end block
 
 		self:UnregisterEvent('PLAYER_SPECIALIZATION_CHANGED', ColorPath)
 		self:UnregisterEvent('RUNE_POWER_UPDATE', Path)

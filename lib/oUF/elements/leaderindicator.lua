@@ -38,7 +38,15 @@ local function Update(self, event)
 		element:PreUpdate()
 	end
 
-	local isLeader = (UnitInParty(unit) or UnitInRaid(unit)) and UnitIsGroupLeader(unit)
+	-- ElvUI changed block
+	local isLeader
+	if IsInInstance() then
+		isLeader = UnitIsGroupLeader(unit)
+	else
+		isLeader = UnitLeadsAnyGroup(unit)
+	end
+	-- end block
+
 	if(isLeader) then
 		element:Show()
 	else

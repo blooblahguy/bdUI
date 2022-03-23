@@ -95,7 +95,8 @@ local function UpdateColor(self, event, unit)
 		t =  self.colors.threat[UnitThreatSituation('player', unit)]
 	elseif(element.colorClass and UnitIsPlayer(unit))
 		or (element.colorClassNPC and not UnitIsPlayer(unit))
-		or (element.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
+		or ((element.colorClassPet or element.colorPetByUnitClass) and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
+		if element.colorPetByUnitClass then unit = unit == 'pet' and 'player' or gsub(unit, 'pet', '') end
 		local _, class = UnitClass(unit)
 		t = self.colors.class[class]
 	elseif(element.colorSelection and unitSelectionType(unit, element.considerSelectionInCombatHostile)) then
@@ -186,7 +187,9 @@ local function Update(self, event, unit)
 	end
 end
 
-local function Path(self, ...)
+local function Path(self, event, ...)
+	if (self.isForced and event ~= 'ElvUI_UpdateAllElements') then return end -- ElvUI changed
+
 	--[[ Override: Health.Override(self, event, unit)
 	Used to completely override the internal update function.
 
@@ -194,9 +197,9 @@ local function Path(self, ...)
 	* event - the event triggering the update (string)
 	* unit  - the unit accompanying the event (string)
 	--]]
-	(self.Health.Override or Update) (self, ...);
+	(self.Health.Override or Update) (self, event, ...);
 
-	ColorPath(self, ...)
+	ColorPath(self, event, ...)
 end
 
 local function ForceUpdate(element)
@@ -215,8 +218,12 @@ local function SetColorDisconnected(element, state, isForced)
 		element.colorDisconnected = state
 		if(state) then
 			element.__owner:RegisterEvent('UNIT_CONNECTION', ColorPath)
+			element.__owner:RegisterEvent('PARTY_MEMBER_ENABLE', ColorPath)
+			element.__owner:RegisterEvent('PARTY_MEMBER_DISABLE', ColorPath)
 		else
 			element.__owner:UnregisterEvent('UNIT_CONNECTION', ColorPath)
+			element.__owner:UnregisterEvent('PARTY_MEMBER_ENABLE', ColorPath)
+			element.__owner:UnregisterEvent('PARTY_MEMBER_DISABLE', ColorPath)
 		end
 	end
 end
@@ -275,7 +282,7 @@ local function SetColorThreat(element, state, isForced)
 	end
 end
 
-local function Enable(self, unit)
+local function Enable(self)
 	local element = self.Health
 	if(element) then
 		element.__owner = self
@@ -285,24 +292,29 @@ local function Enable(self, unit)
 		element.SetColorTapping = SetColorTapping
 		element.SetColorThreat = SetColorThreat
 
+		oUF:RegisterEvent(self, 'UNIT_HEALTH', Path)
+		oUF:RegisterEvent(self, 'UNIT_MAXHEALTH', Path)
+		if not oUF.isRetail then
+			oUF:RegisterEvent(self, 'UNIT_HEALTH_FREQUENT', Path)
+		end
+
 		if(element.colorDisconnected) then
-			self:RegisterEvent('UNIT_CONNECTION', ColorPath)
+			oUF:RegisterEvent(self, 'UNIT_CONNECTION', ColorPath)
+			oUF:RegisterEvent(self, 'PARTY_MEMBER_ENABLE', ColorPath)
+			oUF:RegisterEvent(self, 'PARTY_MEMBER_DISABLE', ColorPath)
 		end
 
 		if(element.colorSelection) then
-			self:RegisterEvent('UNIT_FLAGS', ColorPath)
+			oUF:RegisterEvent(self, 'UNIT_FLAGS', ColorPath)
 		end
 
 		if(element.colorTapping) then
-			self:RegisterEvent('UNIT_FACTION', ColorPath)
+			oUF:RegisterEvent(self, 'UNIT_FACTION', ColorPath)
 		end
 
 		if(element.colorThreat) then
-			self:RegisterEvent('UNIT_THREAT_LIST_UPDATE', ColorPath)
+			oUF:RegisterEvent(self, 'UNIT_THREAT_LIST_UPDATE', ColorPath)
 		end
-
-		self:RegisterEvent('UNIT_HEALTH', Path)
-		self:RegisterEvent('UNIT_MAXHEALTH', Path)
 
 		if(element:IsObjectType('StatusBar') and not (element:GetStatusBarTexture() or element:GetStatusBarAtlas())) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
@@ -319,12 +331,18 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
-		self:UnregisterEvent('UNIT_HEALTH', Path)
-		self:UnregisterEvent('UNIT_MAXHEALTH', Path)
-		self:UnregisterEvent('UNIT_CONNECTION', ColorPath)
-		self:UnregisterEvent('UNIT_FACTION', ColorPath)
-		self:UnregisterEvent('UNIT_FLAGS', ColorPath)
-		self:UnregisterEvent('UNIT_THREAT_LIST_UPDATE', ColorPath)
+		if not oUF.isRetail then
+			oUF:UnregisterEvent(self, 'UNIT_HEALTH_FREQUENT', Path)
+		end
+
+		oUF:UnregisterEvent(self, 'UNIT_HEALTH', Path)
+		oUF:UnregisterEvent(self, 'UNIT_MAXHEALTH', Path)
+		oUF:UnregisterEvent(self, 'UNIT_CONNECTION', ColorPath)
+		oUF:UnregisterEvent(self, 'UNIT_FACTION', ColorPath)
+		oUF:UnregisterEvent(self, 'UNIT_FLAGS', ColorPath)
+		oUF:UnregisterEvent(self, 'PARTY_MEMBER_ENABLE', ColorPath)
+		oUF:UnregisterEvent(self, 'PARTY_MEMBER_DISABLE', ColorPath)
+		oUF:UnregisterEvent(self, 'UNIT_THREAT_LIST_UPDATE', ColorPath)
 	end
 end
 

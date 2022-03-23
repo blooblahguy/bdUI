@@ -3,6 +3,7 @@
 	<Script file="private.lua"/>
 	<Script file="ouf.lua"/>
 	<Script file="events.lua"/>
+	<Script file="combatevents.lua"/>
 	<Script file="factory.lua"/>
 	<Script file="blizzard.lua"/>
 	<Script file="units.lua"/>
@@ -19,6 +20,8 @@
 	<Script file="elements\health.lua"/>
 	<Script file="elements\healthprediction.lua"/>
 	<Script file="elements\leaderindicator.lua"/>
+	<Script file="elements\masterlooterindicator.lua"/>
+	<Script file="elements\partyindicator.lua"/>
 	<Script file="elements\phaseindicator.lua"/>
 	<Script file="elements\portrait.lua"/>
 	<Script file="elements\power.lua"/>

@@ -1,4 +1,4 @@
-local parent, ns = ...
+local _, ns = ...
 local oUF = ns.oUF
 local Private = oUF.Private
 
@@ -9,6 +9,11 @@ local colors = {
 		1, 0, 0,
 		1, 1, 0,
 		0, 1, 0
+	},
+	happiness = {
+		[1] = {.69, .31, .31},
+		[2] = {.65, .63, .35},
+		[3] = {.33, .59, .33},
 	},
 	health = {49 / 255, 207 / 255, 37 / 255},
 	disconnected = {0.6, 0.6, 0.6},
@@ -38,15 +43,20 @@ local colors = {
 	debuff = {},
 	reaction = {},
 	power = {},
-	threat = {},
+	threat = {
+		[0] = { .69, .69, .69},
+		[1] = { 1, 1, .47 },
+		[2] = { 1, .6, 0 },
+		[3] = { 1, 0, 0 },
+	},
 }
 
 -- We do this because people edit the vars directly, and changing the default
 -- globals makes SPICE FLOW!
 local function customClassColors()
-	if(CUSTOM_CLASS_COLORS) then
+	if(_G.CUSTOM_CLASS_COLORS) then
 		local function updateColors()
-			for classToken, color in next, CUSTOM_CLASS_COLORS do
+			for classToken, color in next, _G.CUSTOM_CLASS_COLORS do
 				colors.class[classToken] = {color.r, color.g, color.b}
 			end
 
@@ -56,14 +66,14 @@ local function customClassColors()
 		end
 
 		updateColors()
-		CUSTOM_CLASS_COLORS:RegisterCallback(updateColors)
+		_G.CUSTOM_CLASS_COLORS:RegisterCallback(updateColors)
 
 		return true
 	end
 end
 
 if(not customClassColors()) then
-	for classToken, color in next, RAID_CLASS_COLORS do
+	for classToken, color in next, _G.RAID_CLASS_COLORS do
 		colors.class[classToken] = {color.r, color.g, color.b}
 	end
 
@@ -77,11 +87,11 @@ if(not customClassColors()) then
 	end)
 end
 
-for debuffType, color in next, DebuffTypeColor do
+for debuffType, color in next, _G.DebuffTypeColor do
 	colors.debuff[debuffType] = {color.r, color.g, color.b}
 end
 
-for eclass, color in next, FACTION_BAR_COLORS do
+for eclass, color in next, _G.FACTION_BAR_COLORS do
 	colors.reaction[eclass] = {color.r, color.g, color.b}
 end
 
@@ -90,8 +100,8 @@ for power, color in next, PowerBarColor do
 		if(type(select(2, next(color))) == 'table') then
 			colors.power[power] = {}
 
-			for index, color in next, color do
-				colors.power[power][index] = {color.r, color.g, color.b}
+			for index, color_ in next, color do
+				colors.power[power][index] = {color_.r, color_.g, color_.b}
 			end
 		else
 			colors.power[power] = {color.r, color.g, color.b, atlas = color.atlas}
@@ -121,8 +131,10 @@ colors.power[18] = colors.power.PAIN
 colors.power.ALTERNATE = {0.7, 0.7, 0.6}
 colors.power[10] = colors.power.ALTERNATE
 
-for i = 0, 3 do
-	colors.threat[i] = {GetThreatStatusColor(i)}
+if GetThreatStatusColor then
+	for i = 0, 3 do
+		colors.threat[i] = {GetThreatStatusColor(i)}
+	end
 end
 
 local function colorsAndPercent(a, b, ...)

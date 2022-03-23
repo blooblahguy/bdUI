@@ -34,20 +34,29 @@ if(select(2, UnitClass('player')) ~= 'MONK') then return end
 local _, ns = ...
 local oUF = ns.oUF
 
+-- ElvUI block
+local GetSpecialization = GetSpecialization
+local UnitHasVehiclePlayerFrameUI = UnitHasVehiclePlayerFrameUI
+local UnitHealthMax = UnitHealthMax
+local UnitIsUnit = UnitIsUnit
+local UnitStagger = UnitStagger
+-- GLOBALS: MonkStaggerBar
+-- end block
+
 -- sourced from FrameXML/Constants.lua
-local SPEC_MONK_BREWMASTER = SPEC_MONK_BREWMASTER or 1
+local SPEC_MONK_BREWMASTER = _G.SPEC_MONK_BREWMASTER or 1
 
 -- sourced from FrameXML/MonkStaggerBar.lua
-local BREWMASTER_POWER_BAR_NAME = BREWMASTER_POWER_BAR_NAME or 'STAGGER'
+local BREWMASTER_POWER_BAR_NAME = _G.BREWMASTER_POWER_BAR_NAME or 'STAGGER'
 
 -- percentages at which bar should change color
-local STAGGER_YELLOW_TRANSITION =  STAGGER_YELLOW_TRANSITION or 0.3
-local STAGGER_RED_TRANSITION = STAGGER_RED_TRANSITION or 0.6
+local STAGGER_YELLOW_TRANSITION =  _G.STAGGER_YELLOW_TRANSITION or 0.3
+local STAGGER_RED_TRANSITION = _G.STAGGER_RED_TRANSITION or 0.6
 
 -- table indices of bar colors
-local STAGGER_GREEN_INDEX = STAGGER_GREEN_INDEX or 1
-local STAGGER_YELLOW_INDEX = STAGGER_YELLOW_INDEX or 2
-local STAGGER_RED_INDEX = STAGGER_RED_INDEX or 3
+local STAGGER_GREEN_INDEX = _G.STAGGER_GREEN_INDEX or 1
+local STAGGER_YELLOW_INDEX = _G.STAGGER_YELLOW_INDEX or 2
+local STAGGER_RED_INDEX = _G.STAGGER_RED_INDEX or 3
 
 local function UpdateColor(self, event, unit)
 	if(unit and unit ~= self.unit) then return end
@@ -148,21 +157,32 @@ local function Path(self, ...)
 	(self.Stagger.UpdateColor or UpdateColor) (self, ...)
 end
 
+-- ElvUI changed
 local function Visibility(self, event, unit)
-	if(SPEC_MONK_BREWMASTER ~= GetSpecialization() or UnitHasVehiclePlayerFrameUI('player')) then
-		if(self.Stagger:IsShown()) then
-			self.Stagger:Hide()
-			self:UnregisterEvent('UNIT_AURA', Path)
-		end
-	else
-		if(not self.Stagger:IsShown()) then
-			self.Stagger:Show()
-			self:RegisterEvent('UNIT_AURA', Path)
-		end
+	local element = self.Stagger
+	local isShown = element:IsShown()
+	local useClassbar = (SPEC_MONK_BREWMASTER ~= GetSpecialization()) or UnitHasVehiclePlayerFrameUI('player')
+	local stateChanged = false
 
+	if useClassbar and isShown then
+		element:Hide()
+		oUF:UnregisterEvent(self, 'UNIT_AURA', Path)
+		stateChanged = true
+	elseif not useClassbar and not isShown then
+		element:Show()
+		oUF:RegisterEvent(self, 'UNIT_AURA', Path)
+		stateChanged = true
+	end
+
+	if element.PostVisibility then
+		element.PostVisibility(self, event, unit, not useClassbar, stateChanged)
+	end
+
+	if not useClassbar then
 		Path(self, event, unit)
 	end
 end
+-- end block
 
 local function VisibilityPath(self, ...)
 	--[[ Override: Stagger.OverrideVisibility(self, event, unit)
@@ -185,7 +205,7 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
+		oUF:RegisterEvent(self, 'UNIT_DISPLAYPOWER', VisibilityPath)
 		self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
 
 		if(element:IsObjectType('StatusBar') and not (element:GetStatusBarTexture() or element:GetStatusBarAtlas())) then
@@ -210,8 +230,8 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
-		self:UnregisterEvent('UNIT_AURA', Path)
-		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
+		oUF:UnregisterEvent(self, 'UNIT_AURA', Path)
+		oUF:UnregisterEvent(self, 'UNIT_DISPLAYPOWER', VisibilityPath)
 		self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
 
 		MonkStaggerBar:RegisterEvent('PLAYER_ENTERING_WORLD')
