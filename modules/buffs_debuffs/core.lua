@@ -325,13 +325,13 @@ function mod:config_callback()
 	-- debuffs
 	mod:update_debuffs()
 
-	bdBuffs:Show()
-	bdDebuffs:Show()
-
 	-- drivers
 	-- RegisterStateDriver(header, 'visibility', '[petbattle] hide; show')
 	RegisterAttributeDriver(bdBuffs, 'unit', '[vehicleui] vehicle; player')
 	RegisterAttributeDriver(bdDebuffs, 'unit', '[vehicleui] vehicle; player')
+
+	bdBuffs:Show()
+	bdDebuffs:Show()
 end
 
 --===============================================
