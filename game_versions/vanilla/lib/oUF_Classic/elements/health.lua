@@ -226,7 +226,7 @@ local function SetColorTapping(element, state)
 	end
 end
 
--- ElvUI changed block
+
 local onUpdateElapsed, onUpdateWait = 0, 0.25
 local function onUpdateHealth(self, elapsed)
 	if onUpdateElapsed > onUpdateWait then
@@ -266,7 +266,7 @@ local function Enable(self, unit)
 		element.SetColorDisconnected = SetColorDisconnected
 		element.SetColorTapping = SetColorTapping
 
-		-- ElvUI changed block
+		
 		self.SetHealthUpdateSpeed = SetHealthUpdateSpeed
 		self.SetHealthUpdateMethod = SetHealthUpdateMethod
 		SetHealthUpdateMethod(self, self.effectiveHealth, true)

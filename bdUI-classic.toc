@@ -45,14 +45,14 @@ lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
 
 # Classic
-classic\vanilla\lib\LibClassicCasterino\LibClassicCasterino.lua
-classic\vanilla\lib\LibClassicDurations\LibClassicDurations.xml
-classic\vanilla\lib\LibClassicMobHealth\LibClassicMobHealth.lua
-classic\vanilla\lib\LibHealComm\LibHealComm-4.0.lua
-classic\vanilla\vanilla.lua
+game_versions\vanilla\lib\LibClassicCasterino\LibClassicCasterino.lua
+game_versions\vanilla\lib\LibClassicDurations\LibClassicDurations.xml
+game_versions\vanilla\lib\LibClassicMobHealth\LibClassicMobHealth.lua
+game_versions\vanilla\lib\LibHealComm\LibHealComm-4.0.lua
+game_versions\vanilla\vanilla.lua
 
 # oUF
-classic\vanilla\lib\oUF_Classic\oUF.xml
+lib\oUF\oUF_Classic.xml
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
 lib\oUF_Plugins\oUF_Fader.lua

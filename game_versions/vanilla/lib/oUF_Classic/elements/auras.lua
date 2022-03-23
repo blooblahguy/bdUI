@@ -73,7 +73,7 @@ local oUF = ns.oUF
 local VISIBLE = 1
 local HIDDEN = 0
 
--- ElvUI changed block
+
 local CREATED = 2
 local pcall = pcall
 local tinsert = tinsert
@@ -223,7 +223,7 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 		* show - indicates whether the aura button should be shown (boolean)
 		--]]
 
-		-- ElvUI changed block
+		
 		local show = not element.forceCreate
 		if not (element.forceShow or element.forceCreate) then
 			show = (element.CustomFilter or customFilter) (element, unit, button, name, texture,
@@ -291,7 +291,7 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 			end
 
 			return VISIBLE
-		-- ElvUI changed block
+		
 		elseif element.forceCreate then
 			local size = element.size or 16
 			button:SetSize(size, size)
@@ -334,7 +334,7 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 	local index = 1
 	local visible = 0
 	local hidden = 0
-	-- ElvUI changed block
+	
 	local created = 0
 	while(visible < limit) do
 		local result = updateIcon(element, unit, index, offset, filter, isDebuff, visible)
@@ -344,7 +344,7 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 			visible = visible + 1
 		elseif(result == HIDDEN) then
 			hidden = hidden + 1
-		-- ElvUI changed block
+		
 		elseif result == CREATED then
 			visible = visible + 1
 			created = created + 1
@@ -353,7 +353,7 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 		index = index + 1
 	end
 
-	-- ElvUI changed block
+	
 	visible = visible - created
 
 	if(not dontHide) then
@@ -540,7 +540,7 @@ local function ForceUpdate(element)
 	return Update(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
 
--- ElvUI changed block
+
 local onUpdateElapsed, onUpdateWait = 0, 0.25
 local function onUpdateAuras(self, elapsed)
 	if onUpdateElapsed > onUpdateWait then
@@ -571,14 +571,14 @@ local function SetAuraUpdateMethod(self, state, force)
 end
 
 local function Enable(self)
-	-- ElvUI changed block
+	
 	if not self.updateAurasFrame then
 		self.updateAurasFrame = CreateFrame('Frame', nil, self)
 		self.updateAurasFrame.__owner = self
 	end
 
 	if(self.Buffs or self.Debuffs or self.Auras) then
-		-- ElvUI changed block
+		
 		self.SetAuraUpdateSpeed = SetAuraUpdateSpeed
 		self.SetAuraUpdateMethod = SetAuraUpdateMethod
 		SetAuraUpdateMethod(self, self.effectiveAura, true)
@@ -654,7 +654,7 @@ local function Enable(self)
 end
 
 local function Disable(self)
-	-- ElvUI changed block
+	
 	if self.updateAurasFrame then
 		self.updateAurasFrame:SetScript('OnUpdate', nil)
 	end

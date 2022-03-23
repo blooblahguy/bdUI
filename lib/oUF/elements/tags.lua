@@ -72,7 +72,7 @@ local Private = oUF.Private
 local unitExists = Private.unitExists
 local xpcall = Private.xpcall
 
--- ElvUI block
+
 local _G = _G
 local CreateFrame = CreateFrame
 local hooksecurefunc = hooksecurefunc
@@ -95,7 +95,7 @@ local _ENV = {
 			end
 		end
 
-		-- ElvUI block
+		
 		if not r or type(r) == 'string' then --wtf?
 			return '|cffFFFFFF'
 		end
@@ -626,7 +626,7 @@ local function Update(self)
 	end
 end
 
--- ElvUI block
+
 local onUpdateDelay = {}
 local function escapeSequence(a) return format('|%s', a) end
 local function makeDeadTagFunc(bracket)

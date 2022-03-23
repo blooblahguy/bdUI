@@ -226,7 +226,7 @@ local function Enable(self, unit)
 			end
 		end
 
-		-- ElvUI block
+		
 		if element.IsObjectType and element:IsObjectType("Frame") then
 			element:Show()
 		end
@@ -246,7 +246,7 @@ local function Disable(self)
 			element[i]:Hide()
 		end
 
-		-- ElvUI block
+		
 		if element.IsObjectType and element:IsObjectType("Frame") then
 			element:Hide()
 		end

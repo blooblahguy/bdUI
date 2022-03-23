@@ -35,7 +35,7 @@ the unit.
 local _, ns = ...
 local oUF = ns.oUF
 
--- ElvUI block
+
 local UnitIsUnit = UnitIsUnit
 local UnitGUID = UnitGUID
 local UnitIsConnected = UnitIsConnected

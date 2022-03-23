@@ -273,7 +273,7 @@ local function SetFrequentUpdates(element, state)
 	end
 end
 
--- ElvUI changed block
+
 local onUpdateElapsed, onUpdateWait = 0, 0.25
 local function onUpdatePower(self, elapsed)
 	if onUpdateElapsed > onUpdateWait then
@@ -319,7 +319,7 @@ local function Enable(self)
 		element.SetColorTapping = SetColorTapping
 		element.SetFrequentUpdates = SetFrequentUpdates
 
-		-- ElvUI changed block
+		
 		self.SetPowerUpdateSpeed = SetPowerUpdateSpeed
 		self.SetPowerUpdateMethod = SetPowerUpdateMethod
 		SetPowerUpdateMethod(self, self.effectivePower, true)

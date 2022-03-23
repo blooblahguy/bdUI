@@ -93,7 +93,7 @@ local FALLBACK_ICON = 136243 -- Interface\ICONS\Trade_Engineering
 local FAILED = _G.FAILED or 'Failed'
 local INTERRUPTED = _G.INTERRUPTED or 'Interrupted'
 
--- ElvUI block
+
 local select = select
 local GetNetStats = GetNetStats
 local UnitCastingInfo = UnitCastingInfo
@@ -165,7 +165,7 @@ local function CastStart(self, real, unit, castGUID)
 		element.duration = endTime - GetTime()
 	end
 
-	-- ElvUI block
+	
 	if(mergeTradeskill and isTradeSkill and UnitIsUnit(unit, "player")) then
 		element.duration = element.duration + (element.max * tradeskillCurrent);
 		element.max = element.max * tradeskillTotal;
@@ -282,7 +282,7 @@ local function CastStop(self, event, unit, castID, spellID)
 		return
 	end
 
-	-- ElvUI block
+	
 	if mergeTradeskill and UnitIsUnit(unit, "player") then
 		if tradeskillCurrent == tradeskillTotal then
 			mergeTradeskill = false
@@ -320,7 +320,7 @@ local function CastFail(self, event, unit, castID, spellID)
 
 	element.holdTime = element.timeToHold or 0
 
-	-- ElvUI block
+	
 	if mergeTradeskill and UnitIsUnit(unit, "player") then
 		mergeTradeskill = false
 		element.tradeSkillCastId = nil
@@ -466,7 +466,7 @@ local function Enable(self, unit)
 			self:RegisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
 		end
 
-		-- ElvUI block
+		
 		self:RegisterEvent('UNIT_SPELLCAST_SENT', UNIT_SPELLCAST_SENT, true)
 		-- end block
 
