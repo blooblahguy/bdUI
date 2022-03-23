@@ -1,0 +1,21 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Button name="bdUI_BuffButtonTemplate" inherits="SecureActionButtonTemplate" virtual="true">
+		<Scripts>
+			<Attributes>
+				<Attribute name='type' value='cancelaura'/>
+			</Attributes>
+			<OnLoad>
+				self:RegisterForClicks("RightButtonUp");
+			</OnLoad>
+
+			<OnEnter>
+				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT");
+				GameTooltip:SetFrameLevel(self:GetFrameLevel() + 2);
+				GameTooltip:SetUnitAura(PlayerFrame.unit, self:GetID(), self.filter);
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+</Ui>

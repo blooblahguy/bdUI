@@ -5,10 +5,6 @@
 			<Attribute name='type' value='cancelaura'/>
 		</Attributes>
 		<Scripts>
-			<OnClick>
-				self:SetAttribute("type", "macro");
-				self:SetAttribute("macrotext","/cancelaura "..self.auraName);
-			</OnClick>
 			<OnLoad>
 				bdUI:get_module("Buffs and Debuffs"):create_aura(self)
 				self:RegisterForClicks("RightButtonUp");

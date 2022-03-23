@@ -132,7 +132,7 @@ modules\old_bags\elements\loot.lua
 modules\buffs_debuffs\template.xml
 modules\buffs_debuffs\init.lua
 modules\buffs_debuffs\core.lua
-modules\buffs_debuffs\elements\watcher.lua
+# modules\buffs_debuffs\elements\watcher.lua
 
 # Chat
 modules\chat\init.lua

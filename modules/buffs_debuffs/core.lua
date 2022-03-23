@@ -95,9 +95,6 @@ local function update_aura(button, index)
 	local filter = button:GetParent():GetAttribute('filter')
 	local name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = UnitAura(unit, index, filter)
 
-	-- button:SetAttribute("index", index)
-	-- button:SetAttribute("auraName", name)
-
 	if (not name) then
 		button:SetScript('OnUpdate', nil)
 		return
@@ -195,6 +192,8 @@ function mod:common_headers(header, filter)
 	header:SetAttribute('sortMethod', 'TIME')
 	header:SetAttribute("filter", filter)
 	header.filter = filter
+
+	header:Show()
 end
 
 --==============================================
@@ -203,6 +202,9 @@ end
 function mod:update_buffs()
 	local buffrows = math.ceil(20/config.buffperrow)
 	local template = string.format('bdAuraTemplate%d', config.buffsize)
+
+	-- they share some stuff
+	mod:common_headers(bdBuffs, "HELPFUL")
 
 	-- sizing
 	bdBuffs:SetSize((config.buffsize + config.buffspacing + 2) * config.buffperrow, (config.buffsize + config.buffspacing + 2) * buffrows)
@@ -248,9 +250,6 @@ function mod:update_buffs()
 	else
 		bdBuffs:SetAttribute('wrapYOffset', -yspacing)
 	end
-
-	-- they share some stuff
-	mod:common_headers(bdBuffs, "HELPFUL")
 
 	-- size children
 	mod:size_frames(bdBuffs, config.buffsize)
@@ -329,9 +328,6 @@ function mod:config_callback()
 	-- RegisterStateDriver(header, 'visibility', '[petbattle] hide; show')
 	RegisterAttributeDriver(bdBuffs, 'unit', '[vehicleui] vehicle; player')
 	RegisterAttributeDriver(bdDebuffs, 'unit', '[vehicleui] vehicle; player')
-
-	bdBuffs:Show()
-	bdDebuffs:Show()
 end
 
 --===============================================
