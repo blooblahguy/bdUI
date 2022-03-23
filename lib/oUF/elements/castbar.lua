@@ -474,6 +474,11 @@ local function Enable(self, unit)
 
 		element:SetScript('OnUpdate', element.OnUpdate or onUpdate)
 
+		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
+			CastingBarFrame_SetUnit(CastingBarFrame, nil)
+			CastingBarFrame_SetUnit(PetCastingBarFrame, nil)
+		end
+
 		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
@@ -527,6 +532,11 @@ local function Disable(self)
 		if oUF.isRetail then
 			self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
 			self:UnregisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
+		end
+
+		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
+			CastingBarFrame_OnLoad(CastingBarFrame, 'player', true, false)
+			PetCastingBarFrame_OnLoad(PetCastingBarFrame)
 		end
 
 		element:SetScript('OnUpdate', nil)
