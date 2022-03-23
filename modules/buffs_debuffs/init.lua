@@ -9,7 +9,7 @@ local config = {
 		key = "enabled",
 		type = "toggle",
 		value = true,
-		label = "Enable Buffs & Debuffs"
+		label = "Enable"
 	},
 	--=========================================
 	-- Buffs

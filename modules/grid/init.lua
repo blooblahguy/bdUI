@@ -10,7 +10,7 @@ local config = {
 		key = "enabled",
 		type = "toggle",
 		value = true,
-		label = "Enable Grid"
+		label = "Enable"
 	},
 	--=============================================
 	-- Frames Display

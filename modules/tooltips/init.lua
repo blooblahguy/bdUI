@@ -9,7 +9,7 @@ local config = {
 		key = "enablett",
 		type = "toggle",
 		value = true,
-		label = "Enable Tooltips"
+		label = "Enable"
 	},
 
 	{

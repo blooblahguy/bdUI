@@ -55,7 +55,7 @@ local config = {
 		key = "enabled",
 		type = "toggle",
 		value = true,
-		label = "Enable Nameplates"
+		label = "Enable"
 	},
 	--============================================
 	-- Positioning & Display

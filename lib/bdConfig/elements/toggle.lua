@@ -30,20 +30,34 @@ local methods = {
 		self:set()
 
 		self.callback(self.check, nil, self.save[self.key])
-	end
+		self:check_state_color()
+	end,
+	["check_state_color"] = function(self)
+		if (self.text:GetText() == "Enabled" or self.text:GetText() == "Enable") then
+			if (self.check:GetChecked()) then
+				self.text:SetTextColor(0, 1, 0)
+			else
+				self.text:SetTextColor(1, 0, 0)
+			end
+		else
+			self.text:SetTextColor(1, 1, 1)
+		end
+	end,
 }
 
 local skin = function(frame)
 	local inside = frame:CreateMaskTexture()
-	inside:SetTexture([[Interface\Minimap\UI-Minimap-Background]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
-	inside:SetSize(12, 12)
+	-- inside:SetTexture([[Interface\Minimap\UI-Minimap-Background]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
+	inside:SetTexture(lib.media.flat)--, 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
+	inside:SetSize(10, 10)
 	inside:SetPoint('CENTER')
 
 	frame.inside = inside
 
 	local outside = frame:CreateMaskTexture()
-	outside:SetTexture([[Interface\Minimap\UI-Minimap-Background]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
-	outside:SetSize(15, 15)
+	-- outside:SetTexture([[Interface\Minimap\UI-Minimap-Background]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
+	outside:SetTexture(lib.media.flat) --, 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
+	outside:SetSize(10, 10)
 	outside:SetPoint('CENTER')
 
 	frame.outside = outside
@@ -56,9 +70,9 @@ local skin = function(frame)
 
 	local check = frame:GetCheckedTexture()
 	check:SetVertexColor(unpack(lib.media.blue))
-	check:SetTexCoord(0, 1, 0, 1)
-	check:SetPoint("TOPLEFT", frame, "TOPLEFT", lib.border, -lib.border)
-	check:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -lib.border, lib.border)
+	-- check:SetTexCoord(0, 1, 0, 1)
+	check:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -0)
+	check:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -0, 0)
 	check:AddMaskTexture(inside)
 
 	local highlight = frame:GetHighlightTexture()
@@ -94,18 +108,21 @@ local function create(options, parent)
 	local check = CreateFrame("CheckButton", options.name.."_"..options.key, container, "ChatConfigCheckButtonTemplate")
 	local text = _G[check:GetName().."Text"]
 	check:SetPoint("LEFT", container, "LEFT", -2, 0)
+	check:SetSize(lib.border * 8, lib.border * 8)
 	text:SetText(options.label)
 	text:SetFontObject("bdConfig_font")
 	text:ClearAllPoints()
-	text:SetPoint("LEFT", check, "RIGHT", 2, -1)
+	text:SetPoint("LEFT", check, "RIGHT", 5, -1)
 
 	container.callback = options.callback
 	container.key = options.key
 	container.module = options.module
 	container.check = check
+	container.text = text
 	Mixin(container, methods)
 	container:set()
 	check:SetScript("OnClick", function() container:onclick() end)
+	container:check_state_color()
 
 	skin(check)
 

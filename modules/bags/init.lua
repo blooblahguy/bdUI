@@ -5,7 +5,7 @@ local config = {
 	{
 		key = "enabled",
 		type = "toggle",
-		label = "Enable Bags",
+		label = "Enable",
 		value = true,
 	},
 	{

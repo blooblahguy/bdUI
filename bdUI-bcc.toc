@@ -52,7 +52,8 @@ classic\tbc\tbc.lua
 classic\tbc\tbc_auras.lua
 
 # oUF
-classic\tbc\lib\oUF_TBC\oUF_TBC.xml
+lib\oUF\oUF.xml
+# classic\tbc\lib\oUF_TBC\oUF_TBC.xml
 # lib\oUF_Plugins\oUF_castbar_classic.lua
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua

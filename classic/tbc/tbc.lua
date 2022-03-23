@@ -79,6 +79,18 @@ MiniMapTrackingButtonShine = MiniMapTrackingButtonShine or noob
 QueueStatusMinimapButton = QueueStatusMinimapButton or noob
 QueueStatusMinimapButtonIcon = QueueStatusMinimapButtonIcon or noob
 
+-- AuraUtil = AuraUtil or {}
+-- AuraUtil.ForEachAura = AuraUtil.ForEachAura or function(unit, filter, maxCount, func)
+-- 	if maxCount and maxCount <= 0 then
+-- 		return;
+-- 	end
+-- 	local continuationToken;
+-- 	repeat
+-- 		-- continuationToken is the first return value of UnitAuraSltos
+-- 		continuationToken = ForEachAuraHelper(unit, filter, func, UnitAuraSlots(unit, filter, maxCount, continuationToken));
+-- 	until continuationToken == nil;
+-- end
+
 
 -- threat functions
 local threatcolors = {

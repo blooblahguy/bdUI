@@ -119,4 +119,9 @@ function mod:draw_bag()
 	
 	mod:position_items(categories, config.buttonsize, config.buttonsperrow)
 	mod:position_categories(categories, config.buttonsize, config.buttonsperrow)
+
+	if (mod.bags.currencies) then
+		local height = mod.bags.currencies:GetHeight()
+		mod.bags:SetHeight(mod.bags:GetHeight() + height)
+	end
 end

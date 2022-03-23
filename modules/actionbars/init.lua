@@ -110,7 +110,7 @@ local config = {
 	{
 		key = "enabled",
 		type = "toggle",
-		label = "Enable Actionbars",
+		label = "Enable",
 		value = true,
 	},
 	{

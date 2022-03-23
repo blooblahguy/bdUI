@@ -10,7 +10,7 @@ local Private = oUF.Private
 
 local argcheck = Private.argcheck
 local error = Private.error
-local print = Private.print
+local print = Private.print --luacheck: no unused
 local unitExists = Private.unitExists
 
 local styles, style = {}
@@ -24,26 +24,7 @@ PetBattleFrameHider:SetAllPoints()
 PetBattleFrameHider:SetFrameStrata('LOW')
 RegisterStateDriver(PetBattleFrameHider, 'visibility', '[petbattle] hide; show')
 
--- updating of "invalid" units.
-local function enableTargetUpdate(object)
-	object.onUpdateFrequency = object.onUpdateFrequency or .5
-	object.__eventless = true
-
-	local total = 0
-	object:SetScript('OnUpdate', function(self, elapsed)
-		if(not self.unit) then
-			return
-		elseif(total > self.onUpdateFrequency) then
-			self:UpdateAllElements('OnUpdate')
-			total = 0
-		end
-
-		total = total + elapsed
-	end)
-end
-Private.enableTargetUpdate = enableTargetUpdate
-
-local function updateActiveUnit(self, event, unit)
+local function updateActiveUnit(self, event)
 	-- Calculate units to work with
 	local realUnit, modUnit = SecureButton_GetUnit(self), SecureButton_GetModifiedUnit(self)
 
@@ -62,9 +43,15 @@ local function updateActiveUnit(self, event, unit)
 
 	-- Change the active unit and run a full update.
 	if(Private.UpdateUnits(self, modUnit, realUnit)) then
-		self:UpdateAllElements('RefreshUnit')
+		self:UpdateAllElements(event or 'RefreshUnit')
 
 		return true
+	end
+end
+
+local function evalUnitAndUpdate(self, event)
+	if(not updateActiveUnit(self, event)) then
+		return self:UpdateAllElements(event)
 	end
 end
 
@@ -228,9 +215,7 @@ for k, v in next, {
 end
 
 local function onShow(self)
-	if(not updateActiveUnit(self, 'OnShow')) then
-		return self:UpdateAllElements('OnShow')
-	end
+	evalUnitAndUpdate(self, 'OnShow')
 end
 
 local function updatePet(self, event, unit)
@@ -245,9 +230,8 @@ local function updatePet(self, event, unit)
 	end
 
 	if(self.unit ~= petUnit) then return end
-	if(not updateActiveUnit(self, event)) then
-		return self:UpdateAllElements(event)
-	end
+
+	evalUnitAndUpdate(self, event)
 end
 
 local function updateRaid(self, event)
@@ -259,12 +243,30 @@ local function updateRaid(self, event)
 	end
 end
 
+-- boss6-8 exsist in some encounters, but unit event registration seems to be
+-- completely broken for them, so instead we use OnUpdate to update them.
+local eventlessUnits = {
+	['boss6'] = true,
+	['boss7'] = true,
+	['boss8'] = true,
+}
+
+local function isEventlessUnit(unit)
+	return unit:match('%w+target') or eventlessUnits[unit]
+end
+
 local function initObject(unit, style, styleFunc, header, ...)
 	local num = select('#', ...)
 	for i = 1, num do
 		local object = select(i, ...)
 		local objectUnit = object:GetAttribute('oUF-guessUnit') or unit
 		local suffix = object:GetAttribute('unitsuffix')
+
+		-- Handle the case where someone has modified the unitsuffix attribute in
+		-- oUF-initialConfigFunction.
+		if(suffix and not objectUnit:match(suffix)) then
+			objectUnit = objectUnit .. suffix
+		end
 
 		object.__elements = {}
 		object.style = style
@@ -274,20 +276,20 @@ local function initObject(unit, style, styleFunc, header, ...)
 		table.insert(objects, object)
 
 		-- We have to force update the frames when PEW fires.
-		object:RegisterEvent('PLAYER_ENTERING_WORLD', object.UpdateAllElements, true)
+		-- It's also important to evaluate units before running an update
+		-- because sometimes events that are required for unit updates end up
+		-- not firing because of loading screens. For instance, there's a slight
+		-- delay between UNIT_EXITING_VEHICLE and UNIT_EXITED_VEHICLE during
+		-- which a user can go through a loading screen after which the player
+		-- frame will be stuck with the 'vehicle' unit.
+		object:RegisterEvent('PLAYER_ENTERING_WORLD', evalUnitAndUpdate, true)
 
-		-- Handle the case where someone has modified the unitsuffix attribute in
-		-- oUF-initialConfigFunction.
-		if(suffix and not objectUnit:match(suffix)) then
-			objectUnit = objectUnit .. suffix
-		end
-
-		if(not (suffix == 'target' or objectUnit and objectUnit:match('target'))) then
+		if(isEventlessUnit(objectUnit)) then
 			object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit)
 			object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit)
 
 			-- We don't need to register UNIT_PET for the player unit. We register it
-			-- mainly because UNIT_EXITED_VEHICLE and UNIT_ENTERED_VEHICLE doesn't always
+			-- mainly because UNIT_EXITED_VEHICLE and UNIT_ENTERED_VEHICLE don't always
 			-- have pet information when they fire for party and raid units.
 			if(objectUnit ~= 'player') then
 				object:RegisterEvent('UNIT_PET', updatePet)
@@ -299,15 +301,11 @@ local function initObject(unit, style, styleFunc, header, ...)
 			object:SetAttribute('*type1', 'target')
 			object:SetAttribute('*type2', 'togglemenu')
 
-			-- No need to enable this for *target frames.
-			if(not (unit:match('target') or suffix == 'target')) then
-				object:SetAttribute('toggleForVehicle', true)
-			end
-
-			-- Other boss and target units are handled by :HandleUnit().
-			if(suffix == 'target') then
-				enableTargetUpdate(object)
+			if(isEventlessUnit(objectUnit)) then
+				oUF:HandleEventlessUnit(object)
 			else
+				-- No need to enable this for eventless units.
+				object:SetAttribute('toggleForVehicle', true)
 				oUF:HandleUnit(object)
 			end
 		else
@@ -324,9 +322,11 @@ local function initObject(unit, style, styleFunc, header, ...)
 			end
 
 			if(suffix == 'target') then
-				enableTargetUpdate(object)
+				oUF:HandleEventlessUnit(object)
 			end
 		end
+
+		activeElements[object] = {} -- ElvUI: styleFunc on headers break before this is set when they try to enable elements before it's set.
 
 		Private.UpdateUnits(object, objectUnit)
 
@@ -340,7 +340,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 			object:SetScript('OnShow', onShow)
 		end
 
-		activeElements[object] = {}
 		for element in next, elements do
 			object:EnableElement(element, objectUnit)
 		end
@@ -351,8 +350,8 @@ local function initObject(unit, style, styleFunc, header, ...)
 
 		-- Make Clique kinda happy
 		if(not object.isNamePlate) then
-			_G.ClickCastFrames = ClickCastFrames or {}
-			ClickCastFrames[object] = true
+			_G.ClickCastFrames = _G.ClickCastFrames or {}
+			_G.ClickCastFrames[object] = true
 		end
 	end
 end
@@ -549,7 +548,7 @@ local function generateName(unit, ...)
 end
 
 do
-	local function styleProxy(self, frame, ...)
+	local function styleProxy(self, frame)
 		return walkObject(_G[frame])
 	end
 
@@ -689,8 +688,8 @@ do
 		]])
 		header:SetAttribute('oUF-headerType', isPetHeader and 'pet' or 'group')
 
-		if(Clique) then
-			SecureHandlerSetFrameRef(header, 'clickcast_header', Clique.header)
+		if(_G.Clique) then
+			SecureHandlerSetFrameRef(header, 'clickcast_header', _G.Clique.header)
 		end
 
 		if(header:GetAttribute('showParty')) then
@@ -725,14 +724,14 @@ oUF implements some of its own attributes. These can be supplied by the layout, 
 
 * oUF-enableArenaPrep - can be used to toggle arena prep support. Defaults to true (boolean)
 --]]
-function oUF:Spawn(unit, overrideName)
+function oUF:Spawn(unit, overrideName, overrideTemplate) -- ElvUI adds overrideTemplate
 	argcheck(unit, 2, 'string')
 	if(not style) then return error('Unable to create frame. No styles have been registered.') end
 
 	unit = unit:lower()
 
 	local name = overrideName or generateName(unit)
-	local object = CreateFrame('Button', name, PetBattleFrameHider, 'SecureUnitButtonTemplate')
+	local object = CreateFrame('Button', name, PetBattleFrameHider, overrideTemplate or 'SecureUnitButtonTemplate')
 	Private.UpdateUnits(object, unit)
 
 	self:DisableBlizzard(unit)
@@ -758,7 +757,7 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 	argcheck(nameplateCallback, 3, 'function', 'nil')
 	argcheck(nameplateCVars, 4, 'table', 'nil')
 	if(not style) then return error('Unable to create frame. No styles have been registered.') end
-	if(oUF_NamePlateDriver) then return error('oUF nameplate driver has already been initialized.') end
+	if(_G.oUF_NamePlateDriver) then return error('oUF nameplate driver has already been initialized.') end
 
 	local style = style
 	local prefix = namePrefix or generateName()
@@ -777,6 +776,7 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 	eventHandler:RegisterEvent('NAME_PLATE_UNIT_ADDED')
 	eventHandler:RegisterEvent('NAME_PLATE_UNIT_REMOVED')
 	eventHandler:RegisterEvent('PLAYER_TARGET_CHANGED')
+	eventHandler:RegisterEvent('UNIT_FACTION')
 
 	if(IsLoggedIn()) then
 		if(nameplateCVars) then
@@ -805,6 +805,13 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 			-- ForceUpdate calls layout devs have to do themselves
 			if(nameplate) then
 				nameplate.unitFrame:UpdateAllElements(event)
+			end
+		elseif(event == 'UNIT_FACTION' and unit) then
+			local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
+			if(not nameplate) then return end
+
+			if(nameplateCallback) then
+				nameplateCallback(nameplate.unitFrame, event, unit)
 			end
 		elseif(event == 'NAME_PLATE_UNIT_ADDED' and unit) then
 			local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
@@ -886,5 +893,125 @@ if(global) then
 		error('%s is setting its global to an existing name "%s".', parent, global)
 	else
 		_G[global] = oUF
+	end
+end
+
+do -- Event Pooler by Simpy
+	local pooler = CreateFrame('Frame')
+	pooler.events = {}
+	pooler.times = {}
+
+	pooler.delay = 0.1 -- update check rate
+	pooler.instant = 3 -- seconds since last event
+
+	pooler.run = function(funcs, frame, event, ...)
+		for _, func in pairs(funcs) do
+			func(frame, event, ...)
+		end
+	end
+
+	pooler.execute = function(event, pool, instant, arg1, ...)
+		for frame, info in pairs(pool) do
+			local funcs = info.functions
+			if instant and funcs then
+				pooler.run(funcs, frame, event, arg1, ...)
+			else
+				local data = funcs and info.data[event]
+				local count = data and #data
+				local args = count and data[count]
+				if args then
+					-- if count > 1 then print(frame:GetDebugName(), event, count, unpack(args)) end
+					pooler.run(funcs, frame, event, unpack(args))
+					wipe(data)
+				end
+			end
+		end
+	end
+
+	pooler.update = function()
+		for event, pool in pairs(pooler.events) do
+			pooler.execute(event, pool)
+		end
+	end
+
+	pooler.tracker = function(frame, event, arg1, ...)
+		-- print('tracker', frame, event, arg1, ...)
+
+		local pool = pooler.events[event]
+		if pool then
+			local now = time()
+			local last = pooler.times[event]
+			if last and (last + pooler.instant) < now then
+				pooler.execute(event, pool, true, arg1, ...)
+				-- print('instant', frame:GetDebugName(), event, arg1)
+			elseif arg1 ~= nil then -- require arg1, no unitless
+				local pooled = pool[frame]
+				if pooled then
+					if not pooled.data[event] then
+						pooled.data[event] = {}
+					end
+
+					tinsert(pooled.data[event], {arg1, ...})
+				end
+			end
+
+			pooler.times[event] = now
+		end
+	end
+
+	pooler.onUpdate = function(self, elapsed)
+		if self.elapsed and self.elapsed > pooler.delay then
+			pooler.update()
+
+			self.elapsed = 0
+		else
+			self.elapsed = (self.elapsed or 0) + elapsed
+		end
+	end
+
+	pooler:SetScript('OnUpdate', pooler.onUpdate)
+
+	function oUF:RegisterEvent(frame, event, func)
+		-- print('RegisterEvent', frame, event, func)
+
+		if not pooler.events[event] then
+			pooler.events[event] = {}
+			pooler.events[event][frame] = {functions={},data={}}
+		elseif not pooler.events[event][frame] then
+			pooler.events[event][frame] = {functions={},data={}}
+		end
+
+		frame:RegisterEvent(event, pooler.tracker)
+		tinsert(pooler.events[event][frame].functions, func)
+	end
+
+	function oUF:UnregisterEvent(frame, event, func)
+		-- print('UnregisterEvent', frame, event, func)
+
+		local pool = pooler.events[event]
+		if pool then
+			local pooled = pool[frame]
+			if pooled then
+				for i, funct in ipairs(pooled.functions) do
+					if funct == func then
+						tremove(pooled.functions, i)
+					end
+				end
+
+				if not next(pooled.functions) then
+					pooled.functions = nil
+					pooled.data = nil -- clear data
+				end
+
+				if not next(pooled) then
+					pool[frame] = nil
+				end
+			end
+
+			if not next(pool) then
+				pooler.events[event] = nil
+				frame:UnregisterEvent(event, pooler.tracker)
+			end
+		end
 	end
 end

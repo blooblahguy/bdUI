@@ -8,7 +8,7 @@ local config = {
 	{
 		key = "enabled",
 		type = "toggle",
-		label = "Enable Unitframes",
+		label = "Enable",
 		value = true,
 	},
 	--=========================================
