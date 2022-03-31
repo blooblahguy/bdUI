@@ -12,16 +12,22 @@ function mod:create_bank()
 	-- mod.bank:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_START')
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_UPDATE')
-	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_FAILURE')
 	mod.bank:RegisterEvent('BAG_UPDATE_DELAYED')
 	mod.bank:RegisterEvent('BANKFRAME_OPENED')
 	mod.bank:RegisterEvent('BANKFRAME_CLOSED')
 
+	local run_bag_holder = 0
 	mod.bank:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "BANKFRAME_OPENED") then
 			mod.bank:Show()
 			mod:update_bank()
-			-- mod:create_bank_bagslots()
+
+			-- create bank slots
+			if (run_bag_holder == 0) then
+				run_bag_holder = 1
+
+				mod:create_bagslots(mod.bank, {"-4.1", "-4.2", "-4.3", "-4.4", "-4.5", "-4.6", "-4.7"})
+			end
 		elseif (event == "BANKFRAME_CLOSED") then
 			mod.bank:Hide()
 		else
@@ -88,7 +94,7 @@ function mod:update_bank()
 		end
 	end
 
-	if (config.showfreespaceasone) then
+	if (config.showfreespaceasone and freeslot) then
 		mod.categoryIDtoNames[200] = "Bag"
 		mod.categoryNamestoID["Bag"] = -2
 

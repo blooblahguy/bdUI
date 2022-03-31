@@ -46,8 +46,8 @@ lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
 
 # Classic
-game_versions\tbc\lib\LibClassicMobHealth\LibClassicMobHealth.lua
-game_versions\tbc\lib\LibHealComm\LibHealComm-4.0.lua
+lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
+lib\classic\LibHealComm\LibHealComm-4.0.lua
 game_versions\tbc\tbc.lua
 game_versions\tbc\tbc_auras.lua
 

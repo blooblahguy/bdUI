@@ -23,13 +23,25 @@ function mod:create_bags()
 				for slot = min, max, step do
 					local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
 				end
+
+				-- query for itemlink
+				local bagslots = {"0.0", "0.-1", "0.-2", "0.-3"}
+				for k, ids in pairs(bagslots) do
+					local bagID, slot = strsplit(".", ids)
+					local itemLink = select(7, GetContainerItemInfo(tonumber(bagID), tonumber(slot)))
+				end
+			end
+
+			if (run_bag_holder == 0) then
+				run_bag_holder = 1
+
+				-- then try to create
+				C_Timer.After(2, function()
+					mod:create_bagslots(mod.bags, {"0.0", "0.-1", "0.-2", "0.-3"})
+				end)
 			end
 		else
 			mod:update_bags()
-			if (run_bag_holder == 0) then
-				run_bag_holder = 1
-				mod:create_bag_bagslots()
-			end
 		end
 	end)
 end

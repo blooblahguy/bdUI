@@ -164,8 +164,8 @@ function mod:config_callback()
 
 		-- misc
 		, ['nameplateMaxDistance'] = config.nameplatedistance -- for some reason there is a 6yd diff
-		, ['nameplateShowDebuffsOnFriendly'] = 0
-		, ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
+		-- , ['nameplateShowDebuffsOnFriendly'] = 0
+		-- , ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
 	}
 
 	-- loop through and set CVARS
@@ -638,7 +638,6 @@ function mod:initialize()
 	disable_class_power()
 
 	oUF:RegisterStyle("bdNameplates", nameplate_create)
-	-- oUF:RegisterStyle("bdNameplates", function() return end)
 	oUF:SetActiveStyle("bdNameplates")
 	oUF:SpawnNamePlates("bdNameplates", nameplate_callback)
 	-- oUF:SpawnNamePlates("bdNameplates", function(frame, event, unit)

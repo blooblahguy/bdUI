@@ -50,7 +50,9 @@ function mod:create_container(name, nomove)
 	bags_button.text:SetText("B")
 	bags_button:SetPoint("RIGHT", sort_bags or close_button, "LEFT", -4, 0)
 	bags_button.callback = function()
-		frame.bagslot_holder:SetShown(not frame.bagslot_holder:IsShown())
+		if (frame.bagslot_holder) then
+			frame.bagslot_holder:SetShown(not frame.bagslot_holder:IsShown())
+		end
 	end
 
 	-- money
@@ -111,6 +113,17 @@ local function create_bagslot_item(parent, template)
 	button:SetFrameStrata("HIGH")
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
+	button:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED")
+	button:SetScript("OnEvent", function(self)
+		self:update()
+	end)
+
+	button:HookScript("OnClick", function(self)
+		local isBought = _G['BankSlotsFrame']["Bag"..self.slot].tooltipText ~= BANK_BAG_PURCHASE
+		if (not self.itemID and self.bagID == -4 and not isBought) then
+			StaticPopup_Show("CONFIRM_BUY_BANK_SLOT");
+		end
+	end)
 
 	function button:update_quality()
 		self.quality_border:Hide()
@@ -133,6 +146,20 @@ local function create_bagslot_item(parent, template)
 		SetItemButtonTexture(self, self.texture)
 		SetItemButtonQuality(self, self.quality, self.itemLink)
 		SetItemButtonCount(self, self.itemCount)
+
+		local numSlots, full = GetNumBankSlots()
+		self.BattlepayItemTexture:Hide()
+		if (not full and not self.itemID and self.bagID == -4) then
+			if (_G['BankSlotsFrame']["Bag"..self.slot].tooltipText == BANK_BAG_PURCHASE) then
+				SetItemButtonTexture(self, 135769)
+				self.BattlepayItemTexture:Show()
+				self.icon:SetVertexColor(0, 1, 0)
+				self.icon:SetAlpha(.4)
+			else
+				self.icon:SetVertexColor(1, 1, 1)
+				self.icon:SetAlpha(1)
+			end
+		end
 	
 		self.blank:SetShown(not self.hasItem)
 	
@@ -144,247 +171,62 @@ local function create_bagslot_item(parent, template)
 	return button
 end
 
--- create bank container frames
-function mod:create_bank_bagslots()
-	local config = mod.config
-	local size = config.bankbuttonsize
-	local last_bag = nil
-	local num_bags = 0
-
-	if (not mod.bank.bagslot_holder) then
-		local holder = CreateFrame("frame", nil, mod.bank)
-		holder:SetPoint("BOTTOMRIGHT", mod.bank, "TOPRIGHT", 0, mod.border)
-		bdUI:set_backdrop(holder)
-		holder:SetSize(200, size + size * .5)
-		mod.bank.bagslot_holder = holder
-	end
-
-	for i = 1, 7 do
-		local bankbag = BankSlotsFrame["Bag"..i]
-		if (not bankbag) then break end
-		local icon = bankbag.icon
-		
-		bankbag:SetParent(mod.bank.bagslot_holder)
-		bankbag:ClearAllPoints()
-		bankbag:GetChildren():Hide()
-		bankbag:SetWidth(size)
-		bankbag:SetHeight(size)
-
-		local bankbagchildren = {bankbag:GetChildren()}
-		for k, v in pairs(bankbagchildren) do
-			v:Hide()
-			v:SetParent(bankbag)
-			v.Show = noop
-			bdUI:strip_textures(v)
-		end
-		mod:skin(bankbag)
-
-		bankbag:SetNormalTexture("")
-		bankbag:SetPushedTexture("")
-		bankbag:SetHighlightTexture("")
-		bankbag.IconBorder:SetTexture("")
-		
-		-- for i = 1, bankbag:GetNumRegions() do
-		-- 	local region = select(i, bankbag:GetRegions())
-
-		-- 	if (not region.protected) then
-		-- 		if region:GetObjectType() == "Texture" then
-		-- 			region:SetTexture(nil)
-		-- 			region:Hide()
-		-- 			region:SetAlpha(0)
-		-- 			region:SetAllPoints()
-		-- 			region.Show = noop
-		-- 		end
-		-- 	end
-		-- end	
-		
-		icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-
-		if (not last_bag) then
-			bankbag:SetPoint("RIGHT", mod.bank.bagslot_holder, "RIGHT", -size/4, 0)
-		else
-			bankbag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
-		end
-
-		last_bag = bankbag
-		num_bags = num_bags + 1
-	end
-
-	-- local bagslots = {"-1.1", "-1.-29", "-1.-30", "-1.-31", "-1.-32", "-1.-33", "-1.-34"}
-	-- local last_bag = nil
-	-- local num_bags = 0
-
-	-- for k, ids in pairs(bagslots) do
-	-- 	local bagID, slot = strsplit(".", ids)
-	-- 	local bag = create_bagslot_item(mod.bank.bagslot_holder, "BankItemButtonGenericTemplate")
-
-	-- 	bag.bag = tonumber(bagID)
-	-- 	bag.bagID = tonumber(bagID)
-	-- 	bag.slot = tonumber(slot)
-	-- 	bag:GetParent():SetID(tonumber(bagID))
-	-- 	bag:SetID(tonumber(slot))
-	-- 	bag:SetSize(size, size)
-	-- 	bag:Show()
-	-- 	bag:update()
-
-	-- 	local itemLink = select(7, GetContainerItemInfo(tonumber(bagID), tonumber(slot)))
-
-	-- 	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemLink)
-
-	-- 	local itemString = string.match(itemLink, "item[%-?%d:]+")
-	-- 	local _, itemID = strsplit(":", itemString)
-		
-	-- 	bag.itemLink = itemLink
-	-- 	bag.itemCount = 0
-	-- 	bag.texture = itemTexture
-	-- 	bag.itemID = itemID
-	-- 	bag:update()
-			
-	-- 	if (not last_bag) then
-	-- 		bag:SetPoint("RIGHT", mod.bank.bagslot_holder, "RIGHT", -size/4, 0)
-	-- 	else
-	-- 		bag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
-	-- 	end
-
-	-- 	last_bag = bag
-	-- 	num_bags = num_bags + 1
-	-- end
-end
-
--- create bag container frames
-function mod:create_bag_bagslots()
+-- bagslot frames
+function mod:create_bagslots(frame, bagslots)
 	local config = mod.config
 	local size = config.buttonsize
 
-	if (not mod.bags.bagslot_holder) then
-		local holder = CreateFrame("frame", nil, mod.bags)
-		holder:SetPoint("BOTTOMRIGHT", mod.bags, "TOPRIGHT", 0, mod.border)
+	-- create holder frame
+	if (not frame.bagslot_holder) then
+		local holder = CreateFrame("frame", nil, frame)
+		holder:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", 0, mod.border)
 		bdUI:set_backdrop(holder)
 		holder:SetSize(200, size + size * .5)
 		holder:Hide()
-		mod.bags.bagslot_holder = holder
-		mod.bags.bagslot_holder.items = {}
+
+		frame.bagslot_holder = holder
+		frame.bagslot_holder.items = {}
 	end
-
-
-	local bagslots = {"0.0", "0.-1", "0.-2", "0.-3"}
 
 	local last_bag = nil
 	local num_bags = 0
 
+	-- loop through bags by table of strings
 	for k, ids in pairs(bagslots) do
 		local bagID, slot = strsplit(".", ids)
-		local bag = mod.bags.bagslot_holder.items[k] or create_bagslot_item(mod.bags.bagslot_holder, "ContainerFrameItemButtonTemplate")
-		mod.bags.bagslot_holder.items[k] = bag
+		local bag = frame.bagslot_holder.items[k] or create_bagslot_item(frame.bagslot_holder, "ContainerFrameItemButtonTemplate")
+		frame.bagslot_holder.items[k] = bag
+
+		local itemTexture, itemCount, locked, quality, readable, lootable, itemLink, isFiltered, noValue, itemID, isBound = GetContainerItemInfo(bagID, slot)
 
 		bag.bag = tonumber(bagID)
 		bag.bagID = tonumber(bagID)
 		bag.slot = tonumber(slot)
+		bag.isBag = true
 		bag:GetParent():SetID(tonumber(bagID))
+		bag:GetParent():GetParent():SetID(tonumber(bagID))
 		bag:SetID(tonumber(slot))
 		bag:SetSize(size, size)
 		bag:Show()
 
-		local itemLink = select(7, GetContainerItemInfo(tonumber(bagID), tonumber(slot)))
-		-- print(bagID, slot, itemLink)b
-
-		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemLink)
-
-		if (itemLink) then
-
-			local itemString = string.match(itemLink, "item[%-?%d:]+")
-			local _, itemID = strsplit(":", itemString)
+		bag.itemLink = itemLink
+		bag.itemCount = 0
+		bag.quality = quality
+		bag.texture = itemTexture
+		bag.itemID = itemID or false
+		bag:update()
 			
-			bag.itemLink = itemLink
-			bag.itemCount = 0
-			bag.texture = itemTexture
-			bag.itemID = itemID
-			bag:update()
-				
-			if (not last_bag) then
-				bag:SetPoint("RIGHT", mod.bags.bagslot_holder, "RIGHT", -size/4, 0)
-			else
-				bag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
-			end
-
-			last_bag = bag
-			num_bags = num_bags + 1
+		-- position things
+		if (not last_bag) then
+			bag:SetPoint("RIGHT", frame.bagslot_holder, "RIGHT", -size/4, 0)
 		else
-			C_Timer.After(2, function()
-				mod:create_bag_bagslots()
-			end)
+			bag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
 		end
+
+		last_bag = bag
+		num_bags = num_bags + 1
 	end
 
-	mod.bags.bagslot_holder:SetWidth(((num_bags * (size + mod.border))) + (size / 2))
-end
-
--- update the frames depending on which frame is shown
-function mod:update_bagslot_frames(name, parent)
-	local config = mod.config
-
-	local containers = {}
-	containers[name] = parent
-
-	parent.bag_holder_item_pool:ReleaseAll()
-
-	for name, parent in pairs(containers) do
-		local size = 30
-		if (name == "Bags") then
-			size = config.buttonsize
-		else
-			size = config.bankbuttonsize
-		end
-
-		local num_bags = 0
-		local last_bag = false
-		for ids, v in pairs(bagslots[name]) do
-			local pid, id = strsplit(".", ids)
-			mod.current_parent = parent.bagslot_holder
-			local bag = parent.bag_holder_item_pool:Acquire()
-			bag.bag = tonumber(pid)
-			bag.bagID = tonumber(pid)
-			bag.slot = tonumber(id)
-			bag:SetID(tonumber(id))
-			bag:GetParent():SetID(tonumber(pid))
-			if (name == "Bags") then
-				bag:SetSize(size, size)
-			else
-				bag:SetSize(size, size)
-			end
-			bag:Show()
-
-			local itemLink
-			if (pid == "player") then
-				itemLink = GetInventoryItemLink("player", id)
-			else
-				itemLink = select(7, GetContainerItemInfo(tonumber(pid), tonumber(id)))
-			end
-
-			local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemLink)
-
-			-- print(tonumber(pid), tonumber(id), itemLink)
-			local itemString = string.match(itemLink, "item[%-?%d:]+")
-			local _, itemID = strsplit(":", itemString)
-			
-			bag.bag = tonumber(pid)
-			bag.bagID = tonumber(pid)
-			bag.slot = tonumber(id)
-			bag.itemLink = itemLink
-			bag.itemCount = 0
-			bag.texture = itemTexture
-			bag.itemID = itemID
-				
-			if (not last_bag) then
-				bag:SetPoint("RIGHT", parent.bagslot_holder, "RIGHT", -size/4, 0)
-			else
-				bag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
-			end
-
-			last_bag = bag
-			num_bags = num_bags + 1
-		end
-
-		parent.bagslot_holder:SetWidth(((num_bags * (size + mod.border))) + (size / 2))
-	end
+	-- resize the holder frame
+	frame.bagslot_holder:SetWidth(((num_bags * (size + mod.border))) + (size / 2))
 end

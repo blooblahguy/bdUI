@@ -11,6 +11,28 @@ local function kill_texture(tex)
 	tex.Show = noop
 end
 
+ local function texture_strip(frame)
+ 	local ignore = {}
+	if (frame._background) then
+		ignore[frame._background] = true
+		ignore[frame._border] = true
+		ignore[frame.l] = true
+		ignore[frame.r] = true
+		ignore[frame.t] = true
+		ignore[frame.b] = true
+		ignore[frame.b] = true
+	end
+
+ 	-- ignore[GameTooltipStatusBar] = true
+ 	for k, v in pairs({frame:GetRegions()}) do
+ 		if v:GetObjectType() == "Texture" then
+ 			if (not ignore[v]) then
+ 				kill_texture(v)
+ 			end
+ 		end
+ 	end
+end
+
 -- hook functions and skin
 local function hook_and_skin(self)
 	-- if (self._skinned) then return end
@@ -18,45 +40,9 @@ local function hook_and_skin(self)
 
 	bdUI:set_backdrop(self)
 
-	kill_texture(self.NineSlice.Center)
-	kill_texture(self.NineSlice.TopEdge)
-	kill_texture(self.NineSlice.LeftEdge)
-	kill_texture(self.NineSlice.RightEdge)
-	kill_texture(self.NineSlice.BottomEdge)
-	kill_texture(self.NineSlice.TopLeftCorner)
-	kill_texture(self.NineSlice.TopRightCorner)
-	kill_texture(self.NineSlice.BottomLeftCorner)
-	kill_texture(self.NineSlice.BottomRightCorner)
-
-	kill_texture(self.Center)
-	kill_texture(self.TopEdge)
-	kill_texture(self.LeftEdge)
-	kill_texture(self.RightEdge)
-	kill_texture(self.BottomEdge)
-	kill_texture(self.TopLeftCorner)
-	kill_texture(self.TopRightCorner)
-	kill_texture(self.BottomLeftCorner)
-	kill_texture(self.BottomRightCorner)
-
-	local ignore = {}
-	ignore[self._background] = true
-	ignore[self._border] = true
-	ignore[self.l] = true
-	ignore[self.r] = true
-	ignore[self.t] = true
-	ignore[self.b] = true
-
-	for k, v in pairs({self:GetRegions()}) do
-		if v:GetObjectType() == "Texture" then
-			-- print(v)
-			if (not ignore[v]) then
-				kill_texture(v)
-			end
-		end
-	end
-
-	for i = 1, 10 do
-		_G['GameTooltipTexture'..i]:Hide()
+	texture_strip(self)
+	if (self.NineSlice) then
+		texture_strip(self.NineSlice)
 	end
 
 	-- self._skinned = true

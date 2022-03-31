@@ -7,7 +7,6 @@ local config
 local oUF = bdUI.oUF
 mod.frames = {}
 
-
 local dispelColors = {
 	['Magic'] = {.16, .5, .81, 1},
 	['Poison'] = {.12, .76, .36, 1},
@@ -30,9 +29,9 @@ local dispelColors = {
 -- Callback on creation and configuration change
 --======================================================
 local function update_frame(self)
-	if (not InCombatLockdown()) then
-		self:SetSize(config.width, config.height)
-	end
+	if (InCombatLockdown()) then return end
+
+	self:SetSize(config.width, config.height)
 
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.ReadyCheckIndicator:SetSize(12, 12)
@@ -662,6 +661,10 @@ function mod:update_header()
 	mod.frameHeader:SetAttribute("sortMethod", sort_method)
 end
 
+function style_callback(self)
+	-- print(self.unit)
+end
+
 --======================================================
 -- Initialize
 --======================================================
@@ -672,16 +675,20 @@ function mod:initialize()
 	-- exit if not initialized
 	if (not config.enabled) then return false end
 
+	mod.highlights = bdUI:lowercase_table(config.specialalerts)
+
 	-- make sure we can store grid aliases
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
 
 	-- send to factory
-	oUF:RegisterStyle("bdGrid", layout)
 	oUF:Factory(function(self)
-		self:SetActiveStyle("bdGrid")
+		self:RegisterInitCallback(style_callback)
+		self:RegisterStyle('bdGrid', layout)
+		self:SetActiveStyle('bdGrid')
 
 		-- Initial header spawning
 		local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
+
 		mod.frameHeader = self:SpawnHeader(nil, nil, 'raid,party,solo',
 			"showParty", true,
 			"showPlayer", true,
@@ -700,7 +707,7 @@ function mod:initialize()
 			"initial-height", config.height,
 			"point", new_player_anchor,
 			"groupBy", group_by
-		);
+		)
 	end)
 
 	-- hold the raid frames
@@ -724,16 +731,16 @@ function mod:create_container()
 	mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
 	mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
 	mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
+	mod.raidpartyholder:RegisterEvent("GROUP_JOINED")
 	mod.raidpartyholder:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "PLAYER_ENTERING_WORLD") then
 			C_Timer.After(2, function()
 				mod:update_header()
-				mod:config_callback()
 			end)
+		else
+			mod:update_header()
 		end
-		mod:update_header()
-		mod:config_callback()
 	end)
 end
 

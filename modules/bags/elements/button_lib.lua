@@ -46,7 +46,7 @@ methods["update_cooldown"] = function(self)
 end
 
 methods["update_new"] = function(self)
-	self.BattlepayItemTexture:SetShown(C_NewItems.IsNewItem(self.bag, self.slot))
+	self.BattlepayItemTexture:SetShown(not self.isBag and C_NewItems.IsNewItem(self.bag, self.slot))
 	-- self.new_item:SetShown(C_NewItems.IsNewItem(self.bag, self.slot))
 
 	-- self:update()
@@ -157,13 +157,14 @@ mod.item_pool_create = function(self)
 
 	-- really surprising that i have to do this, itembuttons dont come with tooltip functionality in the bank main bag
 	button:HookScript("OnEnter", function(self, ...)
-		if (self.bag == -1) then
-			self.GetInventorySlot = ButtonInventorySlot;
-			self.UpdateTooltip = BankFrameItemButton_OnEnter;
+		if (self.bag == -1 or self.bag == -4) then
+			self.GetInventorySlot = ButtonInventorySlot
+			self.UpdateTooltip = BankFrameItemButton_OnEnter
+
 			BankFrameItemButton_OnEnter(self)
 		elseif (self.bag == -3) then
 			self.GetInventorySlot = ReagentButtonInventorySlot
-			self.UpdateTooltip = BankFrameItemButton_OnEnter;
+			self.UpdateTooltip = BankFrameItemButton_OnEnter
 			BankFrameItemButton_OnEnter(self)
 		else
 			self.UpdateTooltip = ContainerFrameItemButton_OnUpdate;

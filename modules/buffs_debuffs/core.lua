@@ -43,7 +43,7 @@ local debufffont = bdUI:get_font(12)
 -- Time Function
 --===============================================
 local function set_time(button, duration)
-	local seconds = round(duration)
+	local seconds = duration
 	local hours = round(seconds / 60 / 60, 1)
 	local mins = math.floor(seconds / 60)
 
@@ -54,8 +54,10 @@ local function set_time(button, duration)
 			button.duration:SetText(hours.."h")
 		elseif (mins and mins > 0) then
 			button.duration:SetText(mins.."m")
-		else			
-			button.duration:SetText(seconds.."s")
+		elseif (config.decimalprec and duration <= 10) then
+			button.duration:SetText(round(duration, 1).."s")
+		else
+			button.duration:SetText(round(duration).."s")
 		end
 	end
 end

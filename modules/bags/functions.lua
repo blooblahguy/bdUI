@@ -10,11 +10,16 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 		name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 	end
 
-
 	local itemID
 	if (itemLink) then
+		-- local itemString = string.match(itemLink, "item[%-?%d:]+")
+		-- itemID = select(2, strsplit(":", itemString))
 		local itemString = string.match(itemLink, "item[%-?%d:]+")
-		itemID = select(2, strsplit(":", itemString))
+		if (itemString ~= nil) then
+			itemID = select(2, strsplit(":", itemString))
+		else
+			print("weird item found:", itemLink, " please report to developer")
+		end
 	end
 	
 	-- print(itemLink, icon, count)
