@@ -45,8 +45,8 @@ local noob = CreateFrame("frame", nil, UIParent)
 -- SortBags = SortBags or noop
 -- UnitPhaseReason = UnitPhaseReason or noop
 -- GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
--- ObjectiveTracker_Collapse = ObjectiveTracker_Collapse or noop
--- ObjectiveTracker_Expand = ObjectiveTracker_Expand or noop
+ObjectiveTracker_Collapse = ObjectiveTracker_Collapse or noop
+ObjectiveTracker_Expand = ObjectiveTracker_Expand or noop
 GetContainerItemQuestInfo = GetContainerItemQuestInfo or noop
 
 -- frames
