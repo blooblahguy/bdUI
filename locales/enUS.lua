@@ -4,8 +4,7 @@ local bdUI, c, l = unpack(select(2, ...))
 -- enUS
 --============================================
 local L = LibStub("AceLocale-3.0"):NewLocale("bdUI", "enUS", true)
-L["loaded"] = "Loaded Enjoy!"
-L["for options"] = "/bdui for options"
+L["loaded"] = "Loaded Enjoy! /bdui for options"
 L["reload ui"] = "Reload UI"
 L["lock"] = "Lock"
 L["unlock"] = "Unlock"

@@ -665,6 +665,12 @@ function style_callback(self)
 	-- print(self.unit)
 end
 
+local function newlayout_test(...)
+	print("test", ...)
+end
+
+
+
 --======================================================
 -- Initialize
 --======================================================
@@ -680,10 +686,12 @@ function mod:initialize()
 	-- make sure we can store grid aliases
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
 
+	-- hold the raid frames
+	mod:create_container()
+
 	-- send to factory
+	oUF:RegisterStyle('bdGrid', layout)
 	oUF:Factory(function(self)
-		self:RegisterInitCallback(style_callback)
-		self:RegisterStyle('bdGrid', layout)
 		self:SetActiveStyle('bdGrid')
 
 		-- Initial header spawning
@@ -692,7 +700,7 @@ function mod:initialize()
 		mod.frameHeader = self:SpawnHeader(nil, nil, 'raid,party,solo',
 			"showParty", true,
 			"showPlayer", true,
-			"showSolo", config.showsolo,
+			"showSolo", config.showSolo,
 			"showRaid", true,
 			"initial-scale", 1,
 			"unitsPerColumn", 5,
@@ -706,12 +714,12 @@ function mod:initialize()
 			"initial-width", config.width,
 			"initial-height", config.height,
 			"point", new_player_anchor,
-			"groupBy", group_by
+			"groupBy", group_by,
+			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
 		)
-	end)
 
-	-- hold the raid frames
-	mod:create_container()
+		mod:update_header()
+	end)
 
 	-- disable blizzard things
 	mod:disable_blizzard()
@@ -732,15 +740,16 @@ function mod:create_container()
 	mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
 	mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
 	mod.raidpartyholder:RegisterEvent("GROUP_JOINED")
+	mod.raidpartyholder:RegisterEvent("GROUP_ROSTER_UPDATE")
 	mod.raidpartyholder:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "PLAYER_ENTERING_WORLD") then
 			C_Timer.After(2, function()
 				mod:update_header()
 			end)
-		else
-			mod:update_header()
 		end
+
+		mod:update_header()
 	end)
 end
 

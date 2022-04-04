@@ -23,7 +23,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		bdMove.spacing = bdUI.border
 
 		bdUI:debug(l['loaded'])
-		bdUI:debug(l['for options'])
+		-- bdUI:debug(l['for options'])
 		bdUI:do_action("loaded")
 		bdUI:do_action("post_loaded")
 
