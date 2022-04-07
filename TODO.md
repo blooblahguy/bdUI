@@ -2,11 +2,9 @@
 Items from the discord that I'm tracking to make sure everything is accounted for.
 
 - fix friendly names in / out of raid
-- fix keystones in bag on retail
 
 - completely redo actionbars
 - druid powerbar
-- hide until mouseover issues
 - unattached castbars
 - better personal nameplate display
 - add full EN localization to get things going on more international
