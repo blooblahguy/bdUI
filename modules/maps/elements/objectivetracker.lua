@@ -30,9 +30,9 @@ function mod:create_objective_tracker()
 	local f = CreateFrame("Frame")
 	f:SetScript("OnEvent",function(self, event, addon)
 		if (event == "ENCOUNTER_START" or (event == "PLAYER_ENTERING_WORLD" and IsInRaid())) then
-			ObjectiveTracker_Collapse()
+			if (ObjectiveTracker_Collapse) then ObjectiveTracker_Collapse() end
 		elseif (event == "ENCOUNTER_END" and not IsInRaid()) then
-			ObjectiveTracker_Expand()
+			if (ObjectiveTracker_Expand) then ObjectiveTracker_Expand() end
 		else
 			if (IsAddOnLoaded("Blizzard_ObjectiveTracker") or bdUI:isClassicAny()) then
 				move_objective_tracker()

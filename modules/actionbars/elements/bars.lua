@@ -17,10 +17,10 @@ function mod:create_actionbar1()
 	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.actionPage = "[bar:6] 6; [bar:5] 5; [bar:4] 4; [bar:3] 3; [bar:2] 2; [overridebar] 14; [shapeshift] 13; [vehicleui] 12; [possessbar] 12; [bonusbar:5] 11; [bonusbar:4] 10; [bonusbar:3] 9; [bonusbar:2] 8; [bonusbar:1] 7; 1"
 
-	if (bdUI:isClassicBC()) then
+-- 	if (bdUI:isClassicBC()) then
 -- 		AB.barDefaults.bar1.conditions = '[bonusbar:5] 11; [shapeshift] 13; [form,noform] 0; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6;'
 -- 	else
-	end
+-- 	end
 
 	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 80}
 
@@ -181,16 +181,14 @@ end
 --===============================================================
 function mod:create_micromenu()
 	c = mod.config
-	if (not c.showMicro) then return end
+
 	cfg = {}
 	cfg.cfg = "microbar"
 	cfg.frameName = "bdActionbars_MicroMenuBar"
 	cfg.moveName = "Micromenu"
-	cfg.frameVisibility = "[petbattle] hide; show"
 	cfg.frameSpawn = {"BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -defaultPadding, defaultPadding}
 	cfg.widthScale = 0.777
-	-- TalentMicroButtonAlert:Hide()
-	-- TalentMicroButtonAlert.Show = noop
+
 	cfg.buttonSkin = function(button)
 		local flash = _G[button:GetName().."Flash"]
 		flash:SetAllPoints()
@@ -198,12 +196,15 @@ function mod:create_micromenu()
 		for k, v in pairs(regions) do
 			if (not v.protected) then
 				v:SetTexCoord(.17, .80, .22, .82)
+				v:ClearAllPoints()
 				v:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -6)
 				v:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -4, 6)
 			end
 		end
+
 		bdUI:set_backdrop(button)
 	end
+
 	local buttonList = {}
 	for idx, buttonName in next, MICRO_BUTTONS do
 		local button = _G[buttonName]
@@ -211,13 +212,27 @@ function mod:create_micromenu()
 			table.insert(buttonList, button)
 		end
 	end
+
 	local micromenu = mod:CreateBar(buttonList, cfg)
 
+	-- config callback
+	local function callback()
+		if (mod.config.showMicro) then
+			micromenu:Show()
+		else
+			micromenu:Hide()
+		end
+	end
+	table.insert(mod.variables.callbacks, callback)
+	callback()
+
 	-- lose the alert boxex
-	-- bdUI:hide_protected(CharacterMicroButtonAlert)
-	-- bdUI:hide_protected(TalentMicroButtonAlert)
-	-- CharacterMicroButtonAlert:Hide()
-	-- CharacterMicroButtonAlert.Show = noop
+	if (TalentMicroButtonAlert) then
+		bdUI:hide_protected(TalentMicroButtonAlert)
+	end
+	if (CharacterMicroButtonAlert) then
+		bdUI:hide_protected(CharacterMicroButtonAlert)
+	end
 end
 	
 --===============================================================
@@ -230,21 +245,29 @@ function mod:create_bagbar()
 	-- cfg.moveName = "Bagbar"
 	-- cfg.frameVisibility = "[petbattle] hide; show"
 	-- cfg.frameSpawn = { "BOTTOMRIGHT", mod.bars['microbar'] or bdParent, "TOPRIGHT", 0, defaultPadding }
-	function cfg:callback(frame)
-		frame:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
-		if (c.showBags) then
-			frame:Show()
-		else
-			frame:Hide()
-		end
-	end
 
 	local bag = CreateFrame("Button", "bdActionbars_BagBar", bdParent, BackdropTemplateMixin and "SecureHandlerClickTemplate, BackdropTemplate" or "SecureHandlerClickTemplate")
 	bag:SetPoint("RIGHT", mod.bars['microbar'], "LEFT", -defaultPadding, 0)
 	bag:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
 	bag:RegisterForClicks("AnyUp")
 	bag:SetScript("OnClick", function(self) ToggleAllBags()	end)
-	RegisterStateDriver(bag, "visibility", "[petbattle] hide; show")
+	-- RegisterStateDriver(bag, "visibility", "[petbattle] hide; show")
+
+	if (mod.config.showBags) then
+		bag:Show()
+	else
+		bag:Hide()
+	end
+
+	-- config callback
+	table.insert(mod.variables.callbacks, function()
+		bag:SetSize(mod.config.bagbar_size, mod.config.bagbar_size)
+		if (mod.config.showBags) then
+			bag:Show()
+		else
+			bag:Hide()
+		end
+	end)
 
 	-- ICON
 	local icon = bag:CreateTexture(nil, "ARTWORK")
@@ -272,7 +295,8 @@ end
 -- Vehicle Exit
 --===============================================================
 function mod:create_vehicle()
-	if (bdUI:isClassicAny()) then return end
+	if (not CanExitVehicle) then return end
+
 	cfg = {}
 	cfg.cfg = "vehiclebar"
 	cfg.frameName = "bdActionbars_VehicleExitBar"
@@ -308,15 +332,15 @@ function mod:create_vehicle()
 	local vehicle = mod:CreateBar(buttonList, cfg)
 
 	--[canexitvehicle] is not triggered on taxi, exit workaround
-	vehicle:SetAttribute("_onstate-exit", [[ if CanExitVehicle() then self:Show() else self:Hide() end ]])
-	if not CanExitVehicle() then vehicle:Hide() end
+	vehicle:SetAttribute("_onstate-exit", [[ if CanExitVehicle and CanExitVehicle() then self:Show() else self:Hide() end ]])
+	if CanExitVehicle and (not CanExitVehicle()) then vehicle:Hide() end
 end
 
 --===============================================================
 -- Possess Exit
 --===============================================================
 function mod:create_possess()
-	if (bdUI:isClassicAny()) then return end
+	if (not NUM_POSSESS_SLOTS) then return end
 	cfg = {}
 	cfg.cfg = "possessbar"
 	cfg.blizzardBar = PossessBarFrame

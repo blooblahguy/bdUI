@@ -6,19 +6,14 @@ local noob = CreateFrame("frame", nil, UIParent)
 --====================================================
 -- VANILLA
 --====================================================
-bdUI.mobhealth = bdUI:isClassicAny() and LibStub("LibClassicMobHealth-1.0")
-
-if not bdUI:isClassicAny() then return end
-
+bdUI.mobhealth = LibStub("LibClassicMobHealth-1.0")
 -- mod health
 
 -- classic spell durations
-if (bdUI:isClassicVanilla()) then
-	local UnitAura = _G.UnitAura
-	bdUI.spell_durations = LibStub("LibClassicDurations")
-	bdUI.spell_durations:Register("bdUI")
-	UnitAura = bdUI.spell_durations
-end
+local UnitAura = _G.UnitAura
+bdUI.spell_durations = LibStub("LibClassicDurations")
+bdUI.spell_durations:Register("bdUI")
+UnitAura = bdUI.spell_durations
 
 -- local LibClassicDurations = LibStub("LibClassicDurations", true)
 -- if LibClassicDurations then
@@ -31,24 +26,11 @@ ATTACK_BUTTON_FLASH_TIME = ATTACK_BUTTON_FLASH_TIME or 0.4
 
 -- functions
 GetSpecializationInfoByID = GetSpecializationInfoByID or noop
-GetInspectSpecialization = GetInspectSpecialization or noop
-IsActiveBattlefieldArena = IsActiveBattlefieldArena or noop
-CanExitVehicle = CanExitVehicle or noop
-SetSortBagsRightToLeft = SetSortBagsRightToLeft or noop
-UnitGroupRolesAssigned = UnitGroupRolesAssigned or noop
 UnitThreatSituation = UnitThreatSituation or noop
-UnitHasVehicleUI = UnitHasVehicleUI or noop
 UnitCastingInfo = UnitCastingInfo or CastingInfo
 UnitChannelInfo = UnitChannelInfo or ChannelInfo
 UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
 GetSpecialization = GetSpecialization or noop
-CanExitVehicle = CanExitVehicle or noop
-SortBags = SortBags or noop
-UnitPhaseReason = UnitPhaseReason or noop
-GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
-ObjectiveTracker_Collapse = ObjectiveTracker_Collapse or noop
-ObjectiveTracker_Expand = ObjectiveTracker_Expand or noop
-GetContainerItemQuestInfo = GetContainerItemQuestInfo or noop
 
 -- frames
 MiniMapTrackingDropDown = MiniMapTrackingDropDown or noob
@@ -80,15 +62,12 @@ QueueStatusMinimapButton = QueueStatusMinimapButton or noob
 QueueStatusMinimapButtonIcon = QueueStatusMinimapButtonIcon or noob
 
 -- threat functions
-local threatcolors = {
-	[0] = {0.69, 0.69, 0.69},
-	[1] = {1, 1, 0.47},
-	[2] = {1, 0.6, 0},
-	[3] = {1, 0, 0},
-}
-function GetThreatStatusColor(level)
-	return unpack(threatcolors[level])
-end
-
-Enum.PvPUnitClassification = Enum.PvPUnitClassification or {}
-Enum.SummonStatus = Enum.SummonStatus or {}
+-- local threatcolors = {
+-- 	[0] = {0.69, 0.69, 0.69},
+-- 	[1] = {1, 1, 0.47},
+-- 	[2] = {1, 0.6, 0},
+-- 	[3] = {1, 0, 0},
+-- }
+-- function GetThreatStatusColor(level)
+-- 	return unpack(threatcolors[level])
+-- end

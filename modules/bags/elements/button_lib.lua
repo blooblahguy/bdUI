@@ -14,7 +14,6 @@ events["PLAYER_ENTERING_WORLD"] = "update_cooldown"
 
 local methods = {}
 methods["update_quality"] = function(self)
-	local isQuestItem, questId, isActive = GetContainerItemQuestInfo(self.bag, self.slot)
 
 	self.quality_border:Hide()
 	self.quality_border:set_border_color(unpack(bdUI.media.border))
@@ -27,7 +26,7 @@ methods["update_quality"] = function(self)
 			self.quality_border:Show()
 		end
 	end
-	if (isQuestItem) then
+	if (GetContainerItemQuestInfo and select(1, GetContainerItemQuestInfo(self.bag, self.slot))) then
 		self.quality_border:set_border_color(1, 1, 0.2, 1)
 		self.quality_border:Show()
 	end

@@ -107,7 +107,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 				new_cat = false
 				row.num_items = 0 -- reset row count
 				row.first_item = item -- this is the first item of this row
-			elseif (row.num_items > buttonsperrow) then
+			elseif (row.num_items > buttonsperrow) then -- new row
 				item:SetPoint("TOPLEFT", row.first_item, "BOTTOMLEFT", 0, -row_spacing)
 				if (not cat.positioned) then
 					cat:SetPoint("TOPLEFT", item)
@@ -122,7 +122,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 				row.num_items = 0 -- reset row count
 				row.first_item = item -- this is the first item of this row
 				row.num_rows = row.num_rows + 1
-			elseif (new_cat) then
+			elseif (new_cat) then -- new category
 				item:SetPoint("TOPLEFT", last_item, "TOPRIGHT", buttonsize + mod.border * 2, 0)
 				if (not cat.positioned) then
 					cat:SetPoint("TOPLEFT", item)

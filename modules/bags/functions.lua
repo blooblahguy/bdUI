@@ -6,17 +6,26 @@ local mod = bdUI:get_module("Bags")
 --===============================================
 function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent
+
 	if (itemLink) then
 		name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 	end
 
 	local itemID
 	if (itemLink) then
-		-- local itemString = string.match(itemLink, "item[%-?%d:]+")
-		-- itemID = select(2, strsplit(":", itemString))
 		local itemString = string.match(itemLink, "item[%-?%d:]+")
-		if (itemString ~= nil) then
+		local keyString = string.match(itemLink, "item[%-?%d:]+")
+
+		if (itemString ~= nil) then -- is item
 			itemID = select(2, strsplit(":", itemString))
+		elseif (keyString) then -- is keystone
+			itemID = select(2, strsplit(":", keyString))
+			icon = 525134
+			itemCount = 1
+			itemTypeID = 13
+			itemSubTypeID = 0
+			itemEquipLoc = ""
+			rarity = 4
 		else
 			print("weird item found:", itemLink, " please report to developer")
 		end
@@ -26,7 +35,9 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 	local t = {}
 	t.name = name
 	t.bag = bag
+	t.bagID = bagID
 	t.slot = slot
+
 	t.itemLink = itemLink
 	t.itemID = itemID
 	t.texture = icon
@@ -34,7 +45,6 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 	t.itemTypeID = itemTypeID
 	t.itemSubTypeID = itemSubTypeID
 	t.itemEquipLoc = itemEquipLoc
-	t.bagID = bagID
 	t.rarity = rarity or 0
 
 	return t

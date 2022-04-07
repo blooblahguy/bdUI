@@ -10,8 +10,6 @@ local noob = CreateFrame("frame", nil, UIParent)
 
 -- if not bdUI:isClassicAny() then return end
 
--- mod health
-
 -- classic spell durations
 -- if (bdUI:isClassicVanilla()) then
 -- 	local UnitAura = _G.UnitAura
@@ -20,34 +18,18 @@ local noob = CreateFrame("frame", nil, UIParent)
 -- 	UnitAura = bdUI.spell_durations
 -- end
 
--- local LibClassicDurations = LibStub("LibClassicDurations", true)
--- if LibClassicDurations then
--- 	LibClassicDurations:Register("bdUI")
--- 	UnitAura = LibClassicDurations.UnitAuraWrapper
--- end
-
 -- globals
--- ATTACK_BUTTON_FLASH_TIME = ATTACK_BUTTON_FLASH_TIME or 0.4
+ATTACK_BUTTON_FLASH_TIME = ATTACK_BUTTON_FLASH_TIME or 0.4
 
 -- functions
 -- GetSpecializationInfoByID = GetSpecializationInfoByID or noop
--- GetInspectSpecialization = GetInspectSpecialization or noop
--- IsActiveBattlefieldArena = IsActiveBattlefieldArena or noop
--- CanExitVehicle = CanExitVehicle or noop
--- SetSortBagsRightToLeft = SetSortBagsRightToLeft or noop
+
 -- UnitThreatSituation = UnitThreatSituation or noop
 -- UnitHasVehicleUI = UnitHasVehicleUI or noop
 -- UnitCastingInfo = UnitCastingInfo or CastingInfo
 -- UnitChannelInfo = UnitChannelInfo or ChannelInfo
 -- UnitAlternatePowerInfo = UnitAlternatePowerInfo or noop
 -- GetSpecialization = GetSpecialization or noop
--- CanExitVehicle = CanExitVehicle or noop
--- SortBags = SortBags or noop
--- UnitPhaseReason = UnitPhaseReason or noop
--- GetGuildBankWithdrawMoney = GetGuildBankWithdrawMoney or function() return 0 end
-ObjectiveTracker_Collapse = ObjectiveTracker_Collapse or noop
-ObjectiveTracker_Expand = ObjectiveTracker_Expand or noop
-GetContainerItemQuestInfo = GetContainerItemQuestInfo or noop
 
 -- frames
 MiniMapTrackingDropDown = MiniMapTrackingDropDown or noob
@@ -88,6 +70,3 @@ QueueStatusMinimapButtonIcon = QueueStatusMinimapButtonIcon or noob
 -- function GetThreatStatusColor(level)
 -- 	return unpack(threatcolors[level])
 -- end
-
--- Enum.PvPUnitClassification = Enum.PvPUnitClassification or {}
--- Enum.SummonStatus = Enum.SummonStatus or {}

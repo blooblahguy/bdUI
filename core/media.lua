@@ -161,12 +161,12 @@ end
 	end
 
 	local function border_gen(parent)
-		local frame = parent:CreateTexture(nil, "BORDER", nil, -5)
-		frame:SetTexture(bdUI.media.flat)
-		frame:SetVertexColor(unpack(bdUI.media.border))
-		frame.protected = true
+		local border = parent:CreateTexture(nil, "BORDER", nil, -5)
+		border:SetTexture(bdUI.media.flat)
+		border:SetVertexColor(unpack(bdUI.media.border))
+		border.protected = true
 
-		return frame
+		return border
 	end
 
 	function bdUI:set_backdrop(frame, force_border)

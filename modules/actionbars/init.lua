@@ -164,7 +164,7 @@ local config = {
 			{
 				key = "showBags",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Show Bag Menu",
 			},
 			{
