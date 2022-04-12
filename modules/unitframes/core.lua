@@ -207,7 +207,7 @@ function mod:create_unitframes()
 		local arena_boss = CreateFrame("frame", "bdArenaBoss", bdParent)
 		arena_boss:SetPoint("TOPRIGHT", Minimap, "BOTTOMLEFT", -10, -10)
 		arena_boss:SetSize(config.bosswidth, (config.bossheight + 30) * 5)
-		bdMove:set_moveable(arena_boss, "Boss & Arena Frames")
+		bdMove:set_moveable(arena_boss, "Boss Frames")
 		
 		-- boss
 		local lastboss = nil
@@ -222,19 +222,19 @@ function mod:create_unitframes()
 			lastboss = boss
 		end
 		
-		-- arena
-		local lastarena = nil
-		for i = 1, 5 do
-			local arena = oUF:Spawn("arena"..i, nil)
-			if (not lastarena) then
-				arena:SetPoint("TOP", arena_boss, "TOP", 0, 0)
-			else
-				arena:SetPoint("TOP", lastarena, "BOTTOM", -2, -30)
-			end
-			arena:SetSize(config.bosswidth, config.bossheight)
-			arena:SetAttribute('oUF-enableArenaPrep', 1)
-			lastarena = arena
-		end
+		-- -- arena
+		-- local lastarena = nil
+		-- for i = 1, 5 do
+		-- 	local arena = oUF:Spawn("arena"..i, nil)
+		-- 	if (not lastarena) then
+		-- 		arena:SetPoint("TOP", arena_boss, "TOP", 0, 0)
+		-- 	else
+		-- 		arena:SetPoint("TOP", lastarena, "BOTTOM", -2, -30)
+		-- 	end
+		-- 	arena:SetSize(config.bosswidth, config.bossheight)
+		-- 	arena:SetAttribute('oUF-enableArenaPrep', 1)
+		-- 	lastarena = arena
+		-- end
 	end
 
 	-- mod:RegisterEvent("UPDATE_MOUSEOVER_UNIT")

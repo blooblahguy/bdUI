@@ -26,10 +26,16 @@ local config = {
 				label = "Enable Castbars"
 			},
 			{
-				key = "showtargetbuffs",
+				key = "enable_rested_indicator",
 				value = true,
 				type = "toggle",
-				label = "Show Target's Buffs"
+				label = "Rested Indicator"
+			},
+			{
+				key = "enable_combat_indicator",
+				value = true,
+				type = "toggle",
+				label = "Combat Indicator"
 			},
 			{
 				key = "inrangealpha",
@@ -64,28 +70,6 @@ local config = {
 				label = "Aura Style"
 			},
 			--=========================================
-			-- INDICATORS
-			--=========================================
-			{
-				key = "indicators",
-				type = "group",
-				label = "Indicators",
-				args = {
-					{
-						key = "enable_rested_indicator",
-						value = true,
-						type = "toggle",
-						label = "Rested Indicator"
-					},
-					{
-						key = "enable_combat_indicator",
-						value = true,
-						type = "toggle",
-						label = "Combat Indicator"
-					}
-				}
-			},
-			--=========================================
 			-- RESOURCES
 			--=========================================
 			{
@@ -97,7 +81,7 @@ local config = {
 						key = "resources_enable",
 						value = true,
 						type = "toggle",
-						label = "Enable Resource Bar"
+						label = "Enable Class Resource Bar"
 					},
 					{
 						key = "resources_width",
@@ -153,6 +137,12 @@ local config = {
 				value = true,
 				type = "toggle",
 				label = "Enable Player, Target, ToT, & Pet"
+			},
+			{
+				key = "showtargetbuffs",
+				value = true,
+				type = "toggle",
+				label = "Show Target's Buffs"
 			},
 			{
 				key = "playertargetwidth",
@@ -341,7 +331,7 @@ local config = {
 	{
 		key = "bosstab",
 		type = "tab",
-		label = "Boss & Arena",
+		label = "Boss",
 		args = {
 			{
 				key = "bossenable",
