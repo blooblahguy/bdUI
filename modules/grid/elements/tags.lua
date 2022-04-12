@@ -54,7 +54,7 @@ mod.add_tags = function(self, unit)
 	-- shortname
 	self.Short = self.name_holder:CreateFontString(nil, "OVERLAY")
 	self.Short:SetFontObject(bdUI:get_font(12))
-	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
+	self.Short:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 0, 0)
 	self.Short:SetJustifyH("RIGHT")
 
 	-- group number
