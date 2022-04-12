@@ -2,6 +2,8 @@
 Items from the discord that I'm tracking to make sure everything is accounted for.
 
 - fix friendly names in / out of raid
+- fix grid debuff highlights
+- add back full chat functionality
 
 - completely redo actionbars
 - druid powerbar
