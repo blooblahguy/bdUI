@@ -82,6 +82,41 @@ function bdUI:truncate_text(text, fontObject, targetWidth)
 	end
 end
 
+local function on_cvar_event()
+	if (bdUI.cvars_ignore) then return end -- don't trigger this while we update our own cvars
+
+	bdUI:apply_cvars()
+end
+
+bdUI.cvars = {
+	["cameraDistanceMaxZoomFactor"] = 4,
+}
+bdUI:RegisterEvent("CVAR_UPDATE", on_cvar_event)
+bdUI:RegisterEvent("VARIABLES_LOADED", on_cvar_event)
+bdUI:RegisterEvent("PLAYER_REGEN_ENABLED", on_cvar_event)
+
+function bdUI:SetCVar(name, value)
+	bdUI.cvars[name] = value
+
+	bdUI:apply_cvars()
+end
+
+function bdUI:apply_cvars()
+	if (InCombatLockdown()) then return end
+	bdUI.cvars_ignore = true
+	
+	-- loop through and set our own
+	for name, value in pairs(bdUI.cvars) do
+		if (value == "default") then
+			SetCVar(name, GetCVarDefault(name))	
+		else
+			SetCVar(name, value)
+		end
+	end
+
+	bdUI.cvars_ignore = false
+end
+
 function bdUI:hide_protected(frame)
 	frame:Hide()
 	frame:EnableMouse(false)
