@@ -121,12 +121,26 @@ modules\actionbars\elements\zoneability.lua
 modules\actionbars\elements\hotkeys.lua
 
 # Bags
-modules\old_bags\init.lua
-modules\old_bags\functions.lua
-modules\old_bags\core.lua
-modules\old_bags\elements\bag.lua
-modules\old_bags\elements\bank.lua
-modules\old_bags\elements\loot.lua
+# modules\old_bags\init.lua
+# modules\old_bags\functions.lua
+# modules\old_bags\core.lua
+# modules\old_bags\elements\bag.lua
+# modules\old_bags\elements\bank.lua
+# modules\old_bags\elements\loot.lua
+modules\bags\init.lua
+modules\bags\functions.lua
+modules\bags\core.lua
+modules\bags\elements\currencies.lua
+modules\bags\elements\money.lua
+modules\bags\elements\categories.lua
+modules\bags\elements\button_lib.lua
+modules\bags\elements\bags.lua
+modules\bags\elements\bank.lua
+modules\bags\elements\reagents.lua
+modules\bags\elements\loot.lua
+modules\bags\elements\positioning.lua
+modules\bags\elements\filters.lua
+modules\bags\elements\containers.lua
 
 # Buffs & Debuffs
 modules\buffs_debuffs\template.xml
