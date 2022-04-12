@@ -32,24 +32,18 @@ local function update_frame(self)
 	if (InCombatLockdown()) then return end
 
 	self:SetSize(config.width, config.height)
-
-	self.RaidTargetIndicator:SetSize(12, 12)
-	self.ReadyCheckIndicator:SetSize(12, 12)
-	self.ResurrectIndicator:SetSize(16, 16)
-	self.ThreatLite:SetSize(60, 50)
-	self.Dispel:SetSize(60, 50)
-	
 	self.Short:SetWidth(config.width)
-	self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0,0)
 
-	self.Debuffs:SetPoint("CENTER", self.Health, "CENTER")
-	self.Debuffs:SetFrameLevel(27)
-	self.Debuffs:SetSize(44, 22)
+	if (config.powerdisplay == "None") then
+		self.Power:SetHeight(1)
+		self.Power:SetAlpha(0)
+	elseif (config.powerdisplay == "Healers" and role == "HEALER" or config.powerdisplay == "All") then
+		self.Power:SetHeight(config.powerheight)
+		self.Power:SetAlpha(1)
+	end
 
 	self.Buffs.size = config.buffSize
 	self.Debuffs.size = config.debuffSize
-
-	self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
 
 	if (config.showGroupNumbers and IsInRaid()) then
 		self.Group:Show()
@@ -154,12 +148,6 @@ local function layout(self, unit)
 			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(0, 0, 0, .4)
 		end
 	end
-	
-	--===============================================
-	-- Tags
-	--===============================================
-	self.name_holder = CreateFrame("frame", nil, self.Health)
-	mod.add_tags(self, unit)
 
 	--===============================================
 	-- Healing & Damage Absorbs
@@ -224,7 +212,8 @@ local function layout(self, unit)
 	self.Power:SetStatusBarTexture(bdUI.media.flat)
 	self.Power:ClearAllPoints()
 	self.Power:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", 0, 0)
-	self.Power:SetPoint("TOPRIGHT", self.Health, "BOTTOMRIGHT",0, config.powerheight)
+	self.Power:SetPoint("BOTTOMRIGHt", self.Health, "BOTTOMRIGHt", 0, 0)
+	self.Power:SetSize(config.width, config.powerheight)
 	self.Power:SetAlpha(0.8)
 	self.Power.colorPower = true
 	self.Power._border = self.Health:CreateTexture(nil, "OVERLAY")
@@ -252,19 +241,7 @@ local function layout(self, unit)
 			end
 		end
 
-
-		self.Short:ClearAllPoints()
-		self.Power:Hide()
-		self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, 0)
-		if (config.powerdisplay == "None") then
-			self.Power:Hide()
-		elseif (config.powerdisplay == "Healers" and role == "HEALER") then
-			self.Power:Show()
-			self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
-		elseif (config.powerdisplay == "All") then
-			self.Power:Show()
-			self.Short:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, config.powerheight)
-		end
+		update_frame(self)
 	end
 
 	self.LeaderIndicator = self.Health:CreateTexture(nil, "OVERLAY")
@@ -284,10 +261,12 @@ local function layout(self, unit)
 	-- Readycheck
 	self.ReadyCheckIndicator = self.Health:CreateTexture(nil, 'OVERLAY', nil, 7)
 	self.ReadyCheckIndicator:SetPoint('CENTER', self, 'CENTER', 0, 2)
+	self.ReadyCheckIndicator:SetSize(12, 12)
 	
 	-- ResurrectIcon
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
 	self.ResurrectIndicator:SetPoint('CENTER', self, "CENTER", 0,0)
+	self.ResurrectIndicator:SetSize(16, 16)
 	
 	-- Threat
 	local pixel = bdUI:get_pixel(self)
@@ -297,6 +276,7 @@ local function layout(self, unit)
 	self.ThreatLite:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.pixel})
 	self.ThreatLite:SetBackdropBorderColor(1, 0, 0,1)
 	self.ThreatLite:SetBackdropColor(0,0,0,0)
+	-- self.ThreatLite:SetSize(60, 50)
 	self.ThreatLite:Hide()
 	
 	-- Buffs
@@ -376,10 +356,11 @@ local function layout(self, unit)
 	self.Dispel:SetBackdropBorderColor(1, 1, 1, 1)
 	self.Dispel:SetBackdropColor(0, 0, 0, 0)
 	self.Dispel:Hide()
+	-- self.Dispel:SetSize(60, 50)
 	
 	-- look / color / show dispels and glows
-	self:RegisterEvent("UNIT_AURA", mod.dispel_glow);
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", mod.dispel_glow);
+	self:RegisterEvent("UNIT_AURA", mod.dispel_glow)
+	self:RegisterEvent("PLAYER_ENTERING_WORLD", mod.dispel_glow)
 
 	-- overlays if there are multiple dispells
 	self.Dispel.Magic = self.Dispel:CreateTexture(nil, "OVERLAY")
@@ -421,6 +402,8 @@ local function layout(self, unit)
 	self.Debuffs = CreateFrame("Frame", "bdGrid_debuffs", self.Health)
 	self.Debuffs:SetFrameLevel(21)
 	self.Debuffs:SetPoint("CENTER")
+	self.Debuffs:SetFrameLevel(27)
+	self.Debuffs:SetSize(44, 22)
 	self.Debuffs.initialAnchor = "CENTER"
 	self.Debuffs.size = config.debuffSize
 	self.Debuffs:EnableMouse(false)
@@ -476,6 +459,13 @@ local function layout(self, unit)
 			button._border:SetVertexColor(unpack(bdUI.media.border))
 		end
 	end
+
+
+	--===============================================
+	-- Tags
+	--===============================================
+	self.name_holder = CreateFrame("frame", nil, self.Health)
+	mod.add_tags(self, unit)
 	
 	table.insert(mod.frames, self)
 	update_frame(self)
