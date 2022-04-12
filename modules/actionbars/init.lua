@@ -48,6 +48,12 @@ local function addBarConf(title, key, options)
 				label = "Hide Bar Hotkeys until Mouseover"
 			},
 			{
+				key = key.."_hidemacros",
+				type = "toggle",
+				value = defaults.hotkeys,
+				label = "Hide Macros until Mouseover"
+			},
+			{
 				key = key.."_size",
 				type = "range",
 				min = 4,
