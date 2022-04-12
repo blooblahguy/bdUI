@@ -592,6 +592,7 @@ local function nameplate_create(self, unit)
 end
 
 local function disable_class_power()
+	if (not ClassNameplateManaBarFrame) then return end
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_DISPLAYPOWER")
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_POWER_FREQUENT")
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_MAXPOWER")

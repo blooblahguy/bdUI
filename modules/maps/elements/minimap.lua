@@ -65,8 +65,10 @@ function mod:create_minimap()
 		Minimap:SetQuestBlobRingScalar(0)
 	end
 	MinimapCluster:EnableMouse(false)
-	MiniMapInstanceDifficulty:ClearAllPoints()
-	MiniMapInstanceDifficulty:SetPoint("TOPRIGHT", Minimap.background, "TOPRIGHT", -2, -2)
+	if (MiniMapInstanceDifficulty) then
+		MiniMapInstanceDifficulty:ClearAllPoints()
+		MiniMapInstanceDifficulty:SetPoint("TOPRIGHT", Minimap.background, "TOPRIGHT", -2, -2)
+	end
 
 	--========================
 	-- Skin
@@ -101,13 +103,21 @@ function mod:create_minimap()
 	background:SetBackdropBorderColor(unpack(bdUI.media.border))
 
 	-- ButtonFrame stuff
-	GarrisonLandingPageMinimapButton:SetParent(Minimap)
-	QueueStatusMinimapButton:SetParent(Minimap)
-	MiniMapTracking:SetParent(Minimap)
-	MiniMapTrackingButtonBorder:Hide()
-	MiniMapTrackingButtonShine:Hide()
-	MiniMapTrackingButtonShine.Show = noop
-	QueueStatusMinimapButtonIcon:SetFrameLevel(50)
+	if (GarrisonLandingPageMinimapButton) then
+		GarrisonLandingPageMinimapButton:SetParent(Minimap)
+	end
+	if (QueueStatusMinimapButton) then
+		QueueStatusMinimapButton:SetParent(Minimap)
+		QueueStatusMinimapButtonIcon:SetFrameLevel(50)
+	end
+	if (MiniMapTracking) then
+		MiniMapTracking:SetParent(Minimap)
+	end
+	if (MiniMapTrackingButtonBorder) then
+		MiniMapTrackingButtonBorder:Hide()
+		MiniMapTrackingButtonShine:Hide()
+		MiniMapTrackingButtonShine.Show = noop
+	end
 
 	--===========================
 	-- Mail

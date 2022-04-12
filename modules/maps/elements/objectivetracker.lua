@@ -15,6 +15,7 @@ function mod:create_objective_tracker()
 	Minimap.qa = quest_anchor
 
 	local function move_objective_tracker()
+		if (not ObjectiveTrackerFrame) then return end
 		local tracker = ObjectiveTrackerFrame
 		tracker:ClearAllPoints()
 		ignore_point = true
@@ -34,7 +35,7 @@ function mod:create_objective_tracker()
 		elseif (event == "ENCOUNTER_END" and not IsInRaid()) then
 			if (ObjectiveTracker_Expand) then ObjectiveTracker_Expand() end
 		else
-			if (IsAddOnLoaded("Blizzard_ObjectiveTracker") or bdUI:isClassicAny()) then
+			if (IsAddOnLoaded("Blizzard_ObjectiveTracker")) then
 				move_objective_tracker()
 				hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
 					if (not ignore_point) then

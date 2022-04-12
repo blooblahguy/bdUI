@@ -136,8 +136,10 @@ function mod:skin_chat()
 	-- Hide side buttons
 	ChatFrameMenuButton:Hide()
 	ChatFrameMenuButton.Show = noop
-	QuickJoinToastButton:Hide()
-	QuickJoinToastButton.Show = noop
+	if (QuickJoinToastButton) then
+		QuickJoinToastButton:Hide()
+		QuickJoinToastButton.Show = noop
+	end
 	ChatFrameChannelButton:Hide()
 	ChatFrameChannelButton.Show = noop
 
