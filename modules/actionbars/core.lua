@@ -61,26 +61,39 @@ function mod:config_callback()
 	
 	mod:UnregisterEvent("PLAYER_REGEN_DISABLED")
 	mod.variables.font = bdUI:get_font(c.font_size)
-	mod.variables.cooldownfont = bdUI:get_font(12)
+	mod.variables.cooldownfont = bdUI:get_font(11)
 
 	-- loop through bar callbacks
 	for k, callback in pairs(mod.variables.callbacks) do
 		callback()
 	end
+
+	for name, frame in pairs(mod.bars) do
+		mod:hide_keybinds(frame, true)
+	end
 end
 
-local function HideKeybinds(frame)
-	local hide = frame.hidehotkeys and not IsMouseOverFrame(frame)
+function mod:hide_keybinds(frame, force)
+	local hovered = IsMouseOverFrame(frame)
+
+	local hide_keys = frame.hidehotkeys
+	local hide_macros = frame.hidemacros
 
 	for i, button in pairs(frame.buttonList) do
 		local hotkey = _G[button:GetName().."HotKey"]
+		local macro = _G[button:GetName().."Name"]
+
 		if (hotkey) then
 			local text = hotkey:GetText()
-			if (hide or not text or not text:match("[%a%d]")) then
+			if (not text or not text:match("[%a%d]")) then
 				hotkey:Hide()
 			else
-				hotkey:Show()
+				hotkey:SetShown(not hide_keys or (hide_keys and hovered))
 			end
+		end
+
+		if (macro) then
+			macro:SetShown(not hide_macros or (hide_macros and hovered))
 		end
 	end
 end
@@ -95,8 +108,13 @@ function mod:CreateBar(buttonList, cfg)
 	frame.buttonList = buttonList
 
 	-- hide hotkeys based on mousing over full bar
-	frame:HookScript("OnEnter", HideKeybinds)
-	frame:HookScript("OnLeave", HideKeybinds)
+	frame.total = 0
+	frame:HookScript("OnUpdate", function(self, elapsed)
+		self.total = self.total + elapsed
+		if (self.total > 0.3) then
+			mod:hide_keybinds(self)
+		end
+	end)
 
 	-- hook into configuration changes
 	table.insert(mod.variables.callbacks, function() 
@@ -142,6 +160,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	frame.alpha = c[cfg.cfg.."_alpha"] or 1
 	frame.enableFader = c[cfg.cfg.."_mouseover"] or false
 	frame.hidehotkeys = c[cfg.cfg.."_hidehotkeys"] or false
+	frame.hidemacros = c[cfg.cfg.."_hidemacros"] or false
 	
 	frame.num = #buttonList
 	frame.cols = math.floor(math.min(frame.limit, frame.num) / frame.rows)
@@ -160,7 +179,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	frame:SetAlpha(frame.alpha)
 
 	-- hotkeys
-	HideKeybinds(frame)
+	mod:hide_keybinds(frame)
 	
 	-- Fader
 	if (frame.enableFader) then
@@ -336,7 +355,8 @@ function mod:SkinButton(button)
 		cooldowntext:SetJustifyH("Center")
 		cooldowntext:SetAllPoints(cooldown)
 		cooldown:SetParent(button)
-		cooldown:SetAllPoints(button)
+		cooldown:SetPoint("CENTER")
+		cooldown:SetSize(button:GetWidth() + 4, button:GetHeight() + 4)
 		hook_cooldown(button)
 	end
 
