@@ -5,22 +5,22 @@ function mod:alt_invite()
 	local InviteUnit = InviteUnit or C_PartyInfo.InviteUnit
 
 	hooksecurefunc("SetItemRef", function(link)
-		local type, value = link:match("(%a+):(.+)")
-
 		if not IsAltKeyDown() then return end
 		
-		if type == "player" then
-			local player = value:match("([^:]+)")
-			InviteUnit(Ambiguate(player, "none"))
-		elseif (type == "BNplayer") then
+		local player = value:match("^player:([^:]+)")
+		local bnet = value:match("^BNplayer:[^:]+:([^:]+)")
+
+		if player then
+			InviteUnit(player)
+			ChatEdit_OnEscapePressed(ChatFrame1EditBox)
+		elseif (bnet) then
 			-- full credit to funkydude here 
-			local gameAccountID = link:match("^BNplayer:[^:]+:([^:]+)")
-			local accountInfoTbl = C_BattleNet.GetAccountInfoByID(gameAccountID)
-			if accountInfoTbl and accountInfoTbl.gameAccountInfo and accountInfoTbl.gameAccountInfo.gameAccountID then
-				BNInviteFriend(accountInfoTbl.gameAccountInfo.gameAccountID)
+			local _, _, _, _, _, gameAccountId = BNGetFriendInfoByID(bnet)
+			if gameAccountId then
+				BNInviteFriend(gameAccountId)
+				ChatEdit_OnEscapePressed(ChatFrame1EditBox)
 			end
 		end
 
-		ChatEdit_OnEscapePressed(ChatFrame1EditBox)
 	end)
 end
