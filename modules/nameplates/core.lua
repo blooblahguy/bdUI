@@ -75,10 +75,6 @@ role_collection:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 role_collection:RegisterEvent("GROUP_ROSTER_UPDATE")
 role_collection:SetScript("OnEvent", store_tanks)
 
--- local function pixel_perfect(self)
--- 	local border = bdUI:get_border(self)
--- end
-
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
@@ -88,10 +84,6 @@ function mod:config_callback()
 	mod.lists = {}
 	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
 	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
-	-- mod.lists.specialSpells = bdUI:lowercase_table(config.specialSpells) -- not using these at all right now?
-	-- mod.lists.selfwhitelist = bdUI:lowercase_table(config.selfwhitelist) -- not using these at all right now?
-	-- mod.lists.whitelist = bdUI:lowercase_table(config.whitelist) -- not using these at all right now?
-	-- mod.lists.blacklist = bdUI:lowercase_table(config.blacklist) -- not using these at all right now?
 	
 	-- Update nameplate sizing
 	mod:nameplate_size()
@@ -140,42 +132,29 @@ function mod:config_callback()
 	mod.font_castbar = bdUI:get_font(castbar)
 	mod.font_friendly = bdUI:get_font(config.friendlynamesize)
 
-	if (InCombatLockdown()) then return end
-	-- set cVars
-	local cvars = {
-		['nameplateShowAll'] = 1
-		, ['nameplateMotion'] = config.stacking == "Stacking" and 1 or 0
-		, ['nameplateMotionSpeed'] = config.stackingspeed
+	bdUI:SetCVar("nameplateShowAll", 1)
+	bdUI:SetCVar("nameplateMotion", config.stacking == "Stacking" and 1 or 0)
+	bdUI:SetCVar("nameplateMotionSpeed", config.stackingspeed)
 
-		-- scale
-		, ['nameplateGlobalScale'] = config.scale
-		, ['nameplateSelfScale'] = config.scale
-		, ['nameplateSelectedScale'] = config.selectedscale
-		, ['nameplateLargerScale'] = config.largerscale
-		, ['nameplateMinScale'] = 1
-		, ['nameplateMaxScale'] = 1
-		
-		-- alpha
-		, ['nameplateSelfAlpha'] = 1
-		, ['nameplateMinAlpha'] = config.unselectedalpha
-		, ['nameplateMinAlpha'] = config.unselectedalpha
-		, ['nameplateMaxAlpha'] = config.unselectedalpha
-		, ['nameplateOccludedAlphaMult'] = config.occludedalpha
+	-- scale
+	bdUI:SetCVar("nameplateGlobalScale", config.scale)
+	bdUI:SetCVar("nameplateSelfScale", config.scale)
+	bdUI:SetCVar("nameplateSelectedScale", config.selectedscale)
+	bdUI:SetCVar("nameplateLargerScale", config.largerscale)
+	bdUI:SetCVar("nameplateMinScale", 1)
+	bdUI:SetCVar("nameplateMaxScale", 1)
 
-		-- misc
-		, ['nameplateMaxDistance'] = config.nameplatedistance -- for some reason there is a 6yd diff
-		-- , ['nameplateShowDebuffsOnFriendly'] = 0
-		-- , ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
-	}
+	-- alpha
+	bdUI:SetCVar("nameplateSelfAlpha", 1)
+	bdUI:SetCVar("nameplateMinAlpha", config.unselectedalpha)
+	bdUI:SetCVar("nameplateMinAlpha", config.unselectedalpha)
+	bdUI:SetCVar("nameplateMaxAlpha", config.unselectedalpha)
+	bdUI:SetCVar("nameplateOccludedAlphaMult", config.occludedalpha)
 
-	-- loop through and set CVARS
-	for k, v in pairs(cvars) do
-		if (v == "default") then
-			SetCVar(k, GetCVarDefault(k))	
-		else
-			SetCVar(k, v)
-		end
-	end
+	-- misc
+	bdUI:SetCVar("nameplateMaxDistance", config.nameplatedistance) -- for some reason there is a 6yd diff
+	-- , ['nameplateShowDebuffsOnFriendly'] = 0
+	-- , ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
 end
 
 --==============================================
