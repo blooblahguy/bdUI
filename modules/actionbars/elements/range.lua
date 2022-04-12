@@ -21,10 +21,6 @@ colors['unusable'] = {0.3, 0.3, 0.3}
 local text_colors = {}
 text_colors[3] = {0.8, 0.1, 0.1}
 text_colors[60] = {0.8, 0.7, 0.1}
-
-local updater = CreateFrame("frame")
-updater:Hide()
-
 --=========================================
 -- BUTTON FUNCTIONS
 --=========================================
@@ -114,10 +110,10 @@ updater:Hide()
 -- Init
 -- Register all hooks and event handlers
 --=====================================================
-hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange, inRange)
+function mod:update_useable(button, checksRange, inRange)
 	if (not mod.config.enabled) then return end
 
-	if (not checksRange) then 
+	if (not checksRange) then
 		return 
 	end
 	
@@ -142,4 +138,10 @@ hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange
 
 	local r, g, b = unpack(colors[colorkey])
 	button.icon:SetVertexColor(r, g, b)
-end)
+end
+
+local updater = CreateFrame("frame")
+updater:RegisterEvent("PLAYER_CONTROL_GAINED")
+updater:RegisterEvent("PLAYER_CONTROL_LOST")
+updater:RegisterEvent("PLAYER_TARGET_CHANGED")
+hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange, inRange) mod:update_useable(button, checksRange, inRange) end)
