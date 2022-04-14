@@ -22,6 +22,12 @@ local config = {
 			-- 	lookup = bdUI.get_fonts
 			-- },
 			{
+				key = "set_ui_scale",
+				type = "toggle",
+				value = true,
+				label = "Set Global UI Scale"
+			},
+			{
 				key = "change_fonts",
 				type = "toggle",
 				value = true,

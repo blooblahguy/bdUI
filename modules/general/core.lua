@@ -16,6 +16,7 @@ function mod:config_callback()
 
 	mod:create_fighttimer()
 end
+
 function mod:initialize()
 	mod.config = mod:get_save()
 
@@ -24,4 +25,11 @@ function mod:initialize()
 	mod:create_dcbo()
 	mod:create_errorblock()
 	mod:create_qol()
+
+	if (mod.config.set_ui_scale) then
+		bdUI:SetCVar("useUiScale", 1)
+		bdUI:SetCVar("uiScale", 0.65)
+
+		bdUI:do_action("bdUI/border_size")
+	end
 end
