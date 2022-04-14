@@ -119,6 +119,8 @@ local function create_bagslot_item(parent, template)
 	end)
 
 	button:HookScript("OnClick", function(self)
+		if (not _G['BankSlotsFrame'] or not _G['BankSlotsFrame']["Bag"..self.slot]) then return end 
+		
 		local isBought = _G['BankSlotsFrame']["Bag"..self.slot].tooltipText ~= BANK_BAG_PURCHASE
 		if (not self.itemID and self.bagID == -4 and not isBought) then
 			StaticPopup_Show("CONFIRM_BUY_BANK_SLOT");

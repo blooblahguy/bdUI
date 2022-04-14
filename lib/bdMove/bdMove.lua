@@ -13,7 +13,7 @@ LibStub("bdCallbacks-1.0"):New(lib)
 --========================================================
 local function IsMouseOverFrame(self)
 	if MouseIsOver(self) then return true end
-	if not SpellFlyout:IsShown() then return false end
+	if not SpellFlyout or not SpellFlyout:IsShown() then return false end
 	if not SpellFlyout.__faderParent then return false end
 	if SpellFlyout.__faderParent == self and MouseIsOver(SpellFlyout) then return true end
 

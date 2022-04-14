@@ -20,6 +20,12 @@ function mod:initialize()
 	c = mod:get_save()
 	mod.config = c
 	if (not c.enabled) then mod.disabled = true; return end
+
+	if (not c.enabled_once) then
+		SetActionBarToggles(1, 1, 1, 1, 0)
+		MultiActionBar_Update()
+		c.enabled_once = true
+	end
 	
 	mod:remove_blizzard()
 
@@ -69,12 +75,12 @@ function mod:config_callback()
 	end
 
 	for name, frame in pairs(mod.bars) do
-		mod:hide_keybinds(frame, true)
+		mod:toggle_keybinds(frame, true)
 	end
 end
 
-function mod:hide_keybinds(frame, force)
-	local hovered = IsMouseOverFrame(frame)
+function mod:toggle_keybinds(frame, force)
+	local hovered = bdUI:IsMouseOverFrame(frame)
 
 	local hide_keys = frame.hidehotkeys
 	local hide_macros = frame.hidemacros
@@ -111,8 +117,9 @@ function mod:CreateBar(buttonList, cfg)
 	frame.total = 0
 	frame:HookScript("OnUpdate", function(self, elapsed)
 		self.total = self.total + elapsed
-		if (self.total > 0.3) then
-			mod:hide_keybinds(self)
+		if (self.total > 0.1) then
+			self.total = 0
+			mod:toggle_keybinds(self)
 		end
 	end)
 
@@ -177,9 +184,6 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	local frameHeight = frame.rows * frame.height + (frame.rows-1) * frame.spacing
 	frame:SetSize(frameWidth, frameHeight)
 	frame:SetAlpha(frame.alpha)
-
-	-- hotkeys
-	mod:hide_keybinds(frame)
 	
 	-- Fader
 	if (frame.enableFader) then

@@ -468,9 +468,9 @@ end
 --========================================================
 -- Frames / Faders
 --========================================================
-	function IsMouseOverFrame(self)
-		if not (SpellFlyout) then return false end
+	function bdUI:IsMouseOverFrame(self)
 		if MouseIsOver(self) then return true end
+		if not SpellFlyout then return false end
 		if not SpellFlyout:IsShown() then return false end
 		if not SpellFlyout.__faderParent then return false end
 		if SpellFlyout.__faderParent == self and MouseIsOver(SpellFlyout) then return true end
@@ -528,7 +528,7 @@ end
 			self = self.__faderParent
 		end
 
-		if IsMouseOverFrame(self) then
+		if bdUI:IsMouseOverFrame(self) then
 			StartFadeIn(self)
 		else
 			StartFadeOut(self)
