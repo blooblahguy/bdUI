@@ -148,7 +148,7 @@ function mod:config_callback()
 	bdUI:SetCVar("nameplateSelfAlpha", 1)
 	bdUI:SetCVar("nameplateNotSelectedAlpha", config.unselectedalpha)
 	bdUI:SetCVar("nameplateMinAlpha", config.unselectedalpha)
-	bdUI:SetCVar("nameplateMaxAlpha", 1)
+	bdUI:SetCVar("nameplateMaxAlpha", config.unselectedalpha)
 	bdUI:SetCVar("nameplateOccludedAlphaMult", config.occludedalpha)
 
 	-- misc
