@@ -170,12 +170,12 @@ modules\databars\elements\honor.lua
 modules\databars\elements\altpower.lua
 
 # Grid
-modules\grid\init.lua
-modules\grid\functions.lua
-modules\grid\core.lua
-modules\grid\elements\alias.lua
-modules\grid\elements\tags.lua
-modules\grid\elements\dispel_glow.lua
+modules\groups\init.lua
+modules\groups\functions.lua
+modules\groups\core.lua
+modules\groups\elements\alias.lua
+modules\groups\elements\tags.lua
+modules\groups\elements\dispel_glow.lua
 
 # Maps
 modules\maps\config.lua

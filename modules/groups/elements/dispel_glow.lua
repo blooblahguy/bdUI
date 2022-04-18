@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Grid")
+local mod = bdUI:get_module("Groups")
 
 local dispelClass = {
 	["PRIEST"] = { ["Disease"] = true, ["Magic"] = true, }, --Purify

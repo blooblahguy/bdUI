@@ -11,6 +11,12 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		bdUI.config_instance = bdUI.bdConfig:load()
 		bdUI.persistent = BDUI_SAVE.persistent
 
+		-- migrating bdGrid profile over to groups
+		if (BDUI_SAVE and BDUI_SAVE.profiles and BDUI_SAVE.profiles.default and BDUI_SAVE.profiles.default.Grid) then
+			BDUI_SAVE.profiles.default.Groups = BDUI_SAVE.profiles.default.Grid
+			BDUI_SAVE.profiles.default.Grid = nil
+		end
+
 		-- set save for bdMove, so that we're not vulnerable to UI errors resetting positioning
 		local profile = bdUI.bdConfig:get_save("BDUI_SAVE")
 		bdMove:set_save(bdUI.bdConfig:get_save("BDUI_SAVE"))

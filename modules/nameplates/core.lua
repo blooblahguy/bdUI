@@ -137,7 +137,7 @@ function mod:config_callback()
 	bdUI:SetCVar("nameplateMotionSpeed", config.stackingspeed)
 
 	-- scale
-	bdUI:SetCVar("nameplateGlobalScale", config.scale)
+	bdUI:SetCVar("nameplateGlobalScale", UIParent:GetScale() * config.scale)
 	bdUI:SetCVar("nameplateSelfScale", config.scale)
 	bdUI:SetCVar("nameplateSelectedScale", config.selectedscale)
 	bdUI:SetCVar("nameplateLargerScale", config.largerscale)

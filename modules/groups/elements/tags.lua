@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Grid")
+local mod = bdUI:get_module("Groups")
 local oUF = bdUI.oUF
 
 mod.add_tags = function(self, unit)

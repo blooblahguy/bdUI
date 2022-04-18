@@ -10,8 +10,8 @@ local methods = {
 		self.save = self.module:get_save()
 
 		if (not value) then value = self:get() end
+		value = lib:round(value, self.decimals)
 		self.save[self.key] = value
-		
 
 		self.lastValue = value
 		self.slider:SetValue(value)
@@ -28,7 +28,7 @@ local methods = {
 		if (self.step >= 1) then
 			newval = lib:round(self.slider:GetValue())
 		else
-			newval = lib:round(self.slider:GetValue(), 1)
+			newval = lib:round(self.slider:GetValue(), self.decimals)
 		end
 
 		if (self.lastValue == newval) then return end
@@ -116,11 +116,18 @@ local function create(options, parent)
 	slider.value:SetAlpha(lib.media.muted)
 
 	-- Mixin methods, reference variables
+	if (options.step >= 1) then
+		options.decimals = options.decimals or 0
+	else
+		options.decimals = 1
+	end
+
 	container.lastValue = 0
 	container.callback = options.callback
 	container.step = options.step
 	container.key = options.key
 	container.slider = slider
+	container.decimals = options.decimals or 0
 	container.module = options.module
 	Mixin(container, methods)
 	container:set()
