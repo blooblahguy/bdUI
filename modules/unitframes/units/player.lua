@@ -47,9 +47,6 @@ mod.custom_layout["player"] = function(self, unit)
 
 	self.Buffs.CustomFilter = buff_filter
 	self.AuraBars.CustomFilter = buff_filter
-
-	-- create standalone resource bar
-	mod.create_resources(self, unit)
 	
 	-- config callback
 	self.callback = function(self, unit, config)

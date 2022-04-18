@@ -110,6 +110,10 @@ local config = {
 						tooltip = "Make the main color of the frames a dark grey, and the backgrounds the class color.",
 					},
 					{
+						key = "clear",
+						type = "clear",
+					},
+					{
 						key = "inrangealpha",
 						type = "range",
 						value = 1,
@@ -318,6 +322,11 @@ local config = {
 				value = true,
 				label = "Enable Party Frames"
 			},
+			{
+				key = "text",
+				type = "text",
+				value = "This area is a work in progress, check back later!",
+			},
 		}
 	},
 
@@ -332,6 +341,11 @@ local config = {
 				type = "toggle",
 				value = true,
 				label = "Enable Arena Frames"
+			},
+			{
+				key = "text",
+				type = "text",
+				value = "This area is a work in progress, check back later!",
 			},
 		}
 	},

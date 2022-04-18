@@ -69,58 +69,6 @@ local config = {
 				options = {"Icons", "Bars", "None"},
 				label = "Aura Style"
 			},
-			--=========================================
-			-- RESOURCES
-			--=========================================
-			{
-				key = "resources",
-				type = "group",
-				label = "Resources",
-				args = {
-					{
-						key = "resources_enable",
-						value = true,
-						type = "toggle",
-						label = "Enable Class Resource Bar"
-					},
-					{
-						key = "resources_width",
-						value = 200,
-						min = 40,
-						max = 400,
-						step = 2,
-						type = "range",
-						label = "Width"
-					},
-					{
-						key = "resources_power_height",
-						value = 14,
-						min = 0,
-						max = 30,
-						step = 1,
-						type = "range",
-						label = "Power Height"
-					},
-					{
-						key = "resources_primary_height",
-						value = 5,
-						min = 0,
-						max = 20,
-						step = 1,
-						type = "range",
-						label = "Primary Resource Height"
-					},
-					{
-						key = "resources_secondary_height",
-						value = 3,
-						min = 0,
-						max = 20,
-						step = 1,
-						type = "range",
-						label = "Secondary Resource Height"
-					},
-				}
-			}
 		}
 	},
 
@@ -387,10 +335,6 @@ local mod = bdUI:register_module("Unitframes", config)
 function mod:initialize()
 	mod.config = mod:get_save()
 	if (not mod.config.enabled) then return false end
-
-	bdUI.oUF.colors.power[0] = {46/255, 130/255, 215/255}
-	bdUI.oUF.colors.power["MANA"] = {46/255, 130/255, 215/255}
-	bdUI.oUF.colors.power.ARCANE_CHARGES = {55/255, 139/255, 224/255}
 	
 	mod:create_unitframes()
 

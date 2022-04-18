@@ -37,9 +37,11 @@ local function update_frame(self)
 	if (config.powerdisplay == "None") then
 		self.Power:SetHeight(1)
 		self.Power:SetAlpha(0)
+		self.Short:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 1, 0)
 	elseif (config.powerdisplay == "Healers" and role == "HEALER" or config.powerdisplay == "All") then
 		self.Power:SetHeight(config.powerheight)
 		self.Power:SetAlpha(1)
+		self.Short:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 1, 2)
 	end
 
 	self.Buffs.size = config.buffSize
@@ -216,9 +218,7 @@ local function layout(self, unit)
 	self.Power:SetSize(config.width, config.powerheight)
 	self.Power:SetAlpha(0.8)
 	self.Power.colorPower = true
-	self.Power._border = self.Health:CreateTexture(nil, "OVERLAY")
-	self.Power._border:SetPoint("BOTTOMLEFT", self.Power, "TOPLEFT", 0, 0)
-	self.Power._border:SetPoint("TOPRIGHT", self.Power, "TOPRIGHT", 0, 2)
+	bdUI:set_backdrop(self.Power)
 	
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)

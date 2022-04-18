@@ -11,6 +11,7 @@ local methods = {
 
 		if (not value) then value = self:get() end
 		value = lib:round(value, self.decimals)
+		
 		self.save[self.key] = value
 
 		self.lastValue = value
@@ -24,12 +25,7 @@ local methods = {
 		return self.save[self.key]
 	end,
 	["onchange"] = function(self)
-		local newval
-		if (self.step >= 1) then
-			newval = lib:round(self.slider:GetValue())
-		else
-			newval = lib:round(self.slider:GetValue(), self.decimals)
-		end
+		local newval = lib:round(self.slider:GetValue(), self.decimals)
 
 		if (self.lastValue == newval) then return end
 		if (self:get() == newval) then -- throttle it changing on the same pixel
@@ -115,19 +111,20 @@ local function create(options, parent)
 	slider.value:SetPoint("BOTTOMRIGHT", slider, "TOPRIGHT", -4, 2)
 	slider.value:SetAlpha(lib.media.muted)
 
-	-- Mixin methods, reference variables
-	if (options.step >= 1) then
-		options.decimals = options.decimals or 0
+	-- set decimal display
+	if (options.step < 1) then
+		options.decimals = options.decimals or 1
 	else
-		options.decimals = 1
+		options.decimals = options.decimals or 0
 	end
 
+	-- Mixin methods, reference variables
 	container.lastValue = 0
 	container.callback = options.callback
 	container.step = options.step
 	container.key = options.key
 	container.slider = slider
-	container.decimals = options.decimals or 0
+	container.decimals = options.decimals
 	container.module = options.module
 	Mixin(container, methods)
 	container:set()

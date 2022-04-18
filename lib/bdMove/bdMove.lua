@@ -20,7 +20,9 @@ local function IsMouseOverFrame(self)
 	return false
 end
 local function GetQuadrant(frame)
-	local x,y = frame:GetCenter()
+	local x, y = frame:GetCenter()
+	x = x * UIParent:GetScale()
+	y = y * UIParent:GetScale()
 	local hhalf = (x > UIParent:GetWidth()/2) and "RIGHT" or "LEFT"
 	local vhalf = (y > UIParent:GetHeight()/2) and "TOP" or "BOTTOM"
 	return vhalf..hhalf, vhalf, hhalf
@@ -30,14 +32,22 @@ noop = function() end
 --========================================================
 -- Defaults
 --========================================================
-lib.screenheight = select(2, GetPhysicalScreenSize())
-lib.scale = 768 / lib.screenheight
-lib.ui_scale = GetCVar("uiScale") or 1
-lib.pixel = lib.scale / lib.ui_scale
-lib.border = lib.pixel * 2
+function lib:SetBorder()
+	local pixel = (PixelUtil.GetPixelToUIUnitFactor() / GetCVar("uiScale") or 1)
 
-StickyFrames.rangeX = lib.border * 3
-StickyFrames.rangeY = lib.border * 3
+	-- lib.screenheight = select(2, GetPhysicalScreenSize())
+	-- lib.scale = 768 / lib.screenheight
+	-- lib.ui_scale = GetCVar("uiScale") or 1
+	-- lib.pixel = lib.scale / lib.ui_scale
+	-- lib.border = lib.pixel * 2
+	lib.border = pixel * 2
+	lib.pixel = pixel
+
+	StickyFrames.rangeX = lib.border * 3
+	StickyFrames.rangeY = lib.border * 3
+end
+
+lib:SetBorder()
 
 lib.movers = {}
 lib.save = nil
@@ -272,7 +282,9 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 		self:SetBackdropBorderColor(unpack(lib.media.border))
 
 		self:SetScript("OnDragStart", function(self)
-			StickyFrames:StartMoving(self, lib.movers, -lib.border, -lib.border, -lib.border, -lib.border)
+			lib:SetBorder()
+			local space = -lib.border
+			StickyFrames:StartMoving(self, lib.movers, -space, -space, -space, -space)
 		end)
 		self:SetScript("OnDragStop", function(self)
 			StickyFrames:StopMoving(self)

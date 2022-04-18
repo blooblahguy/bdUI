@@ -152,6 +152,15 @@ function bdUI:kill(frame)
 	frame:Hide()
 end
 
+function bdUI:GetQuadrant(frame)
+	local x, y = frame:GetCenter()
+	x = x * UIParent:GetScale()
+	y = y * UIParent:GetScale()
+	local hhalf = (x > UIParent:GetWidth() / 2) and "RIGHT" or "LEFT"
+	local vhalf = (y > UIParent:GetHeight() / 2) and "TOP" or "BOTTOM"
+	return vhalf..hhalf, vhalf, hhalf
+end
+
 --==============================================
 -- Event, Filter, & Action System
 bdUI.events = bdUI.events or {}

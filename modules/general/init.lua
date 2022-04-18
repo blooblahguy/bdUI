@@ -36,17 +36,6 @@ local config = {
 				decimals = 2,
 				value = 0.63,
 				label = "Set Global UI Scale",
-				callback = function()
-					local mod = bdUI:get_module("General")
-					if (mod.config.set_ui_scale) then
-						bdUI:SetCVar("useUiScale", 1)
-						bdUI:SetCVar("uiScale", mod.config.ui_scale)
-					else
-						bdUI:SetCVar("useUiScale", 0)
-					end
-
-					bdUI:do_action("bdUI/border_size") 
-				end,
 			},
 			{
 				key = "change_fonts",

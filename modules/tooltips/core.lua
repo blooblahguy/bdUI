@@ -100,7 +100,7 @@ function mod:create_tooltips()
 	--============================
 	mod.tooltipanchor = CreateFrame("frame", "bdTooltip", bdParent)
 	mod.tooltipanchor:SetSize(150, 100)
-	mod.tooltipanchor:SetPoint("LEFT", bdParent, "CENTER", 474, -116)
+	mod.tooltipanchor:SetPoint("RIGHT", bdParent, "RIGHT", 20, -116)
 	bdMove:set_moveable(mod.tooltipanchor, "Tooltips")
 
 	--============================
@@ -110,9 +110,20 @@ function mod:create_tooltips()
 		local config = mod.config
 	
 		if (config.anchor == "Frame") then
+			local position, vpos, hpos = bdUI:GetQuadrant(mod.tooltipanchor)
+
+			local vspace = 17
+			local hspace = -34
+			if (vpos == "BOTTOM") then
+				vspace = -23
+			end
+			if (hpos == "RIGHT") then
+				hspace = 34
+			end
+
 			self:SetOwner(parent, "ANCHOR_NONE")
 			self:ClearAllPoints()
-			self:SetPoint("TOPLEFT", mod.tooltipanchor, "TOPLEFT", -34, 16)
+			self:SetPoint(position, mod.tooltipanchor, position, hspace, vspace)
 		else
 			self:ClearAllPoints()
 			self:SetOwner(parent, "ANCHOR_CURSOR")
