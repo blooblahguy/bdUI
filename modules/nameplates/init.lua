@@ -153,18 +153,6 @@ local config = {
 				label = "Friendly Name Opacity",
 			},
 			{
-				key = "highlightPurge",
-				type = "toggle",
-				value = false,
-				label = "Highlight units who have purgeable auras",
-			},
-			{
-				key = "highlightEnrage",
-				type = "toggle",
-				value = true,
-				label = "Auto whitelist enrage auras on units.",
-			},
-			{
 				key = "friendlynamehack",
 				type = "toggle",
 				value = false,
@@ -522,11 +510,29 @@ local config = {
 		type = "tab",
 		value = "Auras",
 		args = {
-						{
+			{
+				key = "disableauras",
+				type = "toggle",
+				value = false,
+				label = "Don't show any auras."
+			},
+			{
 				key = "automydebuff",
 				type = "toggle",
 				value = true,
 				label = "Automatically track debuffs cast by you."
+			},
+			{
+				key = "highlightPurge",
+				type = "toggle",
+				value = false,
+				label = "Highlight units who have purgeable auras",
+			},
+			{
+				key = "highlightEnrage",
+				type = "toggle",
+				value = true,
+				label = "Auto whitelist enrage auras on units.",
 			},
 			{
 				key = "raidbefuffs",
@@ -535,13 +541,16 @@ local config = {
 				min = 20,
 				max = 100,
 				step = 2,
-				label = "Raid Debuff Size",
+				label = "Debuff Size",
 			},
 			{
-				key = "disableauras",
-				type = "toggle",
-				value = false,
-				label = "Don't show any auras."
+				key = "debuff_timer_size",
+				type = "range",
+				value = 12,
+				min = 8,
+				max = 24,
+				step = 1,
+				label = "Debuff Timer Size",
 			},
 			{
 				key = "selfwhitelist",

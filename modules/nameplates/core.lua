@@ -555,10 +555,11 @@ local function nameplate_create(self, unit)
 		bdUI:set_backdrop(button, true)
 
 		local cdtext = button.cd:GetRegions()
-		cdtext:SetFontObject(bdUI:get_font(11)) 
+		cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size)) 
 		cdtext:SetJustifyH("CENTER")
 		cdtext:ClearAllPoints()
 		cdtext:SetAllPoints(button)
+		self.last_timer_size = config.debuff_timer_size
 		
 		button.count:SetFontObject(bdUI:get_font(11)) 
 		button.count:SetTextColor(1,.8,.3)
@@ -574,6 +575,12 @@ local function nameplate_create(self, unit)
 	self.Auras.PostUpdateIcon = function(self, unit, button, index, position)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
 		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+
+		if (self.last_timer_size ~= config.debuff_timer_size) then
+			local cdtext = button.cd:GetRegions()
+			cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size))
+		end
+		self.last_timer_size = config.debuff_timer_size
 
 		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
 		if (config.highlightPurge and isStealable) then -- purge alert
