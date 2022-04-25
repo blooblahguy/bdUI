@@ -30,11 +30,11 @@ local config = {
 			{
 				key = "ui_scale",
 				type = "range",
-				min = 0.63,
+				min = 0.65,
 				step = 0.01,
 				max = 1,
 				decimals = 2,
-				value = 0.63,
+				value = 0.65,
 				label = "Set Global UI Scale",
 			},
 			{

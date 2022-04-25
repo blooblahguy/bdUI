@@ -7,10 +7,6 @@ function mod:fix_healthbars()
 
 		local function update_color(self)
 			self:SetStatusBarColor( mod:getUnitColor() )
-			-- if (UnitIsPlayer("mouseover")) then
-			-- else
-			-- 	self:SetStatusBarColor( GameTooltipTextLeft1:GetTextColor() )
-			-- end
 		end
 
 		GameTooltipStatusBar:ClearAllPoints()

@@ -69,6 +69,8 @@ local function update_frame(self)
 		self.Group:Hide()
 	end
 end
+
+
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
@@ -78,6 +80,8 @@ function mod:config_callback()
 	
 	-- prevent case where callback is called before frameHeader initialization
 	if (not mod.frameHeader) then return end
+
+	mod:resize_container()
 
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
@@ -108,12 +112,14 @@ local function layout(self, unit)
 		-- self.Health.highlight:Show()
 		if (not config.hidetooltips) then
 			UnitFrame_OnEnter(self)
+			GameTooltip:SetUnit(self.unit)
 		end
 	end)
 	self:SetScript('OnLeave', function(self)
 		-- self.Health.highlight:Hide()
 		if (not config.hidetooltips) then
 			UnitFrame_OnLeave(self)
+			GameTooltip:SetUnit(self.unit)
 		end
 	end)
 

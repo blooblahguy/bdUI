@@ -115,21 +115,6 @@ modules\actionbars\elements\zoneability.lua
 modules\actionbars\elements\hotkeys.lua
 
 # Bags
-# modules\new_bags\init.lua
-# modules\new_bags\functions.lua
-# modules\new_bags\core.lua
-# modules\new_bags\elements\containers.lua
-# modules\new_bags\elements\currencies.lua
-# modules\new_bags\elements\money.lua
-# modules\new_bags\elements\filters.lua
-# modules\new_bags\elements\categories.lua
-# modules\new_bags\elements\button_lib.lua
-# modules\new_bags\elements\bags.lua
-# modules\new_bags\elements\bank.lua
-# modules\new_bags\elements\reagents.lua
-# modules\new_bags\elements\loot.lua
-
-# Bags
 modules\bags\init.lua
 modules\bags\functions.lua
 modules\bags\core.lua
@@ -145,20 +130,10 @@ modules\bags\elements\positioning.lua
 modules\bags\elements\filters.lua
 modules\bags\elements\containers.lua
 
-# Bags
-# modules\bags\init.lua
-# modules\bags\functions.lua
-# modules\bags\core.lua
-# modules\bags\elements\bag.lua
-# modules\bags\elements\bank.lua
-# modules\bags\elements\loot.lua
-# modules\bags\elements\quality.lua
-
 # Buffs & Debuffs
 modules\buffs_debuffs\template.xml
 modules\buffs_debuffs\init.lua
 modules\buffs_debuffs\core.lua
-# modules\buffs_debuffs\elements\watcher.lua
 
 # Chat
 modules\chat\init.lua
@@ -260,8 +235,8 @@ modules\unitframes\units\boss.lua
 modules\unitframes\units\arena.lua
 
 # Resources
-modules\resources\init.lua
-modules\resources\core.lua
+# modules\resources\init.lua
+# modules\resources\core.lua
 
 # Skins
 modules\skin\init.lua
