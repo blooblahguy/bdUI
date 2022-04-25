@@ -52,6 +52,7 @@ game_versions\tbc\tbc_auras.lua
 
 # oUF
 lib\oUF\oUF_TBC.xml
+lib\oUF_Plugins\oUF_ClassicComboPoints.lua
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
 lib\oUF_Plugins\oUF_Fader.lua

@@ -6,6 +6,7 @@ local mod = bdUI:get_module("Nameplates")
 local oUF = bdUI.oUF
 local config
 local nameplates = {}
+local border
 mod.elements = {}
 
 local tanks = {}
@@ -90,7 +91,7 @@ function mod:config_callback()
 
 	-- Update from bdConfig
 	for k, self in pairs(nameplates) do
-		local border = bdUI:get_border(self)
+		border = bdUI:get_border(self)
 
 		-- health
 		self.Health._shadow:SetColor(unpack(config.glowcolor))
@@ -303,7 +304,7 @@ end
 -- Nameplate first time creation
 --==============================================
 local function nameplate_create(self, unit)
-	local border = bdUI:get_border(self)
+	border = bdUI:get_border(self)
 	nameplates[self] = self
 	
 	self:SetPoint("BOTTOMLEFT", 0, math.floor(config.targetingBottomPadding))
@@ -318,8 +319,6 @@ local function nameplate_create(self, unit)
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
 	self.Health:SetAllPoints()
-	-- self.Health:SetPoint("CENTER", self, "CENTER")
-	-- self.Health:SetSize(self:GetWidth(), self:GetHeight())
 	self.Health.colorTapping = true
 	self.Health.colorDisconnected = true
 	self.Health.colorClass = true
@@ -385,7 +384,8 @@ local function nameplate_create(self, unit)
 		self.absorbBar:SetValue(absorb)
 	end
 
-	self.OverlayHolder = CreateFrame("frame", nil, self)
+	self.OverlayHolder = CreateFrame("frame", nil, self.Health)
+	self.OverlayHolder:SetFrameLevel(20)
 	self.OverlayHolder:SetAllPoints()
 
 	--==========================================
@@ -591,6 +591,47 @@ local function nameplate_create(self, unit)
 			button._border:SetVertexColor(unpack(bdUI.media.border))
 		end
 	end
+
+	--==========================================
+	-- Combo Points
+	--==========================================
+	if (select(2, UnitClass("player")) == "ROGUE") then
+		local last
+		self.ClassicComboPoints = {}
+		local gap = border * 4
+		width = 16
+		for index = 1, 5 do
+			local bar = CreateFrame('StatusBar', "bdNameplateComboPoint"..index, self.Health)
+			bar:SetStatusBarTexture(bdUI.media.flat)
+			bdUI:set_backdrop_basic(bar)
+
+			bar:SetSize(width, 12)
+			if (not last) then
+				bar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, 6)
+			else
+				bar:SetPoint('LEFT', last, "RIGHT", gap, 0)
+			end
+
+			last = bar
+			self.ClassicComboPoints[index] = bar
+		end
+
+		local colors = {}
+		colors[1] = {0.34, 0.57, 0.17}
+		colors[2] = {0.34, 0.57, 0.17}
+		colors[3] = {0.58, 0.52, 0}
+		colors[4] = {0.64, 0.50, 0}
+		colors[5] = {0,6, 0.23, 0}
+
+		self.ClassicComboPoints.UpdateColor = function(self, powerType)
+			local width = (config.width - (gap * 4)) / 5
+			for i = 1, #self do
+				local bar = self[i]
+				bar:SetSize(width, 12)
+				bar:SetStatusBarColor(unpack(colors[i]))
+			end
+		end
+    end
 
 	--==========================================
 	-- CASTBARS

@@ -151,13 +151,11 @@ end
 	end
 
 	function bdUI:get_border(frame)
-		local screenheight = select(2, GetPhysicalScreenSize())
-		local scale = 768 / screenheight
+		local scale = 768 / select(2, GetPhysicalScreenSize())
 		local frame_scale = frame:GetEffectiveScale()
 		local pixel = scale / frame_scale
-		local border = pixel * (bdUI:get_border_size() or 2)
 
-		return border
+		return pixel * (bdUI:get_border_size() or 2)
 	end
 
 	local function border_gen(parent)
@@ -350,6 +348,15 @@ end
 		g = g <= 255 and g >= 0 and g or 0
 		b = b <= 255 and b >= 0 and b or 0
 		return string.format("%02x%02x%02x", r, g, b)
+	end
+
+	function RGBtoRGBPerc(r, g, b)
+		return r / 255, g / 255, b / 255
+	end
+
+	function HexToRGBPerc(hex)
+		local rhex, ghex, bhex = string.sub(hex, 1, 2), string.sub(hex, 3, 4), string.sub(hex, 5, 6)
+		return tonumber(rhex, 16)/255, tonumber(ghex, 16)/255, tonumber(bhex, 16)/255
 	end
 
 	function RGBPercToHex(r, g, b)

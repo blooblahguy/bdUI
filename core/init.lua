@@ -50,12 +50,12 @@ bdParent:SetPoint("TOPLEFT", UIParent)
 bdParent:SetPoint("BOTTOMRIGHT", UIParent)
 
 function bdUI:calculate_scale()
-	bdUI.screenheight = select(2, GetPhysicalScreenSize())
-	bdUI.scale = 768 / bdUI.screenheight
-	bdUI.ui_scale = GetCVar("uiScale") or 1
+	bdUI.scale = 768 / select(2, GetPhysicalScreenSize())
+	bdUI.ui_scale = GetCVar("useUiScale") and GetCVar("uiScale") or 1
 	bdUI.pixel = bdUI.scale / bdUI.ui_scale
+
 	bdUI.border = bdUI.pixel * 2
-	bdParent:SetScale(bdUI.scale)
+	bdParent:SetScale(bdUI.pixel)
 end
 bdUI:calculate_scale()
 
@@ -103,7 +103,7 @@ function bdUI:get_game_version()
 	bdUI.version = version
 	bdUI.expansion = game 
 
-	return game
+	return game, tocversion
 end
 bdUI:get_game_version()
 
