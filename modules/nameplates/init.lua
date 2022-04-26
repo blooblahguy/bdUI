@@ -159,6 +159,13 @@ local config = {
 				label = "Friendly Names in Raid",
 			},
 			{
+				key = "show_class_resources",
+				type = "toggle",
+				value = false,
+				label = "Show Class Resources",
+				tooltip = "Things like rogue combat points, holy power",
+			},
+			{
 				key = "friendlyplates",
 				type = "toggle",
 				value = false,

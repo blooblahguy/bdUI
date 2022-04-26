@@ -21,11 +21,7 @@ end
 function mod:SetUIScale()
 	if (mod.config.set_ui_scale) then
 		bdUI:SetCVar("useUiScale", 1)
-		bdUI:SetCVar("uiScale", 0.65)
-		
-		-- print(mod.config.ui_scale)
-	else
-		-- bdUI:SetCVar("useUiScale", 0)
+		bdUI:SetCVar("uiScale", mod.config.ui_scale)
 	end
 	bdUI:do_action("bdUI/border_size")
 end

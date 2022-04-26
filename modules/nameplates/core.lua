@@ -85,6 +85,14 @@ function mod:config_callback()
 	mod.lists = {}
 	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
 	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
+
+	if (self.ClassicComboPoints) then
+		if (config.show_class_resources) then
+			self.ClassicComboPoints:Show()
+		else
+			self.ClassicComboPoints:Hide()
+		end
+	end
 	
 	-- Update nameplate sizing
 	mod:nameplate_size()
@@ -630,6 +638,12 @@ local function nameplate_create(self, unit)
 				bar:SetSize(width, 12)
 				bar:SetStatusBarColor(unpack(colors[i]))
 			end
+		end
+
+		if (config.show_class_resources) then
+			self.ClassicComboPoints:Show()
+		else
+			self.ClassicComboPoints:Hide()
 		end
     end
 

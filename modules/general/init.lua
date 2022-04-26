@@ -28,6 +28,16 @@ local config = {
 				label = "Set Global UI Scale"
 			},
 			{
+				key = "ui_scale",
+				type = "range",
+				min = 0.65,
+				step = 0.01,
+				max = 1,
+				decimals = 2,
+				value = 0.65,
+				label = "Set Global UI Scale",
+			},
+			{
 				key = "change_fonts",
 				type = "toggle",
 				value = true,

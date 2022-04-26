@@ -194,7 +194,7 @@ function mod:create_micromenu()
 		flash:SetAllPoints()
 		local regions = {button:GetRegions()}
 		for k, v in pairs(regions) do
-			if (not v.protected) then
+			if (not v.protected and v.SetTexCoord) then
 				v:SetTexCoord(.17, .80, .22, .82)
 				v:ClearAllPoints()
 				v:SetPoint("TOPLEFT", button, "TOPLEFT", 4, -6)
