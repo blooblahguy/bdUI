@@ -14,10 +14,10 @@ local SPELL_POWER_COMBO_POINTS = Enum.PowerType.ComboPoints or 4
 local RequirePower, RequireSpell
 local ClassPowerID = SPELL_POWER_COMBO_POINTS
 local ClassPowerType = 'COMBO_POINTS'
-if(PlayerClass == 'DRUID') then
-	RequirePower = SPELL_POWER_ENERGY
-	RequireSpell = 768
-end
+-- if(PlayerClass == 'DRUID') then
+-- 	RequirePower = SPELL_POWER_ENERGY
+-- 	RequireSpell = 768
+-- end
 
 local function UpdateColor(element, powerType)
 	local color = element.__owner.colors.power[powerType]

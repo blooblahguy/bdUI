@@ -86,11 +86,11 @@ function mod:config_callback()
 	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
 	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
 
-	if (self.ClassicComboPoints) then
+	if (self.ClassicComboPointsHolder) then
 		if (config.show_class_resources) then
-			self.ClassicComboPoints:Show()
+			self.ClassicComboPointsHolder:Show()
 		else
-			self.ClassicComboPoints:Hide()
+			self.ClassicComboPointsHolder:Hide()
 		end
 	end
 	
@@ -603,19 +603,22 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- Combo Points
 	--==========================================
-	if (select(2, UnitClass("player")) == "ROGUE") then
+	local class = select(2, UnitClass("player"))
+	if (class == "ROGUE" or class == "DRUID") then
 		local last
+		self.ClassicComboPointsHolder = CreateFrame("frame", nil, self.Health)
+		self.ClassicComboPointsHolder:SetAllPoints()
 		self.ClassicComboPoints = {}
 		local gap = border * 4
 		width = 16
 		for index = 1, 5 do
-			local bar = CreateFrame('StatusBar', "bdNameplateComboPoint"..index, self.Health)
+			local bar = CreateFrame('StatusBar', "bdNameplateComboPoint"..index, self.ClassicComboPointsHolder)
 			bar:SetStatusBarTexture(bdUI.media.flat)
 			bdUI:set_backdrop_basic(bar)
 
 			bar:SetSize(width, 12)
 			if (not last) then
-				bar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, 6)
+				bar:SetPoint("TOPLEFT", self.ClassicComboPointsHolder, "BOTTOMLEFT", 0, 6)
 			else
 				bar:SetPoint('LEFT', last, "RIGHT", gap, 0)
 			end
@@ -641,9 +644,9 @@ local function nameplate_create(self, unit)
 		end
 
 		if (config.show_class_resources) then
-			self.ClassicComboPoints:Show()
+			self.ClassicComboPointsHolder:Show()
 		else
-			self.ClassicComboPoints:Hide()
+			self.ClassicComboPointsHolder:Hide()
 		end
     end
 

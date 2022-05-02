@@ -83,33 +83,6 @@ sell:HookScript("OnEvent", function(self, event)
 		end
 
 		coroutine.wrap(sell_trash)(0)
-		
-		-- local index = 0
-		-- for bagID = 0, 4 do
-		-- 	for slot = 0, GetContainerNumSlots(bagID) do
-		-- 		local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bagID, slot);
-
-		-- 		if (texture and quality == 0) then
-		-- 			local price = select(11, GetItemInfo(itemLink))
-		-- 			profit = profit + price
-
-		-- 			if (not locked) then
-		-- 				UseContainerItem(bagID, slot)
-		-- 			else
-		-- 				C_Timer.After(0.2, function()
-		-- 					if (cansell) then
-		-- 						UseContainerItem(bagID, slot)
-		-- 					end
-		-- 				end)
-		-- 			end
-		-- 		end
-		-- 	end
-		-- end
-		-- C_Timer.After(2, function()
-		-- 	if (profit > 0) then
-		-- 		print(("Sold all trash for %d|cFFF0D440"..GOLD_AMOUNT_SYMBOL.."|r %d|cFFC0C0C0"..SILVER_AMOUNT_SYMBOL.."|r %d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r"):format(profit / 100 / 100, (profit / 100) % 100, profit % 100));
-		-- 	end
-		-- end)
 	end
 end)
 

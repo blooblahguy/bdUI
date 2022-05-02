@@ -164,14 +164,15 @@ function mod:create_stancebar()
 	-- todo: fire on event to make only the correct number of stance buttons
 	for i = 1, NUM_STANCE_SLOTS do
 		local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i)
-		if (icon) then
-			stances = stances + 1
-		end
+		-- if (icon) then
+		stances = stances + 1
+		-- end
 	end
 
 	if (stances == 0) then return end
 
-	local buttonList = mod:GetButtonList("StanceButton", stances)
+	-- local buttonList = mod:GetButtonList("StanceButton", stances)
+	local buttonList = mod:GetButtonList("StanceButton", NUM_STANCE_SLOTS)
 	local stancebar = mod:CreateBar(buttonList, cfg)
 	stancebar:EnableMouse(false)
 end

@@ -161,7 +161,7 @@ local config = {
 			{
 				key = "show_class_resources",
 				type = "toggle",
-				value = false,
+				value = true,
 				label = "Show Class Resources",
 				tooltip = "Things like rogue combat points, holy power",
 			},
