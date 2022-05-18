@@ -601,14 +601,18 @@ function mod:get_attributes()
 	
 	num_groups = config.num_groups
 	if (config.intel_groups) then
+		local name, group_type, difficultyID, raidSize, dynamicDifficulty, isDynamic, instanceMapId, lfgID = GetInstanceInfo()
+		local inInstance, instanceType = select(1, IsInInstance())
+
 		local diff = select(3, GetInstanceInfo())
 		local size = select(5, GetInstanceInfo())
+		size = tonumber(size)
 
 		-- print(diff, size)
-		if (not select(1, IsInInstance())) then
+		if (not inInstance) then
 			num_groups = 8
 		elseif (size > 0) then
-			num_groups = math.ceil(size / 5)
+			num_groups = size / 5
 		elseif (difficultySize[diff]) then
 			num_groups = difficultySize[diff] / 5
 		end
@@ -752,15 +756,20 @@ end
 function mod:resize_container()
 	mod.frameHeader:ClearAllPoints();
 
+	local size = 4
+	if (bdUI:isClassicAny()) then
+		size = 5
+	end
+
 	-- change where to start the growth of groups
 	if (config.group_growth == "Right") then
-		mod.raidpartyholder:SetSize(config.width*4+8, config.height*5+8)
+		mod.raidpartyholder:SetSize(config.width*5+8, config.height*5+8)
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
 		
 	elseif (config.group_growth == "Left") then
-		mod.raidpartyholder:SetSize(config.width*4+8, config.height*5+8)
+		mod.raidpartyholder:SetSize(config.width*5+8, config.height*5+8)
 		hgrowth = "RIGHT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
