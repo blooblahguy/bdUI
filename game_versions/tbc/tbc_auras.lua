@@ -136,7 +136,6 @@ raidauras["Vile Slime"] = true
 raidauras["Sludge Nova"] = true
 
 raidauras["Impaling Spine"] = true
-special["Impaling Spine"] = true
 
 raidauras["Molten Flame"] = true
 raidauras["Volcanic Geyser"] = true
