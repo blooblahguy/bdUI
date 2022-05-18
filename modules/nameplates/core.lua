@@ -399,7 +399,7 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- UNIT NAME
 	--==========================================
-	self.Name = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
+	self.Name = self:CreateFontString(nil, "OVERLAY")
 	self.Name:SetFontObject(mod.font)
 	self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)	
 	self:Tag(self.Name, '[name]')
