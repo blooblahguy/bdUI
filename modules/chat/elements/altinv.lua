@@ -4,7 +4,7 @@ local mod = bdUI:get_module("Chat")
 function mod:alt_invite()
 	local InviteUnit = InviteUnit or C_PartyInfo.InviteUnit
 
-	hooksecurefunc("SetItemRef", function(link)
+	hooksecurefunc("SetItemRef", function(value)
 		if not IsAltKeyDown() then return end
 		
 		local player = value:match("^player:([^:]+)")
@@ -12,15 +12,17 @@ function mod:alt_invite()
 
 		if player then
 			InviteUnit(player)
-			ChatEdit_OnEscapePressed(ChatFrame1EditBox)
+			-- ChatEdit_OnEscapePressed(ChatFrame1EditBox)
 		elseif (bnet) then
 			-- full credit to funkydude here 
 			local _, _, _, _, _, gameAccountId = BNGetFriendInfoByID(bnet)
 			if gameAccountId then
 				BNInviteFriend(gameAccountId)
-				ChatEdit_OnEscapePressed(ChatFrame1EditBox)
+				-- ChatEdit_OnEscapePressed(ChatFrame1EditBox)
 			end
 		end
+
+		ChatEdit_OnEscapePressed(ChatFrame1EditBox)
 
 	end)
 end

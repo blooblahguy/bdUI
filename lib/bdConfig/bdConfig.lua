@@ -21,11 +21,28 @@ local lib = ns.bdConfig
 -- Hooked into method
 --=================================================================
 local module_methods = {
+	['run_module_elements'] = function(self, config)
+		for name, element in pairs(self.module_elements) do
+			-- if it doesn't enable, then disable
+			if (not element.enable(config)) then
+				element.disable(config)
+			end
+		end
+	end,
+
+	['callback_wrapper'] = function(self)
+		local config = self:get_save()
+
+		self:run_module_elements(config)
+		self:callback(config)
+	end,
+
 	['reload'] = function(self, profile)
 		self:get_save()
 		self:ensure_values(self.config)
-		self:callback()
+		self:callback_wrapper()
 	end,
+
 	-- builds frame objects in layout window
 	['build'] = function(self, config, parent)
 		if (not self.first) then self.first = parent end
@@ -44,7 +61,7 @@ local module_methods = {
 				if (info.self_callback) then
 					info:self_callback(...)
 				end
-				module:callback()
+				module:callback_wrapper()
 			end
 
 			if (not self.options.hide_ui and (lib.containers[info.type] or lib.elements[info.type])) then -- only if we've created this module
@@ -75,6 +92,7 @@ local module_methods = {
 
 		-- parent:update()
 	end,
+
 	['ensure_values'] = function(self, config)
 		for option, info in pairs(config) do
 			-- type assertion fixes some errors
@@ -88,6 +106,7 @@ local module_methods = {
 			end
 		end
 	end,
+
 	-- load and build the module now that SVs are available
 	['load'] = function(self)
 		self:get_save()
@@ -100,6 +119,8 @@ local module_methods = {
 			self.callback = lib.noop
 		end
 
+		self:run_module_elements(self:get_save())
+
 		-- call recursive build function
 		local group = lib.containers["group"]({}, self, true)
 		self:build(self.config, group)
@@ -111,6 +132,7 @@ local module_methods = {
 
 		return self.save
 	end,
+
 	-- Update scrollframe to size of build
 	['update_scroll'] = function(self)
 		local height = self.first:GetHeight() + lib.dimensions.padding
@@ -130,11 +152,22 @@ local module_methods = {
 			self.scrollbar:Show()
 		end
 	end,
+
 	-- fetch and return save for current profile to addons
 	['get_save'] = function(self)
 		self.save = lib:get_save(self.sv_string, self.name, self.options.persistent)
 		return self.save
-	end
+	end,
+
+	-- adds an element to the module, all to be loaded with the module
+	["add_element"] = function(self, name, path, enable, disable)		
+		local element = {}
+		element.name = name
+		element.enable = enable
+		element.disable = disable
+
+		self.module_elements[name] = element
+	end,
 }
 
 --=================================================================
@@ -151,6 +184,7 @@ local methods = {
 			self.default:select()
 		end
 	end,
+
 	-- store save object, now that sv is available
 	['load'] = function(self, options)
 		options = options or {}
@@ -164,11 +198,13 @@ local methods = {
 			lib:create_profiles(self, options)
 		end
 	end,
+
 	-- fetch and return save for current profile to addons
 	['get_save'] = function(self)
 		self.save = lib:get_save(self.sv_string, nil, false)
 		return self.save
 	end,
+
 	-- register a blank module frame that we can reference and update
 	['register_module'] = function(self, name, config, callback, options)
 		options = options or {}
@@ -176,7 +212,7 @@ local methods = {
 		if (options.hide_ui) then
 			module = CreateFrame("frame", nil, UIParent)
 		else
-			module = lib:create_module(self, name, config, callback, options)
+			module = lib:create_module_frame(self, name)
 		end
 
 		-- cascading variables
@@ -186,6 +222,7 @@ local methods = {
 		module.options = options
 		module.sv_string = self.sv_string
 		module.save = false
+		module.module_elements = {}
 
 		-- add methods to object
 		Mixin(module, module_methods)

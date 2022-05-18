@@ -4,7 +4,7 @@ local bdUI, c, l = unpack(select(2, ...))
 -- Mod should have
 ---- mod:initialize()
 ---- mod:config_callback()
--- Upon savedvariables load
+-- Upon savedvariables load?
 --================================================
 
 --================================================
@@ -25,7 +25,10 @@ function bdUI:register_module(name, config, options)
 	-- register module frame with bdConfig
 	bdUI[name] = bdConfig:register_module(name, config, "config_callback", options)
 	local module = bdUI[name]
+	module._elements = {}
+
 	bdUI.modules[name] = module
+
 	return module
 end
 
@@ -49,7 +52,10 @@ function bdUI:load_module(module)
 		-- run callback
 		-- module:callback()
 		return module
-	end	
+	end
+
+	-- run the element registry
+
 end
 
 -- Load all modules

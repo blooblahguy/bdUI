@@ -41,6 +41,7 @@ function mod:initialize()
 	
 	-- telltarget command
 	mod:telltarget()
+	
 	-- community mask
 	mod:create_community()
 

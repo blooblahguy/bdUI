@@ -102,7 +102,7 @@ function lib:create_windows(name, lock_toggle)
 end
 
 -- Add single module
-function lib:create_module(instance, name)
+function lib:create_module_frame(instance, name)
 	local dimensions = lib.dimensions
 	local media = lib.media
 	local border = lib:get_border(UIParent)
