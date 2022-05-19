@@ -392,16 +392,16 @@ local function nameplate_create(self, unit)
 		self.absorbBar:SetValue(absorb)
 	end
 
-	self.OverlayHolder = CreateFrame("frame", nil, self.Health)
+	self.OverlayHolder = CreateFrame("frame", nil, self)
 	self.OverlayHolder:SetFrameLevel(20)
 	self.OverlayHolder:SetAllPoints()
 
 	--==========================================
 	-- UNIT NAME
 	--==========================================
-	self.Name = self:CreateFontString(nil, "OVERLAY")
+	self.Name = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
 	self.Name:SetFontObject(mod.font)
-	self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)	
+	self.Name:SetPoint("BOTTOM", self.OverlayHolder, "TOP", 0, config.hpoffset)	
 	self:Tag(self.Name, '[name]')
 
 	--==========================================

@@ -180,6 +180,26 @@ special["Dark Barrage"] = true
 special["Agonizing Flames"] = true
 special["Aura of Dread"] = true
 
+
+-- sunwell
+raidauras["Arcane Buffet"] = true
+raidauras["Spectral Realm"] = true
+
+raidauras["Burn"] = true
+special["Burn"] = true
+raidauras["Meteor Slash"] = true
+
+raidauras["Corrosion"] = true
+raidauras["Gas Nova"] = true
+raidauras["Demonic Vapor"] = true
+special["Demonic Vapor"] = true
+
+raidauras["Dark Strike"] = true
+raidauras["Conflagration"] = true
+special["Conflagration"] = true
+raidauras["Shadowfury"] = true
+
+
 -- merge tables
 for k,v in pairs(raidauras) do bdUI.aura_lists.raid[k] = v end
 for k,v in pairs(special) do bdUI.aura_lists.special[k] = v end
