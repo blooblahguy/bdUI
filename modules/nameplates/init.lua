@@ -160,8 +160,9 @@ local config = {
 			},
 			{
 				key = "show_class_resources",
-				type = "toggle",
-				value = true,
+				type = "select",
+				values = "All",
+				options = {"None", "ROGUE", "DRUID", "All"},
 				label = "Show Class Resources",
 				tooltip = "Things like rogue combat points, holy power",
 			},

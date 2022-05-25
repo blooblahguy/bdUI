@@ -198,6 +198,8 @@ raidauras["Dark Strike"] = true
 raidauras["Conflagration"] = true
 special["Conflagration"] = true
 raidauras["Shadowfury"] = true
+raidauras["Flame Touched"] = true
+raidauras["Dark Touched"] = true
 
 
 -- merge tables

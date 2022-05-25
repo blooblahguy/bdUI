@@ -87,7 +87,7 @@ function mod:config_callback()
 	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
 
 	if (self.ClassicComboPointsHolder) then
-		if (config.show_class_resources) then
+		if (not config.show_class_resources == "None" and (config.show_class_resources == "ALL" or config.show_class_resources == select(2, UnitClass("player")))) then
 			self.ClassicComboPointsHolder:Show()
 		else
 			self.ClassicComboPointsHolder:Hide()
@@ -643,7 +643,7 @@ local function nameplate_create(self, unit)
 			end
 		end
 
-		if (config.show_class_resources) then
+		if (not config.show_class_resources == "None" and (config.show_class_resources == "ALL" or config.show_class_resources == select(2, UnitClass("player")))) then
 			self.ClassicComboPointsHolder:Show()
 		else
 			self.ClassicComboPointsHolder:Hide()
