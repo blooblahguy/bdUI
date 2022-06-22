@@ -640,7 +640,13 @@ function mod:update_header()
 	-- growth/spacing
 	mod.frameHeader:SetAttribute("columnAnchorPoint", new_group_anchor)
 	mod.frameHeader:SetAttribute("point", new_player_anchor)
-	mod.frameHeader:SetAttribute("columnSpacing", -yOffset)
+
+	if (config.group_growth == "Right") then
+		mod.frameHeader:SetAttribute("columnSpacing", xOffset)
+	else
+		mod.frameHeader:SetAttribute("columnSpacing", -yOffset)
+	end
+
 	mod.frameHeader:SetAttribute("yOffset", yOffset)
 	mod.frameHeader:SetAttribute("xOffset", xOffset)
 

@@ -154,6 +154,7 @@ modules\chat\elements\history.lua
 modules\chat\elements\names.lua
 modules\chat\elements\skin.lua
 modules\chat\elements\url.lua
+modules\chat\elements\filter.lua
 
 # Databars
 modules\databars\init.lua

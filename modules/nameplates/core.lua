@@ -52,6 +52,24 @@ function bdUI:get_nameplate(unit)
 	end
 end
 
+local function show_class_resources(self)
+	if (self.ClassicComboPointsHolder) then
+		local show = false
+		if (config.show_class_resources == "ALL") then
+			show = true
+		end
+		if (config.show_class_resources == select(2, UnitClass("player"))) then
+			show = true
+		end
+
+		if (show) then
+			self.ClassicComboPointsHolder:Show()
+		else
+			self.ClassicComboPointsHolder:Hide()
+		end
+	end
+end
+
 local function store_tanks()
 	-- store a list of the tanks in the group
 	tanks = {}
@@ -86,13 +104,7 @@ function mod:config_callback()
 	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
 	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
 
-	if (self.ClassicComboPointsHolder) then
-		if (not config.show_class_resources == "None" and (config.show_class_resources == "ALL" or config.show_class_resources == select(2, UnitClass("player")))) then
-			self.ClassicComboPointsHolder:Show()
-		else
-			self.ClassicComboPointsHolder:Hide()
-		end
-	end
+	show_class_resources(self)
 	
 	-- Update nameplate sizing
 	mod:nameplate_size()
@@ -124,10 +136,10 @@ function mod:config_callback()
 		self.Auras.size = config.raidbefuffs * config.scale
 
 		self.RaidTargetIndicator:ClearAllPoints()
-		if (config.markposition == "LEFT") then
-			self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
-		elseif (config.markposition == "RIGHT") then
-			self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", config.raidmarkersize/2, 0)
+		if (config.markposition == "RIGHT") then
+			self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize/2), 0)
+		elseif (config.markposition == "LEFT") then
+			self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize/2, 0)
 		else
 			self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
 		end
@@ -485,12 +497,12 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- RAID MARKER
 	--==========================================
-	self.RaidTargetIndicator = self:CreateTexture(nil, "OVERLAY", nil, 7)
+	self.RaidTargetIndicator = self.OverlayHolder:CreateTexture(nil, "OVERLAY", nil, 7)
 	self.RaidTargetIndicator:SetSize(config.raidmarkersize, config.raidmarkersize)
-	if (config.markposition == "LEFT") then
-		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", -(config.raidmarkersize/2), 0)
-	elseif (config.markposition == "RIGHT") then
-		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", config.raidmarkersize/2, 0)
+	if (config.markposition == "RIGHT") then
+		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize/2), 0)
+	elseif (config.markposition == "LEFT") then
+		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize/2, 0)
 	else
 		self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
 	end
@@ -643,11 +655,7 @@ local function nameplate_create(self, unit)
 			end
 		end
 
-		if (not config.show_class_resources == "None" and (config.show_class_resources == "ALL" or config.show_class_resources == select(2, UnitClass("player")))) then
-			self.ClassicComboPointsHolder:Show()
-		else
-			self.ClassicComboPointsHolder:Hide()
-		end
+		show_class_resources(self)
     end
 
 	--==========================================

@@ -1,7 +1,21 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
+local cache_channels = {
+	["CHAT_MSG_GUILD"] = true,
+	["CHAT_MSG_OFFICER"] = true,
+	["CHAT_MSG_SYSTEM"] = true,
+	["CHAT_MSG_RAID"] = true,
+	["CHAT_MSG_RAID_LEADER"] = true,
+}
+
 function mod:color_names()
+	-- gonna cache names of people from known environments
+	local config = mod:get_save()
+	config.name_cache = config.name_cache or {}
+	local cache = config.name_cache
+
+
 	local function filter(chatFrame, event, msg, ...)
 		local newMsg = msg
 
@@ -23,6 +37,14 @@ function mod:color_names()
 		return false, newMsg, ...
 	end
 
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_ACHIEVEMENT", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_NOTICE", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_TRADESKILLS", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_TEXT_EMOTE", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_TARGETICONS", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", filter)

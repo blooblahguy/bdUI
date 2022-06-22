@@ -1,6 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 -- aura functions will move here
 
+
 -- for classic cooldown spirals
 function bdUI:update_duration(cd_frame, unit, spellID, caster, name, duration, expiration)
 	if (not bdUI.spell_durations or duration ~= 0 or expiration ~= 0) then

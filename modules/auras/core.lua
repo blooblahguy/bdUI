@@ -26,26 +26,6 @@ function mod:config_callback()
 	mod:store_lowercase_auras()
 end
 
-local function sanitize(str)
-	str = str:lower()
-	str = strtrim(str)
-	str = gsub(str, "[^a-zA-Z%s]+", "")
-
-	return str
-end
-
-function bdUI:lowercase_table(t)
-	local new = {}
-
-	for k, v in pairs(t) do
-		k = type(k) == "string" and sanitize(k) or k
-		v = type(v) == "string" and sanitize(v) or v
-		new[k] = v
-	end
-
-	return new
-end
-
 function mod:store_lowercase_auras()
 	mod.config = mod:get_save()
 
@@ -60,14 +40,14 @@ function mod:store_lowercase_auras()
 
 		
 		for spell, v in pairs(spells) do
-			spell = sanitize(spell)
+			spell = bdUI:sanitize(spell)
 			mod.auras[category][spell] = true
 		end
 	end
 	
 	mod.auras[class] = {}
 	for spell, v in pairs(mod.config[class]) do
-		spell = sanitize(spell)
+		spell = bdUI:sanitize(spell)
 		
 		mod.auras[class][spell] = true
 

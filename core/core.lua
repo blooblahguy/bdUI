@@ -239,3 +239,23 @@ function dump (tbl, indent)
 		end
 	end
 end
+
+function bdUI:sanitize(str)
+	str = str:lower()
+	str = strtrim(str)
+	str = gsub(str, "[^a-zA-Z%s]+", "")
+
+	return str
+end
+
+function bdUI:lowercase_table(t)
+	local new = {}
+
+	for k, v in pairs(t) do
+		k = type(k) == "string" and bdUI:sanitize(k) or k
+		v = type(v) == "string" and bdUI:sanitize(v) or v
+		new[k] = v
+	end
+
+	return new
+end

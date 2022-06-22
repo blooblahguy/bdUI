@@ -75,6 +75,7 @@ mod.emojis[':sob:'] = emoji_textures.Sob
 mod.emojis[':sunglasses:'] = emoji_textures.Sunglasses
 mod.emojis[':thinking:'] = emoji_textures.Thinking
 mod.emojis[':thumbs_up:'] = emoji_textures.ThumbsUp
+mod.emojis[':thumbsup:'] = emoji_textures.ThumbsUp
 mod.emojis[':semi_colon:'] = emoji_textures.SemiColon
 mod.emojis[':wink:'] = emoji_textures.Wink
 mod.emojis[':zzz:'] = emoji_textures.ZZZ

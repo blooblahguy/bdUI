@@ -48,7 +48,6 @@ lib\ace\LibDBIcon-1.0.lua
 # Classic
 lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
 lib\classic\LibHealComm\LibHealComm-4.0.lua
-game_versions\tbc\tbc_auras.lua
 
 # oUF
 lib\oUF\oUF_TBC.xml
@@ -85,6 +84,9 @@ core\auras.lua
 core\modules.lua
 core\setup.lua
 core\load.lua
+
+# classic auras
+game_versions\tbc\tbc_auras.lua
 
 # General
 modules\general\init.lua
@@ -160,6 +162,7 @@ modules\chat\elements\history.lua
 modules\chat\elements\names.lua
 modules\chat\elements\skin.lua
 modules\chat\elements\url.lua
+modules\chat\elements\filter.lua
 
 # Databars
 modules\databars\init.lua
