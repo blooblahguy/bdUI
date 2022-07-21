@@ -12,6 +12,10 @@ local c = {}
 -- ACTION_BUTTON_SHOW_GRID_REASON_EVENT = 4;
 -- ACTION_BUTTON_SHOW_GRID_REASON_SPELLBOOK = 4;
 
+function mod:add_config_callback(fn)
+	table.insert(mod.variables.callbacks, fn)
+end
+
 --===============================================
 -- Core functionality
 -- place core functionality here
@@ -20,6 +24,9 @@ function mod:initialize()
 	c = mod:get_save()
 	mod.config = c
 	if (not c.enabled) then mod.disabled = true; return end
+
+	mod.variables.font = bdUI:get_font(c.font_size)
+	mod.variables.cooldownfont = bdUI:get_font(c.cd_font_size)
 
 	if (not c.enabled_once) then
 		SetActionBarToggles(1, 1, 1, 1, 0)
@@ -67,7 +74,7 @@ function mod:config_callback()
 	
 	mod:UnregisterEvent("PLAYER_REGEN_DISABLED")
 	mod.variables.font = bdUI:get_font(c.font_size)
-	mod.variables.cooldownfont = bdUI:get_font(11)
+	mod.variables.cooldownfont = bdUI:get_font(c.cd_font_size)
 
 	-- loop through bar callbacks
 	for k, callback in pairs(mod.variables.callbacks) do
@@ -354,10 +361,10 @@ function mod:SkinButton(button)
 	-- COOLDOWN
 	if (cooldown) then
 		local cooldowntext = cooldown:GetRegions()
-		cooldowntext = cooldown:GetRegions()
 		cooldowntext:SetFontObject(v.cooldownfont)
-		cooldowntext:SetJustifyH("Center")
-		cooldowntext:SetAllPoints(cooldown)
+		cooldowntext:SetJustifyH("CENTER")
+		cooldowntext:SetPoint("LEFT", cooldown, -20, 0)
+		cooldowntext:SetPoint("RIGHT", cooldown, 20, 0)
 		cooldown:SetParent(button)
 		cooldown:SetPoint("CENTER")
 		cooldown:SetSize(button:GetWidth() + 4, button:GetHeight() + 4)

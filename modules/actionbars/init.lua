@@ -142,6 +142,15 @@ local config = {
 				label = "Main Font Size"
 			},
 			{
+				key = "cd_font_size",
+				type = "range",
+				min = 1,
+				max = 30,
+				step = 1,
+				value = 18,
+				label = "Cooldown Font Size"
+			},
+			{
 				key = "fade_duration",
 				type = "range",
 				min = 0,
