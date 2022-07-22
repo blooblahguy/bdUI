@@ -94,17 +94,4 @@ mod.elements.castbar = function(self, unit)
 	self.Castbar.PostCastNotInterruptible = kickable_cast
 	self.Castbar.PostCastInterruptible = kickable_cast
 	self.Castbar.PostCastStart = kickable_cast
-
-	-- Pixel Perfect
-	self:HookScript("OnSizeChanged", function(self, elapsed)
-		bdUI:set_backdrop(self.Health, true)
-		bdUI:set_backdrop(self.Castbar, true)
-
-		local border = bdUI:get_border(self)
-
-		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
-		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
-		self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -border)
-		self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)
-	end)
 end

@@ -118,8 +118,8 @@ end
 		end	
 	end
 
-	function bdUI:set_backdrop_basic(frame)
-		if (frame.background) then return end
+	function bdUI:set_backdrop_basic(frame, force)
+		if (frame.background and not force) then return end
 
 		if (not frame.SetBackdrop) then
 			Mixin(frame, BackdropTemplateMixin)

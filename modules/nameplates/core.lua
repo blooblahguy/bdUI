@@ -626,6 +626,44 @@ local function nameplate_create(self, unit)
 	-- CASTBARS
 	--==========================================
 	mod.elements.castbar(self, unit)
+
+	--==========================================
+	-- Pixel Perfect
+	--==========================================
+	self:HookScript("OnSizeChanged", function(self, elapsed)
+		local border = bdUI:get_border(self)
+
+		bdUI:set_backdrop(self.Health, true)
+
+		-- castbars
+		if (self.Castbar) then
+			bdUI:set_backdrop(self.Castbar, true)
+
+			self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
+			self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
+			self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -border)
+			self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)
+		end
+
+		if (self.ClassicComboPointsHolder) then
+			bdUI:set_backdrop(self.ClassicComboPointsHolder, true)
+			local gap = border * 4
+			local width = (config.width - (gap * 4)) / 5
+			for index = 1, 5 do
+				bar = self.ClassicComboPoints[index]
+				bdUI:set_backdrop(bar, true)
+				bar:SetSize(width, border * 3)
+				
+				if (not last) then
+					bar:SetPoint("BOTTOMLEFT", self.Health)
+				else
+					bar:SetPoint('LEFT', last, "RIGHT", gap, 0)
+				end
+
+				last = bar
+			end
+		end
+	end)
 end
 
 local function disable_class_power()
