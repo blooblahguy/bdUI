@@ -647,12 +647,14 @@ local function nameplate_create(self, unit)
 
 		if (self.ClassicComboPointsHolder) then
 			bdUI:set_backdrop(self.ClassicComboPointsHolder, true)
+			local last
 			local gap = border * 4
 			local width = (config.width - (gap * 4)) / 5
 			for index = 1, 5 do
-				bar = self.ClassicComboPoints[index]
+				local bar = self.ClassicComboPoints[index]
 				bdUI:set_backdrop(bar, true)
 				bar:SetSize(width, border * 3)
+				bar:ClearAllPoints()
 				
 				if (not last) then
 					bar:SetPoint("BOTTOMLEFT", self.Health)
