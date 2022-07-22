@@ -52,7 +52,7 @@ function bdUI:get_nameplate(unit)
 	end
 end
 
-local function show_class_resources(self)
+function mod:show_class_resources(self)
 	if (self.ClassicComboPointsHolder) then
 		local show = false
 		if (config.show_class_resources == "ALL") then
@@ -104,7 +104,7 @@ function mod:config_callback()
 	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
 	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
 
-	show_class_resources(self)
+	mod:show_class_resources(self)
 	
 	-- Update nameplate sizing
 	mod:nameplate_size()
@@ -616,46 +616,10 @@ local function nameplate_create(self, unit)
 	-- Combo Points
 	--==========================================
 	local class = select(2, UnitClass("player"))
-	if (class == "ROGUE" or class == "DRUID") then
-		local last
-		self.ClassicComboPointsHolder = CreateFrame("frame", nil, self.Health)
-		self.ClassicComboPointsHolder:SetAllPoints()
-		self.ClassicComboPoints = {}
-		local gap = border * 4
-		width = 16
-		for index = 1, 5 do
-			local bar = CreateFrame('StatusBar', "bdNameplateComboPoint"..index, self.ClassicComboPointsHolder)
-			bar:SetStatusBarTexture(bdUI.media.flat)
-			bdUI:set_backdrop_basic(bar)
-
-			bar:SetSize(width, 12)
-			if (not last) then
-				bar:SetPoint("TOPLEFT", self.ClassicComboPointsHolder, "BOTTOMLEFT", 0, 6)
-			else
-				bar:SetPoint('LEFT', last, "RIGHT", gap, 0)
-			end
-
-			last = bar
-			self.ClassicComboPoints[index] = bar
+	if (mod.elements.combopoints) then
+		if (class == "ROGUE" or class == "DRUID") then
+			mod.elements.combopoints(self, unit)
 		end
-
-		local colors = {}
-		colors[1] = {0.34, 0.57, 0.17}
-		colors[2] = {0.34, 0.57, 0.17}
-		colors[3] = {0.58, 0.52, 0}
-		colors[4] = {0.64, 0.50, 0}
-		colors[5] = {0,6, 0.23, 0}
-
-		self.ClassicComboPoints.UpdateColor = function(self, powerType)
-			local width = (config.width - (gap * 4)) / 5
-			for i = 1, #self do
-				local bar = self[i]
-				bar:SetSize(width, 12)
-				bar:SetStatusBarColor(unpack(colors[i]))
-			end
-		end
-
-		show_class_resources(self)
     end
 
 	--==========================================

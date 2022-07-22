@@ -10,7 +10,7 @@ local element_name = "ClassicComboPoints"
 
 -- variables about what combo points we're working with
 -- sourced from FrameXML/Constants.lua
-local SPELL_POWER_COMBO_POINTS = Enum.PowerType.ComboPoints or 4
+local SPELL_POWER_COMBO_POINTS = Enum.PowerType.ComboPoints or 5
 local RequirePower, RequireSpell
 local ClassPowerID = SPELL_POWER_COMBO_POINTS
 local ClassPowerType = 'COMBO_POINTS'
@@ -71,14 +71,17 @@ local function Update(self, event, unit, powerType)
 		-- mod should never be 0, but according to Blizz code it can actually happen
 		cur = mod == 0 and 0 or cur / mod
 
+
 		local numActive = cur + 0.9
+		-- print(cur, max, numActive)
 		for i = 1, max do
 			if(i > numActive) then
 				element[i]:Hide()
 				element[i]:SetValue(0)
 			else
+				-- print(i, "show")
 				element[i]:Show()
-				element[i]:SetValue(cur - i + 1)
+				element[i]:SetValue(1) --cur - i + 1)
 			end
 		end
 

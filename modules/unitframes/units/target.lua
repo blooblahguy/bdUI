@@ -60,7 +60,6 @@ local debuff_filter = function(self, unit, button, name, icon, count, debuffType
 		return true
 	end
 	
-	
 	if (not castByPlayer and not source) then
 		-- print("else", name, castByPlayer, source, nameplateShowPersonal, nameplateShowAll)
 		return true

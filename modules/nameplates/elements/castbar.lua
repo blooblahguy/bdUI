@@ -96,7 +96,7 @@ mod.elements.castbar = function(self, unit)
 	self.Castbar.PostCastStart = kickable_cast
 
 	-- Pixel Perfect
-	self:SetScript("OnSizeChanged", function(self, elapsed)
+	self:HookScript("OnSizeChanged", function(self, elapsed)
 		bdUI:set_backdrop(self.Health, true)
 		bdUI:set_backdrop(self.Castbar, true)
 
