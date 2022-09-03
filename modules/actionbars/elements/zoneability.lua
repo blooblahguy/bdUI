@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Actionbars")
 
 function mod:create_zone_ability()
-	if (bdUI:isClassicAny()) then return end
+	if (not ZoneAbilityFrame) then return end
 	local za_holder = CreateFrame("frame", "bdUI_ZoneAbility", UIParent)
 	za_holder:SetSize(ZoneAbilityFrame:GetSize())
 	za_holder:SetPoint("BOTTOM", 0, 0)

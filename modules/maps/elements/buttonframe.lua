@@ -207,7 +207,7 @@ function mod:create_button_frame()
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
 	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")
 	Minimap.buttonFrame:RegisterEvent("MAIL_CLOSED")
-	if not bdUI:isClassicAny() then
+	if _G["GarrisonMission"] then
 		Minimap.buttonFrame:RegisterEvent("GARRISON_SHOW_LANDING_PAGE");
 		Minimap.buttonFrame:RegisterEvent("GARRISON_HIDE_LANDING_PAGE");
 		Minimap.buttonFrame:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE");
@@ -218,6 +218,7 @@ function mod:create_button_frame()
 		Minimap.buttonFrame:RegisterEvent("GARRISON_SHIPYARD_NPC_OPENED");
 		Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_AVAILABLE");
 		Minimap.buttonFrame:RegisterEvent("GARRISON_INVASION_UNAVAILABLE");
+		Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_LIST_UPDATE")
 		Minimap.buttonFrame:RegisterEvent("SHIPMENT_UPDATE");
 	end
 	Minimap.buttonFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
@@ -229,11 +230,11 @@ function mod:create_button_frame()
 	if (bdUI.version >= 60000) then
 		Minimap.buttonFrame:RegisterEvent("GARRISON_UPDATE")
 	end
-	if (not bdUI:isClassicAny()) then
+	if (_G["CovenantCallingQuestMixin"]) then
 		Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
 	end
 	if (not bdUI:isClassicAny()) then
-		Minimap.buttonFrame:RegisterEvent("GARRISON_MISSION_LIST_UPDATE")
+		
 	end
 
 	-- Updater script
