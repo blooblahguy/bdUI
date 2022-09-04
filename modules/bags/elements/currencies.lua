@@ -50,7 +50,7 @@ function mod:currencies_update()
 		end
 
 
-		if (currency.isWatched) then
+		if (currency.isWatched and currency.quantity ~= nil) then
 			local frame = currencies.watchers[index]
 
 			frame:Show()

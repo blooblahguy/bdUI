@@ -100,11 +100,11 @@ mod.emojis[':%-@'] = emoji_textures.Angry
 mod.emojis[':@'] = emoji_textures.Angry
 mod.emojis[':%-%)'] = emoji_textures.Smile
 mod.emojis[':%)'] = emoji_textures.Smile
-mod.emojis[':D'] = emoji_textures.Grin
+mod.emojis[':D'] = emoji_textures.Smile
 mod.emojis[':%-D'] = emoji_textures.Grin
 mod.emojis[';%-D'] = emoji_textures.Grin
 mod.emojis[';D'] = emoji_textures.Grin
-mod.emojis['=D'] = emoji_textures.Grin
+mod.emojis['=D'] = emoji_textures.Smile
 mod.emojis['xD'] = emoji_textures.Grin
 mod.emojis['XD'] = emoji_textures.Grin
 mod.emojis[':%-%('] = emoji_textures.SlightFrown
