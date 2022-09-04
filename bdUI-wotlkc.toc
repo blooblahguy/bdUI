@@ -1,4 +1,4 @@
-## Interface: 20503
+## Interface: 30400
 
 ## Title: |cffA02C2Fbd|rUI |cff3FC7EB[WOTLK]|r
 ## Author: Blooblahguy
