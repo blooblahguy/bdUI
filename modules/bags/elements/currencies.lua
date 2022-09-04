@@ -2,6 +2,12 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
 --============================================
+-- Sync C_CurrencyInfo across game versions
+--============================================
+C_CurrencyInfo.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize or GetCurrencyListSize
+C_CurrencyInfo.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or GetCurrencyListInfo
+
+--============================================
 -- Currency object
 --============================================
 local currencies = {}
@@ -11,7 +17,7 @@ currencies.watchers = {}
 -- Currency updates
 --============================================
 function mod:currencies_update()
-	if (not C_CurrencyInfo.GetCurrencyListSize) then 
+	if (not GetCurrencyListSize) then 
 		currencies:SetHeight(10)
 		return
 	end
@@ -31,9 +37,21 @@ function mod:currencies_update()
 	currencies:SetSize(maxwidth, 30)
 
 	for i = 1, C_CurrencyInfo.GetCurrencyListSize() do
-		local currency = C_CurrencyInfo.GetCurrencyListInfo(i)
+		local currency = {}
+		local name, isHeader, isExpanded, isUnused, isWatched, count, icon = C_CurrencyInfo.GetCurrencyListInfo(i)
+		if (type(name) ~= "table") then
+			currency.name = name
+			currency.isHeader = isHeader
+			currency.quantity = count
+			currency.iconFileID = icon
+			currency.isWatched = isWatched
+		else
+			currency = name -- we returned a table
+		end
 
-		if (currency.isShowInBackpack) then
+
+		if (currency.isWatched) then
+			print(C_CurrencyInfo.GetCurrencyListInfo(i))
 			local frame = currencies.watchers[index]
 
 			frame:Show()
@@ -85,7 +103,12 @@ function mod:create_currencies()
 	currencies = CreateFrame("frame", "bdBags_Currencies", mod.bags)
 	currencies.watchers = {}
 	
-	if (not C_CurrencyInfo.GetCurrencyListSize) then return currencies end
+	if (not C_CurrencyInfo.GetCurrencyListSize and not GetCurrencyListSize) then return currencies end
+
+	BackpackTokenFrame.Tokens = BackpackTokenFrame.Tokens or {}
+	BackpackTokenFrame.Tokens[1] = BackpackTokenFrame.Tokens[1] or "BackpackTokenFrameToken1"
+	BackpackTokenFrame.Tokens[2] = BackpackTokenFrame.Tokens[2] or "BackpackTokenFrameToken2"
+	BackpackTokenFrame.Tokens[3] = BackpackTokenFrame.Tokens[3] or "BackpackTokenFrameToken3"
 
 	for i = 3, MAX_WATCHED_TOKENS do
 		local frame = CreateFrame("button", "BackpackTokenFrameToken"..i, BackpackTokenFrame, "BackpackTokenTemplate")
