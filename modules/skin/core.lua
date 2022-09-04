@@ -10,7 +10,6 @@ local mod = bdUI:get_module("Skinning")
 --===============================================
 function mod:initialize()
 	-- mod:create_fonts()
-	if bdUI:isClassicAny() then return end
 	mod:move_vehicle()
 
 	-- General config

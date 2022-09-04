@@ -762,9 +762,9 @@ end
 function mod:resize_container()
 	mod.frameHeader:ClearAllPoints();
 
-	local size = 4
-	if (bdUI:isClassicAny()) then
-		size = 5
+	local size = 5
+	if (bdUI.version >= 80000) then
+		size = 4
 	end
 
 	-- change where to start the growth of groups

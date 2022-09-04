@@ -107,7 +107,7 @@ end
 --======================================
 -- World Marker Buttons
 --======================================
-if not bdUI:isClassicAny() then
+if bdUI.version >= 40000 then -- cata
 	local marks_table = {
 		[1] = {"Blue", "0496ff", 6}
 		, [2] = {"Green", "119c0c", 4}

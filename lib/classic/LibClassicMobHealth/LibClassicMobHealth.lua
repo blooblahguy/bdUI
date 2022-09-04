@@ -27,7 +27,7 @@ if oldMinor then
 	end
 end
 
-if not bdUI:isClassicAny() then return end
+if bdUI.version < 40000 then return end
 
 local _G = _G
 local UnitLevel = _G.UnitLevel

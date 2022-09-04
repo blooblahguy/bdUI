@@ -4,7 +4,6 @@ local mod = bdUI:get_module("Databars")
 function mod:create_honor()
 	local config = mod.config
 
-	if (bdUI:isClassicAny()) then return end
 	if (not UnitHonorLevel) then return end
 
 	local bar = mod:create_databar("bdHonor")

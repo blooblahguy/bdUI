@@ -1,8 +1,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
--- if bdUI:isClassicAny() then return end
-
 --============================================
 -- Currency object
 --============================================

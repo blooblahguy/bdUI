@@ -32,7 +32,7 @@ function mod:player_tooltip(self, unit)
 
 	GameTooltipTextLeft1:SetFormattedText('%s%s', name, dnd)
 
-	if (IsShiftKeyDown() and not bdUI:isClassicAny()) then
+	if (IsShiftKeyDown() and GetInspectSpecialization) then
 		mod:getAverageItemLevel(self, self.unit)
 	end
 

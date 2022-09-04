@@ -13,7 +13,7 @@ end
 -- failing to account for some rows being headers. Fix by ignoring
 -- modifiers when clicking header rows.
 -- New in 7.0
-if not bdUI:isClassicAny() then
+if TradeSkillFrame then
 	local frame = CreateFrame("Frame")
 	frame:RegisterEvent("ADDON_LOADED")
 	frame:SetScript("OnEvent", function(self, event, name)

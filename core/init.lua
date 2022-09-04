@@ -93,10 +93,10 @@ function bdUI:get_game_version()
 	local game = 0
 	local version = 1000000
 
-	for k, v in pairs(versions) do
-		if (tocversion < k and k < version) then
-			version = k
-			game = v
+	for k_id, v_name in pairs(versions) do
+		if (tocversion < k_id and k_id < version) then
+			version = k_id
+			game = v_name
 		end
 	end
 
@@ -106,25 +106,3 @@ function bdUI:get_game_version()
 	return game, tocversion
 end
 bdUI:get_game_version()
-
-function bdUI:VersionLessThan()
-	-- print(WOW_PROJECT_MAINLINE)
-	-- print(WOW_PROJECT_CLASSIC)
-	-- print(WOW_PROJECT_BURNING_CRUSADE_CLASSIC)
-end
-
-bdUI:VersionLessThan()
-
-function bdUI:isRetail()
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then return true end
-end
-function bdUI:isClassicVanilla()
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return true end
-end
-function bdUI:isClassicBC()
-	if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then return true end
-end
-function bdUI:isClassicAny()
-	if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then return true end
-	if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then return true end
-end

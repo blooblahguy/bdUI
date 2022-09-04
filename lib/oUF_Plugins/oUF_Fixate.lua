@@ -65,7 +65,7 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 		element.icon = select(3, GetSpellInfo(210099))
-		if (bdUI:isClassicAny()) then
+		if (not element.icon) then
 			element.icon = select(3, GetSpellInfo(12021))
 		end
 		element:SetJustifyH("LEFT")

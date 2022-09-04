@@ -3,7 +3,7 @@ local mod = bdUI:get_module("General")
 
 
 function mod:create_dcbo(event, addon)
-	if not bdUI:isClassicAny() then return end
+	if not PlaceAuctionBid then return end
 	local config = mod.config
 	local dcbo = CreateFrame('frame')
 	dcbo:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)

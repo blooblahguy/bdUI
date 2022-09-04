@@ -17,7 +17,6 @@ Usage example 1:
     end
 
 --]================]
-if not bdUI:isClassicAny() then return end
 
 local apiLevel = math.floor(select(4,GetBuildInfo())/10000)
 local isClassic = apiLevel <= 2

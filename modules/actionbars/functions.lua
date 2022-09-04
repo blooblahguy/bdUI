@@ -57,7 +57,7 @@ end
 
 -- hide mainmenu bar
 function mod:HideMainMenuBar()
-	if not bdUI:isClassicAny() then 
+	if C_CurrencyInfo then 
 		v.hidden:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	end
 	for i, frame in next, framesToHide do

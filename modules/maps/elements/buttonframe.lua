@@ -233,9 +233,6 @@ function mod:create_button_frame()
 	if (_G["CovenantCallingQuestMixin"]) then
 		Minimap.buttonFrame:RegisterEvent("COVENANT_CALLINGS_UPDATED")
 	end
-	if (not bdUI:isClassicAny()) then
-		
-	end
 
 	-- Updater script
 	local total = 0

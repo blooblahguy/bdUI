@@ -35,7 +35,6 @@ end
 
 -- Mega resource display
 mod.create_resources = function(self, unit)
-	-- if (bdUI:isClassicAny()) then return end
 	if (unit ~= "player") then return end
 	config = mod.save
 

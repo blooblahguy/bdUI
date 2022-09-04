@@ -7,7 +7,7 @@ ttscan:SetOwner(WorldFrame, 'ANCHOR_NONE')
 local activeQuests = {}
 local activeWorldQuests = {}
 
-if bdUI:isClassicAny() then return end
+if not GetQuestObjectiveInfo then return end
 
 local colors = {
 	['world'] = {},
