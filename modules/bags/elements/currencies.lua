@@ -51,7 +51,6 @@ function mod:currencies_update()
 
 
 		if (currency.isWatched) then
-			print(C_CurrencyInfo.GetCurrencyListInfo(i))
 			local frame = currencies.watchers[index]
 
 			frame:Show()
