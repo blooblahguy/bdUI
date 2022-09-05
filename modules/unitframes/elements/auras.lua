@@ -7,8 +7,14 @@ mod.additional_elements.auras = function(self, unit)
 
 	-- Auras
 	self.Auras = CreateFrame("Frame", "bdUF_Auras", self)
-	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
-	self.Auras:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
+
+	if (self.ResourceHolder:IsShown()) then
+		self.Auras:SetPoint("BOTTOMLEFT", self.ResourceHolder, "TOPLEFT", 0, 8)
+		self.Auras:SetPoint("BOTTOMRIGHT", self.ResourceHolder, "TOPRIGHT", 0, 8)
+	else
+		self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 4)
+		self.Auras:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 4)
+	end
 	self.Auras:SetSize(config.playertargetwidth, 60)
 	self.Auras.size = 18
 	self.Auras.initialAnchor  = "BOTTOMLEFT"

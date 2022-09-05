@@ -5,10 +5,10 @@ mod.additional_elements.runes = function(self, unit)
 	if (select(2, UnitClass("player")) ~= "DEATHKNIGHT") then return end
 	if (self.Runes) then return end
 
+	self.ResourceHolder:Show()
+
 	local config = mod:get_save()
 	local border = bdUI:get_border(self)
-	self.RunesHolder = CreateFrame("frame", nil, self)
-	self.RunesHolder:SetAllPoints()
 
 	local runes = {}
 	local last
@@ -16,7 +16,7 @@ mod.additional_elements.runes = function(self, unit)
 	local width = (config.playertargetwidth - (gap * 5)) / 6
 	for index = 1, 6 do
 		-- Position and size of the rune bar indicators
-		local rune = CreateFrame('StatusBar', "bdUnitframesRune"..index, self.RunesHolder)
+		local rune = CreateFrame('StatusBar', "bdUnitframesRune"..index, self.ResourceHolder)
 		rune:SetStatusBarTexture(bdUI.media.flat)
 		rune:SetSize(width, border * 3)
 		rune:ClearAllPoints()

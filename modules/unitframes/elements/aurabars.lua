@@ -8,7 +8,12 @@ mod.additional_elements.aurabars = function(self, unit)
 	local config = mod.config
 
 	self.AuraBars = CreateFrame("Frame", "bdUF_AuraBars", self)
-	self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", bdUI.border * 2, bdUI.border)
+	if (self.ResourceHolder:IsShown()) then
+		self.AuraBars:SetPoint("BOTTOMLEFT", self.ResourceHolder, "TOPLEFT", bdUI.border * 2, bdUI.border)
+	else
+		self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", bdUI.border * 2, bdUI.border)
+	end
+
 	-- self.AuraBars:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border)
 	self.AuraBars:SetHeight(60)
 	self.AuraBars:SetWidth(config.playertargetwidth - (bdUI.border * 2))

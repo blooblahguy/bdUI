@@ -1,15 +1,23 @@
 local bdUI, c, l = unpack(select(2, ...))
 
 -- measure addon load times
-local start = time()
-local addon_loads = {}
+-- local enabled_addons = {}
+-- for i = 1, 60 do
+-- 	local name, title, notes, enabled, loadable, reason, security = GetAddOnInfo(i)
+-- 	if (not name) then break end
+-- 	if (enabled) then
+-- 		-- print(name)
+-- 		enabled_addons[name] = GetTime()
+-- 	end
+-- end
 
 local loader = CreateFrame("frame", nil, bdParent)
 loader:RegisterEvent("ADDON_LOADED")
 loader:SetScript("OnEvent", function(self, event, addon)
+	-- print(addon, "loaded in", GetTime() - enabled_addons[addon])
 
 	if (addon == bdUI.name) then
-		loader:UnregisterEvent("ADDON_LOADED")
+		-- loader:UnregisterEvent("ADDON_LOADED")
 		bdUI:do_action("pre_loaded")
 
 		-- overwrite some ouf colors

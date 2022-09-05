@@ -124,7 +124,7 @@ end
 		if (not frame.SetBackdrop) then
 			Mixin(frame, BackdropTemplateMixin)
 		end
-		frame:SetBackdrop({bgFile = bdUI.media.flat, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
+		frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})--, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
 		frame:SetBackdropColor(unpack(bdUI.media.backdrop))
 		frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 

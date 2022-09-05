@@ -97,6 +97,14 @@ local function layout(self, unit)
 	self.Border:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border)
 	self.Border:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
 
+	-- holds tracking resources
+	self.ResourceHolder = CreateFrame("frame", nil, self)
+	self.ResourceHolder:SetHeight(bdUI.border * 3)
+	self.ResourceHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, bdUI.border)
+	self.ResourceHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border)
+	bdUI:set_backdrop(self.ResourceHolder)
+	self.ResourceHolder:Hide()
+
 	--===============================================
 	-- Healing & Damage Absorbs
 	--===============================================

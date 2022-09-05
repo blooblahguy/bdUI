@@ -5,10 +5,7 @@ local config
 function mod:create_objective_tracker()
 	config = mod.config
 
-	print(ObjectiveTrackerFrame)
 	ObjectiveTrackerFrame = ObjectiveTrackerFrame or WatchFrame
-
-	print(ObjectiveTrackerFrame)
 
 	local ignore_point
 
@@ -40,7 +37,7 @@ function mod:create_objective_tracker()
 		elseif (event == "ENCOUNTER_END" and not IsInRaid()) then
 			if (ObjectiveTracker_Expand) then ObjectiveTracker_Expand() end
 		else
-			if (IsAddOnLoaded("Blizzard_ObjectiveTracker")) then
+			if (ObjectiveTrackerFrame) then
 				move_objective_tracker()
 				hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", function(self, anchorPoint, relativeTo, x, y)
 					if (not ignore_point) then
