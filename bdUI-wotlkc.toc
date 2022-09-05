@@ -50,8 +50,9 @@ lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
 lib\classic\LibHealComm\LibHealComm-4.0.lua
 
 # oUF
-lib\oUF\oUF_TBC.xml
+lib\oUF\oUF_WOTLK.xml
 lib\oUF_Plugins\oUF_ClassicComboPoints.lua
+lib\oUF_Plugins\oUF_WotlkRunes.lua
 lib\oUF_Plugins\oUF_Fixate.lua
 lib\oUF_Plugins\oUF_ThreatLite.lua
 lib\oUF_Plugins\oUF_Fader.lua
@@ -236,6 +237,7 @@ modules\unitframes\elements\power.lua
 modules\unitframes\elements\resting.lua
 modules\unitframes\elements\solocastbar.lua
 modules\unitframes\elements\tags.lua
+modules\unitframes\elements\runes.lua
 modules\unitframes\units\player.lua
 modules\unitframes\units\target.lua
 modules\unitframes\units\targettarget.lua
@@ -249,7 +251,7 @@ modules\unitframes\units\arena.lua
 # modules\resources\core.lua
 # modules\resources\elements\power.lua
 # modules\resources\elements\points.lua
-# modules\resources\elements\runes.lua
+
 # modules\resources\elements\stagger.lua
 # modules\resources\elements\totems.lua
 

@@ -29,6 +29,7 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.aurabars(self, unit)
+	mod.additional_elements.runes(self, unit)
 	mod.tags.pp(self, unit)
 
 	local size = math.restrict(config.playertargetheight * 0.75, 8, config.playertargetheight)

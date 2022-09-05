@@ -1,8 +1,13 @@
 local bdUI, c, l = unpack(select(2, ...))
 
+-- measure addon load times
+local start = time()
+local addon_loads = {}
+
 local loader = CreateFrame("frame", nil, bdParent)
 loader:RegisterEvent("ADDON_LOADED")
 loader:SetScript("OnEvent", function(self, event, addon)
+
 	if (addon == bdUI.name) then
 		loader:UnregisterEvent("ADDON_LOADED")
 		bdUI:do_action("pre_loaded")

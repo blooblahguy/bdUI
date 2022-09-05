@@ -5,6 +5,11 @@ local config
 function mod:create_objective_tracker()
 	config = mod.config
 
+	print(ObjectiveTrackerFrame)
+	ObjectiveTrackerFrame = ObjectiveTrackerFrame or WatchFrame
+
+	print(ObjectiveTrackerFrame)
+
 	local ignore_point
 
 	local quest_anchor = CreateFrame("frame", "bdObjectiveFrame", bdParent)
