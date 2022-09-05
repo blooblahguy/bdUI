@@ -44,8 +44,8 @@ local function create(options, parent)
 
 	local picker = CreateFrame("button", nil, container, BackdropTemplateMixin and "BackdropTemplate")
 	picker:SetSize(30, 20)
-	picker:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = 2, insets = {top = 2, right = 2, bottom = 2, left = 2}})
-	picker:SetBackdropBorderColor(0,0,0,1)
+	picker:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.border, insets = {top = lib.border, right = lib.border, bottom = lib.border, left = lib.border}})
+	picker:SetBackdropBorderColor(0, 0, 0, 1)
 	picker:SetPoint("LEFT", container, "LEFT", 0, 0)
 	
 	picker:SetScript("OnClick", function(self)		

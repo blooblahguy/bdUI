@@ -21,4 +21,5 @@
 	<Script file="elements\tab.lua"/>
 	<Script file="elements\text.lua"/>
 	<Script file="elements\toggle.lua"/>
+	<Script file="elements\link.lua"/>
 </Ui>

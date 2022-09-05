@@ -99,6 +99,9 @@ function mod:config_callback()
 	config = mod.config
 	if (not config.enabled) then return false end
 
+	mod.cache = {}
+	collectgarbage()
+
 	-- store lowercase tables
 	mod.lists = {}
 	mod.lists.specialunits = bdUI:lowercase_table(config.specialunits)
@@ -560,7 +563,6 @@ local function nameplate_create(self, unit)
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		local allow = false
 		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 			return true
 		end

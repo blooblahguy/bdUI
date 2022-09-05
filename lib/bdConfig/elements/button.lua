@@ -46,8 +46,26 @@ local function create(options, parent)
 	button.hoverAlpha = 0.8
 	button.inactiveAlpha = 0.5
 	button:SetBackdrop({bgFile = media.flat})
+
+	-- text
+	button.text = button:CreateFontString(nil, "OVERLAY", "bdConfig_font")
+	button.text:SetPoint("CENTER")
+	button.text:SetJustifyH("CENTER")
+	button.text:SetJustifyV("MIDDLE")
+	function button:GetText()
+		return button.text:GetText()
+	end
+	function button:SetText(text)
+		button.text:SetText(text)
+		button:SetWidth(button.text:GetStringWidth() + 30)
+	end
 	
-	function button:BackdropColor(r, g, b, a)
+	-- color
+	button:SetBackdropColor(unpack(media.blue))
+	button:SetHeight(30)
+	button:SetAlpha(button.inactiveAlpha)
+	button:EnableMouse(true)
+	function button:BackdropColor(r, g, b, a, active)
 		button.inactiveColor = button.inactiveColor or media.blue
 		button.activeColor = button.activeColor or media.blue
 
@@ -60,16 +78,18 @@ local function create(options, parent)
 	button.SetBackdropColor = button.BackdropColor
 	button.SetVertexColor = button.BackdropColor
 
-	button:SetBackdropColor(unpack(media.blue))
-	button:SetAlpha(button.inactiveAlpha)
-	button:SetHeight(30)
-	button:EnableMouse(true)
+	function button:mix_color(active)
+		local r, g, b, a = unpack(media.blue)
+		if (active) then
+			a = button.activeAlpha
+		else
+			a = button.inactiveAlpha
+		end
 
-	button.text = button:CreateFontString(nil, "OVERLAY", "bdConfig_font")
-	button.text:SetPoint("CENTER")
-	button.text:SetJustifyH("CENTER")
-	button.text:SetJustifyV("MIDDLE")
-
+		return r, g, b, a
+	end
+	
+	-- states
 	function button:Select()
 		button.SetVertexColor(unpack(button.activeColor))
 		button:SetAlpha(button.activeAlpha)
@@ -115,13 +135,7 @@ local function create(options, parent)
 
 		button:callback(button, options)
 	end
-	function button:GetText()
-		return button.text:GetText()
-	end
-	function button:SetText(text)
-		button.text:SetText(text)
-		button:SetWidth(button.text:GetStringWidth() + 30)
-	end
+	
 
 	button:SetScript("OnEnter", button.OnEnter)
 	button:SetScript("OnLeave", button.OnLeave)

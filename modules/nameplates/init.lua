@@ -3,23 +3,6 @@
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
 
--- populate configuration lists
-local defaultwhitelist = {}
-defaultwhitelist['Arcane Torrent'] = true
-defaultwhitelist['War Stomp'] = true
--- CC
-defaultwhitelist['Banish'] = true
-defaultwhitelist['Repentance'] = true
-defaultwhitelist['Polymorph: Sheep'] = true
-defaultwhitelist['Polymorph'] = true
-defaultwhitelist['Blind'] = true
-defaultwhitelist['Paralyze'] = true
-defaultwhitelist['Imprison'] = true
-defaultwhitelist['Sap'] = true
-defaultwhitelist['Hammer of Justice'] = true
-defaultwhitelist['Fear'] = true
-defaultwhitelist['Intimidating Shout'] = true
-
 local fixateMobs = {}
 fixateMobs['Tormented Fragment'] = true
 fixateMobs['Razorjaw Gladiator'] = true
@@ -561,26 +544,37 @@ local config = {
 				label = "Debuff Timer Size",
 			},
 			{
-				key = "selfwhitelist",
-				type = "list",
-				value = {},
-				label = "Debuffs Cast By You",
-				tooltip="Use to show a specified aura cast by you."
+				key = "link_to_auras",
+				type = "link",
+				value = "Go to Auras configuration",
+				callback = function() bdUI.bdConfig:get_module("Auras"):select() end
 			},
-			{
-				key = "whitelist",
-				type = "list",
-				value = defaultwhitelist,
-				label = "Auras Cast by Anyone",
-				tooltip="Use to show a specified aura cast by anyone."
-			},
-			{
-				key = "blacklist",
-				type = "list",
-				value = {},
-				label = "Aura Blacklist",
-				tooltip="Useful if you want to blacklist any auras that Blizzard tracks by default.",
-			},
+			-- {
+			-- 	key = "text",
+			-- 	type = "text",
+			-- 	value = "Note: These lists ONLY show auras for nameplates. To show auras on all other frames (unit frames, raid frames, target, etc) go to Auras on the sidebar instead.",
+			-- },
+			-- {
+			-- 	key = "selfwhitelist",
+			-- 	type = "list",
+			-- 	value = {},
+			-- 	label = "Debuffs Cast By You",
+			-- 	tooltip="Use to show a specified aura cast by you."
+			-- },
+			-- {
+			-- 	key = "whitelist",
+			-- 	type = "list",
+			-- 	value = defaultwhitelist,
+			-- 	label = "Auras Cast by Anyone",
+			-- 	tooltip="Use to show a specified aura cast by anyone."
+			-- },
+			-- {
+			-- 	key = "blacklist",
+			-- 	type = "list",
+			-- 	value = {},
+			-- 	label = "Aura Blacklist",
+			-- 	tooltip="Useful if you want to blacklist any auras that Blizzard tracks by default.",
+			-- },
 		}
 	},
 }

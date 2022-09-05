@@ -149,7 +149,7 @@ local function create(options, parent)
 	title:SetText(options.label)
 
 	-- button
-	local button = lib.elements['button']({solo = true}, container)
+	local button = lib.elements['link']({solo = true}, container)
 	button:SetText("Add/Remove")
 	button:SetHeight(26)
 

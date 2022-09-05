@@ -1,7 +1,15 @@
 local bdUI, c, l = unpack(select(2, ...))
 bdUI.aura_lists = bdUI.aura_lists or {}
 
+
 local auras = {
+	-- all palyers
+	['Draenic Channeled Mana Potion'] = true,
+	['Leytorrent Potion'] = true,
+	['Sanguine Ichor'] = true,
+	['Arcane Torrent'] = true,
+	['War Stomp'] = true,
+
 	-- Warriors
 	["Die by the Sword"] = true,
 	["Shield Wall"] = true,
@@ -13,6 +21,7 @@ local auras = {
 	["Safeguard"] = true,
 	["Vigilance"] = true,
 	["Shockwave"] = true,
+	['Intimidating Shout'] = true,
 	
 	-- Druids
 	["Barkskin"] = true,
@@ -51,6 +60,7 @@ local auras = {
 	["Sap"] = true,
 	["Evasion"] = true,
 	["Crimson Vial"] = true,
+	['Blind'] = true,
 	
 	-- Mages
 	["Ice Block"] = true,
@@ -61,6 +71,7 @@ local auras = {
 	["Evanesce"] = true,
 	["Polymorph"] = true,
 	["Polymorph: Fish"] = true,
+	['Polymorph: Sheep'] = true,
 	
 	-- Warlocks
 	["Dark Bargain"] = true,
@@ -76,6 +87,7 @@ local auras = {
 	["Guardian of Ancient Kings"] = true,
 	["Forbearance"] = true,
 	["Hammer of Justice"] = true,
+	['Repentance'] = true,
 	
 	-- Monks
 	["Fortifying Brew"] = true,
@@ -104,11 +116,7 @@ local auras = {
 	['Metamorphosis'] = true,
 	['Empower Wards'] = true,
 	['Netherwalk'] = true,
-	
-	-- all palyers
-	['Draenic Channeled Mana Potion'] = true,
-	['Leytorrent Potion'] = true,
-	['Sanguine Ichor'] = true,
+	['Imprison'] = true,
 }
 
 for k,v in pairs(auras) do bdUI.aura_lists.whitelist[k] = v end

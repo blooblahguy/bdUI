@@ -48,25 +48,23 @@ function lib:create_windows(name, lock_toggle)
 	window.header.text:SetText(name.." Configuration")
 	window.header.text:SetJustifyV("MIDDLE")
 
-	window.header.close = lib.elements['button']({solo = true}, window.header)
+	window.header.close = lib.elements['link']({solo = true, color = media.red}, window.header)
 	window.header.close:SetPoint("TOPRIGHT", window.header)
 	window.header.close:SetText("x")
-	window.header.close.inactiveColor = media.red
 	window.header.close:OnLeave()
 	window.header.close.OnClick = function()
 		window:Hide()
 	end
 
-	window.header.reload = lib.elements['button']({solo = true}, window.header)
+	window.header.reload = lib.elements['link']({solo = true, color = media.green}, window.header)
 	window.header.reload:SetPoint("TOPRIGHT", window.header.close, "TOPLEFT", -border, 0)
 	window.header.reload:SetText("Reload UI")
-	window.header.reload.inactiveColor = media.green
 	window.header.reload:OnLeave()
 	window.header.reload.OnClick = function()
 		ReloadUI();
 	end
 
-	window.header.lock = lib.elements['button']({solo = true}, window.header)
+	window.header.lock = lib.elements['link']({solo = true}, window.header)
 	window.header.lock:SetPoint("TOPRIGHT", window.header.reload, "TOPLEFT", -border, 0)
 	window.header.lock:SetText("Unlock")
 	window.header.lock.autoToggle = true
@@ -173,3 +171,36 @@ function lib:create_module_frame(instance, name)
 
 	return module
 end
+
+function lib:create_shadow(frame, offset)
+		if frame._shadow then return end
+		
+		local shadow = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
+		shadow:SetFrameLevel(1)
+		shadow:SetFrameStrata(frame:GetFrameStrata())
+		shadow:SetAlpha(0.7)
+		shadow:SetBackdropColor(0, 0, 0, 0)
+		shadow:SetBackdropBorderColor(0, 0, 0, 0.8)
+		shadow.offset = offset
+
+		shadow.SetColor = function(self, r, g, b, a)
+			a = a or 1
+			self:SetBackdropColor(r, g, b, a)
+			self:SetBackdropBorderColor(r, g, b, a)
+		end
+
+		shadow.set_size = function(self, offset)
+			shadow:SetPoint("TOPLEFT", -offset, offset)
+			shadow:SetPoint("BOTTOMLEFT", -offset, -offset)
+			shadow:SetPoint("TOPRIGHT", offset, offset)
+			shadow:SetPoint("BOTTOMRIGHT", offset, -offset)
+
+			shadow:SetBackdrop( { 
+				edgeFile = lib.media.shadow, edgeSize = offset,
+				insets = {left = offset, right = offset, top = offset, bottom = offset},
+			})
+		end
+
+		shadow:set_size(offset)
+		frame._shadow = shadow
+	end

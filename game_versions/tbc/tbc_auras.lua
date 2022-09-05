@@ -107,8 +107,8 @@ special["Paralyze"] = true
 special["Toxic Spores"] = true
 
 -- Hyjal
-raidauras["Death and Decay"] = true
-special["Death and Decay"] = true
+-- raidauras["Death and Decay"] = true
+-- special["Death and Decay"] = true
 raidauras["Icebolt"] = true
 special["Icebolt"] = true
 raidauras["Frost Nova"] = true

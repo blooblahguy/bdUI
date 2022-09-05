@@ -205,6 +205,11 @@ local methods = {
 		return self.save
 	end,
 
+	-- fetch and return save for current profile to addons
+	['get_module'] = function(self, module_name)
+		return self.modules[module_name]
+	end,
+
 	-- register a blank module frame that we can reference and update
 	['register_module'] = function(self, name, config, callback, options)
 		options = options or {}
@@ -227,8 +232,11 @@ local methods = {
 		-- add methods to object
 		Mixin(module, module_methods)
 
+
 		-- Hook into profile changes
 		lib:add_action("profile_change", function() module:reload() end, 15)
+
+		-- self.modules[name] = module
 
 		return module
 	end,
