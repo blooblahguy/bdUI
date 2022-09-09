@@ -2,6 +2,14 @@ local bdUI, c, l = unpack(select(2, ...))
 local fpmod = mod
 local mod = bdUI:get_module("Bags")
 
+local all_gold = 0
+
+local function tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+
 -- format money string
 local function break_money(money)
 	local gold = floor(abs(money / 10000))
@@ -30,12 +38,12 @@ end
 local methods = {
 	["onenter"] = function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -147, 10)
-		mod.gold = BDUI_SAVE.persistent.goldtrack
+		all_gold = BDUI_SAVE.persistent.goldtrack
 
-		if (#mod.gold == 0) then return end
+		if (tablelength(all_gold) == 0) then return end
 
 		local total = 0;
-		for name, stored in pairs(mod.gold) do
+		for name, stored in pairs(all_gold) do
 			local money, cc, name = unpack(stored)
 			total = total + money
 		end
@@ -43,16 +51,18 @@ local methods = {
 		GameTooltip:AddDoubleLine("Total Gold", total, 1,1,1, 1,1,1)
 		GameTooltip:AddLine(" ")
 
-		table.sort(mod.gold, function(a, b)
+		table.sort(all_gold, function(a, b)
 			return a[1] < b[1]
 		end)
 
-		for name, stored in pairs(mod.gold) do
+		for name, stored in pairs(all_gold) do
 			-- local stored = mod.gold[i]
 			local money, cc, name = unpack(stored)
 			local moneystring = return_money(money, true)
-			
-			GameTooltip:AddDoubleLine("|c"..cc..name.."|r ",moneystring, 1,1,1, 1,1,1)
+
+			if (money and moneystring and money > 0 and moneystring ~= "") then
+				GameTooltip:AddDoubleLine("|c"..cc..name.."|r ",moneystring, 1,1,1, 1,1,1)
+			end
 		end	
 
 		GameTooltip:AddLine(" ")
@@ -64,7 +74,7 @@ local methods = {
 	end,
 	["update"] = function(self)
 		BDUI_SAVE.persistent.goldtrack = BDUI_SAVE.persistent.goldtrack or {}
-		mod.gold = BDUI_SAVE.persistent.goldtrack
+		all_gold = BDUI_SAVE.persistent.goldtrack
 
 		local money = GetMoney()
 
@@ -88,7 +98,7 @@ local methods = {
 		local class, classFileName = UnitClass("player")
 		local color = RAID_CLASS_COLORS[classFileName]
 
-		mod.gold[name] = {money, color.colorStr, name}
+		all_gold[name] = {money, color.colorStr, name}
 	end,
 	["click"] = function(self)
 		if (IsShiftKeyDown() and IsControlKeyDown()) then
