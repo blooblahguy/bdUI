@@ -25,7 +25,7 @@ mod.custom_layout["player"] = function(self, unit)
 
 	self:SetSize(config.playertargetwidth, config.playertargetheight)
 
-	mod.additional_elements.runes(self, unit)
+	if (mod.additional_elements.runes) then mod.additional_elements.runes(self, unit) end
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
 	mod.additional_elements.buffs(self, unit)
