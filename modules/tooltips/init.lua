@@ -100,7 +100,7 @@ function mod:initialize()
 	--============================
 	mod:create_castby()
 	
-	-- mod:color_tooltips()
+	mod:color_tooltips()
 	mod:fix_healthbars()
 	mod:create_unit_info()
 	mod:create_targettarget()
