@@ -21,6 +21,8 @@ function mod:initialize()
 	-- mod:create_bagslot_frames() -- bagslot holders
 	mod:create_reagents() -- lastly reagents
 
+	mod:skin_loot()
+
 	mod:hook_blizzard_functions()
 
 	-- debug tooltips

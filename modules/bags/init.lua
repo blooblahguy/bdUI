@@ -23,6 +23,13 @@ local config = {
 	},
 
 	{
+		key = "skinloot",
+		type = "toggle",
+		label = "Skin Loot Frames",
+		value = true,
+	},
+
+	{
 		key = "dbgroup",
 		type = "group",
 		heading = "Bags",

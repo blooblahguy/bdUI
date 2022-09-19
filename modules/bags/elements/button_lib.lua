@@ -67,6 +67,8 @@ methods["update"] = function(self)
 end
 
 function mod:skin(self)
+	if (self.skinned) then return end
+	self.skinned = true
 	bdUI:set_backdrop(self)
 
 	local normal = _G[self:GetName().."NormalTexture"]
@@ -139,8 +141,10 @@ mod.item_pool_create = function(self)
 	button:SetHeight(36)
 	button:SetWidth(36)
 	-- button:SetFrameStrata("HIGH")
+	button:EnableMouse(true)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
+	-- button:Hide()
 
 	button.text = button:CreateFontString(nil, "OVERLAY")
 	button.text:SetFontObject(bdUI:get_font(13))
@@ -149,13 +153,12 @@ mod.item_pool_create = function(self)
 	button.text:SetTextColor(1, 1, 1)
 	button.text:Hide()
 
-	-- mouseover update new
-	button:HookScript("OnEnter", function(self)
-		self:update_new()
-	end)
+	-- get various methods on this
+	Mixin(button, methods)
 
 	-- really surprising that i have to do this, itembuttons dont come with tooltip functionality in the bank main bag
-	button:HookScript("OnEnter", function(self, ...)
+	mod:SecureHookScript(button, "OnEnter", function(self, ...)
+		self:update_new() -- mouseover update new
 		if (self.bag == -1 or self.bag == -4) then
 			self.GetInventorySlot = ButtonInventorySlot
 			self.UpdateTooltip = BankFrameItemButton_OnEnter
@@ -170,8 +173,13 @@ mod.item_pool_create = function(self)
 		end
 	end)
 
-	mod:skin(button)
-	Mixin(button, methods)
+	securecall(function()
+		mod:skin(button)
+	end)
+	-- mod:SecureHookScript(button, "OnShow", skin)
+	-- button:Show()
+	-- mod:skin(button)
+	
 	mod:register_events(button, events)
 
 	return button

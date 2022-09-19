@@ -143,11 +143,11 @@ function mod:create_currencies()
 			currency:SetWidth(currency.text:GetWidth() + 24)
 		end
 
-		currency:SetScript("OnEnter", function(self)
+		mod:SecureHookScript(currency, "OnEnter", function(self)
 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
             GameTooltip:SetCurrencyToken(self.currencyID)
 		end)
-		currency:SetScript("OnLeave", function(self)
+		mod:SecureHookScript(currency, "OnLeave", function(self)
 			GameTooltip:Hide()
 		end)
 
