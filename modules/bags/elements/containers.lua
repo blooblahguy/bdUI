@@ -1,6 +1,13 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local function sanitize(str)
+	str = str:lower()
+	str = strtrim(str)
+
+	return str
+end
+
 function mod:create_container(name, nomove)
 	local frame = CreateFrame("frame", "bdBags_"..name, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	bdUI:set_backdrop(frame)
@@ -59,7 +66,7 @@ function mod:create_container(name, nomove)
 	local money = mod:create_money(name, frame)
 	money:SetPoint("LEFT", header, "LEFT", mod.spacing - 4, -1)
  
-	-- search
+	-- search box
 	local searchBox = CreateFrame("EditBox", "bd"..name.."SearchBox", frame, "BagSearchBoxTemplate")
 	searchBox:SetHeight(20)
 	searchBox:SetPoint("LEFT", money, "RIGHT", 4, 1)
@@ -68,6 +75,54 @@ function mod:create_container(name, nomove)
 	searchBox.Left:Hide()
 	searchBox.Right:Hide()
 	searchBox.Middle:Hide()
+
+	searchBox.hide = CreateFrame("button", nil, searchBox)
+	searchBox.hide:SetSize(20, 20)
+	searchBox.hide:EnableMouse(true)
+	searchBox.hide:SetScript("OnClick", function() searchBox:SetText(""); searchBox:ClearFocus(false) end)
+	searchBox.hide:SetPoint("RIGHT", searchBox, -2, 0)
+	searchBox.hide:SetAlpha(0.5)
+	searchBox.hide.text = searchBox.hide:CreateFontString(nil, "OVERLAY")
+	searchBox.hide.text:SetFontObject(bdUI:get_font(12))
+	searchBox.hide.text:SetText("x")
+	searchBox.hide.text:SetTextColor(.7, .2, .2)
+	searchBox.hide.text:SetAllPoints()
+	searchBox.hide.text:SetJustifyH("CENTER")
+	searchBox.hide.text:SetJustifyV("MIDDLE")
+
+	searchBox:SetScript("OnEditFocusGained", function(self, ...)
+		self.Instructions:Hide()
+	end)
+	searchBox:SetScript("OnEditFocusLost", function(self, ...)
+		if (strlen(self:GetText()) == 0) then
+			self.Instructions:Show()
+		else
+			self.Instructions:Hide()
+		end
+	end)
+
+	searchBox:SetScript("OnTextChanged", function(self, ...)
+		if (not frame.all_items) then return end
+		local find = sanitize(self:GetText())
+		if (strlen(self:GetText()) == 0) then
+			self.Instructions:Show()
+		else
+			self.Instructions:Hide()
+		end
+
+		for k, item in pairs(frame.all_items) do
+			if (item.name) then
+				local text = sanitize(item.name..item.itemType)
+
+				if (string.find(text, find)) then
+					item:SetAlpha(1)
+				else
+					item:SetAlpha(.1)
+				end
+			end
+		end
+	end)
+
 	local icon = _G[searchBox:GetName().."SearchIcon"]
 	icon:ClearAllPoints()
 	icon:SetPoint("LEFT", searchBox,"LEFT", 4, -1)
@@ -76,13 +131,13 @@ function mod:create_container(name, nomove)
 	tinsert(_G.ITEM_SEARCHBAR_LIST, searchBox:GetName())
 
 	-- callback for sizing
-	-- function frame:update_size(width, height)
-	-- 	if (frame.currencies) then
-	-- 		frame:SetSize(width, height + header:GetHeight() + footer:GetHeight())
-	-- 	else
-	-- 		frame:SetSize(width, height + header:GetHeight() + 10)
-	-- 	end
-	-- end
+	function frame:update_size(width, height)
+		if (frame.currencies) then
+			frame:SetSize(width, height + header:GetHeight() + footer:GetHeight())
+		else
+			frame:SetSize(width, height + header:GetHeight() + 10)
+		end
+	end
 
 	return frame
 end

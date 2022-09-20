@@ -36,14 +36,13 @@ function mod:create_bank()
 	end)
 end
 
-local categories = {}
 function mod:update_bank()
 	if (not mod.bank:IsShown()) then return end
 	
 	local config = mod.config
 	local freeslots = 0
 	local freeslot = nil
-	categories = {}
+	mod.bank.categories = {}
 
 	local bank_bags = {BANK_CONTAINER, 5, 6, 7, 8, 9, 10, 11}
 
@@ -65,10 +64,10 @@ function mod:update_bank()
 					mod.categoryNamestoID["Bag"] = -2
 					
 					-- store it in a category
-					categories[-2] = categories[-2] or {}
+					mod.bank.categories[-2] = mod.bank.categories[-2] or {}
 					
 					-- then store by categoryID with lots of info
-					table.insert(categories[-2], itemInfo)
+					table.insert(mod.bank.categories[-2], itemInfo)
 				elseif (not freeslot) then
 					freeslot = itemInfo
 				end
@@ -86,10 +85,10 @@ function mod:update_bank()
 				mod.categoryNamestoID[itemType] = itemTypeID
 
 				-- store it in a category
-				categories[itemTypeID] = categories[itemTypeID] or {}
+				mod.bank.categories[itemTypeID] = mod.bank.categories[itemTypeID] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], itemInfo)
+				table.insert(mod.bank.categories[itemTypeID], itemInfo)
 			end
 		end
 	end
@@ -99,11 +98,11 @@ function mod:update_bank()
 		mod.categoryNamestoID["Bag"] = -2
 
 		-- store it in a category
-		categories[200] = categories[200] or {}
+		mod.bank.categories[200] = mod.bank.categories[200] or {}
 
 		-- then store by categoryID with lots of info
 		freeslot.itemCount = freeslots -- change item count of this one slot
-		table.insert(categories[200], freeslot)
+		table.insert(mod.bank.categories[200], freeslot)
 	end
 
 	-- now loop through and display items
@@ -116,8 +115,8 @@ function mod:draw_bank()
 
 	mod.current_parent = mod.bank -- we want new frames to parent to bags
 	
-	mod:position_items(categories, config.bankbuttonsize, config.bankbuttonsperrow)
-	mod:position_categories(categories, config.bankbuttonsize, config.bankbuttonsperrow)
+	mod:position_items(mod.bank.categories, config.bankbuttonsize, config.bankbuttonsperrow)
+	mod:position_categories(mod.bank.categories, config.bankbuttonsize, config.bankbuttonsperrow)
 
 	mod:hide_blizzard_bank()
 end

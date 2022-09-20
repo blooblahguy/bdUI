@@ -46,12 +46,11 @@ function mod:create_bags()
 	end)
 end
 
-local categories = {}
 function mod:update_bags()
 	local config = mod.config
 	local freeslots = 0
 	local freeslot = nil
-	categories = {}
+	mod.bags.categories = {}
 	
 	-- first gather all items up
 	for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
@@ -72,10 +71,10 @@ function mod:update_bags()
 					mod.categoryNamestoID["Bag"] = -2
 					
 					-- store it in a category
-					categories[-2] = categories[-2] or {}
+					mod.bags.categories[-2] = mod.bags.categories[-2] or {}
 					
 					-- then store by categoryID with lots of info
-					table.insert(categories[-2], itemInfo)
+					table.insert(mod.bags.categories[-2], itemInfo)
 				elseif (not freeslot) then
 					freeslot = itemInfo
 				end
@@ -94,10 +93,10 @@ function mod:update_bags()
 				mod.categoryNamestoID[itemType] = itemTypeID
 
 				-- store it in a category
-				categories[itemTypeID] = categories[itemTypeID] or {}
+				mod.bags.categories[itemTypeID] = mod.bags.categories[itemTypeID] or {}
 
 				-- then store by categoryID with lots of info
-				table.insert(categories[itemTypeID], itemInfo)
+				table.insert(mod.bags.categories[itemTypeID], itemInfo)
 			end
 		end
 	end
@@ -107,11 +106,11 @@ function mod:update_bags()
 		mod.categoryNamestoID["Bag"] = -2
 
 		-- store it in a category
-		categories[200] = categories[200] or {}
+		mod.bags.categories[200] = mod.bags.categories[200] or {}
 
 		-- then store by categoryID with lots of info
 		freeslot.itemCount = freeslots -- change item count of this one slot
-		table.insert(categories[200], freeslot)
+		table.insert(mod.bags.categories[200], freeslot)
 	end
 
 	-- now loop through and display items
@@ -129,8 +128,8 @@ function mod:draw_bag()
 
 	mod.current_parent = mod.bags -- we want new frames to parent to bags
 	
-	mod:position_items(categories, config.buttonsize, config.buttonsperrow)
-	mod:position_categories(categories, config.buttonsize, config.buttonsperrow)
+	mod:position_items(mod.bags.categories, config.buttonsize, config.buttonsperrow)
+	mod:position_categories(mod.bags.categories, config.buttonsize, config.buttonsperrow)
 
 	if (mod.bags.currencies) then
 		local height = mod.bags.currencies:GetHeight()

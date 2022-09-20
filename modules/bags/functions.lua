@@ -41,6 +41,7 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 	t.itemLink = itemLink
 	t.itemID = itemID
 	t.texture = icon
+	t.itemType = itemType
 	t.itemCount = itemCount
 	t.itemTypeID = itemTypeID
 	t.itemSubTypeID = itemSubTypeID
