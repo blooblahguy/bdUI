@@ -211,7 +211,7 @@ function mod:create_unitframes()
 		bdMove:set_moveable(focus, "Focus")
 	end
 	
-	if (config.bossenable) then
+	if (config.bossenable and CompactUnitFrame) then
 		local arena_boss = CreateFrame("frame", "bdArenaBoss", bdParent)
 		arena_boss:SetPoint("TOPRIGHT", Minimap, "BOTTOMLEFT", -10, -10)
 		arena_boss:SetSize(config.bosswidth, (config.bossheight + 30) * 5)

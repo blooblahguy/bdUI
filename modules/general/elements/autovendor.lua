@@ -11,6 +11,8 @@ end
 local delete_panel = StaticPopupDialogs["DELETE_GOOD_ITEM"]
 local function prefill_text(box)
 	box.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
+	box.editBox:SetAutoFocus(false) -- stop capturing my movement keys and stuff >:(
+	box.editBox:ClearFocus() -- stop capturing my movement keys and stuff >:(
 end
 hooksecurefunc(delete_panel, "OnShow", prefill_text)
 
