@@ -90,24 +90,24 @@ function mod:create_container(name, nomove)
 	searchBox.hide.text:SetJustifyH("CENTER")
 	searchBox.hide.text:SetJustifyV("MIDDLE")
 
-	searchBox:SetScript("OnEditFocusGained", function(self, ...)
-		self.Instructions:Hide()
-	end)
-	searchBox:SetScript("OnEditFocusLost", function(self, ...)
-		if (strlen(self:GetText()) == 0) then
-			self.Instructions:Show()
-		else
-			self.Instructions:Hide()
-		end
-	end)
+	-- searchBox:SetScript("OnEditFocusGained", function(self, ...)
+	-- 	self.Instructions:Hide()
+	-- end)
+	-- searchBox:SetScript("OnEditFocusLost", function(self, ...)
+	-- 	if (strlen(self:GetText()) == 0) then
+	-- 		self.Instructions:Show()
+	-- 	else
+	-- 		self.Instructions:Hide()
+	-- 	end
+	-- end)
 
 	searchBox:SetScript("OnTextChanged", function(self, ...)
 		if (not frame.all_items) then return end
 		local find = sanitize(self:GetText())
-		if (strlen(self:GetText()) == 0) then
-			self.Instructions:Show()
-		else
+		if (strlen(self:GetText()) > 0) then
 			self.Instructions:Hide()
+		else
+			self.Instructions:Show()
 		end
 
 		for k, item in pairs(frame.all_items) do
