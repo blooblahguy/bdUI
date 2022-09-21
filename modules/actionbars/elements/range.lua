@@ -4,144 +4,49 @@ local v = mod.variables
 
 --===================================================
 -- Range & Mana Display
--- A good bit borrowed from TullaCC, who makes this cpu-efficient
 --===================================================
-
-local total = 0
-local throttle = 0.15
-local buttons = {}
-local buttonColors = {}
-
 local colors = {}
 colors['normal'] = {1, 1, 1}
-colors['outmana'] = {0.3, 0.3, 0.8}
+colors['outmana'] = {0.5, 0.3, 0.9}
 colors['outrange'] = {0.8, 0.1, 0.1}
-colors['unusable'] = {0.3, 0.3, 0.3}
+colors['unusable'] = {0.4, 0.4, 0.4}
 
-local text_colors = {}
-text_colors[3] = {0.8, 0.1, 0.1}
-text_colors[60] = {0.8, 0.7, 0.1}
---=========================================
--- BUTTON FUNCTIONS
---=========================================
--- This actually colors the button, main function
--- local function UpdateButtonUsable(self, force)
--- 	if force then
--- 		buttonColors[self] = nil
--- 	end
+local hotkey_colors = {}
+hotkey_colors['normal'] = {1, 1, 1}
+hotkey_colors['unusable'] = {0.8, 0.8, 0.8}
+hotkey_colors['outmana'] = {0.7, 0.5, 1}
+hotkey_colors['outrange'] = {1, 0.5, 0.5}
 
--- 	local action = self.action
--- 	local isUsable, notEnoughMana = IsUsableAction(action)
--- 	print(IsUsableAction(action))
--- 	local colorkey = "normal"
--- 	if (isUsable) then
--- 		if (ActionHasRange(action) and IsActionInRange(action) == false) then
--- 			colorkey = "outrange"
--- 		end
--- 	else
--- 		colorkey = "unusable"
--- 		if (notEnoughMana) then
--- 			colorkey = "outmana"
--- 		end
--- 	end
-
--- 	-- cache results, because SetVertexColor is expensive, we don't want to recall it if unecessary
--- 	if buttonColors[self] == colorkey then return end
--- 	buttonColors[self] = colorkey
-
--- 	local r, g, b = unpack(colors[colorkey])
--- 	self.icon:SetVertexColor(r, g, b)
--- end
-
--- -- since we stripped the OnUpdate from the button, we gotta reimplement this blizzard code
--- local function UpdateButtonFlash(self, elapsed)
--- 	if self.flashing ~= 1 then return end
-
--- 	self.flashtime = self.flashtime + elapsed
--- 	if (self.flashtime >= ATTACK_BUTTON_FLASH_TIME) then
--- 		local flashTexture = self.Flash;
--- 		if ( flashTexture:IsShown() ) then
--- 			flashTexture:Hide();
--- 		else
--- 			flashTexture:Show();
--- 		end
-
--- 		self.flashtime = 0;
--- 	end
--- end
-
--- --=========================================
--- -- UPDATER FUNCTIONS
--- -- Loop through / enable OnUpdater as necessary
--- --=========================================
--- local function UpdateButtons(elapsed)
--- 	if next(buttons) then
--- 		for button in pairs(buttons) do
--- 			UpdateButtonUsable(button)
--- 			UpdateButtonFlash(button, elapsed)
--- 		end
-
--- 		return true
--- 	end
-
--- 	return false
--- end
--- local function RequestUpdate()
--- 	if next(buttons) then
--- 		updater:Show()
--- 	end
--- end
-
--- -- add button to the queue if it's visible and actionable
--- -- then run the onupdate if we're passed the throttle time
--- local function UpdateButtonStatus(self)
--- 	local action = self.action
-
--- 	if action and self:IsVisible() and HasAction(action) then
--- 		buttons[self] = true
--- 	else
--- 		buttons[self] = nil
--- 	end
-
--- 	RequestUpdate()
--- end
-
---=====================================================
--- Init
--- Register all hooks and event handlers
---=====================================================
-function mod:update_useable(button, checksRange, inRange)
-	if (not mod.config.enabled) then return end
-
-	if (not checksRange) then
-		return 
+local function update_useable(self, checksRange, inRange)
+	-- throw back to blizzard if we're not enabled
+	if (not mod.config.enabled) then
+		bdUI.hooks.ActionButton_UpdateRangeIndicator(self, checksRange, inRange)
 	end
-	
-	local action = button.action
-	if (not action) then return end
+
+	local action = self.action
 	local isUsable, notEnoughMana = IsUsableAction(action)
 	local colorkey = "normal"
-	if (isUsable) then
-		if (not inRange) then
-			colorkey = "outrange"
-		end
-	else
+
+	-- if this ability is valid for range check, checking range, and in not in range
+	if (checksRange and not inRange) then
+		colorkey = "outrange"
+	elseif (not isUsable) then
+		-- just plain can't be used
 		colorkey = "unusable"
+
+		-- color blue if class doesn't have enough mana
 		if (notEnoughMana) then
-			colorkey = "outmana"
+			local powerType, powerTypeString = UnitPowerType("player")
+			if (powerTypeString == "MANA") then
+				-- print("out of mana")
+				colorkey = "outmana"
+			end
 		end
 	end
 
-	-- cache results, because SetVertexColor is expensive, we don't want to recall it if unecessary
-	if buttonColors[action] == colorkey then return end
-	buttonColors[action] = colorkey
-
-	local r, g, b = unpack(colors[colorkey])
-	button.icon:SetVertexColor(r, g, b)
+	self.icon:SetVertexColor(unpack(colors[colorkey]))
+	_G[self:GetName().."HotKey"]:SetTextColor(unpack(hotkey_colors[colorkey]))
 end
 
-local updater = CreateFrame("frame")
-updater:RegisterEvent("PLAYER_CONTROL_GAINED")
-updater:RegisterEvent("PLAYER_CONTROL_LOST")
-updater:RegisterEvent("PLAYER_TARGET_CHANGED")
-hooksecurefunc("ActionButton_UpdateRangeIndicator", function(button, checksRange, inRange) mod:update_useable(button, checksRange, inRange) end)
+-- take over blizzard function for this, securely
+bdUI:RawHook("ActionButton_UpdateRangeIndicator", update_useable, true)
