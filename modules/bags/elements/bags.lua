@@ -8,7 +8,18 @@ mod.categoryNamestoID = {}
 function mod:create_bags()
 	mod.bags = mod:create_container("Bags")
 	mod.bags.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
-	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)	
+	mod.bags.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
+
+	-- pre-make these so we don't try to do it in combat
+	mod.current_parent = mod.bags
+	for i = 1, 20 do
+		mod.bags.cat_pool:Acquire()
+	end
+	for i = 1, 200 do
+		mod.bags.item_pool:Acquire()
+	end
+	mod.bags.cat_pool:ReleaseAll()
+	mod.bags.item_pool:ReleaseAll()
 
 	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
 	mod.bags:RegisterEvent('PLAYER_ENTERING_WORLD')

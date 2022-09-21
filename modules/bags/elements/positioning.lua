@@ -82,16 +82,17 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			item:Show()
 			item:SetSize(buttonsize, buttonsize)
 
-			item = Mixin(item, itemInfo)
-			-- item.name = itemInfo.name
-			-- item.bag = itemInfo.bag
-			-- item.bagID = itemInfo.bagID
-			-- item.slot = itemInfo.slot
-			-- item.itemLink = itemInfo.itemLink
-			-- item.itemType = itemInfo.itemType
-			-- item.itemCount = itemInfo.itemCount
-			-- item.texture = itemInfo.texture
-			-- item.itemID = itemInfo.itemID
+			-- item = Mixin(item, itemInfo) -- why doesn't this work for the blank items?
+			item.name = itemInfo.name
+			item.bag = itemInfo.bag
+			item.bagID = itemInfo.bagID
+			item.slot = itemInfo.slot
+			item.itemLink = itemInfo.itemLink
+			item.itemType = itemInfo.itemType
+			item.itemCount = itemInfo.itemCount
+			item.texture = itemInfo.texture
+			item.itemID = itemInfo.itemID
+
 			table.insert(mod.current_parent.all_items, item)
 
 			-- now update the button appearance with new info

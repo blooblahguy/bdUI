@@ -109,6 +109,8 @@ function mod:register_events(frame, events)
 	end
 	mod:SecureHookScript(frame, "OnEvent", function(self, event, ...)
 		if (self[events[event]]) then
+			if (not self.bagID) then return end
+			-- print(event)
 			self[events[event]](self, ...)
 		end
 	end)

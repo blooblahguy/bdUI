@@ -8,6 +8,17 @@ function mod:create_bank()
 	mod.bank.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 	mod.bank.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 
+	-- pre-make these so we don't try to do it in combat
+	mod.current_parent = mod.bank
+	for i = 1, 20 do
+		mod.bank.cat_pool:Acquire()
+	end
+	for i = 1, 200 do
+		mod.bank.item_pool:Acquire()
+	end
+	mod.bank.cat_pool:ReleaseAll()
+	mod.bank.item_pool:ReleaseAll()
+
 	-- mod.bank:RegisterEvent('EQUIPMENT_SWAP_PENDING')
 	-- mod.bank:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_START')
