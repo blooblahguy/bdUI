@@ -14,6 +14,7 @@ function mod:create_databar(name)
 	bar:SetFrameLevel(6)
 	bar:SetStatusBarTexture(bdUI.media.flat)
 	bar:SetValue(0)
+	bar:EnableMouse(true)
 	bar:SetSize(200, 20)
 	bdUI:set_backdrop(bar)
 
@@ -35,8 +36,8 @@ function mod:create_databar(name)
 	bar.text:SetFontObject(bdUI:get_font(11))
 	bar.text:Hide()
 
-	bar:SetScript("OnEnter", function() bar.text:Show() end)
-	bar:SetScript("OnLeave", function() bar.text:Hide() end)
+	bar:SetScript("OnEnter", function(self) self.text:Show() end)
+	bar:SetScript("OnLeave", function(self) self.text:Hide() end)
 
 	return bar
 end
