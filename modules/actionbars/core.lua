@@ -243,51 +243,31 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	end
 end
 
-local function update_cooldown(button, progress, force)
-	if (progress > 1.5) then
-		local color = {1, 1, 1}
-		local threshhold = 0
-		if (progress < 3) then
-			threshhold = 3
-			color = {0.8, 0.1, 0.1}
-		elseif (progress < 60) then
-			threshhold = 60
-			color = {0.9, 0.9, 0.1}
-		end
-		-- don't call blizzard functions more often than neccesary
-		if (button.threshhold ~= threshhold or force) then
-			button.threshhold = threshhold
-			_G[button:GetName().."Cooldown"]:GetRegions():SetTextColor(unpack(color))
-			_G[button:GetName().."Icon"]:SetDesaturated(true)
-		end
-	else
-		-- default
-		_G[button:GetName().."Cooldown"].end_time = false
-		_G[button:GetName().."Cooldown"]:GetRegions():SetTextColor(0.9, 0.9, 0.1)
-		_G[button:GetName().."Icon"]:SetDesaturated(false)
-	end
-end
 
-local function hook_cooldown(self)
-	local button = self
-	local cooldown = _G[self:GetName().."Cooldown"]
 
-	-- update cooldown remaining when its set
-	hooksecurefunc(cooldown, "SetCooldown", function(self, start, duration)
-		local progress = start + duration - GetTime()
-		if (start and duration and duration > 1.5) then
-			self.end_time = start + duration
-			self.duration = duration
-			update_cooldown(button, progress, true)
-		end
-	end)
+-- local function hook_cooldown(self)
+-- 	local cooldown = _G[self:GetName().."Cooldown"]
 
-	-- check math every frame
-	cooldown:SetScript("OnUpdate", function(self)
-		if (not cooldown.end_time) then return end
-		update_cooldown(button, cooldown.end_time - GetTime())
-	end)
-end
+-- 	-- update cooldown remaining when its set
+	
+-- 	-- hooksecurefunc(cooldown, "SetCooldown", function(self, start, duration)
+-- 	-- 	mod:hook_cooldown(self, start, duration)
+-- 	-- -- 	local progress = start + duration - GetTime()
+-- 	-- -- 	if (start and duration and duration > 1.5) then
+-- 	-- -- 		self.end_time = start + duration
+-- 	-- -- 		self.duration = duration
+-- 	-- -- 		update_cooldown(button, progress, true)
+-- 	-- -- 	end
+-- 	-- end)
+
+-- 	-- -- check math every frame
+-- 	-- cooldown:SetScript("OnUpdate", function(self)
+-- 	-- 	if (not cooldown.end_time) then return end
+-- 	-- 	update_cooldown(button, cooldown.end_time - GetTime())
+-- 	-- end)
+
+	
+-- end
 
 --=======================================
 -- Skinning
@@ -368,7 +348,10 @@ function mod:SkinButton(button)
 		cooldown:SetParent(button)
 		cooldown:SetPoint("CENTER")
 		cooldown:SetSize(button:GetWidth() + 4, button:GetHeight() + 4)
-		hook_cooldown(button)
+
+		-- hook into cooldown styling
+		hooksecurefunc(cooldown, "SetCooldown", mod.hook_cooldown)
+		cooldown:SetScript("OnUpdate", function(self, elapsed) mod:cooldown_on_update(self, elapsed) end)
 	end
 
 	-- HOVER
