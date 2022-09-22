@@ -34,11 +34,20 @@ local function update_frame(self)
 	self:SetSize(config.width, config.height)
 	self.Short:SetWidth(config.width)
 
-	if (config.powerdisplay == "None") then
+	local role = UnitGroupRolesAssigned(self.unit)
+
+	local show_power = false
+	if (config.powerdisplay == "All") then
+		show_power = true
+	elseif (config.powerdisplay == "Healers" and role == "HEALER") then
+		show_power = true
+	end
+
+	if (not show_power) then
 		self.Power:SetHeight(1)
 		self.Power:SetAlpha(0)
 		self.Short:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 1, 0)
-	elseif (config.powerdisplay == "Healers" and role == "HEALER" or config.powerdisplay == "All") then
+	else
 		self.Power:SetHeight(config.powerheight)
 		self.Power:SetAlpha(1)
 		self.Short:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 1, 2)

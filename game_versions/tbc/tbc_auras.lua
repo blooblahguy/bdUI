@@ -3,6 +3,16 @@ local bdUI, c, l = unpack(select(2, ...))
 local raidauras = {}
 local special = {}
 
+if (not UnitGroupRolesAssigned) then
+	function UnitGroupRolesAssigned(unit) 
+		if (GetPartyAssignment("MAINTANK", unit)) then
+			return "TANK"
+		else
+			return "DAMAGER"
+		end
+	end
+end
+
 -- Kara
 raidauras["Knockdown"] = true
 raidauras["Brittle Bones"] = true
