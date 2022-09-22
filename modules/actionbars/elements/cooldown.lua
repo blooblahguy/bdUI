@@ -19,7 +19,8 @@ local function style_cooldown(self, button, start, duration)
 	local color = colors["normal"]
 	if (progress >= 5) then
 		color = colors['yellow']
-	elseif (progress >= gcd) then
+	-- elseif (progress >= gcd) then
+	else
 		color = colors['red']
 	end
 	self:GetRegions():SetTextColor(unpack(color))

@@ -7,7 +7,7 @@ local v = mod.variables
 --===================================================
 local colors = {}
 colors['normal'] = {1, 1, 1}
-colors['outmana'] = {0.5, 0.3, 0.9}
+colors['outmana'] = {0.3, 0.3, 0.6}
 colors['outrange'] = {0.8, 0.1, 0.1}
 colors['unusable'] = {0.4, 0.4, 0.4}
 
@@ -30,17 +30,21 @@ local function update_useable(self, checksRange, inRange)
 	-- if this ability is valid for range check, checking range, and in not in range
 	if (checksRange and not inRange) then
 		colorkey = "outrange"
+		if (not isUsable) then
+			colorkey = "unusable"
+
+		end
 	elseif (not isUsable) then
 		-- just plain can't be used
 		colorkey = "unusable"
 
 		-- color blue if class doesn't have enough mana
 		if (notEnoughMana) then
-			local powerType, powerTypeString = UnitPowerType("player")
-			if (powerTypeString == "MANA") then
+			-- local powerType, powerTypeString = UnitPowerType("player")
+			-- if (powerTypeString == "MANA") then
 				-- print("out of mana")
-				colorkey = "outmana"
-			end
+			colorkey = "outmana"
+			-- end
 		end
 	end
 

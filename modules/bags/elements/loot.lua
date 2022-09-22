@@ -106,7 +106,7 @@ function mod:skin_loot()
 			-- quantitiy
 			_G[button:GetName().."Count"]:Hide()
 			_G[button:GetName().."Count"].Show = noop
-			if (lootQuantity >= 2) then
+			if (lootQuantity and lootQuantity >= 2) then
 				button.qty:Show()
 				button.qty:SetText(lootQuantity)
 			else
