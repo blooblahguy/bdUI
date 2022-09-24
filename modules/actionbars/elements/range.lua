@@ -24,6 +24,7 @@ local function update_useable(self, checksRange, inRange)
 	end
 
 	local action = self.action
+	if (action == nil) then return end
 	local isUsable, notEnoughMana = IsUsableAction(action)
 	local colorkey = "normal"
 
