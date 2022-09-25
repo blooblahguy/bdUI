@@ -168,7 +168,7 @@ local config = {
 			{
 				key = "nameplatedistance",
 				type = "range",
-				value = 50,
+				value = 41,
 				min = 10,
 				max = 100,
 				step = 1,
@@ -203,10 +203,11 @@ local config = {
 			{
 				key = "stackingspeed",
 				type = "range",
-				value = 0.025,
-				min = 0,
+				value = 0.1,
+				min = 0.1,
 				max = 1,
-				step = 0.05,
+				step = 0.1,
+				decimals = 1,
 				label = "Positioning speed",
 			},
 			{
