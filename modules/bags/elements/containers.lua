@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
-local function sanitize(str)
+local function search_sanitize(str)
 	str = str:lower()
 	str = strtrim(str)
 
@@ -103,7 +103,7 @@ function mod:create_container(name, nomove)
 
 	searchBox:SetScript("OnTextChanged", function(self, ...)
 		if (not frame.all_items) then return end
-		local find = sanitize(self:GetText())
+		local find = search_sanitize(self:GetText())
 		if (strlen(self:GetText()) > 0) then
 			self.Instructions:Hide()
 		else
@@ -112,7 +112,7 @@ function mod:create_container(name, nomove)
 
 		for k, item in pairs(frame.all_items) do
 			if (item.name) then
-				local text = sanitize(item.name..item.itemType)
+				local text = search_sanitize(item.name..item.itemType)
 
 				if (string.find(text, find)) then
 					item:SetAlpha(1)

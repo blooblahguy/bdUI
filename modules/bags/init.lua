@@ -28,6 +28,13 @@ local config = {
 		label = "Skin Loot Frames",
 		value = true,
 	},
+	{
+		key = "easy_delete",
+		type = "toggle",
+		label = "Easy delete item shortcut",
+		tooltip = "Alt+shift+ctrl + left click deletes items in bag",
+		value = true,
+	},
 
 	{
 		key = "dbgroup",

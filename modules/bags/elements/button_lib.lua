@@ -176,9 +176,16 @@ mod.item_pool_create = function(self)
 	securecall(function()
 		mod:skin(button)
 	end)
-	-- mod:SecureHookScript(button, "OnShow", skin)
-	-- button:Show()
-	-- mod:skin(button)
+
+	-- easy delete item
+	mod:SecureHookScript(button, "OnClick", function(self, button)
+		if (mod.config.easy_delete) then
+			if (IsAltKeyDown() and IsShiftKeyDown() and IsControlKeyDown() and button == "LeftButton") then
+				PickupContainerItem(self.bagID, self.slot)
+				DeleteCursorItem()
+			end
+		end
+	end)
 	
 	mod:register_events(button, events)
 

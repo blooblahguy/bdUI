@@ -52,7 +52,8 @@ function mod:create_bags()
 				end)
 			end
 		else
-			mod:update_bags()
+			C_Timer.After(0.05, mod.update_bags)
+			-- mod:update_bags()
 		end
 	end)
 end
