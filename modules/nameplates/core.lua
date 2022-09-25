@@ -563,6 +563,9 @@ local function nameplate_create(self, unit)
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
+		if (bdUI.is_blacklisted(self, name)) then
+			return false
+		end
 		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 			return true
 		end
@@ -605,7 +608,7 @@ local function nameplate_create(self, unit)
 		self.last_timer_size = config.debuff_timer_size
 
 		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
-		if (config.highlightPurge and isStealable) then -- purge alert
+		if (config.highlightPurge and (isStealable or debuffType == "Magic")) then -- purge alert
 			button._border:SetVertexColor(unpack(config.purgeColor))
 		elseif (config.highlightEnrage and debuffType == "") then -- enrage alert
 			button._border:SetVertexColor(unpack(config.enrageColor))
@@ -687,6 +690,11 @@ function mod:initialize()
 	config = mod.config
 
 	if (not config.enabled) then return end
+
+	-- woopsie reset from before
+	if (config.stackingspeed == 0) then
+		config.stackingspeed = 0.25
+	end
 
 	bdUI.using_nameplates = true
 

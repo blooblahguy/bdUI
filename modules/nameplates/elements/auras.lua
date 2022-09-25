@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Nameplates")
 
 local function auraFilter(self, name, castByPlayer, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
 	-- blacklist is priority
-	if (config.highlightPurge and isStealable) then
+	if (config.highlightPurge and (isStealable or debuffType == "Magic")) then
 		return true
 	end
 	-- this is an enrage
