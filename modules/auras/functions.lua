@@ -10,7 +10,7 @@ local auras
 --===============================================
 local is_whitelisted = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = mod.auras
-	name = name:lower()
+	name = bdUI:sanitize(name)
 
 	-- whitelisted if in raid
 	if (bdUI:is_whitelist_raid(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
@@ -40,7 +40,7 @@ end
 --===============================================
 local is_blacklisted = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = mod.auras
-	name = name:lower()
+	name = bdUI:sanitize(name)
 
 	if (auras and auras["blacklist"][name]) then
 		return true
@@ -67,7 +67,7 @@ end
 --===============================================
 local is_whitelist_mine = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = mod.auras
-	name = name:lower()
+	name = bdUI:sanitize(name)
 
 	-- print(name, auras["mine"][name])
 	-- if (castByMe) then
@@ -87,7 +87,7 @@ end
 --===============================================
 local is_whitelist_class = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = mod.auras
-	name = name:lower()
+	name = bdUI:sanitize(name)
 
 	if (auras and auras[bdUI.class][name]) then	
 		return true
@@ -101,7 +101,7 @@ end
 --===============================================
 local is_whitelist_raid = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = mod.auras
-	name = name:lower()
+	name = bdUI:sanitize(name)
 
 	local inInstance, instanceType = IsInInstance()
 	if (inInstance and (instanceType == "party" or instanceType == "raid")) then
@@ -126,7 +126,7 @@ bdUI.is_whitelist_raid = is_whitelist_raid --, bdUI.caches.auras.raid)
 --===============================================
 local filter_aura = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	auras = mod.auras
-	name = name:lower()
+	name = bdUI:sanitize(name)
 
 	if (bdUI.is_blacklisted(self, name)) then
 		return false

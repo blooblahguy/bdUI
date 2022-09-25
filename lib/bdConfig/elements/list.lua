@@ -4,7 +4,7 @@ local lib = ns.bdConfig
 local function sanitize(str)
 	str = str:lower()
 	str = strtrim(str)
-	str = gsub(str, "[^a-zA-Z%s]+", "")
+	str = gsub(str, "[^a-zA-Z0-9%s]+", "")
 
 	return str
 end
