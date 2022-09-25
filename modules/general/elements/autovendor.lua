@@ -56,7 +56,7 @@ sell:HookScript("OnEvent", function(self, event)
 	if (mod.config.autorepair) then
 		if CanMerchantRepair() then
 			local repair = GetRepairAllCost()
-			if (GetGuildBankWithdrawMoney and GetGuildBankWithdrawMoney() > repair) then
+			if (GetGuildBankWithdrawMoney and GetGuildBankWithdrawMoney() > repair and GetGuildBankWithdrawMoney() ~= 10000000) then
 				RepairAllItems(1)
 			elseif GetMoney() >= repair then
 				RepairAllItems()
