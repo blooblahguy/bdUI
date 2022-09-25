@@ -41,10 +41,10 @@ function mod:create_xp()
 		self:SetStatusBarColor(.4, .1, 0.6, 1)
 
 		if (mxp > 0) then
-			local text = bdUI:numberize(xp).." / "..bdUI:numberize(mxp).." - "..floor((xp / mxp) * 1000) / 10 .."%"
+			local text = FormatLargeNumber(xp).." / "..FormatLargeNumber(mxp).." - "..floor((xp / mxp) * 1000) / 10 .."%"
 
 			if rxp then
-				self.text:SetText(text .. " (+"..bdUI:numberize(rxp)..")")
+				self.text:SetText(text .. " (+"..FormatLargeNumber(rxp)..")")
 				self:SetMinMaxValues(0, mxp)
 				self.layer:SetMinMaxValues(0, mxp)
 				self:SetStatusBarColor(.2, .4, 0.8, 1)
