@@ -11,18 +11,36 @@ local pcolors = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
 pcolors = RGBPercToHex(pcolors.r, pcolors.g, pcolors.b)
 local pstring = "@|cff"..pcolors..playername.."|r"
 
+
+-- Alert Frame
+bdUI.alert = CreateFrame("Frame")
+bdUI.alert:ClearAllPoints()
+bdUI.alert:SetHeight(300)
+bdUI.alert:SetWidth(300)
+bdUI.alert:Hide()
+bdUI.alert.text = bdUI.alert:CreateFontString(nil, "BACKGROUND")
+bdUI.alert.text:SetFontObject(bdUI:get_font(16))
+bdUI.alert.text:SetAllPoints()
+bdUI.alert:SetPoint("CENTER", 0, 200)
+
+function bdUI.alert:AddMessage(text, disablesound)
+	bdUI.alert.text:SetText(text)
+	bdUI.alert:SetAlpha(1)
+	bdUI.alert:Show()
+	bdUI.alert.time = GetTime()
+	if (not disablesound) then
+		PlaySound(3081, "master")
+	end
+	C_Timer.After(3, function()
+		UIFrameFadeOut(bdUI.alert, 1, 1, 0)
+	end)
+end
+
 -- TODO: Hook into editbox autocomplete
 
 -- show alert box
 local function alert_message(message)
-	mod.alert.text:SetText(message)
-	mod.alert:SetAlpha(1)
-	mod.alert:Show()
-	mod.alert.time = GetTime()
-	PlaySound(3081,"master")
-	C_Timer.After(3, function()
-		UIFrameFadeOut(mod.alert, 1, 1, 0)
-	end)
+	bdUI.alert:AddMessage(message)
 end
 
 -- listen to the chat frames
@@ -56,19 +74,8 @@ function mod:create_alerts()
 	-- Register Addon Message
 	C_ChatInfo.RegisterAddonMessagePrefix("bdChat")
 
-	-- Alert Frame
-	mod.alert = CreateFrame("Frame")
-	mod.alert:ClearAllPoints()
-	mod.alert:SetHeight(300)
-	mod.alert:SetWidth(300)
-	mod.alert:Hide()
-	mod.alert.text = mod.alert:CreateFontString(nil, "BACKGROUND")
-	mod.alert.text:SetFontObject(bdUI:get_font(16))
-	mod.alert.text:SetAllPoints()
-	mod.alert:SetPoint("CENTER", 0, 200)
-
-	mod.alert:RegisterEvent('CHAT_MSG_ADDON')
-	mod.alert:SetScript("OnEvent", function(self, event, arg1, arg2)
+	bdUI.alert:RegisterEvent('CHAT_MSG_ADDON')
+	bdUI.alert:HookScript("OnEvent", function(self, event, arg1, arg2)
 		if (event == "CHAT_MSG_ADDON" and arg1 == "bdChat") then
 			alert_message(arg2)
 		end

@@ -1,6 +1,15 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Databars")
 
+local alerted = false
+
+local function alert_can_level()
+	if (not alerted and UnitLevel("player") ~= GetMaxPlayerLevel()) then
+		alerted = true
+		bdUI.alert:AddMessage("XP Enabled!")
+	end
+end
+
 function mod:create_xp()
 	local config = mod.config
 
@@ -20,6 +29,7 @@ function mod:create_xp()
 		tex:SetVertexColor(1, 1, 1)
 		bar.tex[i] = tex
 	end
+
 	bar:RegisterEvent("PLAYER_XP_UPDATE")
 	bar:RegisterEvent("PLAYER_LEVEL_UP")
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -28,6 +38,15 @@ function mod:create_xp()
 		local xp = UnitXP("player")
 		local mxp = UnitXPMax("player")
 		local rxp = GetXPExhaustion("player")
+
+		if (event == "PLAYER_ENTERING_WORLD") then
+			if (UnitName("player") == "Update") then
+				C_Timer.After(1, function()
+					self:SetScript("OnUpdate", alert_can_level)
+				end)
+			end
+		end
+		-- alert_can_level()
 
 		-- make sure it's enabled
 		if (config.xpbar == "Always Hide" or (config.xpbar == "Show When Leveling" and (UnitLevel("player") == bdUI.level_cap or IsXPUserDisabled() == true))) then 

@@ -65,3 +65,39 @@ end
 -- hooksecurefunc("QuestLogFrame", "OnShow", function()
 
 -- end)
+
+-- local function show_xp_per()
+-- 	local frame = CreateFrame("frame", nil, UIParent)
+-- 	frame:SetSize(100, 300)
+-- 	frame:SetPoint("TOPLEFT", UIParent, 10, -200)
+-- 	frame:SetUserPlaced(true)
+-- 	frame:EnableMouse(true)
+-- 	frame:RegisterForDrag("LeftButton")
+-- 	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+-- 	frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+-- 	frame:RegisterEvent("PLAYER_XP_UPDATE")
+-- 	bdUI:set_backdrop(frame)
+
+-- 	local total_xp_earned = 0
+-- 	local xp_started_hour = UnitXP("player")
+-- 	local xp_started_minute = UnitXP("player")
+-- 	local hour_window = GetTime()
+-- 	local minute_window = GetTime()
+-- 	frame:SetScript("OnEvent", function()
+-- 		total_xp_earned = UnitXP("player")
+-- 	end)
+
+-- 	local t1 = frame:CreateFontString()
+-- 	t1:SetFontObject(bdUI:get_font(12))
+-- 	local t2 = frame:CreateFontString()
+-- 	t1:SetFontObject(bdUI:get_font(12))
+-- 	local t3 = frame:CreateFontString()
+-- 	t1:SetFontObject(bdUI:get_font(12))
+-- 	local t4 = frame:CreateFontString()
+-- 	t1:SetFontObject(bdUI:get_font(12))
+
+-- 	-- per hour
+-- 	-- per 10 minutes
+
+-- 	t1:SetPoint("TOPLEFT", frame, 4, 4)
+-- end
