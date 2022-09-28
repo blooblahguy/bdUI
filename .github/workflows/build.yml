@@ -65,5 +65,5 @@ jobs:
       - name: Package WOTLKC
         uses: BigWigsMods/packager@master
         with:
-          args: -g wotlkc
+          args: -g wrath
 
