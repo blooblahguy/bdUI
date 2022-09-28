@@ -41,7 +41,7 @@ function mod:create_xp()
 
 		if (event == "PLAYER_ENTERING_WORLD") then
 			if (UnitName("player") == "Update") then
-				C_Timer.After(1, function()
+				C_Timer.After(2, function()
 					self:SetScript("OnUpdate", alert_can_level)
 				end)
 			end
