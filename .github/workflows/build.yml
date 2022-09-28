@@ -59,9 +59,9 @@ jobs:
 
       # Package for WOTLKC
       - name: Rename WOTLKC toc
-          run: |
-            rm bdUI.toc
-            mv bdUI-wotlkc.toc bdUI.toc
+        run: |
+          rm bdUI.toc
+          mv bdUI-wotlkc.toc bdUI.toc
       - name: Package WOTLKC
         uses: BigWigsMods/packager@master
         with:
