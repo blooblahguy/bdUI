@@ -104,6 +104,7 @@ function mod:create_container(name, nomove)
 	searchBox:SetScript("OnTextChanged", function(self, ...)
 		if (not frame.all_items) then return end
 		local find = search_sanitize(self:GetText())
+		
 		if (strlen(self:GetText()) > 0) then
 			self.Instructions:Hide()
 		else
@@ -112,7 +113,14 @@ function mod:create_container(name, nomove)
 
 		for k, item in pairs(frame.all_items) do
 			if (item.name) then
-				local text = search_sanitize(item.name..item.itemType)
+				local text = search_sanitize(item.name..item.itemType..item.bindType)
+
+				if (find == "boe") then
+					find = "bind on equip"
+				elseif (find == "bop") then
+					find = "bind on pickup"
+				end
+				
 
 				if (string.find(text, find)) then
 					item:SetAlpha(1)

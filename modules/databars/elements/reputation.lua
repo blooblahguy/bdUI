@@ -15,9 +15,12 @@ function mod:create_reputation()
 		-- make sure it's enabled
 		if (config.repbar == "Always Hide") then
 			disable = true
-		elseif (config.repbar == "Show When Tracking & Max Level" and UnitLevel("player") ~= MAX_PLAYER_LEVEL) then
+		elseif (config.repbar == "Show When Tracking & Max Level" and UnitLevel("player") ~= GetMaxPlayerLevel()) then
 			disable = true
 		end
+
+		-- print("rep bar", disabled, MAX_PLAYER_LEVEL)
+
 		if (disable or not name) then 
 			self:Hide()
 			return

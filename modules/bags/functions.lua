@@ -1,6 +1,24 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local tooltip = CreateFrame( "GameTooltip", "bdUIItemScan", nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
+tooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
+tooltip:AddFontStrings(
+	tooltip:CreateFontString( "$parentTextLeft1", nil, "GameTooltipText" ),
+	tooltip:CreateFontString( "$parentTextRight1", nil, "GameTooltipText" )
+)
+
+mod.item_tooltip_cache = {}
+
+-- ITEM_SOULBOUND
+-- ITEM_BIND_ON_EQUIP
+
+local bindTypes = {
+	[1]	= "Bind on Pickup",
+	[2] = "Bind on Equip",
+	[3] = "Bind on Use",
+}
+
 --===============================================
 -- Item / Filter Helpers
 --===============================================
@@ -15,9 +33,28 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 	if (itemLink) then
 		local itemString = string.match(itemLink, "item[%-?%d:]+")
 		local keyString = string.match(itemLink, "item[%-?%d:]+")
+		bindType = bindTypes[bindType] or ""
 
 		if (itemString ~= nil) then -- is item
 			itemID = select(2, strsplit(":", itemString))
+
+			-- print("prescan", itemLink)
+			-- if (mod.item_tooltip_cache[itemLink] == nil) then
+			-- 	print("scan", itemLink)
+			-- 	mod.item_tooltip_cache[itemLink] = true
+			-- 	local itemscan = tooltip:SetInventoryItem("player", )
+			-- 	for i = 1, 5 do
+			-- 		local line = _G["bdUIItemScanTextLeft"..i]
+			-- 		local text = line and line:GetText()
+			-- 		print(text, ITEM_SOULBOUND)
+			-- 		if text and string.find(text, ITEM_SOULBOUND) then
+			-- 			-- if (text == ITEM_SOULBOUND) then
+			-- 			bindType = "Soulbound"
+			-- 			break
+			-- 			-- end
+			-- 		end
+			-- 	end
+			-- end
 		elseif (keyString) then -- is keystone
 			itemID = select(2, strsplit(":", keyString))
 			icon = 525134
@@ -39,6 +76,7 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 	t.slot = slot
 
 	t.itemLink = itemLink
+	t.bindType = bindType and bindType or ""
 	t.itemID = itemID
 	t.texture = icon
 	t.itemType = itemType

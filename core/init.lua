@@ -77,7 +77,7 @@ bdUI.developer = developer_names[select(1, UnitName("player"))]
 --===================================================================
 --Return game version, so that we can have cross version compatibility when possible
 --===================================================================
-bdUI.level_cap = MAX_PLAYER_LEVEL_TABLE[GetAccountExpansionLevel()]
+bdUI.level_cap = GetMaxPlayerLevel() --MAX_PLAYER_LEVEL_TABLE[GetAccountExpansionLevel()]
 
 local versions = {}
 versions[99999] = "shadowlands"

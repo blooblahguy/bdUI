@@ -88,6 +88,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			item.bagID = itemInfo.bagID
 			item.slot = itemInfo.slot
 			item.itemLink = itemInfo.itemLink
+			item.bindType = itemInfo.bindType
 			item.itemType = itemInfo.itemType
 			item.itemCount = itemInfo.itemCount
 			item.texture = itemInfo.texture
