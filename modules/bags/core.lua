@@ -9,6 +9,9 @@ mod.spacing = 14
 function mod:initialize()
 	mod.config = mod:get_save()
 
+	if (type(BDUI_SAVE.persistent.goldtrack) ~= "table") then
+		BDUI_SAVE.persistent.goldtrack = {}
+	end
 	BDUI_SAVE.persistent.goldtrack = BDUI_SAVE.persistent.goldtrack or {}
 
 	if (not mod.config.enabled) then return end
@@ -92,11 +95,14 @@ function mod:hook_blizzard_functions()
 	mod:RawHook("ToggleBackpack", toggle_bags, true)
 	mod:RawHook("ToggleAllBags", toggle_bags, true)
 	mod:RawHook("ToggleBag", toggle_bags, true)
+
 	mod:RawHook("OpenAllBags", open_bags, true)
 	mod:RawHook("OpenBackpack", open_bags, true)
 	mod:RawHook("OpenBag", open_bags, true)
+
 	mod:RawHook("CloseBag", close_bags, true)
 	mod:RawHook("CloseBackpack", close_bags, true)
+	
 	mod:RawHook("CloseAllBags", close_all, true)
 	hooksecurefunc("CloseSpecialWindows", close_all)
 

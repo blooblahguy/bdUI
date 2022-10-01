@@ -2,8 +2,6 @@ local bdUI, c, l = unpack(select(2, ...))
 local fpmod = mod
 local mod = bdUI:get_module("Bags")
 
-local all_gold = 0
-
 local function tablelength(T)
   local count = 0
   for _ in pairs(T) do count = count + 1 end
@@ -38,7 +36,7 @@ end
 local methods = {
 	["onenter"] = function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -147, 10)
-		all_gold = BDUI_SAVE.persistent.goldtrack
+		local all_gold = BDUI_SAVE.persistent.goldtrack
 
 		if (tablelength(all_gold) == 0) then return end
 
@@ -56,12 +54,14 @@ local methods = {
 		end)
 
 		for name, stored in pairs(all_gold) do
-			-- local stored = mod.gold[i]
-			local money, cc, name = unpack(stored)
-			local moneystring = return_money(money, true)
+			if (name) then
+				-- local stored = mod.gold[i]
+				local money, cc, name = unpack(stored)
+				local moneystring = return_money(money, true)
 
-			if (money and moneystring and money > 0 and moneystring ~= "") then
-				GameTooltip:AddDoubleLine("|c"..cc..name.."|r ",moneystring, 1,1,1, 1,1,1)
+				if (money and moneystring and money > 0 and moneystring ~= "") then
+					GameTooltip:AddDoubleLine("|c"..cc..name.."|r ",moneystring, 1,1,1, 1,1,1)
+				end
 			end
 		end	
 
@@ -73,8 +73,7 @@ local methods = {
 		GameTooltip:Hide()
 	end,
 	["update"] = function(self)
-		BDUI_SAVE.persistent.goldtrack = BDUI_SAVE.persistent.goldtrack or {}
-		all_gold = BDUI_SAVE.persistent.goldtrack
+		local all_gold = BDUI_SAVE.persistent.goldtrack
 
 		local money = GetMoney()
 
@@ -98,7 +97,7 @@ local methods = {
 		local class, classFileName = UnitClass("player")
 		local color = RAID_CLASS_COLORS[classFileName]
 
-		all_gold[name] = {money, color.colorStr, name}
+		BDUI_SAVE.persistent.goldtrack[name] = {money, color.colorStr, name}
 	end,
 	["click"] = function(self)
 		if (IsShiftKeyDown() and IsControlKeyDown()) then
