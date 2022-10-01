@@ -64,7 +64,7 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 			itemEquipLoc = ""
 			rarity = 4
 		else
-			print("weird item found:", itemLink, " please report to developer")
+			print("weird item found:", itemLink, " please report to developer", string.gsub(itemLink, "[|]", "|"))
 		end
 	end
 	

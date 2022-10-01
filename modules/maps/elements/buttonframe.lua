@@ -46,6 +46,57 @@ function mod:position_button_frame()
 
 	local minimap_width = Minimap:GetWidth()
 	local row_width = 0
+	local spacing = bdUI.border * 3
+	local size = config.buttonsize + spacing
+
+	if (config.buttonpos == "Disable") then
+		Minimap.buttonFrame:ClearAllPoints()
+		Minimap.buttonFrame:Hide()
+		return
+	end
+
+	Minimap.buttonFrame:ClearAllPoints()
+	Minimap.buttonFrame:SetSize(50, 50)
+	-- bdUI:set_backdrop(Minimap.buttonFrame)
+
+	-- decide how to position (default is bottom)
+	local x_pos = "LEFT"
+	local x_pos_self = "RIGHT"
+	local holder_position = {"TOPLEFT", "BOTTOMLEFT", "TOPRIGHT", "BOTTOMRIGHT"}
+	local holder_size = {0, 0}
+	local increase_index = 2
+	local row_spacing = {0, -spacing}
+	local button_spacing = {spacing, 0}
+	local holder_space = {bdUI.border, -spacing}
+
+	if (config.buttonpos == "Top") then
+		holder_position = {"BOTTOMLEFT", "TOPLEFT", "BOTTOMRIGHT", "TOPRIGHT"}
+		row_spacing = {0, spacing}
+		button_spacing = {spacing, 0}
+		holder_space = {bdUI.border, spacing}
+	elseif (config.buttonpos == "Right") then
+		holder_position = {"TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMLEFT"}
+		x_pos = "TOP"
+		x_pos_self = "BOTTOM"
+		row_spacing = {spacing, 0}
+		button_spacing = {0, -spacing}
+		holder_space = {spacing, -bdUI.border}
+		increase_index = 1
+	elseif (config.buttonpos == "Left") then
+		holder_position = {"TOPRIGHT", "TOPLEFT", "BOTTOMRIGHT", "BOTTOMRIGHT"}
+		x_pos = "TOP"
+		x_pos_self = "BOTTOM"
+		row_spacing = {-spacing, 0}
+		button_spacing = {0, -spacing}
+		holder_space = {-spacing, -bdUI.border}
+		increase_index = 1
+	end
+
+	-- position button frame
+	Minimap.buttonFrame:SetPoint(holder_position[1], Minimap.background, holder_position[2], unpack(holder_space))
+	Minimap.buttonFrame:SetPoint(holder_position[3], Minimap.background, holder_position[4], 0, 0)
+
+	holder_size[increase_index] = config.buttonsize + spacing
 
 	-- start loop
 	local last = nil
@@ -56,38 +107,26 @@ function mod:position_button_frame()
 		f:SetSize(config.buttonsize, config.buttonsize)
 
 		local width = (config.buttonsize * (1 / config.scale)) + ((bdUI.border * 3) * (1 / config.scale))
+		row_width = row_width + width
 
-		if (config.buttonpos == "Top" or config.buttonpos == "Bottom") then
-			row_width = row_width + width
+		if (not last) then
+			f:SetPoint(holder_position[1], Minimap.buttonFrame, holder_position[1], 0, 0)
+			row = f
+		elseif (row_width > minimap_width) then
+			f:SetPoint(holder_position[1], row, holder_position[2], unpack(row_spacing))
 
-			if (not last) then
-				f:SetPoint("TOPLEFT", Minimap.buttonFrame, "TOPLEFT", 0, 0)
-				row = f
-			elseif (row_width > minimap_width) then
-				if (config.buttonpos == "BOTTOM") then
-					f:SetPoint("BOTTOMLEFT", row, "TOPLEFT", 0, (bdUI.border * 3))
-				else
-					f:SetPoint("TOPLEFT", row, "BOTTOMLEFT", 0, -(bdUI.border * 3))
-				end
-				
-				row = f
-				row_width = 0
-			else
-				f:SetPoint("LEFT", last, "RIGHT", bdUI.border*3, 0)		
-			end
-
+			holder_size[increase_index] = holder_size[increase_index] + f:GetSize() + spacing
+			
+			row = f
+			row_width = 0
+		else
+			f:SetPoint(x_pos, last, x_pos_self, unpack(button_spacing))	
 		end
-		if (config.buttonpos == "Right" or config.buttonpos == "Left") then
-			if (last) then
-				f:SetPoint("TOP", last, "BOTTOM", 0, -bdUI.border*3)		
-			else
-				f:SetPoint("TOPLEFT", Minimap.buttonFrame, "TOPLEFT", 0, 0)
-			end
-		end
-
 
 		last = f
 	end
+
+	Minimap.buttonFrame:SetSize(unpack(holder_size))
 end
 
 --===================================
@@ -201,7 +240,7 @@ function mod:create_button_frame()
 	Minimap.buttonFrame = CreateFrame("frame", "bdButtonFrame", UIParent)
 	Minimap.buttonFrame:SetSize(1, 1)
 	Minimap.buttonFrame:SetPoint("TOP", Minimap.background, "BOTTOM", bdUI.border, -bdUI.border)
-	bdUI:create_fader(Minimap.buttonFrame, {}, 1, 0, .1, 0)
+	-- bdUI:create_fader(Minimap.buttonFrame, {}, 1, 0, .1, 0)
 	
 	Minimap.buttonFrame:RegisterEvent("UPDATE_FACTION")
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")

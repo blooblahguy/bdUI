@@ -506,25 +506,25 @@ local config = {
 				key = "disableauras",
 				type = "toggle",
 				value = false,
-				label = "Don't show any auras."
+				label = "Don't show any auras"
 			},
 			{
 				key = "automydebuff",
 				type = "toggle",
 				value = true,
-				label = "Automatically track debuffs cast by you."
+				label = "Automatically track your debuffs"
 			},
 			{
 				key = "highlightPurge",
 				type = "toggle",
-				value = false,
-				label = "Highlight units who have purgeable auras",
+				value = true,
+				label = "Highlight magic auras",
 			},
 			{
 				key = "highlightEnrage",
 				type = "toggle",
 				value = true,
-				label = "Auto whitelist enrage auras on units.",
+				label = "Automatically show enrages",
 			},
 			{
 				key = "raidbefuffs",

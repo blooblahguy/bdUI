@@ -566,6 +566,11 @@ local function nameplate_create(self, unit)
 		if (bdUI.is_blacklisted(self, name)) then
 			return false
 		end
+
+		if (config.highlightPurge and (isStealable or debuffType == "Magic")) then
+			return true
+		end
+
 		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 			return true
 		end
