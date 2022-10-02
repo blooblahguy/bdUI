@@ -88,11 +88,13 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			item.bagID = itemInfo.bagID
 			item.slot = itemInfo.slot
 			item.itemLink = itemInfo.itemLink
+			item.itemLevel = itemInfo.itemLevel
 			item.bindType = itemInfo.bindType
 			item.itemType = itemInfo.itemType
 			item.itemCount = itemInfo.itemCount
 			item.texture = itemInfo.texture
 			item.itemID = itemInfo.itemID
+			item.rarity = itemInfo.rarity
 
 			table.insert(mod.current_parent.all_items, item)
 

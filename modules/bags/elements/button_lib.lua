@@ -12,6 +12,25 @@ events["BAG_UPDATE"] = "update_lock"
 events["PLAYERBANKSLOTS_CHANGED"] = "update"
 events["PLAYER_ENTERING_WORLD"] = "update_cooldown"
 
+local function range_lerp(value, sourceMin, sourceMax, newMin, newMax)
+	return newMin + (newMax - newMin) * ((value - sourceMin) / (sourceMax - sourceMin))
+end
+
+local function increase_brightness(r, percent)
+    r = range_lerp(r, 0, 1, 0, 255)
+    r = r + math.floor( percent / 100 * 255 )
+	r = range_lerp(r, 0, 255, 0, 1)
+    return r
+end
+
+local function brighten_color(r, g, b, percent)
+	r = increase_brightness(r, percent)
+	g = increase_brightness(g, percent)
+	b = increase_brightness(b, percent)
+
+	return r, g, b
+end
+
 local methods = {}
 methods["update_quality"] = function(self)
 
@@ -51,6 +70,18 @@ methods["update_new"] = function(self)
 	-- self:update()
 end
 
+methods["compare"] = function(self, key, down)
+	if (not self.itemID) then return end
+
+	if IsModifiedClick("COMPAREITEMS") or (GetCVarBool("alwaysCompareItems") and not IsEquippedItem(self.itemID)) then
+		GameTooltip_ShowCompareItem()
+	end
+
+	if (not IsModifiedClick("COMPAREITEMS") and not GetCVarBool("alwaysCompareItems")) then
+		GameTooltip_HideShoppingTooltips(GameTooltip)
+	end
+end
+
 methods["update"] = function(self)
 	self.hasItem = not not self.itemID
 	self:GetParent():SetID(self.bagID)
@@ -64,6 +95,15 @@ methods["update"] = function(self)
 
 	self:update_new()
 	self:update_quality()
+
+	if (mod.config.show_ilvl and self.itemLevel > 0 and tonumber(self.itemCount) == 1) then
+		local r, g, b, hex = GetItemQualityColor(self.rarity)
+		r, g, b = brighten_color(r, g, b, 50)
+		self.ilvl:SetText(self.itemLevel)
+		self.ilvl:SetTextColor(r, g, b, 1)
+	else
+		self.ilvl:SetText("")
+	end
 end
 
 function mod:skin(self)
@@ -153,8 +193,24 @@ mod.item_pool_create = function(self)
 	button.text:SetTextColor(1, 1, 1)
 	button.text:Hide()
 
+	button.ilvl = button:CreateFontString(nil, "OVERLAY")
+	button.ilvl:SetFontObject(bdUI:get_font(13))
+	button.ilvl:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 4)
+	button.ilvl:SetAlpha(1)
+	button.ilvl:SetTextColor(1, 1, 1)
+
 	-- get various methods on this
 	Mixin(button, methods)
+
+	button:HookScript("OnEnter", function(key, down)
+		button:RegisterEvent("MODIFIER_STATE_CHANGED")
+	end)
+	button:HookScript("OnLeave", function(key, down)
+		button:UnregisterEvent("MODIFIER_STATE_CHANGED")
+	end)
+	button:SetScript("OnEvent", function(key, down)
+		button:compare(button, key, down)
+	end)
 
 	-- really surprising that i have to do this, itembuttons dont come with tooltip functionality in the bank main bag
 	mod:SecureHookScript(button, "OnEnter", function(self, ...)

@@ -35,6 +35,12 @@ local config = {
 		tooltip = "Alt+shift+ctrl + left click deletes items in bag",
 		value = true,
 	},
+	{
+		key = "show_ilvl",
+		type = "toggle",
+		label = "Show item level overlay",
+		value = true,
+	},
 
 	{
 		key = "dbgroup",

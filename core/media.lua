@@ -208,6 +208,9 @@ end
 		frame.set_border_color = function(self, r, g, b, a)
 			self._border:SetVertexColor(r, g, b, a)
 		end
+		frame.get_border_color = function(self)
+			return self._border:GetVertexColor()
+		end
 		frame.reset_border_color = function(self, r, g, b, a)
 			self._border:SetVertexColor(unpack(bdUI.media.border))
 		end

@@ -23,10 +23,10 @@ local bindTypes = {
 -- Item / Filter Helpers
 --===============================================
 function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
-	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent
+	local name, link, rarity, itemLevel, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent
 
 	if (itemLink) then
-		name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+		name, link, rarity, itemLevel, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 	end
 
 	local itemID
@@ -67,7 +67,11 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 			print("weird item found:", itemLink, " please report to developer", string.gsub(itemLink, "[|]", "|"))
 		end
 	end
-	
+
+	itemLevel = itemLevel or 0
+	if (itemEquipLoc == "") then
+		itemLevel = 0
+	end
 	-- print(itemLink, icon, count)
 	local t = {}
 	t.name = name
@@ -77,6 +81,7 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 
 	t.itemLink = itemLink
 	t.bindType = bindType and bindType or ""
+	t.itemLevel = itemLevel
 	t.itemID = itemID
 	t.texture = icon
 	t.itemType = itemType
