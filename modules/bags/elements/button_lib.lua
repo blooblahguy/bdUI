@@ -71,6 +71,7 @@ methods["update_new"] = function(self)
 end
 
 methods["compare"] = function(self, key, down)
+	if (not MouseIsOver(self)) then self:UnregisterEvent("MODIFIER_STATE_CHANGED") return end
 	if (not self.itemID) then return end
 
 	if IsModifiedClick("COMPAREITEMS") or (GetCVarBool("alwaysCompareItems") and not IsEquippedItem(self.itemID)) then
@@ -209,8 +210,10 @@ mod.item_pool_create = function(self)
 	button:HookScript("OnLeave", function(key, down)
 		button:UnregisterEvent("MODIFIER_STATE_CHANGED")
 	end)
-	button:SetScript("OnEvent", function(key, down)
-		button:compare(button, key, down)
+	button:SetScript("OnEvent", function(self, event, arg1)
+		if (event == "MODIFIER_STATE_CHANGED") then
+			button:compare(button, key, down)
+		end
 	end)
 
 	-- really surprising that i have to do this, itembuttons dont come with tooltip functionality in the bank main bag
