@@ -87,14 +87,12 @@ methods["update"] = function(self)
 	self.hasItem = not not self.itemID
 	self:GetParent():SetID(self.bagID)
 	self:SetID(self.slot)
-	self.blank:SetShown(not self.hasItem)
-
-	if (not self.hasItem) then return end
 
 	SetItemButtonTexture(self, self.texture)
 	SetItemButtonQuality(self, self.quality, self.itemLink)
 	SetItemButtonCount(self, self.itemCount)
 
+	self.blank:SetShown(not self.hasItem)
 	self:update_new()
 	self:update_quality()
 
