@@ -29,6 +29,7 @@ function lib:create_windows(name, lock_toggle)
 	window:SetUserPlaced(true)
 	window:SetFrameStrata("DIALOG")
 	window:SetClampedToScreen(true)
+	tinsert(UISpecialFrames, window:GetName())
 	window:Hide()
 
 	-- Header
