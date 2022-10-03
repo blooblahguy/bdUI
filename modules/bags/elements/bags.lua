@@ -52,7 +52,8 @@ function mod:create_bags()
 				end)
 			end
 		else
-			--C_Timer.After(0.05, mod.update_bags)
+			-- C_Timer.After(0.1, mod.update_bags)
+			-- print('upodate from delayed update')
 			mod:update_bags()
 		end
 	end)
@@ -72,6 +73,13 @@ function mod:update_bags()
 		
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+
+			-- if (texture and texture > 0 and quality == -1) then
+			-- 	print(bag, slot, GetContainerItemInfo(bag, slot))
+			-- 	-- print('bag bugged i think')
+			-- 	C_Timer.After(0.2, mod.update_bank)
+			-- 	return
+			-- end
 
 			if (not itemLink) then
 				-- make this table consistent from one place

@@ -73,13 +73,14 @@ function mod:hook_blizzard_functions()
 	end
 
 	local function open_bags()
+		if (mod.bags:IsShown()) then return end
 		mod.bags:Show()
 		mod:update_bags()
 		mod:draw_bag()
 		-- mod:draw_bag_categories()
 	end
 
-	local function toggle_bags()
+	local function toggle_bags(...)
 		if (not mod.bags:IsShown()) then
 			open_bags()
 		else

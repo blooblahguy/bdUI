@@ -5,7 +5,7 @@ local events = {}
 events["BAG_UPDATE_COOLDOWN"] = "update_cooldown"
 events["ITEM_LOCK_CHANGED"] = "update_lock"
 events["ITEM_UNLOCKED"] = "update_lock"
-events["BAG_UPDATE_DELAYED"] = "update"
+-- events["BAG_UPDATE_DELAYED"] = "update"
 events["BAG_NEW_ITEMS_UPDATED"] = "update_new"
 events["INVENTORY_SEARCH_UPDATE"] = "update_search"
 events["BAG_UPDATE"] = "update_lock"
@@ -86,12 +86,13 @@ methods["update"] = function(self)
 	self.hasItem = not not self.itemID
 	self:GetParent():SetID(self.bagID)
 	self:SetID(self.slot)
+	self.blank:SetShown(not self.hasItem)
+
+	if (not self.hasItem) then return end
 
 	SetItemButtonTexture(self, self.texture)
 	SetItemButtonQuality(self, self.quality, self.itemLink)
 	SetItemButtonCount(self, self.itemCount)
-
-	self.blank:SetShown(not self.hasItem)
 
 	self:update_new()
 	self:update_quality()

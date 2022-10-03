@@ -41,12 +41,25 @@ function mod:create_bank()
 			end
 		elseif (event == "BANKFRAME_CLOSED") then
 			mod.bank:Hide()
+		-- elseif (event == "BAG_UPDATE" and (arg1 == -2 or arg1 >= 5)) then
+		-- 	-- C_Timer.After(.5, mod.update_bank)
+		-- 	mod:update_bank()
 		else
+			-- print(GetContainerItemInfo(11, 2))
+			-- local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(11, 2)
+
+			
+
+			-- end
+			-- C_Timer.After(0.1, mod.update_bank)
 			mod:update_bank()
 		end
 	end)
 end
 
+function bdUI:update_bank()
+	mod:update_bank()
+end
 function mod:update_bank()
 	if (not mod.bank:IsShown()) then return end
 	
@@ -64,8 +77,17 @@ function mod:update_bank()
 
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+			-- print(bag, slot, itemLink, GetContainerItemInfo(bag, slot))
+
+			-- if (texture and texture > 0 and quality == -1) then
+			-- 	print(bag, slot, GetContainerItemInfo(bag, slot))
+			-- 	print('bank bugged i think')
+			-- 	C_Timer.After(0.2, mod.update_bank)
+			-- 	return
+			-- end
 
 			if (not itemLink) then
+				-- print(GetContainerItemInfo(bag, slot))
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
 
@@ -133,12 +155,15 @@ function mod:draw_bank()
 end
 
 function mod:hide_blizzard_bank()
+	if (BankFrame.hidden) then return end
+	BankFrame.hidden = true
 	local children = {BankFrame:GetChildren()}
 	for k, child in pairs(children) do
 		child:Hide()
 		child.Show = noop
 		child:SetAlpha(0)
 		child:EnableMouse(false)
+		child:SetParent(bdUI.hidden)
 	end
 
 	bdUI:strip_textures(BankFrame, true)

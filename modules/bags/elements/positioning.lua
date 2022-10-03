@@ -36,6 +36,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 		return tonumber(a) < tonumber(b)
 	end) do
 		local cat = mod.current_parent.cat_pool:Acquire()
+		-- print(mod.current_parent:GetName(), "acquire")
 		cat:Show()
 		cat.positioned = false
 		cat:SetSize(buttonsize * 2, buttonsize)
