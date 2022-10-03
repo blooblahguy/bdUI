@@ -567,7 +567,8 @@ local function nameplate_create(self, unit)
 			return false
 		end
 
-		if (config.highlightPurge and (isStealable or debuffType == "Magic")) then
+		if (config.highlightPurge and (isStealable or debuffType == "Magic") and source and not UnitIsFriend("player", source) and self.currentStyle == "enemy" and UnitCanAttack("player", unit)) then
+			-- print(source)
 			return true
 		end
 
