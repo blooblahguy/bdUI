@@ -190,14 +190,14 @@ mod.item_pool_create = function(self)
 
 	button.text = button:CreateFontString(nil, "OVERLAY")
 	button.text:SetFontObject(bdUI:get_font(13))
-	button.text:SetPoint("BOTTOMLEFT", button, "TOPLEFT", -2, 4)
+	button.text:SetPoint("BOTTOMLEFT", button, "TOPLEFT", -2, 2)
 	button.text:SetAlpha(1)
 	button.text:SetTextColor(1, 1, 1)
 	button.text:Hide()
 
 	button.ilvl = button:CreateFontString(nil, "OVERLAY")
 	button.ilvl:SetFontObject(bdUI:get_font(13))
-	button.ilvl:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 4)
+	button.ilvl:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
 	button.ilvl:SetAlpha(1)
 	button.ilvl:SetTextColor(1, 1, 1)
 
