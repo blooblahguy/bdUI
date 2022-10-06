@@ -113,6 +113,7 @@ function mod:create_container(name, nomove)
 
 		for k, item in pairs(frame.all_items) do
 			if (item.name) then
+				if(not item.itemType) then item.itemType=13 end
 				local text = search_sanitize(item.name..item.itemType..item.bindType)
 
 				if (find == "boe") then

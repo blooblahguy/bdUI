@@ -64,6 +64,9 @@ function mod:update_bags()
 	local freeslots = 0
 	local freeslot = nil
 	mod.bags.categories = {}
+	mod.categoryIDtoNames[13] = GetItemClassInfo(13)
+	local keyName = GetItemClassInfo(13)
+	mod.categoryNamestoID[keyName] = 13
 	
 	-- first gather all items up
 	for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
@@ -107,6 +110,9 @@ function mod:update_bags()
 
 				-- run through filters to see where i truly belong
 				itemType, itemTypeID = mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, itemEquipLoc)
+				
+				if (not itemType) then itemType = GetItemClassInfo(13) end;
+				if (not itemTypeID) then itemTypeID = 13 end;
 
 				-- store these for later
 				mod.categoryIDtoNames[itemTypeID] = itemType
