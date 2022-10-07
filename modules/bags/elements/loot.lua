@@ -3,6 +3,14 @@ local mod = bdUI:get_module("Bags")
 
 -- @TODO Group Loot Frame
 
+function mod:auto_greed_loot()
+	local eh = CreateFrame("frame")
+	eh:RegisterEvent("START_LOOT_ROLL")
+	eh:SetScript("OnEvent", function(self, rollID, rollTime, lootHandle)
+	
+	end)
+end
+
 function mod:skin_loot()
 	if (not mod.config.skinloot) then return end
 	local p, r, spacing_x, spacing_y = "TOP", "BOTTOM", 0, -4

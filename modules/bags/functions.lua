@@ -1,12 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
-local tooltip = CreateFrame( "GameTooltip", "bdUIItemScan", nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
-tooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
-tooltip:AddFontStrings(
-	tooltip:CreateFontString( "$parentTextLeft1", nil, "GameTooltipText" ),
-	tooltip:CreateFontString( "$parentTextRight1", nil, "GameTooltipText" )
-)
+local tooltip = CreateFrame('GameTooltip', 'bdUIItemScan', UIParent, 'GameTooltipTemplate')
+tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
 
 mod.item_tooltip_cache = {}
 
@@ -19,10 +15,45 @@ local bindTypes = {
 	[3] = "Bind on Use",
 }
 
+
+-- Tradability
+function mod:is_item_tradeable(itemLink)
+	local isTradable = false
+	local tradableString = BIND_TRADE_TIME_REMAINING:utf8sub(0, 24):lower()
+	local sellableString = REFUND_TIME_REMAINING:utf8sub(0, 24):lower() -- for testing
+
+	-- the tooltip for trading actually only shows up on bag tooltips, so we have to do this
+	for bag = 0, 4 do
+		for slot = 1, GetContainerNumSlots(bag) do
+			local bagItemLink = GetContainerItemLink(bag, slot)
+			
+			if (bagItemLink and bagItemLink == itemLink) then
+				tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
+				tooltip:SetBagItem(bag, slot)
+
+				for i = 1, 150 do
+					local line = _G['bdUIItemScanTextLeft'..i]
+					local text = line and line:GetText() and line:GetText():lower()
+
+					if (not text) then break end
+
+					if (string.find(text, tradableString) ~= nil) then
+						isTradable = true
+						break
+					end
+				end
+
+			end
+		end
+	end
+
+	return isTradable
+end
+
 --===============================================
 -- Item / Filter Helpers
 --===============================================
-function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
+local function get_item_table(self, bag, slot, bagID, itemCount, itemLink)
 	local name, link, rarity, itemLevel, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent
 
 	if (itemLink) then
@@ -93,6 +124,8 @@ function mod:get_item_table(bag, slot, bagID, itemCount, itemLink)
 
 	return t
 end
+
+mod.get_item_table = memoize(get_item_table, mod.cache)
 
 --===============================================
 -- Bag Frames

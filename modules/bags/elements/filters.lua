@@ -52,6 +52,7 @@ custom_categories["Herbalism:7.7"] = {
 -- generic weapons should go here too
 custom_categories["Miscellaneous:15"] = {
 	{"4.0", nil, false},
+	{"", "INVTYPE_TABARD", false},
 }
 
 -- add things like blacksmithing hammers etc
@@ -71,18 +72,23 @@ custom_categories["Quest:6.2"] = {
 }
 
 -- tries to match an item to a custom category, rather than default
-function mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, equipSlot)
+local function filter_category(self, itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, equipSlot)
 	local itemType_return, itemTypeID_return = itemType, itemTypeID
 	local pass = false
 
 	for filter_name, filters in pairs(custom_categories) do
 		local name, id = strsplit(":", filter_name)
+		-- print(name)
 		for k, criteria in pairs(filters) do
 			local itemTypes_filter, equipSlot_filter, subType_filter = unpack(criteria)
 			local itemType_filter, itemSubIDType_filter = strsplit(".", itemTypes_filter)
 
-			if (tonumber(itemTypeID) == tonumber(itemType_filter)) then
+			
+			if (itemTypes_filter ~= "" and tonumber(itemTypeID) == tonumber(itemType_filter)) then
 				-- print(itemLink, "matches", name, "itemids", itemSubTypeID, itemSubIDType_filter)
+				-- if (equipSlot == "INVTYPE_TABARD") then
+				-- 	print(itemLink, itemTypes_filter, equipSlot_filter, subType_filter, equipSlot)
+				-- end
 				pass = true
 				if (itemSubIDType_filter ~= "") then -- compare
 					if (tonumber(itemSubTypeID) == tonumber(itemSubIDType_filter)) then
@@ -92,7 +98,11 @@ function mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSu
 						pass = false
 					end
 				end
-
+			elseif (itemTypes_filter == "") then
+				-- print(name, unpack(criteria))
+				-- if (equipSlot == "INVTYPE_TABARD") then
+				-- 	print(itemLink, itemTypes_filter, equipSlot_filter, subType_filter, equipSlot)
+				-- end
 				if (equipSlot_filter ~= false) then
 					if (equipSlot_filter == equipSlot) then
 						pass = true
@@ -124,6 +134,8 @@ function mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSu
 end
 
 function mod:categorize_items(bag, slot, config)
-
 	return categories, freeslot
 end
+
+
+mod.filter_category = memoize(filter_category, mod.cache)

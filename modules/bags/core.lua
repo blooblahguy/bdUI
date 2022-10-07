@@ -5,6 +5,7 @@ local ace_hook = LibStub("AceHook-3.0")
 ace_hook:Embed(mod)
 
 mod.spacing = 14
+mod.cache = {}
 
 function mod:initialize()
 	mod.config = mod:get_save()
@@ -75,8 +76,8 @@ function mod:hook_blizzard_functions()
 	local function open_bags()
 		if (mod.bags:IsShown()) then return end
 		mod.bags:Show()
-		mod:update_bags()
-		mod:draw_bag()
+		-- mod:update_bags()
+		-- mod:draw_bag()
 		-- mod:draw_bag_categories()
 	end
 
