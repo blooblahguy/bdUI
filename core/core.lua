@@ -259,3 +259,18 @@ function bdUI:lowercase_table(t)
 
 	return new
 end
+
+-- thanks to elvui for saving me a lot of time here
+function bdUI:abbreviate_string(name)
+	local letters, lastWord = '', strmatch(name, '.+%s(.+)$')
+	if lastWord then
+		for word in gmatch(name, '.-%s') do
+			local firstLetter = string.utf8sub(gsub(word, '^[%s%p]*', ''), 1, 1)
+			if firstLetter ~= string.utf8lower(firstLetter) then
+				letters = format('%s%s. ', letters, firstLetter)
+			end
+		end
+		name = format('%s%s', letters, lastWord)
+	end
+	return name
+end

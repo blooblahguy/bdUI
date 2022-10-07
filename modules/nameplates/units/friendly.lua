@@ -13,7 +13,8 @@ mod.friendly_style = function(self, event, unit)
 	-- print(unit)
 
 	-- auras
-	self.Auras:Show()
+	self.Buffs:Show()
+	self.Debuffs:Show()
 
 	self.Name:Show()
 	-- names

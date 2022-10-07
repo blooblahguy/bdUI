@@ -13,7 +13,8 @@ mod.npc_style = function(self, event, unit)
 
 	-- castbar
 	self:DisableElement("Castbar")
-	self:DisableElement("Auras")
+	self:DisableElement("Buffs")
+	self:DisableElement("Debuffs")
 	self:DisableElement("FixateAlert")
 	self:DisableElement("QuestProgress")
 
