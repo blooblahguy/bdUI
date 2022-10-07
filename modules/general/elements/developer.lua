@@ -1,23 +1,77 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("General")
 
--- local quest_xp = CreateFrame("frame", nil, UIParent)
--- quest_xp:RegisterEvent("QUEST_DETAIL")
--- quest_xp:RegisterEvent("QUEST_ACCEPTED")
--- quest_xp:RegisterEvent("QUEST_REMOVED")
+-- -- local quest_xp = CreateFrame("frame", nil, UIParent)
+-- -- quest_xp:RegisterEvent("QUEST_DETAIL")
+-- -- quest_xp:RegisterEvent("QUEST_ACCEPTED")
+-- -- quest_xp:RegisterEvent("QUEST_REMOVED")
 
--- local QuestXP
+-- -- local QuestXP
 
--- local function show_xp(xp)
--- 	local xpshow = QuestInfoRewardsFrame.xp_text
--- 	if (not xpshow) then
--- 		QuestInfoRewardsFrame.xp_text = QuestInfoRewardsFrame:CreateFontString(nil, "OVERLAY")
--- 		xpshow = QuestInfoRewardsFrame.xp_text
--- 		xpshow:SetFontObject(QuestInfoRewardsFrame.ItemReceiveText:GetFontObject())
--- 		xpshow:SetPoint("TOPRIGHT", QuestDetailsScrollChildFrame, -10, -10)
+-- -- local function show_xp(xp)
+-- -- 	local xpshow = QuestInfoRewardsFrame.xp_text
+-- -- 	if (not xpshow) then
+-- -- 		QuestInfoRewardsFrame.xp_text = QuestInfoRewardsFrame:CreateFontString(nil, "OVERLAY")
+-- -- 		xpshow = QuestInfoRewardsFrame.xp_text
+-- -- 		xpshow:SetFontObject(QuestInfoRewardsFrame.ItemReceiveText:GetFontObject())
+-- -- 		xpshow:SetPoint("TOPRIGHT", QuestDetailsScrollChildFrame, -10, -10)
+-- -- 	end
+
+-- -- 	xpshow:SetText(xp)
+-- -- end
+
+-- local instances = {
+-- 	["Halls of Stone"] = false,
+-- 	["Halls of Lightning"] = false,
+-- 	["Gundrak"] = false,
+-- 	["Drak'Tharon Keep"] = false,
+-- 	["Utgarde Keep"] = false,
+-- 	["Utgarde Pinnacle"] = false,
+-- 	["Azjol-Nerub"] = false,
+-- 	["Ahn'kahet: The Old Kingdom"] = false,
+-- 	["The Oculus"] = false,
+-- 	["The Nexus"] = false,
+-- 	["Violet Hold"] = false,
+-- 	["The Culling of Stratholme"] = false,
+-- }
+
+-- local my_instances = {}
+
+-- function bdUI:dungeon_tracker()
+
+	
+
+-- 	local function collect_data()
+-- 		my_instances = instances
+
+-- 		local numInstances = GetNumSavedInstances()
+-- 		for index = 1, numInstances do
+-- 			local name, id, reset, difficulty, locked, extended, instanceIDMostSig, isRaid, maxPlayers, difficultyName, numEncounters, encounterProgress = GetSavedInstanceInfo(index)
+-- 		end
 -- 	end
 
--- 	xpshow:SetText(xp)
+-- 	local function sync_to_guild()
+
+-- 	end
+
+-- 	local function sync_to_party()
+
+-- 	end
+
+-- 	local function sync_to_raid()
+
+-- 	end
+
+-- 	local function request_sync(groupChannel)
+
+-- 	end
+
+-- 	local addon = CreateFrame("frame")
+-- 	addon:RegisterEvent("PLAYER_ENTERING_WORLD")
+-- 	addon:RegisterEvent("ENCOUNTER_END")
+-- 	addon:SetScript("OnEvent", function(self, event, arg1)
+
+-- 	end)
 -- end
 
 local cache_name = {}
