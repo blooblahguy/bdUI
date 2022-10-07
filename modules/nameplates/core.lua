@@ -176,7 +176,7 @@ function mod:config_callback()
 	bdUI:SetCVar("nameplateOccludedAlphaMult", config.occludedalpha)
 
 	-- misc
-	bdUI:SetCVar("nameplateMaxDistance", config.nameplatedistance) -- for some reason there is a 6yd diff
+	bdUI:SetCVar("nameplateMaxDistance", config.nameplatedistance)
 	-- , ['nameplateShowDebuffsOnFriendly'] = 0
 	-- , ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
 end
@@ -316,6 +316,15 @@ local function nameplate_callback(self, event, unit)
 		mod.friendly_style(self, event, unit)
 	elseif (unit_type == "npc") then
 		mod.npc_style(self, event, unit)
+	end
+
+	-- hide healthbars for unattackable targets
+	if (not UnitCanAttack("player", unit)) then
+		self.Health:Hide()
+		self.Auras:Hide()
+	else
+		self.Health:Show()
+		self.Auras:Show()
 	end
 
 	-- select correct target
@@ -563,23 +572,8 @@ local function nameplate_create(self, unit)
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = source and UnitIsUnit(source, "player") or false
 
-		if (bdUI.is_blacklisted(self, name)) then
-			return false
-		end
-
-		if (config.highlightPurge and (isStealable or debuffType == "Magic") and source and not UnitIsFriend("player", source) and self.currentStyle == "enemy" and UnitCanAttack("player", unit)) then
-			-- print(source)
-			return true
-		end
-
-		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
-			return true
-		end
-		if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
-			return true
-		end
-
-		return mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowPersonal, nameplateShowAll)
+		-- call to memoized function
+		return mod:auraFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.automydebuff, config.highlightPurge, config.highlightEnrage)
 	end
 	
 	self.Auras.PostCreateIcon = function(self, button)
@@ -657,7 +651,7 @@ local function nameplate_create(self, unit)
 		end
 
 		if (self.ClassicComboPointsHolder) then
-			bdUI:set_backdrop(self.ClassicComboPointsHolder, true)
+			-- bdUI:set_backdrop(self.ClassicComboPointsHolder, true)
 			local last
 			local gap = border * 4
 			local width = (config.width - (gap * 4)) / 5
