@@ -6,22 +6,22 @@ local standing_ids = {
 	[1] = "cc0000", -- "Hated"
 	[2] = "ff0000", -- "Hostile"
 	[3] = "f26000", -- "Unfriendly"
-	[4] = "e4e400", -- "Neutral"
-	[5] = "33aa33", -- "Friendly"
-	[6] = "5fd65d", -- "Honored"
-	[7] = "53e9bc", -- "Revered"
-	[8] = "2ee6e6", -- "Exalted"
+	[4] = "62b800", -- "Neutral"
+	[5] = "33ff33", -- "Friendly"
+	[6] = "1eb01c", -- "Honored"
+	[7] = "11df6a", -- "Revered"
+	[8] = "18cdcd", -- "Exalted"
 }
 local standings = {
-	{"Unknown", "ffffff"},
-	{"Hated", "cc0000"},
-	{"Hostile", "ff0000"},
-	{"Unfriendly", "f26000"},
-	{"Neutral", "e4e400"},
-	{"Friendly", "33ff33"},
-	{"Honored", "5fe65d"},
-	{"Revered", "53e9bc"},
-	{"Exalted", "2ee6e6"},
+	[0] = "Unknown",
+	[1] = "Hated",
+	[2] = "Hostile",
+	[3] = "Unfriendly",
+	[4] = "Neutral",
+	[5] = "Friendly",
+	[6] = "Honored",
+	[7] = "Revered",
+	[8] = "Exalted",
 }
 
 function mod:create_reputation()
@@ -54,7 +54,13 @@ function mod:create_reputation()
 		self:SetValue(value)
 		local r, g, b = HexToRGBPerc(standing_ids[standing])
 		self:SetStatusBarColor(r, g, b, 1)
-		self.text:SetText(value - minrep.." / "..maxrep - minrep.." - "..math.floor(((value - minrep) / (maxrep - minrep)) * 1000) / 10 .."% - ".. name)
+		local text = table.concat({
+			name,
+			standings[standing],
+			value - minrep.." / "..maxrep - minrep,
+		}, " - ")
+		self.text:SetText(text)
+		--standings[standing].." "..value - minrep.." / "..maxrep - minrep.." - "..math.floor(((value - minrep) / (maxrep - minrep)) * 1000) / 10 .."% - ".. name
 	end
 	bar:SetScript("OnEvent", bar.callback)
 
