@@ -35,6 +35,7 @@ hideTextures['Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight'] = true
 hideTextures['Interface\\Minimap\\UI-Minimap-Background'] = true 
 hideTextures[136430] = true 
 hideTextures[136467] = true 
+hideTextures[136477] = true 
 
 --===================================
 -- Position button frames
