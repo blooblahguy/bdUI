@@ -26,6 +26,7 @@ function mod:initialize()
 	mod:create_reagents() -- lastly reagents
 
 	mod:skin_loot()
+	mod:auto_greed_loot()
 
 	mod:hook_blizzard_functions()
 

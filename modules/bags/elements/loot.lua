@@ -3,11 +3,41 @@ local mod = bdUI:get_module("Bags")
 
 -- @TODO Group Loot Frame
 
+local function is_enchanter()
+	if (not GetSpellBookItemName) then return end
+	local i = 1
+	while true do
+		local spellName, spellRank = GetSpellBookItemName(i, BOOKTYPE_SPELL)
+		if not spellName then
+			break
+		end
+
+		if (spellName == "Enchanting") then return true end
+
+		i = i + 1
+	end
+end
+
+
 function mod:auto_greed_loot()
 	local eh = CreateFrame("frame")
 	eh:RegisterEvent("START_LOOT_ROLL")
-	eh:SetScript("OnEvent", function(self, rollID, rollTime, lootHandle)
-	
+	eh:SetScript("OnEvent", function(self, event, rollID, rollTime, lootHandle)
+		if (not mod.config.autoroll_greens) then return end
+		local itemLink = GetLootRollItemLink(rollID)
+		local bop = select(5, GetLootRollItemInfo(rollID))
+		local quality = C_Item.GetItemQualityByID(itemLink)
+		
+		if bop then return end
+
+		local roll = 2 -- greed
+		if (select(1, bdUI:get_game_version()) == "cataclysm" and is_enchanter()) then
+			roll = 3 -- DE
+		end
+		
+		if quality and quality <= 2 then
+			RollOnLoot(rollID, roll)
+		end
 	end)
 end
 
