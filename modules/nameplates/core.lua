@@ -641,7 +641,6 @@ local function nameplate_create(self, unit)
 	-- FIXATES / TARGETS
 	--==========================================
 	self.FixateAlert = self:CreateFontString(nil, "OVERLAY")
-	
 	self.FixateAlert:SetPoint("LEFT", self.Health, "RIGHT", 4, -1)
 	self.FixateAlert:SetSize(self.Health:GetSize())
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
@@ -691,7 +690,10 @@ local function nameplate_create(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
-		local castByMe = source and UnitIsUnit(source, "player") or false
+		local castByMe = false
+		if (source) then
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+		end
 
 		-- call to memoized function
 		return mod:buffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
@@ -717,7 +719,10 @@ local function nameplate_create(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
-		local castByMe = source and UnitIsUnit(source, "player") or false
+		local castByMe = false
+		if (source) then
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+		end
 
 		-- call to memoized function
 		return mod:debuffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)

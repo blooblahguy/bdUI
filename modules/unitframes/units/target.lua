@@ -7,7 +7,7 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 	nameplateShowPersonal = nameplateShowPersonal or false
 	local castByMe = false
 	if (source) then
-		castByMe =  UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+		castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
 	end
 
 	-- don't show if blacklisted

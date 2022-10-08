@@ -4,7 +4,10 @@ local mod = bdUI:get_module("Unitframes")
 local buff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 	isBossDebuff = isBossDebuff or false
 	nameplateShowAll = nameplateShowAll or false
-	local castByMe = source and UnitIsUnit(source, "player") or false
+	local castByMe = false
+	if (source) then
+		castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+	end
 
 	-- classic
 	duration, expirationTime = bdUI:update_duration(button.cd, unit, spellId, source, name, duration, expirationTime)

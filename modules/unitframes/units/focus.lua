@@ -67,7 +67,10 @@ mod.custom_layout["focus"] = function(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
-		local castByMe = source and UnitIsUnit(source, "player") or false
+		local castByMe = false
+		if (source) then
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+		end
 
 		if (bdUI:is_blacklisted(name)) then
 			return false
