@@ -38,7 +38,7 @@ end
 --===============================================
 -- Blacklists
 --===============================================
-local is_blacklisted = function(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+local is_blacklisted = function(self, name)
 	auras = mod.auras
 	name = bdUI:sanitize(name)
 
@@ -53,7 +53,6 @@ end
 -- Nameplates
 --===============================================
 local is_whitelist_nameplate = function(self, castByMe, nameplateShowPersonal, nameplateShowAll)
-	-- auras = mod.auras
 	if ((nameplateShowPersonal and castByMe) or nameplateShowAll) then
 		return true
 	end
@@ -128,11 +127,11 @@ local filter_aura = function(self, name, spellID, castByMe, isBossDebuff, namepl
 	auras = mod.auras
 	name = bdUI:sanitize(name)
 
-	if (bdUI.is_blacklisted(self, name)) then
+	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
 
-	return bdUI.is_whitelisted(self, name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
+	return bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 end
 
 bdUI.filter_aura = memoize(filter_aura, bdUI.caches.auras)

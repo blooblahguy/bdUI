@@ -34,12 +34,10 @@ mod.elements.castbar = function(self, unit)
 	
 	-- text
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Text:SetFontObject(mod.font_castbar)
 	self.Castbar.Text:SetJustifyH("LEFT")
 	self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", 10, 0)
 
 	self.Castbar.AttributeText = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.AttributeText:SetFontObject(mod.font_castbar)
 	self.Castbar.AttributeText:SetJustifyH("RIGHT")
 	self.Castbar.AttributeText:SetPoint("RIGHT", self.Castbar, "RIGHT", -10, 0)
 	

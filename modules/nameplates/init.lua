@@ -142,6 +142,12 @@ local config = {
 				label = "Friendly Names in Raid",
 			},
 			{
+				key = "show_target_indicator",
+				type = "toggle",
+				value = true,
+				label = "Show current target indicator",
+			},
+			{
 				key = "show_class_resources",
 				type = "select",
 				values = "All",
@@ -276,18 +282,57 @@ local config = {
 		label = "Text",
 		args = {
 			{
-				key = "hpoffset",
+				key = "font_size",
+				type = "range",
+				value = 13,
+				min = 8,
+				max = 24,
+				step = 1,
+				label = "Font Size",
+			},
+			{
+				key = "heading",
+				type = "heading",
+				value = "Names"
+			},
+			{
+				key = "name_position",
+				type = "select",
+				value = "Inside",
+				options = {"Inside", "Outside"},
+				label = "Name positioning",
+			},
+			{
+				key = "name_offset",
 				type = "range",
 				value = -7,
 				min = -20,
 				max = 20,
 				step = 1,
-				label = "Name Text offset",
+				label = "Name Text offset (positioned outside)",
+			},
+			{
+				key = "hideEnemyNames",
+				type = "select",
+				value = "Always Show",
+				options = {"Always Show", "Always Hide", "Only Target", "Hide in Arena"},
+				label = "Hide Enemy Names",
+			},
+			{
+				key = "hidefriendnames",
+				type = "toggle",
+				value = false,
+				label = "Hide Friendly Names",
+			},
+			{
+				key = "heading",
+				type = "heading",
+				value = "Health & Power"
 			},
 			{
 				key = "hptext",
 				type = "select",
-				value = "HP - %",
+				value = "HP",
 				options = {"None","HP - %", "HP", "%"},
 				label = "Nameplate Health Text",
 			},
@@ -306,7 +351,7 @@ local config = {
 			{
 				key = "showhptexttargetonly",
 				type = "toggle",
-				value = true,
+				value = false,
 				label = "Show Health Text on target only",
 			},
 			{
@@ -314,37 +359,6 @@ local config = {
 				type = "toggle",
 				value = false,
 				label = "Show energy value on healthbar",
-			},
-			{
-				key = "hideEnemyNames",
-				type = "select",
-				value = "Always Show",
-				options = {"Always Show", "Always Hide", "Only Target", "Hide in Arena"},
-				label = "Hide Enemy Names",
-			},
-			{
-				key = "hidefriendnames",
-				type = "toggle",
-				value = false,
-				label = "Hide Friendly Names",
-			},
-			{
-				key = "enemynamesize",
-				type = "range",
-				value = 16,
-				min = 8,
-				max = 24,
-				step = 1,
-				label = "Enemy Name Font Size",
-			},
-			{
-				key = "friendlynamesize",
-				type = "range",
-				value = 16,
-				min = 8,
-				max = 24,
-				step = 1,
-				label = "Friendly Name Font Size",
 			},
 			{
 				key = "markposition",
@@ -507,12 +521,6 @@ local config = {
 				type = "toggle",
 				value = false,
 				label = "Don't show any auras"
-			},
-			{
-				key = "automydebuff",
-				type = "toggle",
-				value = true,
-				label = "Automatically track your debuffs"
 			},
 			{
 				key = "highlightPurge",

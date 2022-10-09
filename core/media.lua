@@ -273,7 +273,7 @@ end
 		local shadow = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 		shadow:SetFrameLevel(1)
 		shadow:SetFrameStrata(frame:GetFrameStrata())
-		shadow:SetAlpha(0.7)
+		shadow:SetAlpha(0.8)
 		shadow:SetBackdropColor(0, 0, 0, 0)
 		shadow:SetBackdropBorderColor(0, 0, 0, 0.8)
 		shadow.offset = offset

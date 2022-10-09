@@ -1,17 +1,106 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 
-local function auraFilter(self, name, castByPlayer, debuffType, isStealable, nameplateShowSelf, nameplateShowAll)
-	-- blacklist is priority
-	-- this is an enrage
-	if (config.highlightEnrage and debuffType == "") then
+local function buffFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
+	if (bdUI:is_blacklisted(name)) then
+		-- print("blacklisted", name)
+		return false
+	end
+
+	-- auto purge / stealable highlight
+	if (highlightPurge and (isStealable or debuffType == "Magic") and source and UnitIsEnemy("player", source) and nameplate.currentStyle == "enemy" and UnitCanAttack("player", unit)) then
+		-- print("purgable", name)
 		return true
 	end
+
+	-- see if this is auto whitelisted by blizzard
+	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("auto whitelisted", name)
+		return true
+	end
+
+	-- see if this is whitelisted by us
+	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("whitelisted", name)
+		return true
+	end
+
+	-- this is an enrage
+	if (highlightEnrage and debuffType == "") then
+		-- print("enrage", name)
+		return true
+	end
+
+	return false
+end
+
+local function debuffFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
+	if (bdUI:is_blacklisted(name)) then
+		-- print("blacklisted", name)
+		return false
+	end
+
+	-- anything i do i wanna see
+	if (castByMe) then
+		-- print("casted by me", name)
+		return true
+	end
+
+	-- see if this is auto whitelisted by blizzard
+	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("auto whitelisted", name)
+		return true
+	end
+
+	-- see if this is whitelisted by us
+	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("whitelisted", name)
+		return true
+	end
+
+	return false
+end
+
+local function auraFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
+	-- print(nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
+	-- blacklist is priority
+	if (bdUI:is_blacklisted(name)) then
+		-- print("blacklisted", name)
+		return false
+	end
+
 	-- if we've whitelisted this inside of bdCore defaults
-	if (config.automydebuff and castByPlayer) then
+	if (castByMe) then
+		-- print("casted by me", name)
+		return true
+	end
+
+	-- auto purge / stealable highlight
+	if (highlightPurge and (isStealable or debuffType == "Magic") and source and UnitIsEnemy("player", source) and nameplate.currentStyle == "enemy" and UnitCanAttack("player", unit)) then
+		-- print("purgable", name)
+		return true
+	end
+
+	-- see if this is auto whitelisted by blizzard
+	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("auto whitelisted", name)
+		return true
+	end
+
+	-- see if this is whitelisted by us
+	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
+		-- print("whitelisted", name)
+		return true
+	end
+
+	-- this is an enrage
+	if (highlightEnrage and debuffType == "") then
+		-- print("enrage", name)
 		return true
 	end
 	
 	return false
 end
 mod.auraFilter = memoize(auraFilter, mod.cache)
+mod.buffFilter = memoize(buffFilter, mod.cache)
+mod.debuffFilter = memoize(debuffFilter, mod.cache)

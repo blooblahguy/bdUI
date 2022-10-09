@@ -29,6 +29,13 @@ local config = {
 		value = true,
 	},
 	{
+		key = "autoroll_greens",
+		type = "toggle",
+		label = "Auto roll greed on greens",
+		value = true,
+	},
+	
+	{
 		key = "easy_delete",
 		type = "toggle",
 		label = "Easy delete item shortcut",

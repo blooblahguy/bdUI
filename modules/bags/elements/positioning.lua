@@ -96,6 +96,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			item.texture = itemInfo.texture
 			item.itemID = itemInfo.itemID
 			item.rarity = itemInfo.rarity
+			item.tradeable = mod:is_item_tradeable(itemInfo.itemLink) and "tradeable" or ""
 
 			table.insert(mod.current_parent.all_items, item)
 

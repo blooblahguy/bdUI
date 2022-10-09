@@ -23,7 +23,10 @@ mod.custom_layout["boss"] = function(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
-		local castByMe = source and UnitIsUnit(source, "player") or false
+		local castByMe = false
+		if (source) then
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+		end
 
 		if (not castByMe) then return false end
 
@@ -43,7 +46,10 @@ mod.custom_layout["boss"] = function(self, unit)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
-		local castByMe = source and UnitIsUnit(source, "player") or false
+		local castByMe = false
+		if (source) then
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+		end
 
 		if (bdUI:is_blacklisted(name) or castByPlayer) then
 			return false

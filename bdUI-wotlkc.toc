@@ -87,7 +87,7 @@ core\setup.lua
 core\load.lua
 
 # classic auras
-game_versions\tbc\tbc_auras.lua
+game_versions\wotlk\wotlk_auras.lua
 
 # General
 modules\general\init.lua

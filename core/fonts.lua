@@ -10,7 +10,7 @@ function bdUI:get_font(size, outline)
 	if (not bdUI.fonts[name]) then
 		local font = CreateFont("BDUI_"..name)
 		font:SetFont(bdUI.media.font, tonumber(size), outline)
-		font:SetShadowColor(0, 0, 0)
+		font:SetShadowColor(0, 0, 0, 0)
 		font:SetShadowOffset(0, 0)
 
 		bdUI.fonts[name] = font

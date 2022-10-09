@@ -87,8 +87,6 @@ for eclass, color in next, FACTION_BAR_COLORS do
 	end
 end
 
-
-
 -- returns a 1-6 of how this unit reacts to you
 function mod:getUnitReactionIndex(unit)
 	if UnitIsDeadOrGhost(unit) then

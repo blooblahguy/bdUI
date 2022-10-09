@@ -12,11 +12,48 @@ mod.elements = {}
 local tanks = {}
 local meTank = false
 
--- Fonts we use
-mod.font = bdUI:get_font(14)
-mod.font_friendly = bdUI:get_font(14)
-mod.font_small = bdUI:get_font(14)
-mod.font_castbar = bdUI:get_font(14)
+-- Aura Styling
+local function PostCreateIcon(self, button)
+	bdUI:set_backdrop(button, true)
+
+	local cdtext = button.cd:GetRegions()
+	cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size)) 
+	cdtext:SetJustifyH("CENTER")
+	cdtext:ClearAllPoints()
+	cdtext:SetAllPoints(button)
+	self.last_timer_size = config.debuff_timer_size
+	
+	button.count:SetFontObject(bdUI:get_font(11)) 
+	button.count:SetTextColor(1,.8,.3)
+	button.count:SetJustifyH("RIGHT")
+	button.count:ClearAllPoints()
+	button.count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
+	
+	button.icon:SetTexCoord(0.08, 0.9, 0.20, 0.74)
+	
+	button.cd:SetReverse(true)
+	button.cd:SetHideCountdownNumbers(false)
+end
+
+local function PostUpdateIcon(self, unit, button, index, position)
+	local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+	bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+
+	if (self.last_timer_size ~= config.debuff_timer_size) then
+		local cdtext = button.cd:GetRegions()
+		cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size))
+	end
+	self.last_timer_size = config.debuff_timer_size
+
+	button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
+	if (config.highlightPurge and (isStealable or debuffType == "Magic")) then -- purge alert
+		button._border:SetVertexColor(unpack(config.purgeColor))
+	elseif (config.highlightEnrage and debuffType == "") then -- enrage alert
+		button._border:SetVertexColor(unpack(config.enrageColor))
+	else -- neither
+		button._border:SetVertexColor(unpack(bdUI.media.border))
+	end
+end
 
 --===============================================
 -- Core functionality
@@ -94,6 +131,75 @@ role_collection:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 role_collection:RegisterEvent("GROUP_ROSTER_UPDATE")
 role_collection:SetScript("OnEvent", store_tanks)
 
+function mod:config_nameplate(self)
+	border = bdUI:get_border(self)
+
+	-- Health
+	self.Health._shadow:SetColor(unpack(config.glowcolor))
+
+	-- Castbar
+	local cbi_size = (config.height+config.castbarheight) * config.castbariconscale
+	self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", 2, 0)
+	self.Castbar.Icon:SetSize( cbi_size, cbi_size )
+	self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
+	self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
+
+	-- Text Positioning
+	self.Name:ClearAllPoints()
+	if (config.name_position == "Inside" and self.currentStyle == "enemy") then
+		self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
+	else
+		self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.name_offset)
+	end
+
+	-- Text Sizes
+	self.Name:SetFontObject(bdUI:get_font(config.font_size))
+	self.text_test:SetFontObject(bdUI:get_font(config.font_size))
+	self.Curhp:SetFontObject(bdUI:get_font(config.font_size))
+	self.Curpower:SetFontObject(bdUI:get_font(config.font_size))
+	self.FixateAlert:SetFontObject(bdUI:get_font(config.font_size))
+	self.Castbar.Text:SetFontObject(bdUI:get_font(config.font_size))
+	self.Castbar.AttributeText:SetFontObject(bdUI:get_font(config.font_size))
+
+	-- Config Auras
+	if (config.name_position == "Inside") then
+		self.AuraHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8)
+		self.AuraHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 8)
+	else
+		self.AuraHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8+config.name_offset)
+		self.AuraHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 8+config.name_offset)
+	end
+	if (config.disableauras) then
+		self.Buffs:Hide()
+		self.Debuffs:Hide()
+	else
+		self.Buffs:Show()
+		self.Debuffs:Show()
+	end
+	self.Buffs.size = config.raidbefuffs * config.scale
+	self.Debuffs.size = config.raidbefuffs * config.scale
+
+	-- hide healthbars / buffs for unattackable targets
+	if (not UnitCanAttack("player", self.unit)) then
+		self.Health:Hide()
+		self.Buffs:Hide()
+		self.Debuffs:Hide()
+	else
+		self.Health:Show()
+		self.Buffs:Show()
+		self.Debuffs:Show()
+	end
+
+	self.RaidTargetIndicator:ClearAllPoints()
+	if (config.markposition == "RIGHT") then
+		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize/2), 0)
+	elseif (config.markposition == "LEFT") then
+		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize/2, 0)
+	else
+		self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
+	end
+end
+
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
@@ -114,47 +220,11 @@ function mod:config_callback()
 
 	-- Update from bdConfig
 	for k, self in pairs(nameplates) do
-		border = bdUI:get_border(self)
-
-		-- health
-		self.Health._shadow:SetColor(unpack(config.glowcolor))
-		-- self.Health._shadow:SetBackdropBorderColor(unpack(config.glowcolor))
-
-		-- castbar
-		local cbi_size = (config.height+config.castbarheight) * config.castbariconscale
-		self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", 2, 0)
-		self.Castbar.Icon:SetSize( cbi_size, cbi_size )
-		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
-		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
-
-		self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.hpoffset)
-		self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24+config.hpoffset)
-
-		-- Disabled auras
-		if (config.disableauras) then
-			self.Auras:Hide()
-		else
-			self.Auras:Show()
-		end
-		self.Auras.size = config.raidbefuffs * config.scale
-
-		self.RaidTargetIndicator:ClearAllPoints()
-		if (config.markposition == "RIGHT") then
-			self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize/2), 0)
-		elseif (config.markposition == "LEFT") then
-			self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize/2, 0)
-		else
-			self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
-		end
+		mod:config_nameplate(self)
 	end
 
 	local small = math.max(config.height * 0.6, config.height - 20)
 	local castbar = math.max(config.castbarheight * 0.74, config.castbarheight - 20)
-
-	mod.font = bdUI:get_font(config.enemynamesize)
-	mod.font_small = bdUI:get_font(small)
-	mod.font_castbar = bdUI:get_font(castbar)
-	mod.font_friendly = bdUI:get_font(config.friendlynamesize)
 
 	bdUI:SetCVar("nameplateShowAll", 1)
 	bdUI:SetCVar("nameplateMotion", config.stacking == "Stacking" and 1 or 0)
@@ -176,7 +246,7 @@ function mod:config_callback()
 	bdUI:SetCVar("nameplateOccludedAlphaMult", config.occludedalpha)
 
 	-- misc
-	bdUI:SetCVar("nameplateMaxDistance", config.nameplatedistance) -- for some reason there is a 6yd diff
+	bdUI:SetCVar("nameplateMaxDistance", config.nameplatedistance)
 	-- , ['nameplateShowDebuffsOnFriendly'] = 0
 	-- , ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
 end
@@ -192,6 +262,9 @@ local function find_target(self, event, unit)
 	if (UnitIsUnit(unit, "target")) then
 		self.isTarget = true
 		self:SetAlpha(1)
+		if (config.show_target_indicator and self.currentStyle == "enemy") then
+			self.target_arrows:Show()
+		end
 		if (not UnitIsUnit(unit, "player")) then
 			self.Health._shadow:Show()
 		end
@@ -200,6 +273,7 @@ local function find_target(self, event, unit)
 		-- print(self:GetParent():GetAlpha())
 		-- self:SetAlpha(self:GetParent():GetAlpha())
 		self.Health._shadow:Hide()
+		self.target_arrows:Hide()
 	end
 
 	-- on target callback per specific nameplate
@@ -318,6 +392,11 @@ local function nameplate_callback(self, event, unit)
 		mod.npc_style(self, event, unit)
 	end
 
+	--==========================================
+	-- Callback
+	--==========================================
+	mod:config_nameplate(self)
+
 	-- select correct target
 	find_target(self, event, unit)
 	update_threat(self, event, unit)
@@ -347,7 +426,10 @@ local function nameplate_create(self, unit)
 	self.Health.colorClass = true
 	self.Health.colorReaction = true
 	self.Health.frequentUpdates = true
-	bdUI:create_shadow(self.Health, 10)
+	bdUI:create_shadow(self.Health, 6)
+	-- self.Health._shadow = self.Health:CreateTexture(nil, "BACKGROUND", -8)
+	-- self.Health._shadow:SetTexture(bdUI.media.highlight)
+	-- self.Health._shadow:SetAlpha(0.8)
 	self.Health._shadow:SetColor(unpack(config.glowcolor))
 
 	-- THREAT
@@ -407,17 +489,64 @@ local function nameplate_create(self, unit)
 		self.absorbBar:SetValue(absorb)
 	end
 
+	--==========================================
+	-- Text Holder
+	--==========================================
 	self.OverlayHolder = CreateFrame("frame", nil, self)
 	self.OverlayHolder:SetFrameLevel(20)
 	self.OverlayHolder:SetAllPoints()
 
 	--==========================================
+	-- Target Arrows
+	--==========================================
+	self.target_arrows = CreateFrame("frame", nil, self)
+	self.target_arrows:SetFrameLevel(20)
+	self.target_arrows:SetAlpha(0.8)
+	self.target_arrows:Hide()
+	self.target_arrow_left_large = self.target_arrows:CreateFontString(nil, "OVERLAY")
+	self.target_arrow_left_large:SetPoint("RIGHT", self.Health, "LEFT", -2, 0)
+	self.target_arrow_left_large:SetFontObject(bdUI:get_font(22), "MONOCHROME")
+	self.target_arrow_left_large:SetJustifyV("MIDDLE")
+	self.target_arrow_left_large:SetText(">")
+
+	self.target_arrow_right_large = self.target_arrows:CreateFontString(nil, "OVERLAY")
+	self.target_arrow_right_large:SetPoint("LEFT", self.Health, "RIGHT", 2, 0)
+	self.target_arrow_right_large:SetFontObject(bdUI:get_font(22), "MONOCHROME")
+	self.target_arrow_right_large:SetJustifyV("MIDDLE")
+	self.target_arrow_right_large:SetText("<")
+
+	self.target_arrow_left = self.target_arrows:CreateFontString(nil, "OVERLAY")
+	self.target_arrow_left:SetPoint("RIGHT", self.Health, "LEFT", -9, 0)
+	self.target_arrow_left:SetFontObject(bdUI:get_font(16), "MONOCHROME")
+	self.target_arrow_left:SetJustifyV("MIDDLE")
+	self.target_arrow_left:SetText(">")
+
+	self.target_arrow_right = self.target_arrows:CreateFontString(nil, "OVERLAY")
+	self.target_arrow_right:SetPoint("LEFT", self.Health, "RIGHT", 9, 0)
+	self.target_arrow_right:SetFontObject(bdUI:get_font(16), "MONOCHROME")
+	self.target_arrow_right:SetJustifyV("MIDDLE")
+	self.target_arrow_right:SetText("<")
+
+	--==========================================
 	-- UNIT NAME
 	--==========================================
+	self.text_test = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
+	self.text_test:Hide()
+
 	self.Name = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
-	self.Name:SetFontObject(mod.font)
-	self.Name:SetPoint("BOTTOM", self.OverlayHolder, "TOP", 0, config.hpoffset)	
-	self:Tag(self.Name, '[name]')
+	oUF.Tags.Events["bd_name"] = "UNIT_NAME_UPDATE"
+	oUF.Tags.Methods["bd_name"] = function(unit, other_unit)
+		local unit = unit and unit or other_unit
+		local name = UnitName(unit)
+		self.text_test:SetText(name)
+
+		if (self.text_test:GetStringWidth() > config.width / 2) then
+			name = bdUI:abbreviate_string(name)
+		end
+
+		return name
+	end
+	self:Tag(self.Name, '[bd_name]')	
 
 	--==========================================
 	-- QUEST ICON
@@ -452,7 +581,6 @@ local function nameplate_create(self, unit)
 	-- UNIT HEALTH
 	--==========================================
 	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Curhp:SetFontObject(mod.font_small)
 	self.Curhp:SetJustifyH("RIGHT")
 	self.Curhp:SetAlpha(0.8)
 	self.Curhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
@@ -482,7 +610,6 @@ local function nameplate_create(self, unit)
 	-- UNIT POWER
 	--==========================================
 	self.Curpower = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Curpower:SetFontObject(mod.font_small)
 	self.Curpower:SetJustifyH("LEFT")
 	self.Curpower:SetAlpha(0.8)
 	self.Curpower:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
@@ -514,7 +641,6 @@ local function nameplate_create(self, unit)
 	-- FIXATES / TARGETS
 	--==========================================
 	self.FixateAlert = self:CreateFontString(nil, "OVERLAY")
-	self.FixateAlert:SetFontObject(mod.font_small)
 	self.FixateAlert:SetPoint("LEFT", self.Health, "RIGHT", 4, -1)
 	self.FixateAlert:SetSize(self.Health:GetSize())
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
@@ -539,88 +665,67 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- AURAS
 	--==========================================
-	self.Auras = CreateFrame("Frame", "bdNameplates_Auras", self)
-	self.Auras:SetFrameLevel(0)
-	self.Auras:ClearAllPoints()
-	self.Auras:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 24+config.hpoffset)
-	self.Auras:SetSize(config.width, config.raidbefuffs)
-	self.Auras:EnableMouse(false)
-	self.Auras.size = config.raidbefuffs * config.scale
-	self.Auras.initialAnchor  = "BOTTOMLEFT"
-	self.Auras.showStealableBuffs = config.highlightPurge
-	self.Auras.disableMouse = true
-	self.Auras.spacing = 2
-	self.Auras.num = 20
-	self.Auras['growth-y'] = "UP"
-	self.Auras['growth-x'] = "RIGHT"
+	self.AuraHolder = CreateFrame("frame", nil, self.Health)
+	self.AuraHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8)
+	self.AuraHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 8)
+	self.AuraHolder:SetHeight(20)
 
-	self.specialExpiration = 0
-	self.enrageExpiration = 0
-	
-	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	-- buffs
+	self.Buffs = CreateFrame("Frame", "bdNameplates_Buffs", self)
+	self.Buffs:SetFrameLevel(0)
+	self.Buffs:ClearAllPoints()
+	self.Buffs:SetPoint("BOTTOMRIGHT", self.AuraHolder, "BOTTOMRIGHT")
+	self.Buffs:SetSize(config.width / 2, config.raidbefuffs)
+	self.Buffs:EnableMouse(false)
+	self.Buffs.size = config.raidbefuffs * config.scale
+	self.Buffs.initialAnchor  = "BOTTOMRIGHT"
+	self.Buffs.disableMouse = true
+	self.Buffs.spacing = 2
+	self.Buffs.num = 5
+	self.Buffs['growth-y'] = "UP"
+	self.Buffs['growth-x'] = "LEFT"
+	self.Buffs.PostCreateIcon = PostCreateIcon
+	self.Buffs.PostUpdateIcon = PostUpdateIcon
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
-		local castByMe = source and UnitIsUnit(source, "player") or false
-
-		if (bdUI.is_blacklisted(self, name)) then
-			return false
+		local castByMe = false
+		if (source) then
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
 		end
 
-		if (config.highlightPurge and (isStealable or debuffType == "Magic") and source and not UnitIsFriend("player", source) and self.currentStyle == "enemy" and UnitCanAttack("player", unit)) then
-			-- print(source)
-			return true
-		end
-
-		if (bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
-			return true
-		end
-		if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
-			return true
-		end
-
-		return mod:auraFilter(name, castByMe, debuffType, isStealable, nameplateShowPersonal, nameplateShowAll)
+		-- call to memoized function
+		return mod:buffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
 	end
-	
-	self.Auras.PostCreateIcon = function(self, button)
-		bdUI:set_backdrop(button, true)
 
-		local cdtext = button.cd:GetRegions()
-		cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size)) 
-		cdtext:SetJustifyH("CENTER")
-		cdtext:ClearAllPoints()
-		cdtext:SetAllPoints(button)
-		self.last_timer_size = config.debuff_timer_size
-		
-		button.count:SetFontObject(bdUI:get_font(11)) 
-		button.count:SetTextColor(1,.8,.3)
-		button.count:SetJustifyH("RIGHT")
-		button.count:ClearAllPoints()
-		button.count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
-		
-		button.icon:SetTexCoord(0.08, 0.9, 0.20, 0.74)
-		
-		button.cd:SetReverse(true)
-		button.cd:SetHideCountdownNumbers(false)
-	end
-	self.Auras.PostUpdateIcon = function(self, unit, button, index, position)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
-
-		if (self.last_timer_size ~= config.debuff_timer_size) then
-			local cdtext = button.cd:GetRegions()
-			cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size))
+	-- debuffs
+	self.Debuffs = CreateFrame("Frame", "bdNameplates_Buffs", self)
+	self.Debuffs:SetFrameLevel(0)
+	self.Debuffs:ClearAllPoints()
+	self.Debuffs:SetPoint("BOTTOMLEFT", self.AuraHolder, "BOTTOMLEFT")
+	self.Debuffs:SetSize(config.width / 2, config.raidbefuffs)
+	self.Debuffs:EnableMouse(false)
+	self.Debuffs.size = config.raidbefuffs * config.scale
+	self.Debuffs.initialAnchor  = "BOTTOMLEFT"
+	self.Debuffs.disableMouse = true
+	self.Debuffs.spacing = 2
+	self.Debuffs.num = 5
+	self.Debuffs['growth-y'] = "UP"
+	self.Debuffs['growth-x'] = "RIGHT"
+	self.Debuffs.PostCreateIcon = PostCreateIcon
+	self.Debuffs.PostUpdateIcon = PostUpdateIcon
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+		isBossDebuff = isBossDebuff or false
+		nameplateShowAll = nameplateShowAll or false
+		nameplateShowPersonal = nameplateShowPersonal or false
+		local castByMe = false
+		if (source) then
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
 		end
-		self.last_timer_size = config.debuff_timer_size
 
-		button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
-		if (config.highlightPurge and (isStealable or debuffType == "Magic")) then -- purge alert
-			button._border:SetVertexColor(unpack(config.purgeColor))
-		elseif (config.highlightEnrage and debuffType == "") then -- enrage alert
-			button._border:SetVertexColor(unpack(config.enrageColor))
-		else -- neither
-			button._border:SetVertexColor(unpack(bdUI.media.border))
-		end
+		-- call to memoized function
+		return mod:debuffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
 	end
 
 	--==========================================
@@ -646,6 +751,9 @@ local function nameplate_create(self, unit)
 
 		bdUI:set_backdrop(self.Health, true)
 
+		-- self.Health._shadow:SetPoint("TOPLEFT", -20, 3)
+		-- self.Health._shadow:SetPoint("BOTTOMRIGHT", 20, -3)
+
 		-- castbars
 		if (self.Castbar) then
 			bdUI:set_backdrop(self.Castbar, true)
@@ -657,7 +765,7 @@ local function nameplate_create(self, unit)
 		end
 
 		if (self.ClassicComboPointsHolder) then
-			bdUI:set_backdrop(self.ClassicComboPointsHolder, true)
+			-- bdUI:set_backdrop(self.ClassicComboPointsHolder, true)
 			local last
 			local gap = border * 4
 			local width = (config.width - (gap * 4)) / 5

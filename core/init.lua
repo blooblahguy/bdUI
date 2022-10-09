@@ -31,6 +31,7 @@ bdUI.media = {
 	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.tga",
 	align = "Interface\\Addons\\"..addonName.."\\media\\align.tga",
 	shadow = "Interface\\Addons\\"..addonName.."\\media\\shadow.blp",
+	highlight = "Interface\\Addons\\"..addonName.."\\media\\highlight.blp",
 	fonts = {},
 	backgrounds = {},
 	border = {.03, .04, .05, 1},
