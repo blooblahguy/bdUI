@@ -55,7 +55,7 @@ function bdUI:frame_group(container, direction, ...)
 		end
 	end
 
-	container:SetSize(width, height)
+	container:SetSize(width, height - bdUI.border)
 
 	-- loop through frames provided in other parameters	
 	for k, frame in pairs(children) do
