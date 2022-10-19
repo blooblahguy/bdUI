@@ -17,7 +17,7 @@ local function update(self, event)
 end
 
 function mod:create_power(self)
-	local config = mod.config
+	config = mod.config
 
 	-- bar
 	self.Power = CreateFrame("statusbar", "bdPowerResource", mod.Resources)
@@ -37,17 +37,23 @@ function mod:create_power(self)
 	self.Power.PostUpdate = function(power, unit, cur, min, max)
 		power.text:SetText(cur)
 	end
+
+	self.Power.PostUpdateColor = function(power, unit, r, g, b)
+		power:SetStatusBarColor(bdUI:brighten_color(r, g, b, -40))
+	end
 end
 
 local function path() end
 
 local function enable()
 	if (not mod.config.power_enable) then return end
-	print("power made")
-	self:EnableElement("Castbar")
+
+	mod.player:EnableElement("Power")
+	
+	return true
 end
 local function disable()
-	self:DisableElement("Castbar")
+	mod.player:DisableElement("Power")
 end
 
-mod:add_element('filters', path, enable, disable)
+mod:add_element('power', path, enable, disable)

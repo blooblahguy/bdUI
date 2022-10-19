@@ -98,6 +98,24 @@ end
 --================================================
 -- Media Functions
 --================================================
+	function bdUI:range_lerp(value, sourceMin, sourceMax, newMin, newMax)
+		return newMin + (newMax - newMin) * ((value - sourceMin) / (sourceMax - sourceMin))
+	end
+
+	function bdUI:increase_brightness(r, percent)
+		r = bdUI:range_lerp(r, 0, 1, 0, 255)
+		r = r + math.floor( percent / 100 * 255 )
+		r = bdUI:range_lerp(r, 0, 255, 0, 1)
+		return r
+	end
+
+	function bdUI:brighten_color(r, g, b, percent)
+		r = bdUI:increase_brightness(r, percent)
+		g = bdUI:increase_brightness(g, percent)
+		b = bdUI:increase_brightness(b, percent)
+
+		return r, g, b
+	end
 	function bdUI:strip_textures(object, strip_text)
 		if (not object) then return end
 		for i = 1, object:GetNumRegions() do

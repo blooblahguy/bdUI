@@ -11,6 +11,8 @@ local mainNextHit, offNextHit = 0, 0
 local total = 0
 local mainhand, offhand
 local holder
+local currentAction
+local config
 
 -- spells we need to watch or reset on
 local queue = {}
@@ -35,11 +37,14 @@ local function reset_color(bar)
 end
 
 -- color based on queued spell type
-local function special_color(bar, colorType)
+local function color_bars(bar)
+	local colorType = currentAction
 	if (colorType == 1) then
 		bar:SetStatusBarColor(unpack(config.special_1_color))
 	elseif (colorType == 2) then
 		bar:SetStatusBarColor(unpack(config.special_2_color))
+	else
+		reset_color(bar)
 	end
 end
 
@@ -175,15 +180,18 @@ local function enable()
 			path(CombatLogGetCurrentEventInfo())
 		elseif (event == "ACTIONBAR_UPDATE_STATE") then
 			-- color the bar based on action queued
-			reset_color(mainhand)
+			currentAction = nil
 			for name, slot in pairs(queue) do
+				-- print(name, slot, IsCurrentAction(queue[name][1]))
 				if (name and queue[name] and queue[name][1] and IsCurrentAction(queue[name][1])) then
-					special_color(mainhand, spellTypes[name])
+					currentAction = spellTypes[name]
 				end
 			end
+			color_bars(mainhand)
 		elseif (event == "ACTIONBAR_SLOT_CHANGED" or event == "ACTIONBAR_PAGE_CHANGED") then
 			store_spell_info()
 		elseif (event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" or event == "PLAYER_ENTERING_WORLD") then
+			config = mod:get_save()
 			for k, frame in pairs({holder:GetChildren()}) do
 				if (UnitAffectingCombat("player")) then
 					frame:SetAlpha(config.swing_ic_alpha)
@@ -244,4 +252,4 @@ local function disable()
 	holder:Hide()
 end
 
-mod:add_element('filters', path, enable, disable)
+mod:add_element('swingbar', path, enable, disable)

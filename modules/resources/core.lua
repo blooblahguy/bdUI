@@ -94,7 +94,6 @@ function mod:config_callback()
 
 	-- callbacks
 	mod.player.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
-
 	mod.Resources:SetSize(config.resources_width, 40)
 	mod.player.CastbarHolder:SetSize(config.resources_width, config.castbar_height)
 	mod.player.Power:SetSize(config.resources_width, config.power_height)

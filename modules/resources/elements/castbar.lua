@@ -26,7 +26,7 @@ function mod:create_castbar(self)
 	-- since it shows and hides
 	self.CastbarHolder = CreateFrame("frame", nil, self)
 
-	self.Castbar = CreateFrame("StatusBar", nil, self)
+	self.Castbar = CreateFrame("StatusBar", nil, self.CastbarHolder)
 	self.Castbar:SetFrameLevel(3)
 	self.Castbar:SetStatusBarTexture(bdUI.media.flat)
 	self.Castbar:SetStatusBarColor(color.r, color.g, color.b)
@@ -87,13 +87,15 @@ local function path() end
 local function enable(config)
 	if (not config.castbar_enable) then return false end
 
-	mod.player:EnableElement("Castbar")
+	-- mod.player:EnableElement("Castbar")
+	mod.player.CastbarHolder:Show()
 
 	return true
 end
 
 local function disable(config)
-	mod.player:DisableElement("Castbar")
+	-- mod.player:DisableElement("Castbar")
+	mod.player.CastbarHolder:Hide()
 end
 
-mod:add_element('filters', path, enable, disable)
+mod:add_element('castbars', path, enable, disable)
