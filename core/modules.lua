@@ -48,14 +48,17 @@ function bdUI:load_module(module)
 	local save = module:load()
 
 	-- initalize and callback
-	if (module:initialize() ~= false) then
+	if (save.enable ~= false) then
+		module:initialize(save)
+		module:callback_wrapper(save)
 		-- run callback
 		-- module:callback()
+		-- run the element registry
+
 		return module
 	end
 
-	-- run the element registry
-
+	
 end
 
 -- Load all modules
