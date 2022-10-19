@@ -248,13 +248,15 @@ modules\unitframes\units\boss.lua
 modules\unitframes\units\arena.lua
 
 # Resources
-# modules\resources\init.lua
-# modules\resources\core.lua
-# modules\resources\elements\power.lua
-# modules\resources\elements\points.lua
-
-# modules\resources\elements\stagger.lua
-# modules\resources\elements\totems.lua
+modules\resources\init.lua
+modules\resources\core.lua
+modules\resources\elements\power.lua
+modules\resources\elements\points.lua
+modules\resources\elements\stagger.lua
+modules\resources\elements\totems.lua
+modules\resources\elements\castbar.lua
+modules\resources\elements\runes.lua
+modules\resources\elements\swing.lua
 
 # Skins
 modules\skin\init.lua

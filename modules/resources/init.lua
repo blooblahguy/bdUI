@@ -13,49 +13,165 @@ local config = {
 	{
 		key = "resources_enable",
 		type = "text",
-		value = "The resource settings show things like mana, combo points, totems, stagger, and more.",
+		value = "The resource settings show things like mana, combo points, totems, stagger, castbar, and more.",
+	},
+	
+	{
+		key = "general_tab",
+		type = "tab",
+		label = "General",
+		args = {
+			{
+				key = "resources_width",
+				value = 200,
+				min = 40,
+				max = 400,
+				step = 2,
+				type = "range",
+				size = "full",
+				label = "Global Width"
+			},
+			{
+				key = "text_scale",
+				value = 0.6,
+				min = 0.1,
+				max = 2.0,
+				step = 0.1,
+				decimals = 1,
+				type = "range",
+				label = "Text Scale"
+			},
+		},
 	},
 	{
-		key = "resources_width",
-		value = 200,
-		min = 40,
-		max = 400,
-		step = 2,
-		type = "range",
-		size = "full",
-		label = "Global Width"
+		key = "general_tab",
+		type = "tab",
+		label = "Castbar",
+		args = {
+			{
+				key = "castbar_enable",
+				value = true,
+				type = "toggle",
+				label = "Castbar Enable"
+			},
+			{
+				key = "castbar_height",
+				value = 22,
+				min = 6,
+				max = 50,
+				step = 2,
+				type = "range",
+				label = "Castbar Height"
+			},
+		},
 	},
 	{
-		key = "resources_power_height",
-		value = 14,
-		min = 0,
-		max = 30,
-		step = 1,
-		type = "range",
-		size = "full",
-		label = "Power Height"
+		key = "general_tab",
+		type = "tab",
+		label = "Power",
+		args = {
+			{
+				key = "power_enable",
+				value = true,
+				type = "toggle",
+				label = "Power Enable"
+			},
+			{
+				key = "power_height",
+				value = 10,
+				min = 6,
+				max = 50,
+				step = 2,
+				type = "range",
+				label = "Power Height"
+			},
+		},
 	},
-
 	{
-		key = "resources_primary_height",
-		value = 5,
-		min = 0,
-		max = 20,
-		step = 1,
-		type = "range",
-		size = "full",
-		label = "Primary Resource Height"
+		key = "general_tab",
+		type = "tab",
+		label = "Swing",
+		args = {
+			{
+				key = "swingbar_enable",
+				value = false,
+				type = "toggle",
+				label = "Enable"
+			},
+			{
+				key = "mainhand_height",
+				value = 16,
+				min = 6,
+				max = 30,
+				step = 2,
+				type = "range",
+				label = "Mainhand Height"
+			},
+			{
+				key = "offhand_height",
+				value = 8,
+				min = 2,
+				max = 30,
+				step = 1,
+				type = "range",
+				label = "Offhand Height"
+			},
+			{
+				key = "swing_ic_alpha",
+				value = 1,
+				min = 0,
+				max = 1,
+				step = 0.1,
+				decimals = 1,
+				type = "range",
+				label = "In Combat Alpha"
+			},
+			{
+				key = "swing_ooc_alpha",
+				value = 0.4,
+				min = 0,
+				max = 1,
+				step = 0.1,
+				decimals = 1,
+				type = "range",
+				label = "Out of Combat Alpha"
+			},
+			{
+				key = "special_1_color",
+				value = {.81, .76, .36},
+				type = "color",
+				label = "Special 1 Color"
+			},
+			{
+				key = "special_2_color",
+				value = {.51, .85, .46},
+				type = "color",
+				label = "Special 2 Color"
+			},
+		},
 	},
 	{
-		key = "resources_secondary_height",
-		value = 3,
-		min = 0,
-		max = 20,
-		step = 1,
-		type = "range",
-		size = "full",
-		label = "Secondary Resource Height"
+		key = "general_tab",
+		type = "tab",
+		label = "Class Specific",
+		args = {
+			-- {
+			-- 	key = "castbar_enable",
+			-- 	value = true,
+			-- 	type = "toggle",
+			-- 	label = "Enable"
+			-- },
+			-- {
+			-- 	key = "castbar_height",
+			-- 	value = 22,
+			-- 	min = 6,
+			-- 	max = 50,
+			-- 	step = 2,
+			-- 	type = "range",
+			-- 	label = "Castar Height"
+			-- },
+		},
 	},
 }
 
-local mod = bdUI:register_module("Resources & Power", config)
+local mod = bdUI:register_module("Player Bars", config)

@@ -490,6 +490,11 @@ local function nameplate_create(self, unit)
 	end
 
 	--==========================================
+	-- CASTBARS
+	--==========================================
+	mod.elements.castbar(self, unit)
+
+	--==========================================
 	-- Text Holder
 	--==========================================
 	self.OverlayHolder = CreateFrame("frame", nil, self)
@@ -640,9 +645,8 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- FIXATES / TARGETS
 	--==========================================
-	self.FixateAlert = self:CreateFontString(nil, "OVERLAY")
-	self.FixateAlert:SetPoint("LEFT", self.Health, "RIGHT", 4, -1)
-	self.FixateAlert:SetSize(self.Health:GetSize())
+	self.FixateAlert = self:CreateFontString(nil, "OVERLAY", 8)
+	self.FixateAlert:SetPoint("TOPRIGHT", self.OverlayHolder, "BOTTOMRIGHT", -4, -2)
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
 		self:Hide()
 
@@ -737,11 +741,6 @@ local function nameplate_create(self, unit)
 			mod.elements.combopoints(self, unit)
 		end
     end
-
-	--==========================================
-	-- CASTBARS
-	--==========================================
-	mod.elements.castbar(self, unit)
 
 	--==========================================
 	-- Pixel Perfect

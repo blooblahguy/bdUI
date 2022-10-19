@@ -1,5 +1,5 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Resources & Power")
+local mod = bdUI:get_module("Player Bars")
 local config
 local coclors 
 
@@ -16,32 +16,38 @@ local function update(self, event)
 	self:SetStatusBarColor(r * 0.8, g * 0.8, b * 0.8)
 end
 
-function mod:create_power()
-	config = mod.config
+function mod:create_power(self)
+	local config = mod.config
 
 	-- bar
-	power = CreateFrame("statusbar", "bdPowerResource", mod.Resources)
-	power:SetSize(config.resources_width, config.resources_power_height)
-	power:SetStatusBarTexture(bdUI.media.flat)
-	power:EnableMouse(false)
-	bdUI:set_backdrop(power)
+	self.Power = CreateFrame("statusbar", "bdPowerResource", mod.Resources)
+	self.Power:SetSize(config.resources_width, config.resources_power_height)
+	self.Power:SetStatusBarTexture(bdUI.media.flat)
+	self.Power:EnableMouse(false)
+	self.Power.frequentUpdates = true
+	self.Power.colorPower = true
+	bdUI:set_backdrop(self.Power)
 
 	-- text
-	power.text = power:CreateFontString(nil, "OVERLAY")
-	power.text:SetFontObject(bdUI:get_font(11))
-	power.text:SetJustifyV("MIDDLE")
-	power.text:SetPoint("CENTER", power)
+	self.Power.text = self.Power:CreateFontString(nil, "OVERLAY")
+	self.Power.text:SetFontObject(bdUI:get_font(11))
+	self.Power.text:SetJustifyV("MIDDLE")
+	self.Power.text:SetPoint("CENTER", self.Power)
 
-	-- events
-	power:RegisterEvent('UNIT_POWER_FREQUENT')
-	power:RegisterEvent('UNIT_DISPLAYPOWER')
-	power:RegisterEvent('UNIT_MAXPOWER')
-	power:RegisterEvent('PLAYER_ENTERING_WORLD')
-	power:RegisterEvent('UNIT_FLAGS') -- For selection	
-	if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then 
-		power:RegisterEvent('UNIT_POWER_POINT_CHARGE')
+	self.Power.PostUpdate = function(power, unit, cur, min, max)
+		power.text:SetText(cur)
 	end
-	power:SetScript("OnEvent", update)
-
-	return power
 end
+
+local function path() end
+
+local function enable()
+	if (not mod.config.power_enable) then return end
+	print("power made")
+	self:EnableElement("Castbar")
+end
+local function disable()
+	self:DisableElement("Castbar")
+end
+
+mod:add_element('filters', path, enable, disable)
