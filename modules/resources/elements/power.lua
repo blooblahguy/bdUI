@@ -5,18 +5,18 @@ local coclors
 
 local combat_checker = CreateFrame("frame")
 
-local function update(self, event)
-	-- set values first
-	local cur, max = UnitPower("player"), UnitPowerMax("player")
-	self:SetMinMaxValues(0, max)
-	self:SetValue(cur)
-	self.text:SetText(bdUI:numberize(cur))
+-- local function update(self, event)
+-- 	-- set values first
+-- 	local cur, max = UnitPower("player"), UnitPowerMax("player")
+-- 	self:SetMinMaxValues(0, max)
+-- 	self:SetValue(cur)
+-- 	self.text:SetText(bdUI:numberize(cur))
 
-	-- color the bar
-	local ptype, ptoken, altR, altG, altB = UnitPowerType("player")
-	local r, g, b = unpack(bdUI.oUF.colors.power[ptoken or ptype])
-	self:SetStatusBarColor(r * 0.8, g * 0.8, b * 0.8)
-end
+-- 	-- color the bar
+-- 	local ptype, ptoken, altR, altG, altB = UnitPowerType("player")
+-- 	local r, g, b = unpack(bdUI.oUF.colors.power[ptoken or ptype])
+-- 	self:SetStatusBarColor(r * 0.8, g * 0.8, b * 0.8)
+-- end
 
 function mod:create_power(self)
 	config = mod.config
@@ -28,6 +28,7 @@ function mod:create_power(self)
 	self.Power:EnableMouse(false)
 	self.Power.frequentUpdates = true
 	self.Power.colorPower = true
+	self.Power.Smooth = true
 	bdUI:set_backdrop(self.Power)
 
 	-- text
@@ -36,12 +37,15 @@ function mod:create_power(self)
 	self.Power.text:SetJustifyV("MIDDLE")
 	self.Power.text:SetPoint("CENTER", self.Power)
 
+	-- tick
+	self.Power.tick = self.Power:CreateTexture(nil, "OVERLAY")
+	self.Power.tick:SetVertexColor(1, 1, 1, 0.7)
+	self.Power.tick:SetTexture(bdUI.media.flat)
+	self.Power.tick:SetSize(bdUI.border, config.power_height)
+	self.Power.tick:SetPoint("LEFT", self.Power, self.Power:GetWidth() * (config.power_tick / 100), 0)
+
 	self.Power.PostUpdate = function(power, unit, cur, min, max)
 		power.text:SetText(cur)
-	end
-
-	self.Power.PostUpdateColor = function(power, unit, r, g, b)
-		power:SetStatusBarColor(bdUI:brighten_color(r, g, b, -40))
 	end
 end
 

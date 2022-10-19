@@ -86,6 +86,15 @@ local config = {
 				label = "Power Height"
 			},
 			{
+				key = "power_tick",
+				value = 0,
+				min = 0,
+				max = 100,
+				step = 1,
+				type = "range",
+				label = "Show Power Tick"
+			},
+			{
 				key = "power_ic_alpha",
 				value = 1,
 				min = 0,

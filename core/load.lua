@@ -23,6 +23,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- overwrite some ouf colors
 		bdUI.oUF.colors.power[0] = {46/255, 130/255, 215/255}
 		bdUI.oUF.colors.power["MANA"] = {46/255, 130/255, 215/255}
+		bdUI.oUF.colors.power["RAGE"] = {220/255, 30/255, 30/255}
 		bdUI.oUF.colors.power.ARCANE_CHARGES = {55/255, 139/255, 224/255}
 
 		-- Load bdConfig now that we have saved variables

@@ -53,7 +53,7 @@ function mod:initialize()
 	mod.Resources = CreateFrame("frame", "bdResources", UIParent)
 	mod.Resources:SetPoint("CENTER", bdParent, "CENTER", 0, -180)
 	mod.Resources:EnableMouse(false)
-	bdMove:set_moveable(mod.Resources, "Player Resources")
+	bdMove:set_moveable(mod.Resources, "Player Bars")
 
 	-- initialize ouf backend
 	oUF:RegisterStyle("bdPlayerBars", create_ouf_player_unit)
@@ -62,22 +62,6 @@ function mod:initialize()
 	mod.player:SetParent(mod.Resources)
 	mod.player:SetAllPoints(mod.Resources)
 	mod.player:SetAlpha(1)
-
-	-- create some of these bars as oUF players
-	-- oUF:RegisterStyle("bdPrimaryResource", create_primary)
-	-- oUF:RegisterStyle("bdSecondaryResource", create_secondary)
-
-	-- -- mana/rage/energy
-	-- mod.Resources.power = mod:create_power()
-
-	-- -- combo points, holy power
-	-- oUF:SetActiveStyle("bdPrimaryResource")
-	-- mod.Resources.primary = oUF:Spawn("player", "bdPrimaryResource")
-
-	-- -- extra stuff like stagger / necro bar
-	-- oUF:SetActiveStyle("bdSecondaryResource")
-	-- mod.Resources.secondary = oUF:Spawn("player", "bdSecondaryResource")
-
 end
 
 -- on load AND on change
@@ -97,6 +81,13 @@ function mod:config_callback()
 	mod.Resources:SetSize(config.resources_width, 40)
 	mod.player.CastbarHolder:SetSize(config.resources_width, config.castbar_height)
 	mod.player.Power:SetSize(config.resources_width, config.power_height)
+	if (config.power_tick == 0) then
+		mod.player.Power.tick:Hide()
+	else
+		mod.player.Power.tick:Show()
+		mod.player.Power.tick:SetSize(bdUI.border, config.power_height)
+		mod.player.Power.tick:SetPoint("LEFT", mod.player.Power, mod.player.Power:GetWidth() * (config.power_tick / 100), 0)
+	end
 
 	mod.bars = {}
 	
