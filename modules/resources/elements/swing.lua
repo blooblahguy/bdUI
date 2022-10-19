@@ -133,6 +133,8 @@ end
 local function path()
 	mod.config = mod:get_save()
 	config = mod.config
+
+	combat_log(CombatLogGetCurrentEventInfo())
 end
 
 local function enable()
@@ -177,7 +179,7 @@ local function enable()
 	holder:RegisterEvent("PLAYER_ENTERING_WORLD")
 	holder:SetScript("OnEvent", function(self, event, ...)
 		if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-			path(CombatLogGetCurrentEventInfo())
+			combat_log(CombatLogGetCurrentEventInfo())
 		elseif (event == "ACTIONBAR_UPDATE_STATE") then
 			-- color the bar based on action queued
 			currentAction = nil
@@ -195,15 +197,14 @@ local function enable()
 			for k, frame in pairs({holder:GetChildren()}) do
 				if (UnitAffectingCombat("player")) then
 					frame:SetAlpha(config.swing_ic_alpha)
-					if (config.swing_ooc_alpha == 0) then
-						frame:Show()
-					end
 				else
 					frame:SetAlpha(config.swing_ooc_alpha)
-					if (config.swing_ooc_alpha == 0) then
-						frame:Hide()
-					end
 				end
+			end
+			if (not UnitAffectingCombat("player") and config.swing_ooc_alpha == 0) then
+				holder:Hide()
+			else
+				holder:Show()
 			end
 		end
 	end)
