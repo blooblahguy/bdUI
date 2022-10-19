@@ -74,7 +74,7 @@ local function store_spell_info()
 			resetSpells[id] = true
 			if (spellTypes[name]) then
 				-- if we should be coloring based on this, locate the spell on the actionbar
-				queue[name] = C_ActionBar.FindSpellActionButtons(id) or 0
+				queue[name] = C_ActionBar.FindSpellActionButtons(id) or {}
 			end
 		end
 	end
@@ -184,7 +184,7 @@ local function enable()
 			-- color the bar based on action queued
 			currentAction = nil
 			for name, slot in pairs(queue) do
-				-- print(name, slot, IsCurrentAction(queue[name][1]))
+				-- print(name, queue, queue[name], queue[name][1], IsCurrentAction(queue[name][1]))
 				if (name and queue[name] and queue[name][1] and IsCurrentAction(queue[name][1])) then
 					currentAction = spellTypes[name]
 				end
