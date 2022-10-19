@@ -21,7 +21,7 @@ function mod:color_names()
 
 		local test = newMsg:gsub("[^a-zA-Z%s]",'')
 
-		local words = {strsplit(' ',test)}
+		local words = {strsplit(' ', test)}
 		for i = 1, #words do
 			local w = words[i]
 			
@@ -41,7 +41,7 @@ function mod:color_names()
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_NOTICE", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_TRADESKILLS", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_TEXT_EMOTE", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_TARGETICONS", filter)
+	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_TARGETICONS", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", filter)
