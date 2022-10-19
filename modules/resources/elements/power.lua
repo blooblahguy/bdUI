@@ -3,6 +3,8 @@ local mod = bdUI:get_module("Player Bars")
 local config
 local coclors 
 
+local combat_checker = CreateFrame("frame")
+
 local function update(self, event)
 	-- set values first
 	local cur, max = UnitPower("player"), UnitPowerMax("player")
@@ -49,11 +51,28 @@ local function enable()
 	if (not mod.config.power_enable) then return end
 
 	mod.player:EnableElement("Power")
+	combat_checker:RegisterEvent("PLAYER_REGEN_DISABLED")
+	combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
+	combat_checker:SetScript("OnEvent", function(self, event)
+		local config = mod:get_save()
+		if (config.power_ooc_alpha == 0 and not UnitAffectingCombat("player")) then
+			mod.player.Power:Hide()
+		else
+			mod.player.Power:Show()
+		end
+		if (UnitAffectingCombat("player")) then
+			mod.player.Power:SetAlpha(config.power_ic_alpha)
+		else
+			mod.player.Power:SetAlpha(config.power_ooc_alpha)
+		end
+	end)
 	
 	return true
 end
 local function disable()
 	mod.player:DisableElement("Power")
+	combat_checker:UnregisterEvent("PLAYER_REGEN_DISABLED")
+	combat_checker:UnregisterEvent("PLAYER_REGEN_ENABLED")
 end
 
 mod:add_element('power', path, enable, disable)

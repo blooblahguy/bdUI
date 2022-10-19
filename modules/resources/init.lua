@@ -85,6 +85,26 @@ local config = {
 				type = "range",
 				label = "Power Height"
 			},
+			{
+				key = "power_ic_alpha",
+				value = 1,
+				min = 0,
+				max = 1,
+				step = 0.1,
+				decimals = 1,
+				type = "range",
+				label = "In Combat Alpha"
+			},
+			{
+				key = "power_ooc_alpha",
+				value = 0.4,
+				min = 0,
+				max = 1,
+				step = 0.1,
+				decimals = 1,
+				type = "range",
+				label = "Out of Combat Alpha"
+			},
 		},
 	},
 	{
