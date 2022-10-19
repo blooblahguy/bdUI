@@ -1,6 +1,8 @@
 local _, ns = ...
 local oUF = ns.oUF
 
+local total = 0
+
 local fixateSpells = {}
 fixateSpells[268074] = true
 
@@ -11,8 +13,9 @@ local function RGBPercToHex(r, g, b)
 	return string.format("%02x%02x%02x", r*255, g*255, b*255)
 end
 
-local function Update(self, event, unit)
+local function Update(self)
 	local element = self.FixateAlert
+	if (not self.unit) then return end
 	-- if (not UnitIsUnit(unit, self.unit)) then return end
 
 	--[[ Callback: FixateAlert:PreUpdate()
@@ -20,7 +23,7 @@ local function Update(self, event, unit)
 
 	* self - the FixateAlert element
 	--]]
-	if(element.PreUpdate) then
+	if (element.PreUpdate) then
 		element:PreUpdate()
 	end
 
@@ -41,7 +44,7 @@ local function Update(self, event, unit)
 	* self     - the FixateAlert element
 	--]]
 	if(element.PostUpdate) then
-		return element:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
+		return element:PostUpdate(self.unit, target, isTargeting, isTargetingPlayer)
 	end
 end
 
@@ -64,6 +67,7 @@ local function Enable(self, unit)
 	if (element and not oUF.classic) then
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
+		element.throttle = element.throttle or 0.1
 		element.icon = select(3, GetSpellInfo(210099))
 		if (not element.icon) then
 			element.icon = select(3, GetSpellInfo(12021))
@@ -77,11 +81,9 @@ local function Enable(self, unit)
 			local color = RGBPercToHex(cc.r, cc.g, cc.b)
 			if (unit and UnitIsUnit(unit, "player")) then
 				self:SetAlpha(1)
-				-- self:SetText_Old("|T"..self.icon..":16:16:0:0:60:60:4:56:4:56|t ".."|cff"..color..unit.."|r")
 				self:SetText_Old("|cffFF0000-->|r |cff"..color..unit.."|r |cffFF0000<--|r")
 			else
 				self:SetAlpha(0.8)
-				-- self:SetText_Old("|cff"..color..unit.."|r")
 				self:SetText_Old("|cff"..color..unit.."|r")
 			end
 		end
@@ -90,10 +92,18 @@ local function Enable(self, unit)
 
 		-- self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Path) -- todo, account for combat log fixates
 		self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path)
-		self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
-		self:RegisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
+		-- self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
+		-- self:RegisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
 		self:RegisterEvent("UNIT_TARGET", Path)
 		self:RegisterEvent("PLAYER_TARGET_CHANGED", Path)
+		-- moving to just an on update
+		-- self:HookScript("OnUpdate", function(self, elapsed)
+		-- 	total = total + elapsed
+		-- 	if (total > element.throttle) then
+		-- 		total = 0
+		-- 		Path(self)
+		-- 	end
+		-- end)
 
 		return true
 	end

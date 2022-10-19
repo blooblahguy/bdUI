@@ -284,7 +284,7 @@ local config = {
 			{
 				key = "font_size",
 				type = "range",
-				value = 13,
+				value = 12,
 				min = 8,
 				max = 24,
 				step = 1,

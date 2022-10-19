@@ -645,12 +645,12 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- FIXATES / TARGETS
 	--==========================================
-	self.FixateAlert = self:CreateFontString(nil, "OVERLAY", 8)
-	self.FixateAlert:SetPoint("TOPRIGHT", self.OverlayHolder, "BOTTOMRIGHT", -4, -2)
+	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY", 8)
+	self.FixateAlert:SetPoint("TOPRIGHT", self.OverlayHolder, "BOTTOMRIGHT", -4, -4)
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
 		self:Hide()
 
-		if (not UnitExists(target)) then return end
+		if (not isTargeting) then return end
 
 		if (mod.lists.fixateMobs[UnitName(unit):lower()]) then
 			self:Show()
