@@ -13,7 +13,7 @@ end
 
 local function Update(self, event, unit)
 	local element = self.FixateAlert
-	if (unit ~= self.unit) then return end
+	-- if (not UnitIsUnit(unit, self.unit)) then return end
 
 	--[[ Callback: FixateAlert:PreUpdate()
 	Called before the element has been updated.
@@ -24,7 +24,7 @@ local function Update(self, event, unit)
 		element:PreUpdate()
 	end
 
-	local target = unit.."target"
+	local target = self.unit.."target"
 	local isTargeting = UnitExists(target) --and UnitIsPlayer(target)
 	local isTargetingPlayer = UnitIsUnit(target, "player")
 
