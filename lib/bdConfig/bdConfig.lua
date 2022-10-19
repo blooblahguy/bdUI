@@ -119,8 +119,6 @@ local module_methods = {
 			self.callback = lib.noop
 		end
 
-		self:run_module_elements(self:get_save())
-
 		-- call recursive build function
 		local group = lib.containers["group"]({}, self, true)
 		self:build(self.config, group)
@@ -231,7 +229,6 @@ local methods = {
 
 		-- add methods to object
 		Mixin(module, module_methods)
-
 
 		-- Hook into profile changes
 		lib:add_action("profile_change", function() module:reload() end, 15)
