@@ -45,7 +45,7 @@ function mod:create_power(self)
 	self.Power.tick:SetPoint("LEFT", self.Power, self.Power:GetWidth() * (config.power_tick / 100), 0)
 
 	self.Power.PostUpdate = function(power, unit, cur, min, max)
-		power.text:SetText(cur)
+		power.text:SetText(bdUI:numberize(cur, 1))
 	end
 end
 

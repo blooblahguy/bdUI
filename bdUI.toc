@@ -235,10 +235,6 @@ modules\unitframes\units\pet.lua
 modules\unitframes\units\boss.lua
 modules\unitframes\units\arena.lua
 
-# Resources
-# modules\resources\init.lua
-# modules\resources\core.lua
-
 # Skins
 modules\skin\init.lua
 modules\skin\functions.lua

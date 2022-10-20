@@ -418,11 +418,12 @@ end
 		return _in
 	end
 
-	function bdUI:numberize(n)
+	function bdUI:numberize(n, decimals)
+		decimals = decimals or 0
 		if n >= 10^6 then
-			return string.format("%.1fm", n / 10^6)
+			return string.format("%."..decimals.."fm", n / 10^6)
 		elseif n >= 10^3 then
-			return string.format("%.0fk", n / 10^3)
+			return string.format("%."..decimals.."fk", n / 10^3)
 		else
 			return tostring(n)
 		end

@@ -83,14 +83,14 @@ function mod:create_qol()
 
 	local fps = CreateFrame("Frame", nil, fps_location)
 	fps.text = fps:CreateFontString(nil, "OVERLAY")
-	fps.text:SetFontObject(bdUI:get_font(11))
+	fps.text:SetFontObject(bdUI:get_font(10))
 	fps.text:SetPoint("TOPLEFT", fps_location, "TOPLEFT", 0 -2)
 	fps.text:SetJustifyH("LEFT")
 	fps_location.fps = fps
 
 	local ms = CreateFrame("Frame", nil, fps_location)
 	ms.text = ms:CreateFontString(nil, "OVERLAY")
-	ms.text:SetFontObject(bdUI:get_font(11))
+	ms.text:SetFontObject(bdUI:get_font(10))
 	ms.text:SetPoint("TOPLEFT", fps.text, "BOTTOMLEFT", 0 -2)
 	ms.text:SetJustifyH("LEFT")
 	fps_location.ms = ms

@@ -652,17 +652,16 @@ local function nameplate_create(self, unit)
 
 		if (not isTargeting) then return end
 
+		-- show no matter what
 		if (mod.lists.fixateMobs[UnitName(unit):lower()]) then
 			self:Show()
 			self:SetText(UnitName(target))
-		elseif (isTargeting) then
-			if (config.fixatealert == "Always" or config.fixatealert == "All") then
-				self:Show()
-				self:SetText(UnitName(target))
-			elseif (config.fixatealert == "Personal" and isTargetingPlayer) then
-				self:Show()
-				self:SetText(UnitName(target))
-			end
+			return
+		end
+
+		if (config.fixatealert == "Always" or (config.fixatealert == "Personal" and isTargetingPlayer)) then
+			self:Show()
+			self:SetText(UnitName(target))
 		end
 	end
 
@@ -803,6 +802,9 @@ function mod:initialize()
 	config = mod.config
 
 	if (not config.enabled) then return end
+
+	-- migrate from some weird old naming
+	if config.fixatealert == "All" then config.fixatealert = "Always" end
 
 	-- woopsie reset from before
 	if (config.stackingspeed == 0) then

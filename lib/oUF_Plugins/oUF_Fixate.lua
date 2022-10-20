@@ -91,11 +91,19 @@ local function Enable(self, unit)
 		element:Hide()
 
 		-- self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Path) -- todo, account for combat log fixates
-		self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path)
-		-- self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
-		-- self:RegisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
+		self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path, true)
+		self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
+		self:RegisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
 		self:RegisterEvent("UNIT_TARGET", Path)
 		self:RegisterEvent("PLAYER_TARGET_CHANGED", Path)
+		self:RegisterEvent('UNIT_SPELLCAST_START', Path)
+		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_START', Path)
+		self:RegisterEvent('UNIT_SPELLCAST_STOP', Path)
+		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', Path)
+		self:RegisterEvent('UNIT_SPELLCAST_DELAYED', Path)
+		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', Path)
+		self:RegisterEvent('UNIT_SPELLCAST_FAILED', Path)
+		self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
 		-- moving to just an on update
 		-- self:HookScript("OnUpdate", function(self, elapsed)
 		-- 	total = total + elapsed
@@ -115,11 +123,19 @@ local function Disable(self)
 		element:Hide()
 
 		-- self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Path) -- todo, account for combat log fixates
-		self:UnregisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path)
+		self:UnregisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path, true)
 		self:UnregisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
 		self:UnregisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
 		self:UnregisterEvent("UNIT_TARGET", Path)
 		self:UnregisterEvent("PLAYER_TARGET_CHANGED", Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_START', Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_START', Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_STOP', Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_DELAYED', Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_FAILED', Path)
+		self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
 	end
 end
 

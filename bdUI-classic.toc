@@ -241,16 +241,16 @@ modules\unitframes\units\pet.lua
 modules\unitframes\units\boss.lua
 modules\unitframes\units\arena.lua
 
-# Resources
-modules\resources\init.lua
-modules\resources\core.lua
-modules\resources\elements\power.lua
-modules\resources\elements\points.lua
-modules\resources\elements\stagger.lua
-modules\resources\elements\totems.lua
-modules\resources\elements\castbar.lua
-modules\resources\elements\runes.lua
-modules\resources\elements\swing.lua
+# Player Bars
+modules\player_bars\init.lua
+modules\player_bars\core.lua
+modules\player_bars\elements\power.lua
+modules\player_bars\elements\points.lua
+modules\player_bars\elements\stagger.lua
+modules\player_bars\elements\totems.lua
+modules\player_bars\elements\castbar.lua
+modules\player_bars\elements\runes.lua
+modules\player_bars\elements\swing.lua
 
 # Skins
 modules\skin\init.lua
