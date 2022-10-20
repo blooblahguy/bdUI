@@ -63,8 +63,17 @@ local function get_item_table(self, bag, slot, bagID, itemCount, itemLink)
 	local itemID
 	if (itemLink) then
 		local itemString = string.match(itemLink, "item[%-?%d:]+")
-		local keyString = string.match(itemLink, "item[%-?%d:]+")
+		local isKeyStone = false
 		bindType = bindTypes[bindType] or ""
+		
+		local ID, ClassID, SubClassID
+		ID = GetContainerItemID(bag, slot)
+		if ID then
+			ClassID, SubClassID = select(12, GetItemInfo(ID))
+			if (ClassID == 5 and SubClassID == 1) then
+				isKeyStone = true;
+			end
+		end
 
 		if (itemString ~= nil) then -- is item
 			itemID = select(2, strsplit(":", itemString))
@@ -86,8 +95,8 @@ local function get_item_table(self, bag, slot, bagID, itemCount, itemLink)
 			-- 		end
 			-- 	end
 			-- end
-		elseif (keyString) then -- is keystone
-			itemID = select(2, strsplit(":", keyString))
+		elseif (isKeyStone) then -- is keystone
+			name = C_Item.GetItemNameByID(ID)
 			icon = 525134
 			itemCount = 1
 			itemTypeID = 13
