@@ -1,5 +1,50 @@
 local bdUI, c, l = unpack(select(2, ...))
 
+local wotlk_runes = {}
+if (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and select(2, UnitClass("player")) == "DEATHKNIGHT") then
+	wotlk_runes = {
+		{
+			key = "runes_enable",
+			value = true,
+			type = "toggle",
+			label = "Runes Enable"
+		},
+		{
+			key = "runes_height",
+			value = 6,
+			min = 2,
+			max = 30,
+			step = 2,
+			type = "range",
+			label = "Runes Height"
+		},
+		{
+			key = "clear",
+			type = "clear",
+		},
+		{
+			key = "runes_ic_alpha",
+			value = 1,
+			min = 0,
+			max = 1,
+			step = 0.1,
+			decimals = 1,
+			type = "range",
+			label = "Runes In Combat Alpha"
+		},
+		{
+			key = "runes_ooc_alpha",
+			value = 1,
+			min = 0,
+			max = 1,
+			step = 0.1,
+			decimals = 1,
+			type = "range",
+			label = "Runes Out of Combat Alpha"
+		},
+	}
+end
+
 --=========================================
 -- RESOURCES
 --=========================================
@@ -184,6 +229,12 @@ local config = {
 		type = "tab",
 		label = "Class Specific",
 		args = {
+			{
+				key = "label",
+				type = "label",
+				value = "If your current class has any class-specific power types, their config will be here"
+			},
+			unpack(wotlk_runes)
 			-- {
 			-- 	key = "castbar_enable",
 			-- 	value = true,

@@ -235,7 +235,6 @@ modules\unitframes\elements\debuffs.lua
 modules\unitframes\elements\castbar.lua
 modules\unitframes\elements\power.lua
 modules\unitframes\elements\resting.lua
-modules\unitframes\elements\solocastbar.lua
 modules\unitframes\elements\tags.lua
 modules\unitframes\units\player.lua
 modules\unitframes\units\target.lua
@@ -246,13 +245,15 @@ modules\unitframes\units\boss.lua
 modules\unitframes\units\arena.lua
 
 # Resources
-# modules\resources\init.lua
-# modules\resources\core.lua
-# modules\resources\elements\power.lua
-# modules\resources\elements\points.lua
-# modules\resources\elements\runes.lua
-# modules\resources\elements\stagger.lua
-# modules\resources\elements\totems.lua
+modules\resources\init.lua
+modules\resources\core.lua
+modules\resources\elements\power.lua
+modules\resources\elements\points.lua
+modules\resources\elements\stagger.lua
+modules\resources\elements\totems.lua
+modules\resources\elements\castbar.lua
+modules\resources\elements\runes.lua
+modules\resources\elements\swing.lua
 
 # Skins
 modules\skin\init.lua

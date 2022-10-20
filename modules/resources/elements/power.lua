@@ -24,7 +24,7 @@ function mod:create_power(self)
 	-- bar
 	self.Power = CreateFrame("statusbar", "bdPowerResource", mod.Resources)
 	self.Power:SetSize(config.resources_width, config.resources_power_height)
-	self.Power:SetStatusBarTexture(bdUI.media.flat)
+	self.Power:SetStatusBarTexture(bdUI.media.smooth)
 	self.Power:EnableMouse(false)
 	self.Power.frequentUpdates = true
 	self.Power.colorPower = true
@@ -54,27 +54,27 @@ local function path() end
 local function enable()
 	if (not mod.config.power_enable) then return end
 
-	mod.player:EnableElement("Power")
+	mod.ouf:EnableElement("Power")
 	combat_checker:RegisterEvent("PLAYER_REGEN_DISABLED")
 	combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
 	combat_checker:SetScript("OnEvent", function(self, event)
 		local config = mod:get_save()
 		if (config.power_ooc_alpha == 0 and not UnitAffectingCombat("player")) then
-			mod.player.Power:Hide()
+			mod.ouf.Power:Hide()
 		else
-			mod.player.Power:Show()
+			mod.ouf.Power:Show()
 		end
 		if (UnitAffectingCombat("player")) then
-			mod.player.Power:SetAlpha(config.power_ic_alpha)
+			mod.ouf.Power:SetAlpha(config.power_ic_alpha)
 		else
-			mod.player.Power:SetAlpha(config.power_ooc_alpha)
+			mod.ouf.Power:SetAlpha(config.power_ooc_alpha)
 		end
 	end)
 	
 	return true
 end
 local function disable()
-	mod.player:DisableElement("Power")
+	mod.ouf:DisableElement("Power")
 	combat_checker:UnregisterEvent("PLAYER_REGEN_DISABLED")
 	combat_checker:UnregisterEvent("PLAYER_REGEN_ENABLED")
 end

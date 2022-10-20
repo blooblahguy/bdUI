@@ -42,6 +42,7 @@ end
 local function create_ouf_player_unit(self, unit)
 	mod:create_castbar(self)
 	mod:create_power(self)
+	mod:create_runes(self)
 end
 
 -- Start the addon
@@ -58,10 +59,10 @@ function mod:initialize()
 	-- initialize ouf backend
 	oUF:RegisterStyle("bdPlayerBars", create_ouf_player_unit)
 	oUF:SetActiveStyle("bdPlayerBars")
-	mod.player = oUF:Spawn("player")
-	mod.player:SetParent(mod.Resources)
-	mod.player:SetAllPoints(mod.Resources)
-	mod.player:SetAlpha(1)
+	mod.ouf = oUF:Spawn("player")
+	mod.ouf:SetParent(mod.Resources)
+	mod.ouf:SetAllPoints(mod.Resources)
+	mod.ouf:SetAlpha(1)
 end
 
 -- on load AND on change
@@ -77,25 +78,33 @@ function mod:config_callback()
 	end
 
 	-- callbacks
-	mod.player.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
+	mod.ouf.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
 	mod.Resources:SetSize(config.resources_width, 40)
-	mod.player.CastbarHolder:SetSize(config.resources_width, config.castbar_height)
-	mod.player.Power:SetSize(config.resources_width, config.power_height)
+	mod.ouf.CastbarHolder:SetSize(config.resources_width, config.castbar_height)
+	mod.ouf.Power:SetSize(config.resources_width, config.power_height)
 	if (config.power_tick == 0) then
-		mod.player.Power.tick:Hide()
+		mod.ouf.Power.tick:Hide()
 	else
-		mod.player.Power.tick:Show()
-		mod.player.Power.tick:SetSize(bdUI.border, config.power_height)
-		mod.player.Power.tick:SetPoint("LEFT", mod.player.Power, mod.player.Power:GetWidth() * (config.power_tick / 100), 0)
+		mod.ouf.Power.tick:Show()
+		mod.ouf.Power.tick:SetSize(bdUI.border, config.power_height)
+		mod.ouf.Power.tick:SetPoint("LEFT", mod.ouf.Power, mod.ouf.Power:GetWidth() * (config.power_tick / 100), 0)
+	end
+	-- runes
+	mod.ouf.RuneHolder:SetSize(config.resources_width, config.runes_height - bdUI.border * 2)
+	local width = (config.resources_width - (bdUI.border * 5)) / 6
+	for i, rune in pairs({mod.ouf.RuneHolder:GetChildren()}) do
+		rune:SetSize(width, config.runes_height)
 	end
 
+	-- add things to the frame stack
 	mod.bars = {}
-	
-	-- mod.player.CastbarHolder:SetAlpha(1)
-	-- mod.player.Castbar:SetAlpha(1)
-	table.insert(mod.bars, mod.player.Power)
+	if (mod.ouf.RuneHolder) then
+		table.insert(mod.bars, mod.ouf.RuneHolder)
+	end
+	table.insert(mod.bars, mod.ouf.Power)
 	table.insert(mod.bars, mod.swing_timer)
-	table.insert(mod.bars, mod.player.CastbarHolder)
+	table.insert(mod.bars, mod.ouf.CastbarHolder)
+	
 
 	-- position them in a stack
 	bdUI:frame_group(mod.Resources, "downwards", unpack(mod.bars))--, mod.Resources.swing, mod.Resources.primary, mod.Resources.secondary)

@@ -226,7 +226,6 @@ modules\unitframes\elements\debuffs.lua
 modules\unitframes\elements\castbar.lua
 modules\unitframes\elements\power.lua
 modules\unitframes\elements\resting.lua
-modules\unitframes\elements\solocastbar.lua
 modules\unitframes\elements\tags.lua
 modules\unitframes\units\player.lua
 modules\unitframes\units\target.lua

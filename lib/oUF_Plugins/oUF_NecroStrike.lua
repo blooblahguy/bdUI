@@ -83,7 +83,7 @@ local function Update(object, event, unit)
 end
  
 local function Enable(object)
-	if not object.Health.NecroticOverlay then return end
+	if not object.Health or not object.Health.NecroticOverlay then return end
 	local element = object.Health.NecroticOverlay
 	element.__owner = object
 	
