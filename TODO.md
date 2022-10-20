@@ -3,13 +3,10 @@ Items from the discord that I'm tracking to make sure everything is accounted fo
 
 - fix friendly names in / out of raid
 - add back full chat functionality
-
 - completely redo actionbars
-- druid powerbar
-- unattached castbars
 - better personal nameplate display
 - add full EN localization to get things going on more international
 - add back dot in middle of screen
 - add expressway font
 - advanced text formatting options on unitframes
-- search bags by boe
+- skin blizzard ui
