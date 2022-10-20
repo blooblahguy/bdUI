@@ -75,7 +75,6 @@ local oUF = ns.oUF
 local VISIBLE = 1
 local HIDDEN = 0
 
-
 local CREATED = 2
 
 local wipe = wipe
@@ -169,11 +168,11 @@ local function customFilter(element, unit, button, name)
 end
 
 local function updateIcon(element, unit, index, offset, filter, isDebuff, visible)
-	local name, icon, count, debuffType, duration, expiration, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3
+	local name, icon, count, debuffType, duration, expiration, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, modRate, effect1, effect2, effect3
 
 	if LCD and not UnitIsUnit('player', unit) then
 		local durationNew, expirationTimeNew
-		name, icon, count, debuffType, duration, expiration, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = LCD:UnitAura(unit, index, filter)
+		name, icon, count, debuffType, duration, expiration, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, modRate, effect1, effect2, effect3 = LCD:UnitAura(unit, index, filter)
 
 		if spellID then
 			durationNew, expirationTimeNew = LCD:GetAuraDurationByUnit(unit, spellID, source, name)
@@ -183,7 +182,7 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 			duration, expiration = durationNew, expirationTimeNew
 		end
 	else
-		name, icon, count, debuffType, duration, expiration, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = UnitAura(unit, index, filter)
+		name, icon, count, debuffType, duration, expiration, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, modRate, effect1, effect2, effect3 = UnitAura(unit, index, filter)
 	end
 
 	if element.forceShow or element.forceCreate then
@@ -236,12 +235,12 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 	* show - indicates whether the aura button should be shown (boolean)
 	--]]
 
-	
+	-- ElvUI changed block
 	local show = not element.forceCreate
 	if not (element.forceShow or element.forceCreate) then
 		show = (element.CustomFilter or customFilter) (element, unit, button, name, icon,
 			count, debuffType, duration, expiration, source, isStealable, nameplateShowPersonal, spellID,
-			canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll,timeMod, effect1, effect2, effect3)
+			canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, modRate, effect1, effect2, effect3)
 	end
 	-- end block
 
@@ -251,7 +250,7 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 		-- complicated.
 		if(button.cd and not element.disableCooldown) then
 			if(duration and duration > 0) then
-				button.cd:SetCooldown(expiration - duration, duration)
+				button.cd:SetCooldown(expiration - duration, duration, modRate)
 				button.cd:Show()
 			else
 				button.cd:Hide()
@@ -269,16 +268,12 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 			end
 		end
 
-		if(button.stealable) then
-			if(not isDebuff and isStealable and element.showStealableBuffs and not UnitIsUnit('player', unit)) then
-				button.stealable:Show()
-			else
-				button.stealable:Hide()
-			end
+		if button.stealable then
+			button.stealable:SetShown(not isDebuff and isStealable and element.showStealableBuffs and not UnitIsUnit('player', unit))
 		end
 
-		if(button.icon) then button.icon:SetTexture(icon) end
-		if(button.count) then button.count:SetText(count > 1 and count) end
+		if button.icon then button.icon:SetTexture(icon) end
+		if button.count then button.count:SetText(not count or count <= 1 and '' or count) end
 
 		local width = element.width or element.size or 16
 		local height = element.height or element.size or 16
@@ -306,7 +301,6 @@ local function updateIcon(element, unit, index, offset, filter, isDebuff, visibl
 		end
 
 		return VISIBLE
-	
 	elseif element.forceCreate then
 		local size = element.size or 16
 		button:SetSize(size, size)
@@ -361,11 +355,9 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 			visible = visible + 1
 		elseif(result == HIDDEN) then
 			hidden = hidden + 1
-		
 		elseif result == CREATED then
 			visible = visible + 1
 			created = created + 1
-		-- end block
 		end
 
 		index = index + 1
@@ -382,8 +374,8 @@ local function filterIcons(element, unit, filter, limit, isDebuff, offset, dontH
 	return visible, hidden
 end
 
-local function UpdateAuras(self, event, unit)
-	if(self.unit ~= unit) then return end
+local function UpdateAuras(self, event, unit, isFullUpdate, updatedAuras)
+	if not unit or self.unit ~= unit then return end
 
 	local auras = self.Auras
 	if(auras) then
@@ -420,7 +412,7 @@ local function UpdateAuras(self, event, unit)
 			if(button.icon) then button.icon:SetTexture() end
 			if(button.overlay) then button.overlay:Hide() end
 			if(button.stealable) then button.stealable:Hide() end
-			if(button.count) then button.count:SetText() end
+			if(button.count) then button.count:SetText('') end
 
 			button:EnableMouse(false)
 			button:Show()

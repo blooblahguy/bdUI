@@ -50,7 +50,7 @@ lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
 lib\classic\LibHealComm\LibHealComm-4.0.lua
 
 # oUF
-lib\oUF\oUF_WOTLK.xml
+lib\oUF\oUF_Wrath.xml
 lib\oUF_Plugins\oUF_ClassicComboPoints.lua
 lib\oUF_Plugins\oUF_WotlkRunes.lua
 lib\oUF_Plugins\oUF_Fixate.lua

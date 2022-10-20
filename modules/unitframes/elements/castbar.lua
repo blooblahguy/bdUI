@@ -21,9 +21,11 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 		self:DisableElement("Castbar")
 		return
 	end
+
 	if (self.Castbar) then return end
 
 	local font_size = math.restrict(config.castbarheight * 0.8, 8, 14)
+
 
 	self.Castbar = CreateFrame("StatusBar", nil, self)
 	self.Castbar:SetFrameLevel(3)

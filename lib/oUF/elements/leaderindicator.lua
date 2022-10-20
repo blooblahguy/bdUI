@@ -38,7 +38,7 @@ local function Update(self, event)
 		element:PreUpdate()
 	end
 
-	
+	-- ElvUI changed block
 	local isLeader
 	if IsInInstance() then
 		isLeader = UnitIsGroupLeader(unit)

@@ -73,23 +73,22 @@ local UnitPowerType = UnitPowerType
 local POWER_NAME = _G.ADDITIONAL_POWER_BAR_NAME or 'MANA'
 local POWER_INDEX = _G.ADDITIONAL_POWER_BAR_INDEX or 0
 local ALT_MANA_INFO = _G.ALT_MANA_BAR_PAIR_DISPLAY_INFO or {DRUID={[8]=true}, SHAMAN={[11]=true}, PRIEST={[13]=true}}
-if ALT_MANA_INFO.DRUID then ALT_MANA_INFO.DRUID[1] = true end -- allow Bears too, 1 is rage.
 
 local function UpdateColor(self, event, unit, powerType)
 	if(not (unit and UnitIsUnit(unit, 'player') and powerType == POWER_NAME)) then return end
 	local element = self.AdditionalPower
 
-	local r, g, b, t
+	local r, g, b, color
 	if(element.colorPower) then
-		t = self.colors.power[POWER_INDEX]
+		color = self.colors.power[POWER_INDEX]
 	elseif(element.colorClass) then
-		t = self.colors.class[playerClass]
+		color = self.colors.class[playerClass]
 	elseif(element.colorSmooth) then
 		r, g, b = self:ColorGradient(element.cur or 1, element.max or 1, unpack(element.smoothGradient or self.colors.smooth))
 	end
 
-	if(t) then
-		r, g, b = t[1], t[2], t[3]
+	if(color) then
+		r, g, b = color[1], color[2], color[3]
 	end
 
 	if(b) then
@@ -206,7 +205,7 @@ local function Visibility(self, event, unit)
 	local element = self.AdditionalPower
 	local shouldEnable
 
-	if not oUF.isRetail or not UnitHasVehicleUI('player') then
+	if (oUF.isClassic or oUF.isTBC) or not UnitHasVehicleUI('player') then
 		local allowed = element.displayPairs[playerClass]
 		if allowed and UnitPowerMax(unit, POWER_INDEX) ~= 0 then
 			shouldEnable = allowed[UnitPowerType(unit)]

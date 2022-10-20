@@ -76,7 +76,7 @@ local xpcall = Private.xpcall
 local _G = _G
 local CreateFrame = CreateFrame
 local hooksecurefunc = hooksecurefunc
-local setfenv, getfenv = setfenv, getfenv
+local setfenv, getfenv, gsub = setfenv, getfenv, gsub
 local rawget, rawset, select = rawget, rawset, select
 local format, tinsert, tremove = format, tinsert, tremove
 local next, type, pcall, unpack = next, type, pcall, unpack
@@ -305,9 +305,9 @@ local tagStrings = {
 
 	['powercolor'] = [[function(u)
 		local pType, pToken, altR, altG, altB = UnitPowerType(u)
-		local t = _COLORS.power[pToken]
+		local color = _COLORS.power[pToken]
 
-		if(not t) then
+		if(not color) then
 			if(altR) then
 				if(altR > 1 or altG > 1 or altB > 1) then
 					return Hex(altR / 255, altG / 255, altB / 255)
@@ -319,7 +319,7 @@ local tagStrings = {
 			end
 		end
 
-		return Hex(t)
+		return Hex(color)
 	end]],
 
 	['pvp'] = [[function(u)
@@ -571,6 +571,12 @@ if oUF.isRetail then
 	tagEvents['chi']                 = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE'
 	tagEvents['holypower']           = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE'
 	unitlessEvents.PLAYER_TALENT_UPDATE = true
+elseif oUF.isWrath then
+	unitlessEvents.PLAYER_TALENT_UPDATE = true
+end
+
+for tag, events in pairs(tagEvents) do -- ElvUI: UNIT_HEALTH is bugged on TBC, use same method to convert as E.AddTag
+	tagEvents[tag] = (oUF.isRetail and gsub(events, 'UNIT_HEALTH_FREQUENT', 'UNIT_HEALTH')) or gsub(events, 'UNIT_HEALTH([^%s_]?)', 'UNIT_HEALTH_FREQUENT%1')
 end
 
 local events = {}

@@ -65,23 +65,24 @@ local function UpdateColor(self, event, unit)
 	local colors = self.colors.power[BREWMASTER_POWER_BAR_NAME]
 	local perc = (element.cur or 0) / (element.max or 1)
 
-	local t
+	local color
 	if(perc >= STAGGER_RED_TRANSITION) then
-		t = colors and colors[STAGGER_RED_INDEX]
+		color = colors and colors[STAGGER_RED_INDEX]
 	elseif(perc > STAGGER_YELLOW_TRANSITION) then
-		t = colors and colors[STAGGER_YELLOW_INDEX]
+		color = colors and colors[STAGGER_YELLOW_INDEX]
 	else
-		t = colors and colors[STAGGER_GREEN_INDEX]
+		color = colors and colors[STAGGER_GREEN_INDEX]
 	end
 
 	local r, g, b
-	if(t) then
-		r, g, b = t[1], t[2], t[3]
-		if(b) then
+	if color then
+		r, g, b = color[1], color[2], color[3]
+
+		if b then
 			element:SetStatusBarColor(r, g, b)
 
 			local bg = element.bg
-			if(bg and b) then
+			if bg and b then
 				local mu = bg.multiplier or 1
 				bg:SetVertexColor(r * mu, g * mu, b * mu)
 			end
@@ -101,8 +102,18 @@ local function UpdateColor(self, event, unit)
 	end
 end
 
-local function Update(self, event, unit)
-	if(unit and unit ~= self.unit) then return end
+local staggerID = {
+	[124275] = true, -- [GREEN]  Light Stagger
+	[124274] = true, -- [YELLOW] Moderate Stagger
+	[124273] = true, -- [RED]    Heavy Stagger
+}
+
+local function verifyStagger(frame, event, unit, auraInfo)
+	return staggerID[auraInfo.spellId]
+end
+
+local function Update(self, event, unit, isFullUpdate, updatedAuras)
+	if oUF:ShouldSkipAuraUpdate(self, event, unit, isFullUpdate, updatedAuras, verifyStagger) then return end
 
 	local element = self.Stagger
 
@@ -166,11 +177,11 @@ local function Visibility(self, event, unit)
 
 	if useClassbar and isShown then
 		element:Hide()
-		oUF:UnregisterEvent(self, 'UNIT_AURA', Path)
+		self:UnregisterEvent('UNIT_AURA', Path)
 		stateChanged = true
 	elseif not useClassbar and not isShown then
 		element:Show()
-		oUF:RegisterEvent(self, 'UNIT_AURA', Path)
+		self:RegisterEvent('UNIT_AURA', Path)
 		stateChanged = true
 	end
 
@@ -205,7 +216,7 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		oUF:RegisterEvent(self, 'UNIT_DISPLAYPOWER', VisibilityPath)
+		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
 
 		if(element:IsObjectType('StatusBar') and not (element:GetStatusBarTexture() or element:GetStatusBarAtlas())) then
@@ -230,8 +241,8 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
-		oUF:UnregisterEvent(self, 'UNIT_AURA', Path)
-		oUF:UnregisterEvent(self, 'UNIT_DISPLAYPOWER', VisibilityPath)
+		self:UnregisterEvent('UNIT_AURA', Path)
+		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
 
 		MonkStaggerBar:RegisterEvent('PLAYER_ENTERING_WORLD')
