@@ -25,14 +25,14 @@ local combat_checker = CreateFrame("frame", nil)
 combat_checker:RegisterEvent("PLAYER_ENTERING_WORLD")
 combat_checker:RegisterEvent("PLAYER_REGEN_DISABLED")
 combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
+combat_checker:RegisterEvent("PLAYER_UPDATE_RESTING")
 combat_checker:SetScript("OnEvent", function()
 	if (UnitAffectingCombat("player")) then
 		bdUI:do_action("in_combat")
-		bdUI:do_frame_fade()
 	else
 		bdUI:do_action("out_combat")
-		bdUI:do_frame_fade()
 	end
+	bdUI:do_frame_fade()
 end)
 
 function bdUI:do_frame_fade()
