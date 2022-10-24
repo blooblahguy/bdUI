@@ -28,33 +28,37 @@ combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
 combat_checker:SetScript("OnEvent", function()
 	if (UnitAffectingCombat("player")) then
 		bdUI:do_action("in_combat")
+		bdUI:do_frame_fade()
 	else
 		bdUI:do_action("out_combat")
+		bdUI:do_frame_fade()
 	end
+end)
 
+function bdUI:do_frame_fade()
 	for frame, info in pairs(combat_fade_frames) do
-		local ic_alpha, ooc_alpha = unpack(info)
-
-		if (UnitAffectingCombat("player")) then
+		local ic_alpha, ooc_alpha, resting_alpha = unpack(info)
+		local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha or ooc_alpha
+		if (target_alpha > frame:GetAlpha()) then
 			frame:Show()
-			UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), ic_alpha)
+			UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), target_alpha)
 		else
-			UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), ooc_alpha)
+			UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), target_alpha)
 		end
 
 		frame.fadeInfo.finishedFunc = function() 
-			if (ooc_alpha == 0 and not UnitAffectingCombat("player")) then
+			if (frame:GetAlpha() == 0) then
 				frame:Hide()
 			else
 				frame:Show()
 			end
 		end
 	end
-end)
+end
 
 -- fade frame in/out of combat
-function bdUI:set_frame_fade(frame, ic_alpha, ooc_alpha)
-	combat_fade_frames[frame] = {ic_alpha, ooc_alpha}
+function bdUI:set_frame_fade(frame, ic_alpha, ooc_alpha, resting_alpha)
+	combat_fade_frames[frame] = {ic_alpha, ooc_alpha, resting_alpha or ooc_alpha}
 end
 
 --========================================================

@@ -10,6 +10,8 @@ mod.units = {}
 mod.custom_layout = {}
 mod.additional_elements = {}
 mod.tags = {}
+local uf_holder = CreateFrame('Frame', nil, oUF.UFParent, 'SecureHandlerStateTemplate')
+uf_holder:SetFrameStrata('LOW')
 
 --===============================================
 -- Config callback
@@ -27,6 +29,13 @@ function mod:config_callback()
 			self.callback(self, unit, config)
 		end
 	end
+	
+	if (IsResting()) then
+		bdUI:set_frame_fade(uf_holder, config.unitframe_ic_alpha, config.unitframe_resting_alpha)
+	else
+		bdUI:set_frame_fade(uf_holder, config.unitframe_ic_alpha, config.unitframe_ooc_alpha)
+	end
+	bdUI:do_frame_fade()
 end
 
 --===============================================
@@ -186,21 +195,25 @@ function mod:create_unitframes()
 		-- player
 		local player = oUF:Spawn("player")
 		player:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff)
+		player:SetParent(uf_holder)
 		bdMove:set_moveable(player, "Player")
 	
 		-- target
 		local target = oUF:Spawn("target")
 		target:SetPoint("LEFT", bdParent, "CENTER", xoff, -yoff)
+		target:SetParent(uf_holder)
 		bdMove:set_moveable(target, "Target")
 
 		-- targetoftarget
 		local targettarget = oUF:Spawn("targettarget")
 		targettarget:SetPoint("TOPRIGHT", target, "BOTTOMRIGHT", 0, -config.castbarheight-20)
+		targettarget:SetParent(uf_holder)
 		bdMove:set_moveable(targettarget, "Target of Target")
 	
 		-- pet
 		local pet = oUF:Spawn("pet")
 		pet:SetPoint("TOPLEFT", player, "BOTTOMLEFT", 0, -config.castbarheight-20)
+		pet:SetParent(uf_holder)
 		bdMove:set_moveable(pet, "Pet")
 	end
 	
@@ -208,11 +221,12 @@ function mod:create_unitframes()
 	if (config.enablefocus) then
 		local focus = oUF:Spawn("focus")
 		focus:SetPoint("TOP", bdParent, "TOP", 0, -120)
+		focus:SetParent(uf_holder)
 		bdMove:set_moveable(focus, "Focus")
 	end
 	
 	if (config.bossenable and CompactUnitFrame) then
-		local arena_boss = CreateFrame("frame", "bdArenaBoss", bdParent)
+		local arena_boss = CreateFrame("frame", "bdArenaBoss", uf_holder)
 		arena_boss:SetPoint("TOPRIGHT", Minimap, "BOTTOMLEFT", -10, -10)
 		arena_boss:SetSize(config.bosswidth, (config.bossheight + 30) * 5)
 		bdMove:set_moveable(arena_boss, "Boss Frames")

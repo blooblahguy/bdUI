@@ -60,6 +60,7 @@ function mod:initialize()
 	oUF:RegisterStyle("bdPlayerBars", create_ouf_player_unit)
 	oUF:SetActiveStyle("bdPlayerBars")
 	mod.ouf = oUF:Spawn("player")
+	mod.ouf:EnableMouse(false)
 	mod.ouf:SetParent(mod.Resources)
 	mod.ouf:SetAllPoints(mod.Resources)
 	mod.ouf:SetAlpha(1)
@@ -109,9 +110,8 @@ function mod:position_bars()
 	table.insert(mod.bars, mod.ouf.Power)
 	table.insert(mod.bars, mod.swing_timer)
 	table.insert(mod.bars, mod.ouf.CastbarHolder)
-	
 
 	-- position them in a stack
-	bdUI:frame_group(mod.Resources, "downwards", unpack(mod.bars))--, mod.Resources.swing, mod.Resources.primary, mod.Resources.secondary)
+	bdUI:frame_group(mod.Resources, "downwards", unpack(mod.bars))
 end
 

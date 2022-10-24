@@ -61,8 +61,7 @@ local function enable()
 end
 local function disable()
 	mod.ouf:DisableElement("WOTLKRunes")
-	combat_checker:UnregisterEvent("PLAYER_REGEN_DISABLED")
-	combat_checker:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	mod.ouf.RuneHolder:Hide()
 end
 
 

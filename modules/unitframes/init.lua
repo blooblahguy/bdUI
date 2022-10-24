@@ -38,6 +38,10 @@ local config = {
 				label = "Combat Indicator"
 			},
 			{
+				key = "clear",
+				type = "clear",
+			},
+			{
 				key = "inrangealpha",
 				value = 1,
 				min = 0.1,
@@ -68,6 +72,37 @@ local config = {
 				type = "select",
 				options = {"Icons", "Bars", "None"},
 				label = "Aura Style"
+			},
+			{
+				key = "clear",
+				type = "clear",
+			},
+			{
+				key = "unitframe_ic_alpha",
+				value = 1,
+				min = 0.1,
+				max = 1,
+				step = 0.1,
+				type = "range",
+				label = "In Combat Alpha"
+			},
+			{
+				key = "unitframe_ooc_alpha",
+				value = 1,
+				min = 0,
+				max = 1,
+				step = 0.1,
+				type = "range",
+				label = "Out of Combat Alpha"
+			},
+			{
+				key = "unitframe_resting_alpha",
+				value = 1,
+				min = 0,
+				max = 1,
+				step = 0.1,
+				type = "range",
+				label = "Inn / City Alpha"
 			},
 		}
 	},

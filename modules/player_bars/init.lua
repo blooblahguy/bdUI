@@ -231,7 +231,7 @@ local config = {
 		args = {
 			{
 				key = "label",
-				type = "label",
+				type = "text",
 				value = "If your current class has any class-specific power types, their config will be here"
 			},
 			unpack(wotlk_runes)

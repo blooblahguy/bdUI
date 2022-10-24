@@ -44,6 +44,7 @@ local SetCVar = SetCVar
 local UFParent = CreateFrame('Frame', (global or parent) .. 'Parent', UIParent, 'SecureHandlerStateTemplate')
 UFParent:SetFrameStrata('LOW')
 RegisterStateDriver(UFParent, 'visibility', '[petbattle] hide; show')
+oUF.UFParent = UFParent
 
 local function updateActiveUnit(self, event)
 	-- Calculate units to work with
