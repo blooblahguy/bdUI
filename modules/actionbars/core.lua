@@ -367,7 +367,7 @@ function mod:SkinButton(button)
 	if (button.SetPushedTexture) then
 		local pushed = button:CreateTexture()
 		pushed:SetTexture(bdUI.media.flat)
-		pushed:SetVertexColor(1, 1, 1, 0.4)
+		pushed:SetVertexColor(1, 1, 1, 0.2)
 		pushed:SetAllPoints(button)
 		button:SetPushedTexture(pushed)
 	end
