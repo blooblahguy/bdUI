@@ -57,6 +57,7 @@ local function enable()
 	mod.ouf:EnableElement("Power")
 	combat_checker:RegisterEvent("PLAYER_REGEN_DISABLED")
 	combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
+	combat_checker:RegisterEvent("PLAYER_ENTERING_WORLD")
 	combat_checker:SetScript("OnEvent", function(self, event)
 		local config = mod:get_save()
 		if (config.power_ooc_alpha == 0 and not UnitAffectingCombat("player")) then
@@ -77,6 +78,7 @@ local function disable()
 	mod.ouf:DisableElement("Power")
 	combat_checker:UnregisterEvent("PLAYER_REGEN_DISABLED")
 	combat_checker:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	combat_checker:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 mod:add_element('power', path, enable, disable)
