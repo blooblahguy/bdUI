@@ -144,6 +144,7 @@ local function enable()
 	if (not mod.config.swingbar_enable) then return end
 
 	holder = holder or CreateFrame("frame", nil, mod.Resources)
+	bdUI:set_frame_fade(holder, mod.config.swing_ic_alpha, mod.config.swing_ooc_alpha)
 
 	-- create bars
 	if (not mainhand) then
@@ -170,13 +171,10 @@ local function enable()
 	-- update gear changes
 	store_spell_info()
 
-	holder:RegisterEvent("PLAYER_REGEN_ENABLED")
-	holder:RegisterEvent("PLAYER_REGEN_DISABLED")
 	holder:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	holder:RegisterEvent("ACTIONBAR_UPDATE_STATE")
 	holder:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 	holder:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
-	holder:RegisterEvent("PLAYER_ENTERING_WORLD")
 	holder:SetScript("OnEvent", function(self, event, ...)
 		if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 			combat_log(CombatLogGetCurrentEventInfo())
@@ -192,20 +190,6 @@ local function enable()
 			color_bars(mainhand)
 		elseif (event == "ACTIONBAR_SLOT_CHANGED" or event == "ACTIONBAR_PAGE_CHANGED") then
 			store_spell_info()
-		elseif (event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_REGEN_DISABLED" or event == "PLAYER_ENTERING_WORLD") then
-			config = mod:get_save()
-			for k, frame in pairs({holder:GetChildren()}) do
-				if (UnitAffectingCombat("player")) then
-					frame:SetAlpha(config.swing_ic_alpha)
-				else
-					frame:SetAlpha(config.swing_ooc_alpha)
-				end
-			end
-			if (not UnitAffectingCombat("player") and config.swing_ooc_alpha == 0) then
-				holder:Hide()
-			else
-				holder:Show()
-			end
 		end
 	end)
 

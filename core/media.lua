@@ -19,11 +19,50 @@ bdUI:register_theme("bdUI", {
 	["borderColor"] = 2,
 })
 
+local combat_fade_frames = {}
+
+local combat_checker = CreateFrame("frame", nil)
+combat_checker:RegisterEvent("PLAYER_ENTERING_WORLD")
+combat_checker:RegisterEvent("PLAYER_REGEN_DISABLED")
+combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
+combat_checker:SetScript("OnEvent", function()
+	if (UnitAffectingCombat("player")) then
+		bdUI:do_action("in_combat")
+	else
+		bdUI:do_action("out_combat")
+	end
+
+	for frame, info in pairs(combat_fade_frames) do
+		local ic_alpha, ooc_alpha = unpack(info)
+
+		if (UnitAffectingCombat("player")) then
+			frame:Show()
+			UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), ic_alpha)
+		else
+			UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), ooc_alpha)
+		end
+
+		frame.fadeInfo.finishedFunc = function() 
+			if (ooc_alpha == 0 and not UnitAffectingCombat("player")) then
+				frame:Hide()
+			else
+				frame:Show()
+			end
+		end
+	end
+end)
+
+-- fade frame in/out of combat
+function bdUI:set_frame_fade(frame, ic_alpha, ooc_alpha)
+	combat_fade_frames[frame] = {ic_alpha, ooc_alpha}
+end
+
 --========================================================
 -- Frames Groups
 -- automatically positions frames in given direction, and
 -- returns dimensions of the "stack"
 --========================================================
+
 function bdUI:frame_group(container, direction, ...)
 	direction = string.lower(direction) or "down"
 	local last = nil

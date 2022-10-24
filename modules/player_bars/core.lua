@@ -96,6 +96,11 @@ function mod:config_callback()
 		rune:SetSize(width, config.runes_height)
 	end
 
+	mod:position_bars()
+end
+
+
+function mod:position_bars()
 	-- add things to the frame stack
 	mod.bars = {}
 	if (mod.ouf.RuneHolder) then
@@ -109,3 +114,4 @@ function mod:config_callback()
 	-- position them in a stack
 	bdUI:frame_group(mod.Resources, "downwards", unpack(mod.bars))--, mod.Resources.swing, mod.Resources.primary, mod.Resources.secondary)
 end
+

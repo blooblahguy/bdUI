@@ -1,14 +1,9 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Player Bars")
 
-local combat_checker = CreateFrame("frame")
-
 local function wotlk_runes(self)
 	if (self.Runes) then return end
 	local config = mod:get_save()
-
-	
-	-- bdUI:set_backdrop(self.RuneHolder)
 
 	local runes = {}
 	local last
@@ -53,24 +48,14 @@ end
 local function path() end
 
 local function enable()
-	if (not mod.config.runes_enable) then return end
+	if (mod.config.runes_enable == false or select(2, UnitClass("player")) ~= "DEATHKNIGHT") then
+		mod.ouf.RuneHolder:Hide()
+		return false
+	end
+	mod.ouf.RuneHolder:Show()
 
 	mod.ouf:EnableElement("WOTLKRunes")
-	combat_checker:RegisterEvent("PLAYER_REGEN_DISABLED")
-	combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
-	combat_checker:SetScript("OnEvent", function(self, event)
-		local config = mod:get_save()
-		if (config.runes_ooc_alpha == 0 and not UnitAffectingCombat("player")) then
-			mod.ouf.RuneHolder:Hide()
-		else
-			mod.ouf.RuneHolder:Show()
-		end
-		if (UnitAffectingCombat("player")) then
-			mod.ouf.RuneHolder:SetAlpha(config.runes_ic_alpha)
-		else
-			mod.ouf.RuneHolder:SetAlpha(config.runes_ooc_alpha)
-		end
-	end)
+	bdUI:set_frame_fade(mod.ouf.RuneHolder, mod.config.runes_ic_alpha, mod.config.runes_ooc_alpha)
 
 	return true
 end
