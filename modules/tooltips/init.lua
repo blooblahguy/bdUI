@@ -29,6 +29,12 @@ local config = {
 				label = "Show Realm Name"
 			},
 			{
+				key = "show_ilvls",
+				type = "toggle",
+				value = true,
+				label = "Show Item Levels"
+			},
+			{
 				key = "anchor",
 				type = "select",
 				value = "Frame",

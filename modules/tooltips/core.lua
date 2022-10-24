@@ -1,5 +1,6 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
+local config
 
 local function kill_texture(tex)
 	if (not tex) then return end
@@ -46,6 +47,16 @@ local function hook_and_skin(self)
 	end
 
 	-- self._skinned = true
+end
+
+-- add equippables ilvl
+local function add_ilvl(tooltip)
+	if (not mod.config.show_ilvls or not mod.config.enabled) then return end
+	local item = tooltip:GetItem()
+	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent
+	if (not itemLevel or itemEquipLoc == "") then return end
+
+	tooltip:AddLine("Item Level: "..itemLevel)
 end
 
 --=========================================
@@ -112,13 +123,15 @@ function mod:create_tooltips()
 		if (config.anchor == "Frame") then
 			local position, vpos, hpos = bdUI:GetQuadrant(mod.tooltipanchor)
 
-			local vspace = 17
-			local hspace = -34
+			local vspace = 8
+			local hspace = -13
+			-- local vspace = -17
+			-- local hspace = 34
 			if (vpos == "BOTTOM") then
-				vspace = -23
+				vspace = -vspace
 			end
 			if (hpos == "RIGHT") then
-				hspace = 34
+				hspace = -hspace
 			end
 
 			self:SetOwner(parent, "ANCHOR_NONE")
@@ -156,6 +169,7 @@ function mod:create_tooltips()
 	-- hook main styling functions
 	--============================
 	GameTooltip:HookScript('OnTooltipSetUnit', update_unit_tooltip)
+	GameTooltip:HookScript("OnTooltipSetItem", add_ilvl)
 	-- mod:RegisterEvent("PLAYER_LOGIN")
 	-- mod:SetScript("OnEvent", function()
 	-- 	if (LibDBIconTooltip) then
@@ -164,5 +178,7 @@ function mod:create_tooltips()
 	-- end)
 
 end
+
+
 
 
