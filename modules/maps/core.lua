@@ -24,23 +24,17 @@ function mod:config_callback()
 	if (not mod.config.enabled) then return end
 
 	-- resize elements
-	Minimap:SetScale(config.scale)
+	-- Minimap:SetScale(config.scale)
 	
-	local border = bdUI.border --* (1 / config.scale)
-	Minimap.background:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = border})
-	Minimap.background:SetBackdropColor(0, 0, 0, 0)
-	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
-	Minimap:SetSize(config.size, config.size)
-	-- Minimap.qa:SetSize(config.size * config.scale, 50)
+	local border = bdUI.border
+	-- Minimap:SetSize(config.size, config.size)
+
+	mod:position_minimap()
 
 	-- Mask the minimap
 	if (config.shape == "Rectangle") then
 		Minimap:SetMaskTexture("Interface\\Addons\\bdUI\\media\\rectangle.tga")
-		Minimap.background:SetScale(1 * (1 / config.scale))
-		Minimap.background:SetSize(config.size * config.scale, (config.size * config.scale) *.75)
 	else
-		Minimap.background:SetScale(1 * (1 / config.scale))
-		Minimap.background:SetSize(config.size * config.scale, config.size * config.scale)
 		Minimap:SetMaskTexture(bdUI.media.flat)
 	end
 	
@@ -53,7 +47,6 @@ function mod:config_callback()
 	TicketStatusFrame:SetScale(1 / config.scale)
 	Minimap.rd:SetScale(1 / config.scale)
 	
-	-- Minimap.buttonFrame:SetSize(Minimap:GetWidth() - (bdUI.border * 2), config.buttonsize)
 
 	-- show/hide time
 	if not IsAddOnLoaded("Blizzard_TimeManager") then

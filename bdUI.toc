@@ -18,10 +18,10 @@
 # Initialize
 core\init.lua
 lib\ace\LibStub.lua
-# lib\fixes\blizzard_bugs.lua
-# lib\fixes\TaintLess.xml
-# lib\fixes\InspectFix.lua
-# lib\fixes\LibStrataFix.lua
+lib\fixes\blizzard_bugs.lua
+lib\fixes\TaintLess.xml
+lib\fixes\InspectFix.lua
+lib\fixes\LibStrataFix.lua
 
 # Locales
 locales\AceLocale-3.0.lua
@@ -105,9 +105,10 @@ modules\auras\functions.lua
 modules\auras\core.lua
 
 # Actionbars
-# modules\actionbars\init.lua
+modules\df_actionbars\init.lua
 # modules\actionbars\functions.lua
-# modules\actionbars\core.lua
+modules\df_actionbars\core.lua
+modules\df_actionbars\cooldown.lua
 # modules\actionbars\elements\bars.lua
 # modules\actionbars\elements\cooldown.lua
 # modules\actionbars\elements\range.lua

@@ -26,7 +26,7 @@ end
 --=======================================
 -- Get buttons from global
 --=======================================
-function mod:GetButtonList(buttonName,numButtons)
+function mod:GetButtonList(buttonName, numButtons)
 	local buttonList = {}
 	for i=1, numButtons do
 		local button = _G[buttonName..i]

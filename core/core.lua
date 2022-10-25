@@ -141,15 +141,19 @@ end
 
 function bdUI:kill(frame)
 	if (not frame) then return end
+	if frame.GetTexture then
+		frame:SetTexture(nil)
+		frame:Hide()
+		frame:SetAlpha(0)
+	end
 	if frame.UnregisterAllEvents then
 		frame:UnregisterAllEvents()
 		frame:SetParent(bdUI.hidden)
 	else
-		hooksecurefunc(frame, "Show", function(self) self:Hide() end)
-		-- frame.Show = frame.Hide
 	end
 
 	frame:Hide()
+	hooksecurefunc(frame, "Show", function(self) self:Hide() end)
 end
 
 function bdUI:GetQuadrant(frame)

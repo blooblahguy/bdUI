@@ -1,37 +1,53 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 local config
-	
+
+function mod:position_minimap()
+	config = mod:get_save()
+
+	-- scale things
+	Minimap:SetScale(config.scale)
+	Minimap:SetSize(config.size, config.size)
+	mod.Minimap:SetSize(config.size * config.scale, config.size * config.scale)
+
+	-- snap back to our parent
+	Minimap:ClearAllPoints()
+	Minimap:SetPoint("BOTTOMLEFT", mod.Minimap)
+	Minimap:SetPoint("TOPRIGHT", mod.Minimap)
+
+	-- move the cluster, too
+	MinimapCluster:ClearAllPoints()
+	MinimapCluster:SetPoint("BOTTOMLEFT", mod.Minimap)
+	MinimapCluster:SetPoint("TOPRIGHT", mod.Minimap)
+end
 
 function mod:create_minimap()
 	config = mod:get_save()
 
+	local inset = ((config.size * .25) / 2)
 	GetMinimapShape = function() return "SQUARE" end
 
 	--==========================
 	-- Minimap
 	--==========================
-	local inset = ((config.size * .25) / 2)
-	Minimap.background = CreateFrame("frame", "bdMinimap", Minimap, BackdropTemplateMixin and "BackdropTemplate")
-	Minimap.background:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -inset, -inset)
-	Minimap.background:SetSize(config.size, config.size)
-	Minimap.background:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
-	Minimap.background:SetBackdropColor(0,0,0,0)
-	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
-	bdMove:set_moveable(Minimap.background)
+	local bdMinimap = CreateFrame("frame", "bdMinimap", UIParent, BackdropTemplateMixin and "BackdropTemplate")
+	bdMinimap:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -inset, -inset)
+	bdMinimap:SetSize(config.size, config.size)
+	bdMinimap:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
+	bdMinimap:SetBackdropColor(0,0,0,0)
+	bdMinimap:SetBackdropBorderColor(unpack(bdUI.media.border))
+	bdMove:set_moveable(bdMinimap)
+	mod.Minimap = bdMinimap
 
-	Minimap:RegisterEvent("ADDON_LOADED")
-	Minimap:RegisterEvent("PLAYER_ENTERING_WORLD")
-	Minimap:RegisterEvent("LOADING_SCREEN_DISABLED")
-	Minimap:EnableMouseWheel(true)
-	Minimap:SetSize(config.size, config.size)
-	Minimap:ClearAllPoints()
-	hooksecurefunc(MinimapCluster, "SetHeaderUnderneath", function()
-		Minimap:ClearAllPoints()
-		Minimap:SetPoint("CENTER", Minimap.background)
-	end)
+	if (MinimapCluster.SetHeaderUnderneath) then
+		hooksecurefunc(MinimapCluster, "SetHeaderUnderneath", mod.position_minimap)
+		hooksecurefunc(EditModeManagerFrame, "EnterEditMode", mod.position_minimap)
+		hooksecurefunc(EditModeManagerFrame, "ExitEditMode", mod.position_minimap)
+	end
+	mod:position_minimap()
 
 	-- mousewheel scroll
+	Minimap:EnableMouseWheel(true)
 	Minimap:SetScript('OnMouseWheel', function(self, delta)
 		local action = delta > 0 and MinimapZoomIn:Click()
 		local action = delta < 0 and MinimapZoomOut:Click()
@@ -41,7 +57,8 @@ function mod:create_minimap()
 	Minimap.ClickFunc = Minimap:GetScript("OnMouseUp")
 	Minimap:SetScript('OnMouseUp', function (self, button)
 		if button == 'RightButton' then
-			ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, Minimap.background, (Minimap:GetWidth()), (Minimap.background:GetHeight()-2))
+			local tracking = MinimapCluster.Tracking and MinimapCluster.Tracking.DropDown or MiniMapTrackingDropDown
+			ToggleDropDownMenu(1, nil, tracking, Minimap, -config.size / 1.5, config.size * 0.93)
 			GameTooltip:Hide()
 		elseif (button == 'MiddleButton') then
 			if not IsAddOnLoaded("Blizzard_Calendar") then
@@ -71,7 +88,7 @@ function mod:create_minimap()
 	MinimapCluster:EnableMouse(false)
 	if (MiniMapInstanceDifficulty) then
 		MiniMapInstanceDifficulty:ClearAllPoints()
-		MiniMapInstanceDifficulty:SetPoint("TOPRIGHT", Minimap.background, "TOPRIGHT", -2, -2)
+		MiniMapInstanceDifficulty:SetPoint("TOPRIGHT", bdMinimap, "TOPRIGHT", -2, -2)
 	end
 
 	--========================
@@ -100,11 +117,6 @@ function mod:create_minimap()
 			_G[frames[i]].Show = noop
 		end
 	end
-
-	local background = CreateFrame("frame", "bdMinimap", UIParent, BackdropTemplateMixin and "BackdropTemplate")
-	background:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
-	background:SetBackdropColor(0,0,0,0)
-	background:SetBackdropBorderColor(unpack(bdUI.media.border))
 
 	-- ButtonFrame stuff
 	if (GarrisonLandingPageMinimapButton) then
@@ -142,15 +154,23 @@ function mod:create_minimap()
 	--===========================
 	-- Zone
 	--===========================
+	MinimapZoneText:Hide()
+	MinimapZoneText:EnableMouse(false)
+	MinimapCluster.BorderTop:Hide()
+	MinimapCluster.BorderTop:EnableMouse(false)
+	MinimapCluster.Tracking:Hide()
+	MinimapCluster.Tracking:EnableMouse(false)
+	MinimapCluster.ZoneTextButton:Hide()
+	MinimapCluster.ZoneTextButton:EnableMouse(false)
 	Minimap.zone = CreateFrame("frame", nil, Minimap)
 	Minimap.zone:Hide()
 	Minimap.zone.text = Minimap.zone:CreateFontString(nil)
 	Minimap.zone.text:SetFontObject(bdUI:get_font(13))
-	Minimap.zone.text:SetPoint("TOPLEFT", Minimap.background, "TOPLEFT", 8, -8)
+	Minimap.zone.text:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 8, -8)
 	Minimap.zone.text:SetJustifyH("LEFT")
 	Minimap.zone.subtext = Minimap.zone:CreateFontString(nil)
 	Minimap.zone.subtext:SetFontObject(bdUI:get_font(13))
-	Minimap.zone.subtext:SetPoint("TOPRIGHT", Minimap.background, "TOPRIGHT", -8, -8)
+	Minimap.zone.subtext:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", -8, -8)
 	Minimap.zone.subtext:SetJustifyH("RIGHT")
 	Minimap.zone:RegisterEvent("ZONE_CHANGED")
 	Minimap.zone:RegisterEvent("ZONE_CHANGED_INDOORS")
@@ -175,7 +195,7 @@ function mod:create_minimap()
 	end
 	select(1, TimeManagerClockButton:GetRegions()):Hide()
 	TimeManagerClockButton:ClearAllPoints()
-	TimeManagerClockButton:SetPoint("BOTTOMLEFT", Minimap.background, "BOTTOMLEFT",5,-2)
+	TimeManagerClockButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT",5,-2)
 	TimeManagerClockTicker:SetFontObject(bdUI:get_font(13))
 	TimeManagerClockTicker:SetAllPoints(TimeManagerClockButton)
 	TimeManagerClockTicker:SetJustifyH('LEFT')
@@ -201,7 +221,7 @@ function mod:create_minimap()
 	rd:RegisterEvent("GUILD_PARTY_STATE_UPDATED")
 	rd:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	local rdt = rd:CreateFontString(nil, "OVERLAY")
-	rdt:SetPoint("BOTTOMRIGHT", Minimap.background, "BOTTOMRIGHT", -4, 6)
+	rdt:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", -4, 6)
 	rdt:SetFontObject(bdUI:get_font(13))
 	rdt:SetJustifyH("RIGHT")
 	rdt:SetTextColor(.7,.7,.7)

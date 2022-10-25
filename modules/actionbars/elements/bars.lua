@@ -8,7 +8,7 @@ local defaultPadding = 10
 -- Actionbar 1
 --===============================================================
 function mod:create_actionbar1()
-	mod:HideMainMenuBar()
+	-- mod:HideMainMenuBar()
 	cfg = {}
 	cfg.blizzardBar = nil
 	cfg.cfg = "bar1"
@@ -48,7 +48,7 @@ function mod:create_actionbar1()
 		hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
 	end
 		
-	--_onstate-page state driver
+	-- _onstate-page state driver
 	for i, button in next, buttonList do
 		bar1:SetFrameRef(buttonName..i, button)
 	end
@@ -131,6 +131,21 @@ function mod:create_actionbar5()
 
 	local buttonList = mod:GetButtonList("MultiBarLeftButton", NUM_ACTIONBAR_BUTTONS)
 	local bar5 = mod:CreateBar(buttonList, cfg)
+end
+
+function mod:create_extra_actionbars()
+	for i = 5, 7 do
+		cfg = {}
+		cfg.blizzardBar = MultiBarLeft
+		cfg.frameName = "bdActionbars_"..i+1
+		cfg.moveName = "Actionbar "..i+1
+		cfg.cfg = "bar5"
+		cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
+		cfg.frameSpawn = {"LEFT", mod.bars['bar5'], "RIGHT", defaultPadding, 0}
+
+		local buttonList = mod:GetButtonList("MultiBarButton", NUM_ACTIONBAR_BUTTONS)
+		local bar5 = mod:CreateBar(buttonList, cfg)
+	end
 end
 
 --===============================================================
