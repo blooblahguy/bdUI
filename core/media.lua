@@ -36,24 +36,25 @@ combat_checker:SetScript("OnEvent", function()
 end)
 
 function bdUI:do_frame_fade()
-	-- for frame, info in pairs(combat_fade_frames) do
-	-- 	local ic_alpha, ooc_alpha, resting_alpha = unpack(info)
-	-- 	local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha or ooc_alpha
-	-- 	if (target_alpha > frame:GetAlpha()) then
-	-- 		frame:Show()
-	-- 		UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), target_alpha)
-	-- 	else
-	-- 		UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), target_alpha)
-	-- 	end
+	if (bdUI.version >= 10000) then return end -- dragnflight breaks this stuff right now
+	for frame, info in pairs(combat_fade_frames) do
+		local ic_alpha, ooc_alpha, resting_alpha = unpack(info)
+		local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha or ooc_alpha
+		if (target_alpha > frame:GetAlpha()) then
+			frame:Show()
+			UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), target_alpha)
+		else
+			UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), target_alpha)
+		end
 
-	-- 	frame.fadeInfo.finishedFunc = function() 
-	-- 		if (frame:GetAlpha() == 0) then
-	-- 			frame:Hide()
-	-- 		else
-	-- 			frame:Show()
-	-- 		end
-	-- 	end
-	-- end
+		frame.fadeInfo.finishedFunc = function() 
+			if (frame:GetAlpha() == 0) then
+				frame:Hide()
+			else
+				frame:Show()
+			end
+		end
+	end
 end
 
 -- fade frame in/out of combat
