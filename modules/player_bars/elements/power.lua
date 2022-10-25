@@ -21,7 +21,7 @@ function mod:create_power(self)
 
 	-- bar
 	self.Power = CreateFrame("statusbar", "bdPowerResource", mod.Resources)
-	self.Power:SetSize(config.resources_width, config.resources_power_height)
+	self.Power:SetSize(config.resources_width, config.power_height)
 	self.Power:SetStatusBarTexture(bdUI.media.smooth)
 	self.Power:EnableMouse(false)
 	self.Power.frequentUpdates = true
