@@ -1,4 +1,4 @@
-## Interface: 10000
+## Interface: 100000
 
 ## Title: |cffA02C2Fbd|rUI
 ## Author: Blooblahguy
