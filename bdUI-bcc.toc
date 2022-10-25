@@ -75,7 +75,6 @@ lib\bdConfig\bdConfig.xml
 # Core
 core\libraries.lua
 core\fonts.lua
-core\api.lua
 core\performance.lua
 core\commands.lua
 core\core.lua

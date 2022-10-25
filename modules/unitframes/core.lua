@@ -10,7 +10,7 @@ mod.units = {}
 mod.custom_layout = {}
 mod.additional_elements = {}
 mod.tags = {}
-local uf_holder = CreateFrame('Frame', nil, oUF.UFParent, 'SecureHandlerStateTemplate')
+local uf_holder = CreateFrame('Frame', nil, oUF.UFParent)
 uf_holder:SetFrameStrata('LOW')
 
 --===============================================

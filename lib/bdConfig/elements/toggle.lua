@@ -14,8 +14,10 @@ local methods = {
 		
 		self.check:SetChecked(value)
 		if (value) then
+			self.check:GetCheckedTexture():Show()
 			_G[self.check:GetName().."Text"]:SetAlpha(1)
 		else
+			self.check:GetCheckedTexture():Hide()
 			_G[self.check:GetName().."Text"]:SetAlpha(lib.media.muted)
 		end
 	end,
@@ -55,7 +57,7 @@ local skin = function(frame)
 	frame.inside = inside
 
 	local outside = frame:CreateMaskTexture()
-	-- outside:SetTexture([[Interface\Minimap\UI-Minimap-Background]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
+	outside:SetTexture([[Interface\Minimap\UI-Minimap-Background]], 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
 	outside:SetTexture(lib.media.flat) --, 'CLAMPTOBLACKADDITIVE', 'CLAMPTOBLACKADDITIVE')
 	outside:SetSize(10, 10)
 	outside:SetPoint('CENTER')
@@ -70,7 +72,7 @@ local skin = function(frame)
 
 	local check = frame:GetCheckedTexture()
 	check:SetVertexColor(unpack(lib.media.blue))
-	-- check:SetTexCoord(0, 1, 0, 1)
+	-- -- check:SetTexCoord(0, 1, 0, 1)
 	check:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -0)
 	check:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -0, 0)
 	check:AddMaskTexture(inside)
@@ -120,11 +122,13 @@ local function create(options, parent)
 	container.check = check
 	container.text = text
 	Mixin(container, methods)
-	container:set()
 	check:SetScript("OnClick", function() container:onclick() end)
+	skin(check)
+	container:set()
 	container:check_state_color()
 
-	skin(check)
+	-- check:Click()
+	-- check:Click()
 
 	return container
 end

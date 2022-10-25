@@ -157,7 +157,11 @@ function mod:create_currencies()
 	mod.bags.currencies = currencies
 
 	mod:currencies_update()
-	hooksecurefunc("BackpackTokenFrame_Update", mod.currencies_update)
+	if (BackpackTokenFrame_Update) then
+		hooksecurefunc("BackpackTokenFrame_Update", mod.currencies_update)
+	else
+		hooksecurefunc(BackpackTokenFrame, "Update", mod.currencies_update)
+	end
 
 	return currencies
 end

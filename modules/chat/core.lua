@@ -18,31 +18,31 @@ function mod:initialize()
 	-- alerts
 	mod:create_alerts()
 
-	-- skin
+	-- -- skin
 	mod:skin_chat()
 
-	-- url copy
+	-- -- url copy
 	mod:chat_urls()
 
-	-- alt invite
+	-- -- alt invite
 	mod:alt_invite()
 
-	-- bubbles
+	-- -- bubbles
 	mod:create_chat_bubbles()
 	
-	-- names
+	-- -- names
 	mod:color_names()
 	
-	-- channels
+	-- -- channels
 	mod:format_channels()
 
-	-- emojis
+	-- -- emojis
 	mod:create_emojis()
 	
-	-- telltarget command
+	-- -- telltarget command
 	mod:telltarget()
 	
-	-- community mask
+	-- -- community mask
 	mod:create_community()
 
 	mod:config_callback()

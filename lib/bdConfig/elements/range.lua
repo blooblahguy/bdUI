@@ -88,8 +88,8 @@ local function create(options, parent)
 	-- container/controller
 	local container = lib:create_container(options, parent, 36)
 	local name = options.name.."_"..options.key
-
-	local slider = CreateFrame("Slider", name, container, "OptionsSliderTemplate")
+	local template = BackdropTemplateMixin and "BackdropTemplate," or ""
+	local slider = CreateFrame("Slider", name, container, template.."OptionsSliderTemplate")
 	slider:SetWidth(container:GetWidth())
 	slider:SetHeight(8)
 	slider:SetPoint("LEFT", container ,"LEFT", 0, -8)

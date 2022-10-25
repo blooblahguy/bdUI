@@ -5,6 +5,7 @@ local mod = bdUI:get_module("Skinning")
 
 -- GLOBALS: CHAT_FONT_HEIGHTS, UNIT_NAME_FONT, DAMAGE_TEXT_FONT, STANDARD_TEXT_FONT, NORMALOFFSET, BIGOFFSET, SHADOWCOLOR
 local function SetFont(self, font, size, style, r, g, b, sr, sg, sb, sox, soy)
+	style = style or ""
 	self:SetFont(font, size, style)
 	
 	if sr and sg and sb then
@@ -48,7 +49,7 @@ function bdUI:change_fonts()
 	SetFont(SystemFont_Shadow_Large_Outline,	NUMBER, 20 * fontScale, "OUTLINE")
 	SetFont(GameTooltipHeader, 					NORMAL, 14 * fontScale)
 	SetFont(NumberFont_OutlineThick_Mono_Small, NUMBER, 14 * fontScale, "OUTLINE");
-	SetFont(NumberFont_Outline_Huge, 			NUMBER, 28 * fontScale, "THICKOUTLINE", 28);
+	SetFont(NumberFont_Outline_Huge, 			NUMBER, 28 * fontScale, "THICKOUTLINE");
 	SetFont(NumberFont_Outline_Large, 			NUMBER, 17 * fontScale, "OUTLINE");
 	SetFont(NumberFont_Outline_Med, 			NUMBER, 15 * fontScale, "OUTLINE");
 	SetFont(NumberFont_Shadow_Med, 				NORMAL, 14 * fontScale);

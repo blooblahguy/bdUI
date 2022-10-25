@@ -18,7 +18,7 @@ mod.tags.hp = function(self, unit)
 	if (self.Curhp) then return end
 
 	self.Curhp = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Curhp:SetFontObject(bdUI:get_font(10))
+	self.Curhp:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
 
 	oUF.Tags.Events['bdUI:curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
 	oUF.Tags.Methods['bdUI:curhp'] = function(unit)

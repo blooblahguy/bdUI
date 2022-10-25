@@ -174,12 +174,18 @@ local module_methods = {
 --=================================================================
 local methods = {
 	-- toggles visibility of configuration window
+	["start_config"] = function(self)
+		self:Show()
+		self.default:select()
+	end,
+	["end_config"] = function(self)
+		self:Hide()
+	end,
 	["toggle"] = function(self)
 		if (self:IsShown()) then
-			self:Hide()
+			self:end_config()
 		else
-			self:Show()
-			self.default:select()
+			self:start_config()
 		end
 	end,
 

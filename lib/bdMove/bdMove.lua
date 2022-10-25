@@ -412,9 +412,22 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	table.insert(lib.movers, mover)
 end
 
-function lib:toggle_lock()
-	if (lib.unlocked) then
-		-- lock
+function lib:unlock()
+	if (InCombatLockdown()) then
+		print("Moving not allowed in combat")
+		return
+	end
+	-- unlock
+	lib.unlocked = true
+	lib.align:Show()
+	for k, frame in pairs(lib.movers) do
+		frame:deselect()
+		frame:unlock()
+	end
+end
+
+function lib:lock()
+	-- lock
 		lib.bumper:Hide()
 		lib.unlocked = false
 		lib.align:Hide()
@@ -422,18 +435,13 @@ function lib:toggle_lock()
 			frame:deselect()
 			frame:lock()
 		end
+end
+
+function lib:toggle_lock()
+	if (lib.unlocked) then
+		lib:lock()
 	else
-		if (InCombatLockdown()) then
-			print("Moving not allowed in combat")
-			return
-		end
-		-- unlock
-		lib.unlocked = true
-		lib.align:Show()
-		for k, frame in pairs(lib.movers) do
-			frame:deselect()
-			frame:unlock()
-		end
+		lib:unlock()
 	end
 end
 

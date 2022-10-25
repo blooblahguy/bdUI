@@ -52,7 +52,8 @@ function mod:skin_loot()
 	LootFrame:SetScript("OnDragStop", function() LootFrame:StopMovingOrSizing() end)
 	bdUI:set_backdrop(LootFrame)
 
-	LootFrameCloseButton:SetFrameLevel(10)
+	local close_button = LootFrameCloseButton or LootFrame.ClosePanelButton
+	close_button:SetFrameLevel(10)
 
 	local model = CreateFrame("PlayerModel", nil, LootFrame)
 	model:SetPoint("TOPLEFT", LootFrame, 8, -8)
@@ -182,5 +183,9 @@ function mod:skin_loot()
 	end
 
 	-- mod:SecureHook(LootFrame, "OnShow", skin_loot)
-	mod:SecureHook("LootFrame_Show", skin_loot)
+	if (LootFrame_Show) then
+		mod:SecureHook("LootFrame_Show", skin_loot)
+	else
+		mod:SecureHook(LootFrame, "Show", skin_loot)
+	end
 end

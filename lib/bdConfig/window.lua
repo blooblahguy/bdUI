@@ -11,12 +11,12 @@ function lib:create_windows(name, lock_toggle)
 
 	-- main font object
 	lib.font = CreateFont("bdConfig_font")
-	lib.font:SetFont(lib.media.font, lib.media.fontSize)
+	lib.font:SetFont(lib.media.font, lib.media.fontSize, "")
 	lib.font:SetShadowColor(0, 0, 0)
 	lib.font:SetShadowOffset(1, -1)
 
 	lib.font_bold = CreateFont("bdConfig_font_bold")
-	lib.font_bold:SetFont(lib.media.font_bold, lib.media.fontSize)
+	lib.font_bold:SetFont(lib.media.font_bold, lib.media.fontSize, "")
 	lib.font_bold:SetShadowColor(0, 0, 0)
 	lib.font_bold:SetShadowOffset(1, -1)
 	lib.foundBetterFont = false

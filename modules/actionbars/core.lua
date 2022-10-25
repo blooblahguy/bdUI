@@ -330,7 +330,7 @@ function mod:SkinButton(button)
 	
 	-- MACRO
 	if (macro) then
-		macro:SetFontObject(v.font)
+		macro:SetFontObject(v.font, "THINOUTLINE")
 		macro:SetTextColor(0.7,0.7,0.7)
 		macro:SetJustifyH("RIGHT")
 		macro:SetTextColor(1,1,1)
@@ -341,7 +341,7 @@ function mod:SkinButton(button)
 	-- COOLDOWN
 	if (cooldown) then
 		local cooldowntext = cooldown:GetRegions()
-		cooldowntext:SetFontObject(v.cooldownfont)
+		cooldowntext:SetFontObject(v.cooldownfont, "THINOUTLINE")
 		cooldowntext:SetJustifyH("CENTER")
 		cooldowntext:SetPoint("LEFT", cooldown, -20, 0)
 		cooldowntext:SetPoint("RIGHT", cooldown, 20, 0)
@@ -422,6 +422,14 @@ local function StyleFlyout(self)
 end
 
 function mod:hook_flyout()
-	hooksecurefunc("ActionButton_UpdateFlyout", StyleFlyout)
-	hooksecurefunc("SpellButton_OnClick", StyleFlyout)
+	if (ActionButton_UpdateFlyout) then
+		hooksecurefunc("ActionButton_UpdateFlyout", StyleFlyout)
+	else
+		hooksecurefunc("SpellFlyout_OnShow", StyleFlyout)
+	end
+	if (SpellButton_OnClick) then
+		hooksecurefunc("SpellButton_OnClick", StyleFlyout)
+	else
+		hooksecurefunc("SpellBookFrame_OpenToSpell", StyleFlyout)
+	end
 end

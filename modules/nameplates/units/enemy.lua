@@ -40,8 +40,6 @@ mod.enemy_style = function(self, event, unit)
 	end
 	self:EnableElement("FixateAlert")
 
-	
-
 	-- castbars
 	self.Castbar:ClearAllPoints()
 	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI:get_border(self.Castbar))

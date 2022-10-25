@@ -93,12 +93,16 @@ function mod:remove_blizzard()
 	hooksecurefunc(getmetatable(ActionButton1Cooldown).__index, "SetCooldown", FixCooldownFlash)
 
 	-- Hide extra textures
-	StanceBarLeft:SetTexture(nil)
-	StanceBarMiddle:SetTexture(nil)
-	StanceBarRight:SetTexture(nil)
+	if (StanceBarLeft) then
+		StanceBarLeft:SetTexture(nil)
+		StanceBarMiddle:SetTexture(nil)
+		StanceBarRight:SetTexture(nil)
+	end
 
-	SlidingActionBarTexture0:SetTexture(nil)
-	SlidingActionBarTexture1:SetTexture(nil)
+	if (SlidingActionBarTexture0) then
+		SlidingActionBarTexture0:SetTexture(nil)
+		SlidingActionBarTexture1:SetTexture(nil)
+	end
 
 	if (PossessBackground1) then
 		PossessBackground1:SetTexture(nil)

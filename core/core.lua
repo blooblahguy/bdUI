@@ -66,7 +66,7 @@ local trunc_parent = CreateFrame("frame", nil)
 local truncator = trunc_parent:CreateFontString(nil, "OVERLAY")
 function bdUI:truncate_text(text, fontObject, targetWidth)
 	-- BDUI_SAVE.truncates = BDUI_SAVE.truncates or {}
-	truncator:SetFontObject(fontObject)
+	truncator:SetFontObject(fontObject, "THINOUTLINE")
 	truncator:SetText(text)
 	local width = truncator:GetStringWidth()
 

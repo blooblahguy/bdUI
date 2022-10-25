@@ -6,7 +6,7 @@ mod.tags.name = function(self, unit)
 	if (self.Name) then return end
 
 	self.Name = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Name:SetFontObject(bdUI:get_font(13))
+	self.Name:SetFontObject(bdUI:get_font(13, "THINOUTLINE"))
 	oUF.Tags.Events["bdUI:name"] = "UNIT_NAME_UPDATE"
 	oUF.Tags.Methods["bdUI:name"] = function(unit, r)
 		local name = UnitName(r or unit)

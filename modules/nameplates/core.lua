@@ -17,13 +17,13 @@ local function PostCreateIcon(self, button)
 	bdUI:set_backdrop(button, true)
 
 	local cdtext = button.cd:GetRegions()
-	cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size)) 
+	cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size, "THINOUTLINE"))
 	cdtext:SetJustifyH("CENTER")
 	cdtext:ClearAllPoints()
 	cdtext:SetAllPoints(button)
 	self.last_timer_size = config.debuff_timer_size
 	
-	button.count:SetFontObject(bdUI:get_font(11)) 
+	button.count:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
 	button.count:SetTextColor(1,.8,.3)
 	button.count:SetJustifyH("RIGHT")
 	button.count:ClearAllPoints()
@@ -41,7 +41,7 @@ local function PostUpdateIcon(self, unit, button, index, position)
 
 	if (self.last_timer_size ~= config.debuff_timer_size) then
 		local cdtext = button.cd:GetRegions()
-		cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size))
+		cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size, "THINOUTLINE"))
 	end
 	self.last_timer_size = config.debuff_timer_size
 
@@ -153,13 +153,13 @@ function mod:config_nameplate(self)
 	end
 
 	-- Text Sizes
-	self.Name:SetFontObject(bdUI:get_font(config.font_size))
-	self.text_test:SetFontObject(bdUI:get_font(config.font_size))
-	self.Curhp:SetFontObject(bdUI:get_font(config.font_size))
-	self.Curpower:SetFontObject(bdUI:get_font(config.font_size))
-	self.FixateAlert:SetFontObject(bdUI:get_font(config.font_size))
-	self.Castbar.Text:SetFontObject(bdUI:get_font(config.font_size))
-	self.Castbar.AttributeText:SetFontObject(bdUI:get_font(config.font_size))
+	self.Name:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
+	self.text_test:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
+	self.Curhp:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
+	self.Curpower:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
+	self.FixateAlert:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
+	self.Castbar.Text:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
+	self.Castbar.AttributeText:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
 
 	-- Config Auras
 	if (config.name_position == "Inside") then
@@ -510,25 +510,25 @@ local function nameplate_create(self, unit)
 	self.target_arrows:Hide()
 	self.target_arrow_left_large = self.target_arrows:CreateFontString(nil, "OVERLAY")
 	self.target_arrow_left_large:SetPoint("RIGHT", self.Health, "LEFT", -2, 0)
-	self.target_arrow_left_large:SetFontObject(bdUI:get_font(22), "MONOCHROME")
+	self.target_arrow_left_large:SetFontObject(bdUI:get_font(22, "OUTLINE"))
 	self.target_arrow_left_large:SetJustifyV("MIDDLE")
 	self.target_arrow_left_large:SetText(">")
 
 	self.target_arrow_right_large = self.target_arrows:CreateFontString(nil, "OVERLAY")
 	self.target_arrow_right_large:SetPoint("LEFT", self.Health, "RIGHT", 2, 0)
-	self.target_arrow_right_large:SetFontObject(bdUI:get_font(22), "MONOCHROME")
+	self.target_arrow_right_large:SetFontObject(bdUI:get_font(22, "OUTLINE"))
 	self.target_arrow_right_large:SetJustifyV("MIDDLE")
 	self.target_arrow_right_large:SetText("<")
 
 	self.target_arrow_left = self.target_arrows:CreateFontString(nil, "OVERLAY")
 	self.target_arrow_left:SetPoint("RIGHT", self.Health, "LEFT", -9, 0)
-	self.target_arrow_left:SetFontObject(bdUI:get_font(16), "MONOCHROME")
+	self.target_arrow_left:SetFontObject(bdUI:get_font(16, "OUTLINE"))
 	self.target_arrow_left:SetJustifyV("MIDDLE")
 	self.target_arrow_left:SetText(">")
 
 	self.target_arrow_right = self.target_arrows:CreateFontString(nil, "OVERLAY")
 	self.target_arrow_right:SetPoint("LEFT", self.Health, "RIGHT", 9, 0)
-	self.target_arrow_right:SetFontObject(bdUI:get_font(16), "MONOCHROME")
+	self.target_arrow_right:SetFontObject(bdUI:get_font(16, "OUTLINE"))
 	self.target_arrow_right:SetJustifyV("MIDDLE")
 	self.target_arrow_right:SetText("<")
 
@@ -645,7 +645,7 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- FIXATES / TARGETS
 	--==========================================
-	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY", 8)
+	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
 	self.FixateAlert:SetPoint("TOPRIGHT", self.OverlayHolder, "BOTTOMRIGHT", -4, -4)
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
 		self:Hide()

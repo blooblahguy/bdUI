@@ -36,24 +36,24 @@ combat_checker:SetScript("OnEvent", function()
 end)
 
 function bdUI:do_frame_fade()
-	for frame, info in pairs(combat_fade_frames) do
-		local ic_alpha, ooc_alpha, resting_alpha = unpack(info)
-		local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha or ooc_alpha
-		if (target_alpha > frame:GetAlpha()) then
-			frame:Show()
-			UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), target_alpha)
-		else
-			UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), target_alpha)
-		end
+	-- for frame, info in pairs(combat_fade_frames) do
+	-- 	local ic_alpha, ooc_alpha, resting_alpha = unpack(info)
+	-- 	local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha or ooc_alpha
+	-- 	if (target_alpha > frame:GetAlpha()) then
+	-- 		frame:Show()
+	-- 		UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), target_alpha)
+	-- 	else
+	-- 		UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), target_alpha)
+	-- 	end
 
-		frame.fadeInfo.finishedFunc = function() 
-			if (frame:GetAlpha() == 0) then
-				frame:Hide()
-			else
-				frame:Show()
-			end
-		end
-	end
+	-- 	frame.fadeInfo.finishedFunc = function() 
+	-- 		if (frame:GetAlpha() == 0) then
+	-- 			frame:Hide()
+	-- 		else
+	-- 			frame:Show()
+	-- 		end
+	-- 	end
+	-- end
 end
 
 -- fade frame in/out of combat
@@ -201,7 +201,7 @@ end
 	end
 
 	function bdUI:get_border_size()
-		return bdUI:get_module("General"):get_save().border_size
+		return bdUI:get_module("General") and bdUI:get_module("General"):get_save().border_size or 2
 	end
 
 	function bdUI:get_pixel(frame)

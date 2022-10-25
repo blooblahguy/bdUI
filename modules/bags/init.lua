@@ -1,5 +1,4 @@
 local bdUI, c, l = unpack(select(2, ...))
-local mod = bdUI:get_module("Bags")
 
 local config = {
 	{
@@ -121,4 +120,4 @@ local config = {
 	},
 }
 
-local mod = bdUI:register_module("Bags", config)
+bdUI:register_module("Bags", config)

@@ -2,8 +2,6 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Maps")
 local config
 
-
-
 --=============================================
 -- Initialize function
 --=============================================
@@ -23,6 +21,8 @@ end
 function mod:config_callback()
 	config = mod.config
 
+	if (not mod.config.enabled) then return end
+
 	-- resize elements
 	Minimap:SetScale(config.scale)
 	
@@ -31,7 +31,7 @@ function mod:config_callback()
 	Minimap.background:SetBackdropColor(0, 0, 0, 0)
 	Minimap.background:SetBackdropBorderColor(unpack(bdUI.media.border))
 	Minimap:SetSize(config.size, config.size)
-	Minimap.qa:SetSize(config.size * config.scale, 50)
+	-- Minimap.qa:SetSize(config.size * config.scale, 50)
 
 	-- Mask the minimap
 	if (config.shape == "Rectangle") then
@@ -47,6 +47,7 @@ function mod:config_callback()
 	-- scale elements back down
 	TimeManagerClockButton:SetScale(1 / config.scale)
 	MiniMapMailIcon:SetScale(1 / config.scale)
+	local MiniMapMailFrame = MiniMapMailFrame or MailFrame
 	MiniMapMailFrame:SetScale(1 / config.scale)
 	Minimap.zone:SetScale(1 / config.scale)
 	TicketStatusFrame:SetScale(1 / config.scale)

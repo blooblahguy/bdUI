@@ -41,7 +41,7 @@ function bdUI:load_module(module)
 	-- require initialize function
 	if (not module.initialize) then
 		bdUI:debug(module._name, "does not have an initialize() function and can't be loaded")
-		return
+		-- return
 	end
 
 	-- load SVs and build module now

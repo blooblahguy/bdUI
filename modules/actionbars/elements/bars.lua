@@ -44,7 +44,9 @@ function mod:create_actionbar1()
 			-- ActionButton_ShowGrid(button, ACTION_BUTTON_SHOW_GRID_REASON_EVENT)
 		end
 	end
-	hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
+	if (MultiActionBar_UpdateGridVisibility) then
+		hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
+	end
 		
 	--_onstate-page state driver
 	for i, button in next, buttonList do
@@ -152,6 +154,7 @@ end
 -- StanceBar
 --===============================================================
 function mod:create_stancebar()
+	if (not NUM_STANCE_SLOTS) then return end
 	cfg = {}
 	cfg.cfg = "stancebar"
 	cfg.blizzardBar = StanceBarFrame
@@ -181,6 +184,8 @@ end
 -- MicroMenu
 --===============================================================
 function mod:create_micromenu()
+	-- TODO make blizzard new micro menu moveable and skin it 
+	if (not MICRO_BUTTONS) then return end
 	c = mod.config
 
 	cfg = {}

@@ -2,7 +2,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
 local events = {}
-events["BAG_UPDATE_COOLDOWN"] = "update_cooldown"
+events["BAG_UPDATE_COOLDOWN"] = "UpdateCooldown"
 events["ITEM_LOCK_CHANGED"] = "update_lock"
 events["ITEM_UNLOCKED"] = "update_lock"
 -- events["BAG_UPDATE_DELAYED"] = "update"
@@ -10,7 +10,7 @@ events["BAG_NEW_ITEMS_UPDATED"] = "update_new"
 events["INVENTORY_SEARCH_UPDATE"] = "update_search"
 events["BAG_UPDATE"] = "update_lock"
 events["PLAYERBANKSLOTS_CHANGED"] = "update"
-events["PLAYER_ENTERING_WORLD"] = "update_cooldown"
+events["PLAYER_ENTERING_WORLD"] = "UpdateCooldown"
 
 local function range_lerp(value, sourceMin, sourceMax, newMin, newMax)
 	return newMin + (newMax - newMin) * ((value - sourceMin) / (sourceMax - sourceMin))
@@ -60,7 +60,11 @@ methods["update_lock"] = function(self, bag, slot)
 end
 
 methods["update_cooldown"] = function(self)
-	return ContainerFrame_UpdateCooldown(self.bag, self)
+	if (ContainerFrame_UpdateCooldown) then
+		return ContainerFrame_UpdateCooldown(self.bag, self)
+	else
+		return _G["ContainerFrame1"]:UpdateCooldown(self.bag, self)
+	end
 end
 
 methods["update_new"] = function(self)
@@ -123,6 +127,8 @@ function mod:skin(self)
 
 	self.flash:SetAllPoints()
 	normal:SetAllPoints()
+	normal:Hide()
+	normal.Show = noop
 	quest:SetAllPoints()
 
 	self.blank = self:CreateTexture(self:GetName().."Blank", "BACKGROUND")
@@ -187,14 +193,14 @@ mod.item_pool_create = function(self)
 	-- button:Hide()
 
 	button.text = button:CreateFontString(nil, "OVERLAY")
-	button.text:SetFontObject(bdUI:get_font(13))
+	button.text:SetFontObject(bdUI:get_font(13, "THINOUTLINE"))
 	button.text:SetPoint("BOTTOMLEFT", button, "TOPLEFT", -2, 2)
 	button.text:SetAlpha(1)
 	button.text:SetTextColor(1, 1, 1)
 	button.text:Hide()
 
 	button.ilvl = button:CreateFontString(nil, "OVERLAY")
-	button.ilvl:SetFontObject(bdUI:get_font(13))
+	button.ilvl:SetFontObject(bdUI:get_font(13, "OUTLINE"))
 	button.ilvl:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
 	button.ilvl:SetAlpha(1)
 	button.ilvl:SetTextColor(1, 1, 1)

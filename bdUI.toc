@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 10000
 
 ## Title: |cffA02C2Fbd|rUI
 ## Author: Blooblahguy
@@ -18,10 +18,10 @@
 # Initialize
 core\init.lua
 lib\ace\LibStub.lua
-lib\fixes\blizzard_bugs.lua
-lib\fixes\TaintLess.xml
-lib\fixes\InspectFix.lua
-lib\fixes\LibStrataFix.lua
+# lib\fixes\blizzard_bugs.lua
+# lib\fixes\TaintLess.xml
+# lib\fixes\InspectFix.lua
+# lib\fixes\LibStrataFix.lua
 
 # Locales
 locales\AceLocale-3.0.lua
@@ -45,6 +45,8 @@ lib\ace\LibSimpleSticky.lua
 lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
 
+# game versions
+game_versions\dragonflight\frames.lua
 
 # oUF
 lib\oUF\oUF.xml
@@ -58,7 +60,7 @@ lib\oUF_Plugins\oUF_Smooth.lua
 lib\oUF_Plugins\oUF_TotemBar.lua
 lib\oUF_Plugins\oUF_QuestProgress.lua
 lib\oUF_Plugins\oUF_bdHealthPredict.lua
-lib\oUF_Plugins\oUF_bdClassicHealthPredict.lua
+# lib\oUF_Plugins\oUF_bdClassicHealthPredict.lua
 lib\oUF_Plugins\oUF_bdSCT.lua
 
 # Custom
@@ -70,7 +72,6 @@ lib\bdConfig\bdConfig.xml
 # Core
 core\libraries.lua
 core\fonts.lua
-core\api.lua
 core\performance.lua
 core\commands.lua
 core\core.lua
@@ -105,15 +106,15 @@ modules\auras\functions.lua
 modules\auras\core.lua
 
 # Actionbars
-modules\actionbars\init.lua
-modules\actionbars\functions.lua
-modules\actionbars\core.lua
-modules\actionbars\elements\bars.lua
-modules\actionbars\elements\cooldown.lua
-modules\actionbars\elements\range.lua
-modules\actionbars\elements\hoverbind.lua
-modules\actionbars\elements\zoneability.lua
-modules\actionbars\elements\hotkeys.lua
+# modules\actionbars\init.lua
+# modules\actionbars\functions.lua
+# modules\actionbars\core.lua
+# modules\actionbars\elements\bars.lua
+# modules\actionbars\elements\cooldown.lua
+# modules\actionbars\elements\range.lua
+# modules\actionbars\elements\hoverbind.lua
+# modules\actionbars\elements\zoneability.lua
+# modules\actionbars\elements\hotkeys.lua
 
 # Bags
 modules\bags\init.lua

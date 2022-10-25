@@ -38,8 +38,12 @@ local function skin_frame(frame)
 	--main chat frame
 	frame:SetFrameStrata("LOW")
 	frame:SetClampRectInsets(0, 0, 0, 0)
-	frame:SetMaxResize(UIParent:GetWidth()/2, UIParent:GetHeight()/2)
-	frame:SetMinResize(100, 50)
+	if (frame.SetResizeBounds) then
+		frame:SetResizeBounds(100, 50, UIParent:GetWidth()/2, UIParent:GetHeight()/2)
+	else
+		frame:SetMaxResize(UIParent:GetWidth()/2, UIParent:GetHeight()/2)
+		frame:SetMinResize(100, 50)
+	end
 	frame:SetFading(false)
 	frame:SetClampedToScreen(false)
 	resize:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 9,-5)
@@ -112,16 +116,28 @@ function mod:skin_chat()
 	CHAT_FONT_HEIGHTS = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 
 	--tabs
-	CHAT_FRAME_FADE_TIME = 0
-	CHAT_TAB_SHOW_DELAY = 0
-	CHAT_TAB_HIDE_DELAY = 0
-	CHAT_FRAME_FADE_OUT_TIME = 0
-	CHAT_FRAME_TAB_NORMAL_MOUSEOVER_ALPHA = 1
-	CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA = 0
-	CHAT_FRAME_TAB_SELECTED_MOUSEOVER_ALPHA = 1
-	CHAT_FRAME_TAB_SELECTED_NOMOUSE_ALPHA = 0
-	CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA = 1
-	CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA = 1
+	-- CHAT_FRAME_FADE_TIME = 0
+	-- CHAT_TAB_SHOW_DELAY = 0
+	-- CHAT_TAB_HIDE_DELAY = 0
+	-- CHAT_FRAME_FADE_OUT_TIME = 0
+	-- CHAT_FRAME_TAB_NORMAL_MOUSEOVER_ALPHA = 1
+	-- CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA = 0
+	-- CHAT_FRAME_TAB_SELECTED_MOUSEOVER_ALPHA = 1
+	-- CHAT_FRAME_TAB_SELECTED_NOMOUSE_ALPHA = 0
+	-- CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA = 1
+	-- CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA = 1
+
+	-- print("CHAT_FRAME_FADE_TIME", issecurevariable("CHAT_FRAME_FADE_TIME"))
+	-- print("CHAT_TAB_SHOW_DELAY", issecurevariable("CHAT_TAB_SHOW_DELAY"))
+	-- print("CHAT_TAB_HIDE_DELAY", issecurevariable("CHAT_TAB_HIDE_DELAY"))
+	-- print("CHAT_FRAME_FADE_OUT_TIME", issecurevariable("CHAT_FRAME_FADE_OUT_TIME"))
+	-- print("CHAT_FRAME_TAB_NORMAL_MOUSEOVER_ALPHA", issecurevariable("CHAT_FRAME_TAB_NORMAL_MOUSEOVER_ALPHA"))
+	-- print("CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA", issecurevariable("CHAT_FRAME_TAB_NORMAL_NOMOUSE_ALPHA"))
+	-- print("CHAT_FRAME_TAB_SELECTED_MOUSEOVER_ALPHA", issecurevariable("CHAT_FRAME_TAB_SELECTED_MOUSEOVER_ALPHA"))
+	-- print("CHAT_FRAME_TAB_SELECTED_NOMOUSE_ALPHA", issecurevariable("CHAT_FRAME_TAB_SELECTED_NOMOUSE_ALPHA"))
+	-- print("CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA", issecurevariable("CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA"))
+	-- print("CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA", issecurevariable("CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA"))
+	-- print("COPPER_AMOUNT", issecurevariable("COPPER_AMOUNT"))
 
 	-- currency coloring
 	COPPER_AMOUNT = "%d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r";
@@ -151,7 +167,7 @@ function mod:skin_chat()
 	GeneralDockManager:SetFrameStrata("HIGH")
 
 	--editbox font
-	ChatFontNormal:SetFontObject(bdUI:get_font(14, "NONE"))
+	ChatFontNormal:SetFontObject(bdUI:get_font(14, ""))
 	ChatFontNormal:SetShadowOffset(1,1)
 	ChatFontNormal:SetShadowColor(0,0,0)
 

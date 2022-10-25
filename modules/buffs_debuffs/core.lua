@@ -348,8 +348,10 @@ function mod:initialize()
 	addonDisabler:SetScript("OnEvent", function(self, event, addon)
 		BuffFrame:UnregisterAllEvents("UNIT_AURA")
 		BuffFrame:Hide()
-		TemporaryEnchantFrame:UnregisterAllEvents("UNIT_AURA")
-		TemporaryEnchantFrame:Hide()
+		if (TemporaryEnchantFrame) then
+			TemporaryEnchantFrame:UnregisterAllEvents("UNIT_AURA")
+			TemporaryEnchantFrame:Hide()
+		end
 	end)
 
 	mod:config_callback()

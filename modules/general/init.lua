@@ -2,7 +2,7 @@
 -- INIT
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
-local fonts = bdUI:get_fonts()
+-- local fonts = bdUI:get_fonts()
 
 -- Config Table
 local config = {
@@ -71,7 +71,7 @@ local config = {
 				value = true,
 				label = "Skin WeakAuras"
 			},
-		}
+		},
 	},
 	{
 		key = "tab",
@@ -165,8 +165,6 @@ local config = {
 			},
 		}
 	},
-	
-
 }
 
-local mod = bdUI:register_module("General", config)
+bdUI:register_module("General", config)

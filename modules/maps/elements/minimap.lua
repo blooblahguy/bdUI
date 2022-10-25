@@ -26,7 +26,10 @@ function mod:create_minimap()
 	Minimap:EnableMouseWheel(true)
 	Minimap:SetSize(config.size, config.size)
 	Minimap:ClearAllPoints()
-	Minimap:SetPoint("CENTER", Minimap.background)
+	hooksecurefunc(MinimapCluster, "SetHeaderUnderneath", function()
+		Minimap:ClearAllPoints()
+		Minimap:SetPoint("CENTER", Minimap.background)
+	end)
 
 	-- mousewheel scroll
 	Minimap:SetScript('OnMouseWheel', function(self, delta)
@@ -35,6 +38,7 @@ function mod:create_minimap()
 	end)
 
 	-- click tracking and calendar
+	Minimap.ClickFunc = Minimap:GetScript("OnMouseUp")
 	Minimap:SetScript('OnMouseUp', function (self, button)
 		if button == 'RightButton' then
 			ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, Minimap.background, (Minimap:GetWidth()), (Minimap.background:GetHeight()-2))
@@ -46,7 +50,7 @@ function mod:create_minimap()
 			Calendar_Toggle = Calendar_Toggle or noop
 			Calendar_Toggle()
 		else
-			Minimap_OnClick(self)
+			Minimap.ClickFunc(self)
 		end
 	end)
 	
@@ -123,15 +127,16 @@ function mod:create_minimap()
 	-- Mail
 	--===========================
 	MiniMapMailIcon:SetTexture(nil)
-	MiniMapMailFrame.mail = MiniMapMailFrame:CreateFontString(nil,"OVERLAY")
-	MiniMapMailFrame.mail:SetFontObject(bdUI:get_font(13))
-	MiniMapMailFrame.mail:SetText("M")
-	MiniMapMailFrame.mail:SetJustifyH("CENTER")
-	MiniMapMailFrame.mail:SetPoint("CENTER", MiniMapMailFrame, "CENTER", 1, -1)
-	MiniMapMailFrame:RegisterEvent("UPDATE_PENDING_MAIL")
-	MiniMapMailFrame:RegisterEvent("MAIL_INBOX_UPDATE")
-	MiniMapMailFrame:RegisterEvent("MAIL_CLOSED")
-	MiniMapMailBorder:Hide()
+	local frame = MiniMapMailFrame or MailFrame
+	frame.mail = frame:CreateFontString(nil,"OVERLAY")
+	frame.mail:SetFontObject(bdUI:get_font(13))
+	frame.mail:SetText("M")
+	frame.mail:SetJustifyH("CENTER")
+	frame.mail:SetPoint("CENTER", frame, "CENTER", 1, -1)
+	frame:RegisterEvent("UPDATE_PENDING_MAIL")
+	frame:RegisterEvent("MAIL_INBOX_UPDATE")
+	frame:RegisterEvent("MAIL_CLOSED")
+	-- MiniMapMailBorder:Hide()
 
 
 	--===========================

@@ -63,16 +63,16 @@ local function create(options, parent)
 
 	-- create tab page
 	local page = lib:create_container(options, parent)
-	local border = lib:get_border(page)
+	-- local border = lib:get_border(page)
 	page:SetSize(parent.tabContainer:GetWidth(), 30)
 	page:SetPoint("TOPLEFT", parent.tabContainer, "BOTTOMLEFT", 0, -lib.media.padding)
 	page.children = {}
-	-- page:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = border})
-	-- page:SetBackdropColor(0, 0, 0, 0.08)
-	-- page:SetBackdropBorderColor(0, 0, 0, 0.15)
+	-- -- page:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = border})
+	-- -- page:SetBackdropColor(0, 0, 0, 0.08)
+	-- -- page:SetBackdropBorderColor(0, 0, 0, 0.15)
 	Mixin(page, methods)
 
-	-- create tab to link to this page
+	-- -- create tab to link to this page
 	local index = #parent.tabs + 1
 	local tab = lib.elements['button']({solo = true}, parent.tabContainer)
 	local text = ((options.value or options.label):gsub("^%l", string.upper))
@@ -99,7 +99,6 @@ local function create(options, parent)
 		tab.page:Show()
 		tab.border:Show()
 		tab.text:SetFontObject("bdConfig_font_bold")
-		UIFrameFadeIn(tab.page, 0.2, 0, 1)
 		tab.active = true
 		tab.page.active = true
 
@@ -112,11 +111,8 @@ local function create(options, parent)
 
 	-- hide page on tab unselect
 	function tab:unselect()
-		UIFrameFadeOut(tab.page, 0.2, tab.page:GetAlpha(), 0)
 		tab.text:SetFontObject("bdConfig_font")
-		tab.page.fadeInfo.finishedFunc = function()
-			tab.page:Hide()
-		end
+		tab.page:Hide()
 		tab.border:Hide()
 		tab.active = false
 		tab.page.active = false
@@ -126,13 +122,13 @@ local function create(options, parent)
 	end
 
 	-- unselect / hide other tabs
-	tab.OnClick = function()
+	tab:SetScript("OnClick", function()
 		if (tab.active) then return end
 		for i, t in pairs(parent.tabs) do
 			t:unselect()
 		end
 		tab:select()
-	end
+	end)
 
 	-- position
 	if (index == 1) then

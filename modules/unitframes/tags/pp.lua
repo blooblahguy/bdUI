@@ -6,7 +6,7 @@ mod.tags.pp = function(self, unit)
 	if (self.Curpp) then return end
 
 	self.Curpp = self.TextHolder:CreateFontString(nil, "OVERLAY")
-	self.Curpp:SetFontObject(bdUI:get_font(11))
+	self.Curpp:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
 	self.Curpp:SetPoint("LEFT", -4, 0)
 	self.Curpp:SetTextColor(self.Power:GetStatusBarColor())
 

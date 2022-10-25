@@ -38,6 +38,7 @@ end
 -- Happens if the user had previously selected the Spreading Nameplates
 -- option, which was removed from the game in 7.0.
 do
+	if (not InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown) then return end
 	local OnEnter = InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:GetScript("OnEnter")
 	InterfaceOptionsNamesPanelUnitNameplatesMotionDropDown:SetScript("OnEnter", function(self)
 		if self.tooltip then
