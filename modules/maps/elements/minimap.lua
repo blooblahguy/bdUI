@@ -155,13 +155,15 @@ function mod:create_minimap()
 	-- Zone
 	--===========================
 	MinimapZoneText:Hide()
-	MinimapZoneText:EnableMouse(false)
-	MinimapCluster.BorderTop:Hide()
-	MinimapCluster.BorderTop:EnableMouse(false)
-	MinimapCluster.Tracking:Hide()
-	MinimapCluster.Tracking:EnableMouse(false)
-	MinimapCluster.ZoneTextButton:Hide()
-	MinimapCluster.ZoneTextButton:EnableMouse(false)
+	if (MinimapZoneText.EnableMouse) then
+		MinimapZoneText:EnableMouse(false)
+		MinimapCluster.BorderTop:Hide()
+		MinimapCluster.BorderTop:EnableMouse(false)
+		MinimapCluster.Tracking:Hide()
+		MinimapCluster.Tracking:EnableMouse(false)
+		MinimapCluster.ZoneTextButton:Hide()
+		MinimapCluster.ZoneTextButton:EnableMouse(false)
+	end
 	Minimap.zone = CreateFrame("frame", nil, Minimap)
 	Minimap.zone:Hide()
 	Minimap.zone.text = Minimap.zone:CreateFontString(nil)

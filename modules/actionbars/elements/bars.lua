@@ -8,7 +8,7 @@ local defaultPadding = 10
 -- Actionbar 1
 --===============================================================
 function mod:create_actionbar1()
-	-- mod:HideMainMenuBar()
+	mod:HideMainMenuBar()
 	cfg = {}
 	cfg.blizzardBar = nil
 	cfg.cfg = "bar1"

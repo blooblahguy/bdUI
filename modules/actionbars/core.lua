@@ -48,20 +48,20 @@ function mod:initialize()
 	mod:create_actionbar5()
 
 	-- -- Extra bars
-	-- mod:create_petbar()
-	-- mod:create_stancebar()
-	-- mod:create_micromenu()
-	-- mod:create_vehicle()
-	-- mod:create_possess()
-	-- -- mod:create_extra()
-	-- mod:create_bagbar()
-	-- mod:create_zone_ability()
+	mod:create_petbar()
+	mod:create_stancebar()
+	mod:create_micromenu()
+	mod:create_vehicle()
+	mod:create_possess()
+	-- mod:create_extra()
+	mod:create_bagbar()
+	mod:create_zone_ability()
 
 	-- Flyout
 	mod:hook_flyout()
 
-	hooksecurefunc(EditModeManagerFrame, "EnterEditMode", mod.position_selectors)
-	hooksecurefunc(EditModeManagerFrame, "ExitEditMode", mod.position_selectors)
+	-- hooksecurefunc(EditModeManagerFrame, "EnterEditMode", mod.position_selectors)
+	-- hooksecurefunc(EditModeManagerFrame, "ExitEditMode", mod.position_selectors)
 
 	-- Callback events for leaving combat
 	mod.frame:SetScript("OnEvent", mod.callback)
@@ -210,43 +210,43 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	local index = 1
 	local showgrid = tonumber(GetCVar("alwaysShowActionBars"))	
 	for i, button in pairs(buttonList) do
-		-- if not frame.__blizzardBar then
-		-- 	button:SetParent(frame)
-		-- else
-		-- 	frame.__blizzardBar.size = frame.size
-		-- 	frame.__blizzardBar.alpha = frame.alpha
-		-- 	frame.__blizzardBar.spacing = frame.spacing
-		-- end
-			button:SetSize(frame.width, frame.height)
+		if not frame.__blizzardBar then
+			button:SetParent(frame)
+		else
+			frame.__blizzardBar.size = frame.size
+			frame.__blizzardBar.alpha = frame.alpha
+			frame.__blizzardBar.spacing = frame.spacing
+		end
+		button:SetSize(frame.width, frame.height)
 
-			-- custom skinning callback
-			if (cfg.buttonSkin) then
-				cfg.buttonSkin(button)
-			else
-				mod:SkinButton(button)
-			end
+		-- custom skinning callback
+		if (cfg.buttonSkin) then
+			cfg.buttonSkin(button)
+		else
+			mod:SkinButton(button)
+		end
 
-			button:ClearAllPoints()
-			if (i > frame.limit) then
-				button:SetPoint("CENTER", v.hidden, "CENTER", 0, 0)
-				button:Hide()
-				button:SetAlpha(0)
+		button:ClearAllPoints()
+		if (i > frame.limit) then
+			button:SetPoint("CENTER", v.hidden, "CENTER", 0, 0)
+			button:Hide()
+			button:SetAlpha(0)
+		else
+			button:SetAlpha(1)
+			button:Show()
+			button:SetAttribute("showgrid", showgrid)
+			if (i == 1) then
+				button:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+				lastRow = button
+			elseif (index > frame.cols) then
+				button:SetPoint("TOPLEFT", lastRow, "BOTTOMLEFT", 0, -frame.spacing)
+				lastRow = button
+				index = 1
 			else
-				button:SetAlpha(1)
-				button:Show()
-				button:SetAttribute("showgrid", showgrid)
-				if (i == 1) then
-					button:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
-					lastRow = button
-				elseif (index > frame.cols) then
-					button:SetPoint("TOPLEFT", lastRow, "BOTTOMLEFT", 0, -frame.spacing)
-					lastRow = button
-					index = 1
-				else
-					button:SetPoint("TOPLEFT", buttonList[i - 1], "TOPRIGHT", frame.spacing, 0)
-				end
+				button:SetPoint("TOPLEFT", buttonList[i - 1], "TOPRIGHT", frame.spacing, 0)
 			end
-			index = index + 1
+		end
+		index = index + 1
 	end
 end
 
@@ -300,21 +300,10 @@ function mod:SkinButton(button)
 	local autocastable = _G[name.."AutoCastable"]
 	local r_divider = button.RightDivider
 
-	-- normal:Hide()
-	-- normal:SetAllPoints()
-	-- normal.Show = noop
-	-- _G[name.."NormalTexture"] = nil
-
-
 
 	if (button.SetNormalTexture) then
 		button:SetNormalTexture("")
 	end
-
-	-- normal:SetTexture(nil)
-	-- normal:Hide()
-	-- normal:SetAlpha(0)
-	-- normal.Show = noop
 
 	-- FLASH
 	if (flash) then
