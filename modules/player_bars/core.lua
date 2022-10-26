@@ -91,10 +91,12 @@ function mod:config_callback()
 		mod.ouf.Power.tick:SetPoint("LEFT", mod.ouf.Power, mod.ouf.Power:GetWidth() * (config.power_tick / 100), 0)
 	end
 	-- runes
-	mod.ouf.RuneHolder:SetSize(config.resources_width, config.runes_height - bdUI.border * 2)
-	local width = (config.resources_width - (bdUI.border * 5)) / 6
-	for i, rune in pairs({mod.ouf.RuneHolder:GetChildren()}) do
-		rune:SetSize(width, config.runes_height)
+	if (config.runes_height) then
+		mod.ouf.RuneHolder:SetSize(config.resources_width, config.runes_height - bdUI.border * 2)
+		local width = (config.resources_width - (bdUI.border * 5)) / 6
+		for i, rune in pairs({mod.ouf.RuneHolder:GetChildren()}) do
+			rune:SetSize(width, config.runes_height)
+		end
 	end
 
 	mod:position_bars()
