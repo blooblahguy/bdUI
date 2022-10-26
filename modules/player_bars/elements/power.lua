@@ -59,9 +59,6 @@ local function enable()
 end
 local function disable()
 	mod.ouf:DisableElement("Power")
-	combat_checker:UnregisterEvent("PLAYER_REGEN_DISABLED")
-	combat_checker:UnregisterEvent("PLAYER_REGEN_ENABLED")
-	combat_checker:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 mod:add_element('power', path, enable, disable)
