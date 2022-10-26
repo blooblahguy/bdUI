@@ -57,6 +57,7 @@ function mod:skin_weak_auras()
 
 	if (WeakAurasFrame) then
 		if (not config.skin_was) then return end
+		if (not WeakAuras or not WeakAuras.regions) then return end
 		for weakAura, v in pairs(WeakAuras.regions) do
 			if (WeakAuras.regions[weakAura].regionType == "icon" or WeakAuras.regions[weakAura].regionType == "aurabar") then
 				skin_wa_frame(WeakAuras.regions[weakAura].region)
