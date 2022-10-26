@@ -140,10 +140,10 @@ end
 local function enable()
 	mod.config = mod:get_save()
 	config = mod.config
+	holder = holder or CreateFrame("frame", nil, mod.Resources)
 
 	if (not mod.config.swingbar_enable) then return end
 
-	holder = holder or CreateFrame("frame", nil, mod.Resources)
 	bdUI:set_frame_fade(holder, mod.config.swing_ic_alpha, mod.config.swing_ooc_alpha)
 
 	-- create bars
