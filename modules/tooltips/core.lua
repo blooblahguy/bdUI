@@ -51,12 +51,12 @@ end
 
 -- add equippables ilvl
 local function add_ilvl(tooltip)
-	if (not mod.config.show_ilvls or not mod.config.enabled) then return end
+	if (not mod.config.show_ilvls or not mod.config.enablett) then return end
 	local item = tooltip:GetItem()
-	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent
+	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent = GetItemInfo(item)
 	if (not itemLevel or itemEquipLoc == "") then return end
-
-	tooltip:AddLine("Item Level: "..itemLevel)
+	tooltip:AddDoubleLine("Item Level", itemLevel, nil, nil, nil, 1, 1, 1)
+	-- tooltip:AddLine("Item Level: "..itemLevel)
 end
 
 --=========================================

@@ -21,14 +21,14 @@ local spells = {
 	["Heroic Strike"] = 0,
 	["Cleave"] = 0,
 	["Maul"] = 0,
-	["Slam"] = 0,
-	["Raptor Strike"] = 0,
+	-- ["Slam"] = 0,
+	-- ["Raptor Strike"] = 0,
 }
 local spellTypes = {
 	["Heroic Strike"] = 1,
 	["Cleave"] = 2,
 	["Maul"] = 1,
-	["Raptor Strike"] = 1,
+	-- ["Raptor Strike"] = 1,
 }
 
 -- set bar color back to class

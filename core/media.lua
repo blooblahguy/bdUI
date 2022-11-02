@@ -26,6 +26,7 @@ combat_checker:RegisterEvent("PLAYER_ENTERING_WORLD")
 combat_checker:RegisterEvent("PLAYER_REGEN_DISABLED")
 combat_checker:RegisterEvent("PLAYER_REGEN_ENABLED")
 combat_checker:RegisterEvent("PLAYER_UPDATE_RESTING")
+combat_checker:RegisterEvent("ZONE_CHANGED")
 combat_checker:SetScript("OnEvent", function()
 	if (UnitAffectingCombat("player")) then
 		bdUI:do_action("in_combat")

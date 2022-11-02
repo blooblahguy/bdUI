@@ -3,12 +3,14 @@ local mod = bdUI:get_module("Groups")
 
 local dispelClass = {
 	["PRIEST"] = { ["Disease"] = true, ["Magic"] = true, }, --Purify
-	["SHAMAN"] = { ["Curse"] = true, ["Magic"] = true, }, --Purify Spirit
+	["SHAMAN"] = { ["Curse"] = true, ["Magic"] = true, ["Poison"] = true, }, --Purify Spirit
 	["PALADIN"] = { ["Poison"] = true, ["Disease"] = true, ["Magic"] = true, }, --Cleanse
 	["MAGE"] = { ["Curse"] = true, }, --Remove Curse
 	["DRUID"] = { ["Curse"] = true, ["Poison"] = true, ["Magic"] = true, }, --Nature's Cure
 	["MONK"] = { ["Poison"] = true, ["Disease"] = true, ["Magic"] = true, }, --Detox
+	["WARLOCK"] = { ["Magic"] = true, }, -- Devour magic
 }
+
 local dispelColors = {
 	['Magic'] = {.16, .5, .81, 1},
 	['Poison'] = {.12, .76, .36, 1},

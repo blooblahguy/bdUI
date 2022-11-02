@@ -79,9 +79,11 @@ function mod:config_callback()
 	end
 
 	-- callbacks
-	mod.ouf.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
 	mod.Resources:SetSize(config.resources_width, 40)
+	-- castbar
+	mod.ouf.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
 	mod.ouf.CastbarHolder:SetSize(config.resources_width, config.castbar_height)
+	-- power
 	mod.ouf.Power:SetSize(config.resources_width, config.power_height)
 	if (config.power_tick == 0) then
 		mod.ouf.Power.tick:Hide()
@@ -97,6 +99,11 @@ function mod:config_callback()
 		for i, rune in pairs({mod.ouf.RuneHolder:GetChildren()}) do
 			rune:SetSize(width, config.runes_height)
 		end
+	end
+	-- swing
+	if (mod.swing_timer) then
+		mod.swing_timer.mainhand:SetWidth(config.resources_width)
+		mod.swing_timer.offhand:SetWidth(config.resources_width)
 	end
 
 	mod:position_bars()
