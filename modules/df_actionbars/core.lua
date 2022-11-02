@@ -22,6 +22,8 @@ function mod:initialize()
 	config = mod:get_save()
 	if (not config.enabled) then return end
 
+	SetCVar("countdownForCooldowns", 1)
+
 	local bars = {
 		["ab1"] = mod:get_button_list("ActionButton", NUM_ACTIONBAR_BUTTONS),
 		["ab2"] = mod:get_button_list("MultiBarBottomLeftButton", NUM_ACTIONBAR_BUTTONS),
@@ -86,7 +88,7 @@ function mod:skin_button(button)
 	-- ICON
 	if (icon) then
 		icon:SetTexCoord(.1, .9, .1, .9)
-		icon:SetDrawLayer("ARTWORK")
+		-- icon:SetDrawLayer("ARTWORK")
 	end
 
 	-- HOTKEY
@@ -126,12 +128,13 @@ function mod:skin_button(button)
 		cooldowntext:SetPoint("LEFT", cooldown, -20, 0)
 		cooldowntext:SetPoint("RIGHT", cooldown, 20, 0)
 		cooldown:SetParent(button)
-		cooldown:SetPoint("CENTER")
-		cooldown:SetSize(button:GetWidth() + 4, button:GetHeight() + 4)
+		cooldown:SetPoint("TOPLEFT")
+		cooldown:SetPoint("BOTTOMRIGHT")
+		--cooldown:SetSize(button:GetWidth() + 46, button:GetHeight() + 6)
 
 		-- hook into cooldown styling
-		-- hooksecurefunc(cooldown, "SetCooldown", mod.hook_cooldown)
-		-- cooldown:SetScript("OnUpdate", function(self, elapsed) mod:cooldown_on_update(self, elapsed) end)
+		hooksecurefunc(cooldown, "SetCooldown", mod.hook_cooldown)
+		cooldown:SetScript("OnUpdate", function(self, elapsed) mod:cooldown_on_update(self, elapsed) end)
 	end
 
 	-- HOVER

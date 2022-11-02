@@ -111,6 +111,7 @@ end
 
 
 function mod:position_bars()
+	if (InCombatLockdown()) then return end
 	-- add things to the frame stack
 	mod.bars = {}
 	if (mod.ouf.RuneHolder) then

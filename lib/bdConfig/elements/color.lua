@@ -12,6 +12,12 @@ local methods = {
 		if (not value) then value = self:get(self.save, self.key) end
 		self.save[self.key] = value
 
+		-- it was nil at some point?
+		if (value == nil or #value == 0 or value == {}) then
+			value = {1, 1, 1}
+			self.save[self.key] = value
+		end
+
 		self.picker:SetBackdropColor(unpack(value))
 	end,
 	-- return value from profile[key]

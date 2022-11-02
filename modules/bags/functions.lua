@@ -6,6 +6,11 @@ tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
 
 mod.item_tooltip_cache = {}
 
+local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
+local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
+local GetContainerItemLink = GetContainerItemLink or C_Container.GetContainerItemLink
+
 -- ITEM_SOULBOUND
 -- ITEM_BIND_ON_EQUIP
 

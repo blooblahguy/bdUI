@@ -29,6 +29,8 @@ function mod:initialize()
 	mod.config = c
 	if (not c.enabled) then mod.disabled = true; return end
 
+	SetCVar("countdownForCooldowns", 1)
+
 	mod.variables.font = bdUI:get_font(c.font_size)
 	mod.variables.cooldownfont = bdUI:get_font(c.cd_font_size)
 
@@ -80,8 +82,6 @@ function mod:config_callback()
 	end
 	
 	mod:UnregisterEvent("PLAYER_REGEN_DISABLED")
-	mod.variables.font = bdUI:get_font(c.font_size)
-	mod.variables.cooldownfont = bdUI:get_font(c.cd_font_size)
 
 	-- loop through bar callbacks
 	for k, callback in pairs(mod.variables.callbacks) do
@@ -315,7 +315,7 @@ function mod:SkinButton(button)
 	-- ICON
 	if (icon) then
 		icon:SetTexCoord(.1, .9, .1, .9)
-		icon:SetDrawLayer("ARTWORK")
+		-- icon:SetDrawLayer("ARTWORK")
 	end
 
 	-- HOTKEY
@@ -355,8 +355,9 @@ function mod:SkinButton(button)
 		cooldowntext:SetPoint("LEFT", cooldown, -20, 0)
 		cooldowntext:SetPoint("RIGHT", cooldown, 20, 0)
 		cooldown:SetParent(button)
-		cooldown:SetPoint("CENTER")
-		cooldown:SetSize(button:GetWidth() + 4, button:GetHeight() + 4)
+		cooldown:SetPoint("TOPLEFT")
+		cooldown:SetPoint("BOTTOMRIGHT")
+		-- cooldown:SetSize(button:GetWidth() + 4, button:GetHeight() + 4)
 
 		-- hook into cooldown styling
 		hooksecurefunc(cooldown, "SetCooldown", mod.hook_cooldown)

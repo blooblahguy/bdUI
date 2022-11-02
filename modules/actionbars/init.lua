@@ -294,10 +294,6 @@ mod.variables.hidden = CreateFrame("Frame")
 mod.variables.hidden:Hide()
 mod.variables.callbacks = {}
 
---fonts
-mod.variables.cooldownfont = bdUI:get_font(30)
-mod.variables.font = bdUI:get_font(14)
-
 function mod:unpack()
 	return self[1], self[2], self[3]
 end
