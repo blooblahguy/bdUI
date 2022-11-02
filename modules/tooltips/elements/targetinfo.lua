@@ -1,47 +1,53 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
 
+local function target_info(self, unit)
+	local name, unit = self:GetUnit()
+	unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
+
+	self.unit = unit
+	self.ilvl = nil
+	self.spec = nil
+	
+	if (IsShiftKeyDown()) then
+		mod:getAverageItemLevel(self, self.unit)
+	end
+	if (self._extra) then return end
+
+	self:RegisterEvent("MODIFIER_STATE_CHANGED")
+	self:HookScript("OnEvent", function(self, event, arg1, arg2)
+		if (not UnitIsPlayer("mouseover")) then return end
+
+		if (IsShiftKeyDown()) then
+			mod:getAverageItemLevel(self, "mouseover")
+		else
+			if (self.ilvl) then
+				_G["GameTooltipTextLeft"..self.ilvl]:SetText("")
+				_G["GameTooltipTextLeft"..self.ilvl]:Hide()
+				_G["GameTooltipTextRight"..self.ilvl]:SetText("")
+				_G["GameTooltipTextRight"..self.ilvl]:Hide()
+
+				_G["GameTooltipTextLeft"..self.spec]:SetText("")
+				_G["GameTooltipTextLeft"..self.spec]:Hide()
+				_G["GameTooltipTextRight"..self.spec]:SetText("")
+				_G["GameTooltipTextRight"..self.spec]:Hide()
+
+				self:Show()
+			end
+		end
+	end)
+	
+	self._extra = true
+end
+
 function mod:create_unit_info()
 	if not GetInspectSpecialization then return end
 
-	GameTooltip:HookScript('OnTooltipSetUnit', function(self, unit)
-		local name, unit = self:GetUnit()
-		unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
-
-		self.unit = unit
-		self.ilvl = nil
-		self.spec = nil
-		
-		if (IsShiftKeyDown()) then
-			mod:getAverageItemLevel(self, self.unit)
-		end
-		if (self._extra) then return end
-
-		self:RegisterEvent("MODIFIER_STATE_CHANGED")
-		self:HookScript("OnEvent", function(self, event, arg1, arg2)
-			if (not UnitIsPlayer("mouseover")) then return end
-
-			if (IsShiftKeyDown()) then
-				mod:getAverageItemLevel(self, "mouseover")
-			else
-				if (self.ilvl) then
-					_G["GameTooltipTextLeft"..self.ilvl]:SetText("")
-					_G["GameTooltipTextLeft"..self.ilvl]:Hide()
-					_G["GameTooltipTextRight"..self.ilvl]:SetText("")
-					_G["GameTooltipTextRight"..self.ilvl]:Hide()
-
-					_G["GameTooltipTextLeft"..self.spec]:SetText("")
-					_G["GameTooltipTextLeft"..self.spec]:Hide()
-					_G["GameTooltipTextRight"..self.spec]:SetText("")
-					_G["GameTooltipTextRight"..self.spec]:Hide()
-
-					self:Show()
-				end
-			end
-		end)
-		
-		self._extra = true
-	end)
+	if (TooltipDataProcessor) then
+		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, target_info);
+	else
+		GameTooltip:HookScript('OnTooltipSetUnit', target_info)
+	end
 end
 
 if not GetInspectSpecialization then return end

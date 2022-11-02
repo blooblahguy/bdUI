@@ -4,6 +4,11 @@ local mod = bdUI:get_module("Bags")
 mod.categoryIDtoNames = {}
 mod.categoryNamestoID = {}
 
+if (C_Container and C_Container.GetContainerNumSlots) then
+	GetContainerNumSlots = C_Container.GetContainerNumSlots
+	GetContainerItemInfo = C_Container.GetContainerItemInfo
+end
+
 -- bags
 function mod:create_bags()
 	mod.bags = mod:create_container("Bags")

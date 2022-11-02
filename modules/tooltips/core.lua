@@ -168,8 +168,14 @@ function mod:create_tooltips()
 	--============================
 	-- hook main styling functions
 	--============================
-	GameTooltip:HookScript('OnTooltipSetUnit', update_unit_tooltip)
-	GameTooltip:HookScript("OnTooltipSetItem", add_ilvl)
+	if (TooltipDataProcessor) then
+		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, update_unit_tooltip);
+		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, add_ilvl);
+	else
+		GameTooltip:HookScript('OnTooltipSetUnit', update_unit_tooltip)
+		GameTooltip:HookScript("OnTooltipSetItem", add_ilvl)
+	end
+	
 	-- mod:RegisterEvent("PLAYER_LOGIN")
 	-- mod:SetScript("OnEvent", function()
 	-- 	if (LibDBIconTooltip) then
