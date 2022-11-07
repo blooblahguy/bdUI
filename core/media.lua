@@ -41,6 +41,16 @@ function bdUI:do_frame_fade()
 	for frame, info in pairs(combat_fade_frames) do
 		local ic_alpha, ooc_alpha, resting_alpha = unpack(info)
 		local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha or ooc_alpha
+
+		if (InCombatLockdown()) then
+			if (target_alpha > frame:GetAlpha() or frame:GetAlpha() > 0) then
+				frame:Show()
+			else
+				frame:Hide()
+			end
+			return
+		end
+
 		if (target_alpha > frame:GetAlpha()) then
 			frame:Show()
 			UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), target_alpha)
@@ -100,7 +110,9 @@ function bdUI:frame_group(container, direction, ...)
 		end
 	end
 
-	container:SetSize(width, height - bdUI.border)
+	if (not InCombatLockdown()) then
+		container:SetSize(width, height - bdUI.border)
+	end
 
 	-- loop through frames provided in other parameters	
 	for k, frame in pairs(children) do

@@ -260,6 +260,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	
 	-- Sizing
 	local function resize(self)
+		if (InCombatLockdown()) then return end
 		local height = self:GetHeight()
 		local width = self:GetWidth()
 
@@ -267,6 +268,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	end
 	hooksecurefunc(frame, "SetSize", resize)
 	hooksecurefunc(frame, "SetScale", resize)
+	bdUI:add_action("out_combat", function() resize(frame) end)
 
 	-- select this element for moving
 	function mover:select()

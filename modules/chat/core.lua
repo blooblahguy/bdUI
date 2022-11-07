@@ -18,34 +18,34 @@ function mod:initialize()
 	-- alerts
 	mod:create_alerts()
 
-	-- -- skin
+	-- skin
 	mod:skin_chat()
 
-	-- -- url copy
+	-- url copy
 	mod:chat_urls()
 
-	-- -- alt invite
+	-- alt invite
 	mod:alt_invite()
 
-	-- -- bubbles
+	-- bubbles
 	mod:create_chat_bubbles()
 	
-	-- -- names
+	-- names
 	mod:color_names()
 	
-	-- -- channels
+	-- channels
 	mod:format_channels()
 
-	-- -- emojis
-	mod:create_emojis()
+	-- -- -- emojis
+	-- mod:create_emojis()
 	
-	-- -- telltarget command
-	mod:telltarget()
+	-- -- -- telltarget command
+	-- mod:telltarget()
 	
-	-- -- community mask
-	mod:create_community()
+	-- -- -- community mask
+	-- mod:create_community()
 
-	mod:config_callback()
+	-- mod:config_callback()
 end
 
 function mod:config_callback()
@@ -53,6 +53,4 @@ function mod:config_callback()
 	config = mod.config
 
 	if (not config.enabled) then return end
-
-	
 end

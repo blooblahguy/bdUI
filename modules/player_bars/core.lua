@@ -64,6 +64,8 @@ function mod:initialize()
 	mod.ouf:SetParent(mod.Resources)
 	mod.ouf:SetAllPoints(mod.Resources)
 	mod.ouf:SetAlpha(1)
+
+	bdUI:do_frame_fade()
 end
 
 -- on load AND on change
@@ -107,6 +109,7 @@ function mod:config_callback()
 	end
 
 	mod:position_bars()
+	bdUI:do_frame_fade()
 end
 
 
