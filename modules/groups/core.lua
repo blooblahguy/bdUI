@@ -329,11 +329,11 @@ local function layout(self, unit)
 			['Curse'] = {.80, .33, .95, 1},
 		}
 
-		if (dispelColors[debuffType]) then
-			button:set_border_color(dispelColors[debuffType])
-		else
-			button:set_border_color(unpack(bdUI.media.border))
-		end
+		-- if (dispelColors[debuffType]) then
+		-- 	button:set_border_color(unpack(dispelColors[debuffType]))
+		-- else
+		button:set_border_color(unpack(bdUI.media.border))
+		-- end
 
 		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
 	end
