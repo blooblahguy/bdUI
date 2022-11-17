@@ -33,7 +33,7 @@ function mod:config_callback()
 
 	-- Mask the minimap
 	if (config.shape == "Rectangle") then
-		Minimap:SetMaskTexture("Interface\\Addons\\bdUI\\media\\rectangle.tga")
+		Minimap:SetMaskTexture("Interface\\Addons\\bdUI\\core\\media\\rectangle.tga")
 	else
 		Minimap:SetMaskTexture(bdUI.media.flat)
 	end

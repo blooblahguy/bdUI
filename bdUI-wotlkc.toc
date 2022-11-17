@@ -24,9 +24,9 @@ lib\fixes\InspectFix.lua
 lib\fixes\LibStrataFix.lua
 
 # Locales
-locales\AceLocale-3.0.lua
-locales\enUS.lua
-locales\deDE.lua
+core\locales\AceLocale-3.0.lua
+core\locales\enUS.lua
+core\locales\deDE.lua
 
 # Ace
 lib\ace\utf8data.lua
@@ -80,13 +80,12 @@ core\performance.lua
 core\commands.lua
 core\core.lua
 core\media.lua
-core\auras.lua
 core\modules.lua
 core\setup.lua
 core\load.lua
 
 # classic auras
-game_versions\wotlk\wotlk_auras.lua
+versions\wotlk\wotlk_auras.lua
 
 # General
 modules\general\init.lua

@@ -56,8 +56,8 @@ lib.media = {
 	font = "fonts\\ARIALN.ttf",
 	border = {.62, .17, .18, 0.6},
 	backdrop = {.1, .1, .1, 0.6},
-	arrow = "Interface\\Addons\\"..addonName.."\\media\\arrow.blp",
-	align = "Interface\\Addons\\"..addonName.."\\media\\align.blp",
+	arrow = "Interface\\Addons\\"..addonName.."\\core\\media\\arrow.blp",
+	align = "Interface\\Addons\\"..addonName.."\\core\\media\\align.blp",
 }
 
 -- set savedvariable

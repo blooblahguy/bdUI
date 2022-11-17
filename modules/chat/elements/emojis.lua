@@ -6,7 +6,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
 -- Thanks to ElvUI for providing great textures
-local p = "Interface\\Addons\\bdUI\\media\\emojis\\"
+local p = "Interface\\Addons\\bdUI\\core\\media\\emojis\\"
 local emoji_textures = {
 	Angry = p.."Angry.tga",
 	Blush = p.."Blush.tga",

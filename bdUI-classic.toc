@@ -23,9 +23,9 @@ lib\fixes\InspectFix.lua
 lib\fixes\LibStrataFix.lua
 
 # Locales
-locales\AceLocale-3.0.lua
-locales\enUS.lua
-locales\deDE.lua
+core\locales\AceLocale-3.0.lua
+core\locales\enUS.lua
+core\locales\deDE.lua
 
 # Ace
 lib\ace\utf8data.lua
@@ -49,7 +49,7 @@ lib\classic\LibClassicCasterino\LibClassicCasterino.lua
 lib\classic\LibClassicDurations\LibClassicDurations.xml
 lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
 lib\classic\LibHealComm\LibHealComm-4.0.lua
-game_versions\vanilla\vanilla.lua
+versions\vanilla\vanilla.lua
 
 # oUF
 lib\oUF\oUF_Classic.xml
@@ -80,7 +80,6 @@ core\performance.lua
 core\commands.lua
 core\core.lua
 core\media.lua
-core\auras.lua
 core\modules.lua
 core\setup.lua
 core\load.lua

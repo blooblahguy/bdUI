@@ -250,7 +250,6 @@ local function layout(self, unit)
 		local role = UnitGroupRolesAssigned(self.unit)
 		if (config.roleicon) then
 			if (role and (role == "HEALER" or role == "TANK")) then
-				-- self.GroupRoleIndicator:SetTexture("Interface\\Addons\\bdUI\\media\\tank.tga")
 				self.GroupRoleIndicator:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
 				self.GroupRoleIndicator:Show()
 			end
@@ -329,11 +328,7 @@ local function layout(self, unit)
 			['Curse'] = {.80, .33, .95, 1},
 		}
 
-		-- if (dispelColors[debuffType]) then
-		-- 	button:set_border_color(unpack(dispelColors[debuffType]))
-		-- else
 		button:set_border_color(unpack(bdUI.media.border))
-		-- end
 
 		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
 	end

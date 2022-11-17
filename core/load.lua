@@ -68,7 +68,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		if LDB then
 			local minimapIcon = LDB:NewDataObject("bdUI", {
 				type = "launcher",
-				icon = "Interface\\AddOns\\bdUI\\media\\minimapicon.blp",
+				icon = "Interface\\AddOns\\bdUI\\core\\media\\minimapicon.blp",
 				OnClick = function(clickedframe, button)
 					if (button == "LeftButton") then
 						if (IsControlKeyDown()) then
