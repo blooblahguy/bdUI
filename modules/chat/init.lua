@@ -40,12 +40,12 @@ local config = {
 				max = 1,
 				label = "Chat background opacity."
 			},
-			{
-				key = "chatHide",
-				type = "toggle",
-				value = false,
-				label = "Hide communities chat until focus, for streamers."
-			},
+			-- {
+			-- 	key = "chatHide",
+			-- 	type = "toggle",
+			-- 	value = false,
+			-- 	label = "Hide communities chat until focus, for streamers."
+			-- },
 			{
 				key = "hideincombat",
 				type = "toggle",
