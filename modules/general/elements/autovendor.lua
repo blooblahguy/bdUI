@@ -20,6 +20,9 @@ hooksecurefunc(delete_panel, "OnShow", prefill_text)
 local cansell = false
 local repair = 0
 local trash = 0
+
+local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
+local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
  
 local function sell_trash(bag)
     for slot = 1, GetContainerNumSlots(bag) do
