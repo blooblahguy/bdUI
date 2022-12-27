@@ -2,7 +2,11 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
 
 local function target_target(self, unit)
-	local name, unit = self:GetUnit()
+	local name
+	if (self.GetUnit) then
+		name, unit = self:GetUnit()
+	end
+	unit = unit or "mouseover"
 	-- print(unit)
 	-- who's targeting whom?
 	if (unit and UnitExists(unit..'target')) then

@@ -63,11 +63,11 @@ end
 --=========================================
 -- Main tooltip hook
 --=========================================
-local function update_unit_tooltip(self)
+local function update_unit_tooltip(self, unit)
 	if (self:IsForbidden() or self:IsProtected()) then return end -- don't mess with forbidden frames, which sometimes randomly happens
 
-	local name, unit = self:GetUnit()
-	unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
+	-- unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
+	unit = "mouseover"
 
 	self.unit = unit
 	self.ilvl = nil

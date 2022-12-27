@@ -23,12 +23,18 @@ local trash = 0
 
 local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
 local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
+local UseContainerItem = UseContainerItem or C_Container.UseContainerItem
  
 local function sell_trash(bag)
     for slot = 1, GetContainerNumSlots(bag) do
 		if not cansell then break end
 
 		local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+		if (type(texture) == "table") then
+			quality = texture.quality
+			locked = texture.isLocked
+			texture = texture.iconFileID
+		end
 		if (texture and quality == 0 and not locked) then
 			UseContainerItem(bag, slot)
 			delay(0.05)
@@ -54,6 +60,7 @@ sell:HookScript("OnEvent", function(self, event)
 		trash = 0
 		cansell = false
 	end
+
 
 	-- auto repair
 	if (mod.config.autorepair) then

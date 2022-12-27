@@ -2,8 +2,12 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
 
 local function target_info(self, unit)
-	local name, unit = self:GetUnit()
+	local name
+	if (self.GetUnit) then
+		name, unit = self:GetUnit()
+	end
 	unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
+	-- local name, unit = self:GetUnit()C_TooltipInfo.GetUnit("player")
 
 	self.unit = unit
 	self.ilvl = nil
