@@ -125,9 +125,9 @@ modules\df_actionbars\cooldown.lua
 # modules\bags\elements\containers.lua
 
 # Buffs & Debuffs
-# modules\buffs_debuffs\template.xml
-# modules\buffs_debuffs\init.lua
-# modules\buffs_debuffs\core.lua
+modules\buffs_debuffs\template.xml
+modules\buffs_debuffs\init.lua
+modules\buffs_debuffs\core.lua
 
 # Chat
 modules\chat\init.lua

@@ -1,9 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">	
-	<Button name='bdAuraTemplate' inherits='SecureActionButtonTemplate' virtual='true' framelevel='4'>
-		<Size x='32' y='32'/>
-		<Attributes>
-			<Attribute name='type' value='cancelaura'/>
-		</Attributes>
+	<Button name='bdAuraTemplate' inherits='SecureActionButtonTemplate, BackdropTemplate' virtual='true' framelevel='4'>
+		<Attributes><Attribute name='type' value='cancelaura'/></Attributes>
 		<Scripts>
 			<OnLoad>
 				bdUI:get_module("Buffs and Debuffs"):create_aura(self)
