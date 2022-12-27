@@ -156,6 +156,22 @@ function bdUI:kill(frame)
 	hooksecurefunc(frame, "Show", function(self) self:Hide() end)
 end
 
+function bdUI:KillEditMode(object)
+	object.HighlightSystem = noop
+	object.ClearHighlight = noop
+end
+
+function bdUI:Kill(object)
+	if object.UnregisterAllEvents then
+		object:UnregisterAllEvents()
+		object:SetParent(bdUI.hidden)
+	else
+		object.Show = object.Hide
+	end
+
+	object:Hide()
+end
+
 function bdUI:GetQuadrant(frame)
 	local x, y = frame:GetCenter()
 	x = x * UIParent:GetScale()

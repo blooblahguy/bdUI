@@ -161,15 +161,6 @@ local function skin(f)
 		end
 	end
 	
-	-- Create background
-	-- local bg = CreateFrame("button", nil, Minimap.buttonFrame)
-	-- bg:SetPoint("CENTER", f)
-	-- bdUI:set_backdrop(bg)
-	
-	-- f.bg = bg
-	-- -- , "OnShow", function(self) self.bg:Show() end)
-	-- hooksecurefunc(f, "OnHide", function(self) self.bg:Hide() end)
-	
 	bdUI:set_backdrop(f)
 	f.skinned = true
 end

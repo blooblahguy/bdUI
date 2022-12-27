@@ -49,6 +49,8 @@ end
 function mod:skin_button(button)
 	if button.skinned then return end
 
+	button:KillEditMode()
+
 	-- bdUI:set_backdrop(button)
 	if (not button.SetBackdrop) then
 		Mixin(button, BackdropTemplateMixin)

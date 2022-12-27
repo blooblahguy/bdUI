@@ -11,8 +11,11 @@ function mod:initialize()
 	if (not mod.config.enabled) then return end
 
 	mod:create_objective_tracker()
+	
 	mod:create_minimap()
+
 	mod:create_button_frame()
+
 	mod:worldmap_coords()
 
 	mod:config_callback()
@@ -20,17 +23,13 @@ end
 
 function mod:config_callback()
 	config = mod.config
-
 	if (not mod.config.enabled) then return end
 
-	-- resize elements
-	-- Minimap:SetScale(config.scale)
+	-- mm callback
+	Minimap:SetScale(config.scale)
+	Minimap:SetSize(config.size, config.size)
+	mod.bdMinimap:SetSize(config.size * config.scale, config.size * config.scale)
 	
-	local border = bdUI.border
-	-- Minimap:SetSize(config.size, config.size)
-
-	mod:position_minimap()
-
 	-- Mask the minimap
 	if (config.shape == "Rectangle") then
 		Minimap:SetMaskTexture("Interface\\Addons\\bdUI\\core\\media\\rectangle.tga")
@@ -38,28 +37,27 @@ function mod:config_callback()
 		Minimap:SetMaskTexture(bdUI.media.flat)
 	end
 	
-	-- scale elements back down
-	TimeManagerClockButton:SetScale(1 / config.scale)
-	MiniMapMailIcon:SetScale(1 / config.scale)
-	local MiniMapMailFrame = MiniMapMailFrame or MailFrame
-	MiniMapMailFrame:SetScale(1 / config.scale)
-	Minimap.zone:SetScale(1 / config.scale)
-	TicketStatusFrame:SetScale(1 / config.scale)
-	Minimap.rd:SetScale(1 / config.scale)
+	-- -- scale elements back down
+	-- TimeManagerClockButton:SetScale(1 / config.scale)
+	-- MiniMapMailIcon:SetScale(1 / config.scale)
+	-- local MiniMapMailFrame = MiniMapMailFrame or MailFrame
+	-- MiniMapMailFrame:SetScale(1 / config.scale)
+	-- Minimap.zone:SetScale(1 / config.scale)
+	-- TicketStatusFrame:SetScale(1 / config.scale)
+	-- Minimap.rd:SetScale(1 / config.scale)
 	
 
-	-- show/hide time
-	if not IsAddOnLoaded("Blizzard_TimeManager") then
-		LoadAddOn('Blizzard_TimeManager')
-	end
-	if (config.showtime) then
-		TimeManagerClockButton:SetAlpha(1)
-		TimeManagerClockButton:Show()
-	else
-		TimeManagerClockButton:SetAlpha(0)
-		TimeManagerClockButton:Hide()
-	end
-
+	-- -- show/hide time
+	-- if not IsAddOnLoaded("Blizzard_TimeManager") then
+	-- 	LoadAddOn('Blizzard_TimeManager')
+	-- end
+	-- if (config.showtime) then
+	-- 	TimeManagerClockButton:SetAlpha(1)
+	-- 	TimeManagerClockButton:Show()
+	-- else
+	-- 	TimeManagerClockButton:SetAlpha(0)
+	-- 	TimeManagerClockButton:Hide()
+	-- end
 
 	mod:position_button_frame()
 end
