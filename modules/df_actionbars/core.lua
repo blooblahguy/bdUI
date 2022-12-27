@@ -49,7 +49,7 @@ end
 function mod:skin_button(button)
 	if button.skinned then return end
 
-	button:KillEditMode()
+	-- button:KillEditMode()
 
 	-- bdUI:set_backdrop(button)
 	if (not button.SetBackdrop) then
