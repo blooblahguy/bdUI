@@ -34,7 +34,7 @@ function mod:create_altpower()
 				self:Show()
 				self:SetMinMaxValues(0, UnitPowerMax("player", ALTERNATE_POWER_INDEX))
 				self:SetValue(power)
-				self:SetStatusBarColor(bdUI.media.blue.r, bdUI.media.blue.g, bdUI.media.blue.b);
+				--self:SetStatusBarColor(bdUI.media.blue.r, bdUI.media.blue.g, bdUI.media.blue.b);
 				self:SetStatusBarColor(unpack(bdUI.media.blue));
 
 				local extra = config.alt_height / 4
