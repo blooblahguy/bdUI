@@ -183,6 +183,10 @@ modules\maps\config.lua
 modules\maps\functions.lua
 modules\maps\core.lua
 modules\maps\elements\minimap.lua
+modules\maps\elements\skin.lua
+modules\maps\elements\blizzard.lua
+modules\maps\elements\difficulty.lua
+modules\maps\elements\zone.lua
 modules\maps\elements\objectivetracker.lua
 modules\maps\elements\buttonframe.lua
 modules\maps\elements\worldmap.lua
