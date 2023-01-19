@@ -1,6 +1,12 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
+local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
+local GetContainerItemLink = GetContainerItemLink or C_Container.GetContainerItemLink
+local GetContainerItemID = GetContainerItemID or C_Container.GetContainerItemID
+
 -- bank
 function mod:create_bank()
 	mod.bank = mod:create_container("Bank")
@@ -77,6 +83,11 @@ function mod:update_bank()
 
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+			if (type(texture) == "table") then
+				itemLink = texture.hyperlink
+				quality = texture.quality
+				itemCount = texture.stackCount
+			end
 			-- print(bag, slot, itemLink, GetContainerItemInfo(bag, slot))
 
 			-- if (texture and texture > 0 and quality == -1) then

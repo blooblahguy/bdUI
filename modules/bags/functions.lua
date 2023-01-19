@@ -10,6 +10,7 @@ local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNum
 local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
 local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
 local GetContainerItemLink = GetContainerItemLink or C_Container.GetContainerItemLink
+local GetContainerItemID = GetContainerItemID or C_Container.GetContainerItemID
 
 -- ITEM_SOULBOUND
 -- ITEM_BIND_ON_EQUIP

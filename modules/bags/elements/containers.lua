@@ -1,6 +1,10 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
+local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
+
 local function search_sanitize(str)
 	str = str:lower()
 	str = strtrim(str)
