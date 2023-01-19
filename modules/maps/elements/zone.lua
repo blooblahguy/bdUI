@@ -9,12 +9,14 @@ function mod:minimap_zones()
 	MinimapZoneText:Hide()
 	if (MinimapZoneText.EnableMouse) then
 		MinimapZoneText:EnableMouse(false)
-		MinimapCluster.BorderTop:Hide()
-		MinimapCluster.BorderTop:EnableMouse(false)
-		MinimapCluster.Tracking:Hide()
-		MinimapCluster.Tracking:EnableMouse(false)
-		MinimapCluster.ZoneTextButton:Hide()
-		MinimapCluster.ZoneTextButton:EnableMouse(false)
+		if (MinimapCluster.BorderTop) then
+			MinimapCluster.BorderTop:Hide()
+			MinimapCluster.BorderTop:EnableMouse(false)
+			MinimapCluster.Tracking:Hide()
+			MinimapCluster.Tracking:EnableMouse(false)
+			MinimapCluster.ZoneTextButton:Hide()
+			MinimapCluster.ZoneTextButton:EnableMouse(false)
+		end
 	end
 
 	Minimap.zone = CreateFrame("frame", nil, Minimap)

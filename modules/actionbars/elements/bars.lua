@@ -15,12 +15,13 @@ function mod:create_actionbar1()
 	cfg.frameName = "bdActionbars_1"
 	cfg.moveName = "Actionbar 1"
 	cfg.frameVisibility = "[petbattle] hide; show"
-	cfg.actionPage = "[bar:6] 6; [bar:5] 5; [bar:4] 4; [bar:3] 3; [bar:2] 2; [overridebar] 14; [shapeshift] 13; [vehicleui] 12; [possessbar] 12; [bonusbar:5] 11; [bonusbar:4] 10; [bonusbar:3] 9; [bonusbar:2] 8; [bonusbar:1] 7; 1"
 
-	if (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
- 		-- cfg.actionPage = '[bonusbar:5] 11; [shapeshift] 13; [form,noform] 0; [stealth] 7; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6;'
- 		cfg.actionPage = "[stealth] 7; [bar:6] 6; [bar:5] 5; [bar:4] 4; [bar:3] 3; [bar:2] 2; [overridebar] 14; [shapeshift] 13; [vehicleui] 12; [possessbar] 12; [bonusbar:5] 11; [bonusbar:4] 10; [bonusbar:3] 9; [bonusbar:2] 8; [bonusbar:1] 7; 1"
+	-- paging from elvui, ty
+	cfg.actionPage = ""
+	if (bdUI.version > 30000) then
+		cfg.actionPage = format('[overridebar] %d; [vehicleui][possessbar] %d;', GetOverrideBarIndex(), GetVehicleBarIndex())
 	end
+	cfg.actionPage = cfg.actionPage..format('[shapeshift] %d; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; [bonusbar:5] 11;', GetTempShapeshiftBarIndex())
 
 	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 80}
 
