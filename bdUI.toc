@@ -109,20 +109,20 @@ modules\df_actionbars\core.lua
 modules\df_actionbars\cooldown.lua
 
 # Bags
-modules\bags\init.lua
-modules\bags\functions.lua
-modules\bags\core.lua
-modules\bags\elements\currencies.lua
-modules\bags\elements\money.lua
-modules\bags\elements\categories.lua
-modules\bags\elements\button_lib.lua
-modules\bags\elements\bags.lua
-modules\bags\elements\bank.lua
-modules\bags\elements\reagents.lua
-modules\bags\elements\loot.lua
-modules\bags\elements\positioning.lua
-modules\bags\elements\filters.lua
-modules\bags\elements\containers.lua
+# modules\bags\init.lua
+# modules\bags\functions.lua
+# modules\bags\core.lua
+# modules\bags\elements\currencies.lua
+# modules\bags\elements\money.lua
+# modules\bags\elements\categories.lua
+# modules\bags\elements\button_lib.lua
+# modules\bags\elements\bags.lua
+# modules\bags\elements\bank.lua
+# modules\bags\elements\reagents.lua
+# modules\bags\elements\loot.lua
+# modules\bags\elements\positioning.lua
+# modules\bags\elements\filters.lua
+# modules\bags\elements\containers.lua
 
 # Buffs & Debuffs
 modules\buffs_debuffs\template.xml

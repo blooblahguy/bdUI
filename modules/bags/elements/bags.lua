@@ -30,11 +30,13 @@ function mod:create_bags()
 	mod.bags.cat_pool:ReleaseAll()
 	mod.bags.item_pool:ReleaseAll()
 
-	mod.bags:RegisterEvent('BAG_UPDATE_DELAYED')
+	mod.bags:RegisterEvent('BAG_UPDATE')
 	mod.bags:RegisterEvent('PLAYER_ENTERING_WORLD')
 
 	local run_bag_holder = 0
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
+
+		-- cache items
 		if (event == "PLAYER_ENTERING_WORLD") then
 			-- create container items for bigger and better bags
 			for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
@@ -42,7 +44,7 @@ function mod:create_bags()
 				
 				for slot = min, max, step do
 					-- print("ContainerFrame"..bag.."Item"..slot)
-					local blizzbut = _G["ContainerFrame"..bag.."Item"..slot]
+					-- local blizzbut = _G["ContainerFrame"..bag.."Item"..slot]
 					local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
 					-- if (blizzbut) then
 						-- print(blizzbut:GetID(), blizzbut:GetParent():GetID())
@@ -95,6 +97,10 @@ function mod:update_bags()
 				quality = texture.quality
 				itemCount = texture.stackCount
 			end
+
+			-- if (quality == nil) then
+			-- 	print(itemLink)
+			-- end
 
 			-- if (texture and texture > 0 and quality == -1) then
 			-- 	print(bag, slot, GetContainerItemInfo(bag, slot))

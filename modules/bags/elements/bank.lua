@@ -29,7 +29,7 @@ function mod:create_bank()
 	-- mod.bank:RegisterEvent('EQUIPMENT_SWAP_FINISHED')
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_START')
 	-- mod.bank:RegisterEvent('AUCTION_MULTISELL_UPDATE')
-	mod.bank:RegisterEvent('BAG_UPDATE_DELAYED')
+	mod.bank:RegisterEvent('BAG_UPDATE')
 	mod.bank:RegisterEvent('BANKFRAME_OPENED')
 	mod.bank:RegisterEvent('BANKFRAME_CLOSED')
 
