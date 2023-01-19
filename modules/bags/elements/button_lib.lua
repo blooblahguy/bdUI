@@ -1,6 +1,12 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
+local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
+local GetContainerItemLink = GetContainerItemLink or C_Container.GetContainerItemLink
+local GetContainerItemID = GetContainerItemID or C_Container.GetContainerItemID
+
 local events = {}
 events["BAG_UPDATE_COOLDOWN"] = "UpdateCooldown"
 events["ITEM_LOCK_CHANGED"] = "update_lock"

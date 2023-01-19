@@ -1,6 +1,12 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
+local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
+local GetContainerItemLink = GetContainerItemLink or C_Container.GetContainerItemLink
+local GetContainerItemID = GetContainerItemID or C_Container.GetContainerItemID
+
 function mod:create_reagents()
 	if (not IsReagentBankUnlocked or not IsReagentBankUnlocked()) then return end -- make sure we have this
 
