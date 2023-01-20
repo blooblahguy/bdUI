@@ -135,6 +135,7 @@ function mod:skin(self)
 	normal:SetAllPoints()
 	normal:Hide()
 	normal.Show = noop
+	bdUI:kill(normal)
 	quest:SetAllPoints()
 
 	self.blank = self:CreateTexture(self:GetName().."Blank", "BACKGROUND")
