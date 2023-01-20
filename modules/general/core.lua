@@ -36,4 +36,6 @@ function mod:initialize()
 	mod:create_dcbo()
 	mod:create_errorblock()
 	mod:create_qol()
+
+	mod:move_vehicles()
 end

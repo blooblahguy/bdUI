@@ -92,6 +92,7 @@ modules\general\elements\qol.lua
 modules\general\elements\raidmarker.lua
 modules\general\elements\viewports.lua
 modules\general\elements\fighttimer.lua
+modules\general\elements\vehicles.lua
 
 # Auras
 modules\auras\elements\whitelist.lua

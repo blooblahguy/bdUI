@@ -68,8 +68,6 @@ function mod:create_bags()
 			-- 	end)
 			-- end
 		else
-			-- C_Timer.After(0.1, mod.update_bags)
-			-- print('upodate from delayed update')
 			mod:update_bags()
 		end
 	end)
@@ -98,17 +96,6 @@ function mod:update_bags()
 				itemCount = texture.stackCount
 			end
 
-			-- if (quality == nil) then
-			-- 	print(itemLink)
-			-- end
-
-			-- if (texture and texture > 0 and quality == -1) then
-			-- 	print(bag, slot, GetContainerItemInfo(bag, slot))
-			-- 	-- print('bag bugged i think')
-			-- 	C_Timer.After(0.2, mod.update_bank)
-			-- 	return
-			-- end
-
 			if (not itemLink) then
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
@@ -126,7 +113,7 @@ function mod:update_bags()
 				elseif (not freeslot) then
 					freeslot = itemInfo
 				end
-			elseif (itemLink and quality > 0) then
+			elseif (itemLink and quality ~= nil and quality > 0) then
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
 
