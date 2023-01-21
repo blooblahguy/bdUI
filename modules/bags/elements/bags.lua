@@ -1,6 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local last_call = 0
+
 mod.categoryIDtoNames = {}
 mod.categoryNamestoID = {}
 
@@ -31,13 +33,14 @@ function mod:create_bags()
 	mod.bags.item_pool:ReleaseAll()
 
 	mod.bags:RegisterEvent('BAG_UPDATE')
+	mod.bags:RegisterEvent('PLAYER_LOGIN')
 	mod.bags:RegisterEvent('PLAYER_ENTERING_WORLD')
 
 	local run_bag_holder = 0
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
 
 		-- cache items
-		if (event == "PLAYER_ENTERING_WORLD") then
+		if (event == "PLAYER_LOGIN") then
 			-- create container items for bigger and better bags
 			for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 				local min, max, step = GetContainerNumSlots(bag), 1, -1
@@ -68,7 +71,10 @@ function mod:create_bags()
 			-- 	end)
 			-- end
 		else
-			mod:update_bags()
+			if (GetTime() - .01 >= last_call or event == "PLAYER_ENTERING_WORLD") then -- throttle just crazy amounts of calls
+				last_call = GetTime()
+				mod:update_bags()
+			end
 		end
 	end)
 end

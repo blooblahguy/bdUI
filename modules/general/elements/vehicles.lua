@@ -17,5 +17,4 @@ function mod:move_vehicles()
 	bdMove:set_moveable(vehicle, "Vehicle Frame")
 
 	hooksecurefunc(vehicle, 'SetPoint', set_position)
-	-- hooksecurefunc('VehicleSeatIndicator_SetUpVehicle', VehicleSetUp)
 end

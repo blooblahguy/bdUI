@@ -111,7 +111,7 @@ function mod:skin_loot()
 
 				button.border = button:CreateTexture(nil, "BACKGROUND")
 				button.border:SetTexture(bdUI.media.flat)
-				button.border:SetVertexColor(bdUI.media.border)
+				button.border:SetVertexColor(unpack(bdUI.media.border))
 				button.border:SetPoint("TOPLEFT", button.icon, -bdUI.border, bdUI.border)
 				button.border:SetPoint("BOTTOMRIGHT", button.icon, bdUI.border, -bdUI.border)
 

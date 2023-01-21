@@ -1,6 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Bags")
 
+local last_call = 0
+
 local GetContainerNumSlots = GetContainerNumSlots or C_Container.GetContainerNumSlots
 local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerItemInfo
 local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
@@ -40,25 +42,19 @@ function mod:create_bank()
 			mod:update_bank()
 
 			-- create bank slots
-			if (run_bag_holder == 0) then
-				run_bag_holder = 1
+			-- if (run_bag_holder == 0) then
+			-- 	run_bag_holder = 1
 
-				mod:create_bagslots(mod.bank, {"-4.1", "-4.2", "-4.3", "-4.4", "-4.5", "-4.6", "-4.7"})
-			end
+			-- 	mod:create_bagslots(mod.bank, {"-4.1", "-4.2", "-4.3", "-4.4", "-4.5", "-4.6", "-4.7"})
+			-- end
 		elseif (event == "BANKFRAME_CLOSED") then
 			mod.bank:Hide()
-		-- elseif (event == "BAG_UPDATE" and (arg1 == -2 or arg1 >= 5)) then
-		-- 	-- C_Timer.After(.5, mod.update_bank)
-		-- 	mod:update_bank()
 		else
-			-- print(GetContainerItemInfo(11, 2))
-			-- local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(11, 2)
-
-			
-
-			-- end
-			-- C_Timer.After(0.1, mod.update_bank)
-			mod:update_bank()
+			if (GetTime() - .01 >= last_call) then -- throttle just crazy amounts of calls
+				-- print("bank call", event, GetTime())
+				last_call = GetTime()
+				mod:update_bank()
+			end
 		end
 	end)
 end

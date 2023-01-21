@@ -16,7 +16,9 @@ function mod:initialize()
 	BDUI_SAVE.persistent.goldtrack = BDUI_SAVE.persistent.goldtrack or {}
 
 	if (not mod.config.enabled) then return end
+	if (mod.initialized) then return end
 	mod.initialized = true
+	
 	mod.border = bdUI:get_border(UIParent)
 
 	mod:create_bags() -- bags first
