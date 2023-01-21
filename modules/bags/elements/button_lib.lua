@@ -6,6 +6,7 @@ local GetContainerItemInfo = GetContainerItemInfo or C_Container.GetContainerIte
 local GetContainerNumFreeSlots = GetContainerNumFreeSlots or C_Container.GetContainerNumFreeSlots
 local GetContainerItemLink = GetContainerItemLink or C_Container.GetContainerItemLink
 local GetContainerItemID = GetContainerItemID or C_Container.GetContainerItemID
+local PickupContainerItem = PickupContainerItem or C_Container.PickupContainerItem
 
 local events = {}
 events["BAG_UPDATE_COOLDOWN"] = "UpdateCooldown"
