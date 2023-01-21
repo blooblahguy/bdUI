@@ -94,8 +94,8 @@ methods["compare"] = function(self, key, down)
 end
 
 methods["update"] = function(self)
-	self.hasItem = not not self.itemID
-	self:GetParent():SetID(self.bagID)
+	-- self.hasItem = not not self.itemID
+	self:GetParent():SetID(self.bag)
 	self:SetID(self.slot)
 
 	SetItemButtonTexture(self, self.texture)
@@ -191,13 +191,14 @@ mod.item_pool_create = function(self)
 	item_num = item_num + 1
 	local parent = CreateFrame("frame", nil, mod.current_parent)
 	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_Item_"..item_num, parent, "ContainerFrameItemButtonTemplate")
+	-- local button = CreateFrame("ItemButton", "bdBags_Item_"..item_num, parent, "ContainerFrameItemButtonTemplate")
 	button:SetHeight(36)
 	button:SetWidth(36)
-	-- button:SetFrameStrata("HIGH")
+	button:SetFrameStrata("HIGH")
 	button:EnableMouse(true)
 	button:RegisterForDrag("LeftButton")
 	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
-	-- button:Hide()
+	button:Hide()
 
 	button.text = button:CreateFontString(nil, "OVERLAY")
 	button.text:SetFontObject(bdUI:get_font(13, "THINOUTLINE"))
@@ -252,7 +253,7 @@ mod.item_pool_create = function(self)
 	mod:SecureHookScript(button, "OnClick", function(self, button)
 		if (mod.config.easy_delete) then
 			if (IsAltKeyDown() and IsShiftKeyDown() and IsControlKeyDown() and button == "LeftButton") then
-				PickupContainerItem(self.bagID, self.slot)
+				PickupContainerItem(self.bag, self.slot)
 				DeleteCursorItem()
 			end
 		end
@@ -265,5 +266,5 @@ end
 mod.item_pool_reset = function(self, frame)
 	frame:ClearAllPoints()
 	frame:Hide()
-	frame.text:Hide()
+	-- frame.text:Hide()
 end

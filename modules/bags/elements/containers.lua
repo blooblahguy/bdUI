@@ -190,7 +190,7 @@ local function create_bagslot_item(parent, template)
 		if (not _G['BankSlotsFrame'] or not _G['BankSlotsFrame']["Bag"..self.slot]) then return end 
 		
 		local isBought = _G['BankSlotsFrame']["Bag"..self.slot].tooltipText ~= BANK_BAG_PURCHASE
-		if (not self.itemID and self.bagID == -4 and not isBought) then
+		if (not self.itemID and self.bag == -4 and not isBought) then
 			StaticPopup_Show("CONFIRM_BUY_BANK_SLOT");
 		end
 	end)
@@ -210,7 +210,7 @@ local function create_bagslot_item(parent, template)
 	end
 	function button:update()
 		self.hasItem = not not self.itemID
-		self:GetParent():SetID(self.bagID)
+		self:GetParent():SetID(self.bag)
 		self:SetID(self.slot)
 	
 		SetItemButtonTexture(self, self.texture)
@@ -219,7 +219,7 @@ local function create_bagslot_item(parent, template)
 
 		local numSlots, full = GetNumBankSlots()
 		self.BattlepayItemTexture:Hide()
-		if (not full and not self.itemID and self.bagID == -4) then
+		if (not full and not self.itemID and self.bag == -4) then
 			if (_G['BankSlotsFrame']["Bag"..self.slot].tooltipText == BANK_BAG_PURCHASE) then
 				SetItemButtonTexture(self, 135769)
 				self.BattlepayItemTexture:Show()
@@ -270,7 +270,7 @@ function mod:create_bagslots(frame, bagslots)
 		local itemTexture, itemCount, locked, quality, readable, lootable, itemLink, isFiltered, noValue, itemID, isBound = GetContainerItemInfo(bagID, slot)
 
 		bag.bag = tonumber(bagID)
-		bag.bagID = tonumber(bagID)
+		-- bag.bagID = tonumber(bagID)
 		bag.slot = tonumber(slot)
 		bag.isBag = true
 		bag:GetParent():SetID(tonumber(bagID))

@@ -86,7 +86,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			-- item = Mixin(item, itemInfo) -- why doesn't this work for the blank items?
 			item.name = itemInfo.name
 			item.bag = itemInfo.bag
-			item.bagID = itemInfo.bagID
+			-- item.bagID = itemInfo.bagID
 			item.slot = itemInfo.slot
 			item.itemLink = itemInfo.itemLink
 			item.itemLevel = itemInfo.itemLevel
@@ -103,6 +103,14 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			-- now update the button appearance with new info
 			item:update()
 
+			-- show labels at the start of rows
+			if (config.showlabels) then
+				item.text:Show()
+				item.text:SetText(mod.categoryIDtoNames[categoryID])
+			else
+				item.text:Hide()
+			end
+
 			-- start positioning
 			if (not last_item) then
 				local top_spacing = config.showlabels and mod.spacing * 1.5 or mod.spacing * 0.5
@@ -110,10 +118,6 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 				if (not cat.positioned) then
 					cat:SetPoint("TOPLEFT", item)
 					cat.positioned = true
-				end
-				if (config.showlabels) then
-					item.text:Show()
-					item.text:SetText(mod.categoryIDtoNames[categoryID])
 				end
 
 				new_cat = false
@@ -124,10 +128,6 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 				if (not cat.positioned) then
 					cat:SetPoint("TOPLEFT", item)
 					cat.positioned = true
-				end
-				if (config.showlabels) then
-					item.text:Show()
-					item.text:SetText(mod.categoryIDtoNames[categoryID])
 				end
 
 				new_cat = false
@@ -140,14 +140,12 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 					cat:SetPoint("TOPLEFT", item)
 					cat.positioned = true
 				end
-				if (config.showlabels) then
-					item.text:Show()
-					item.text:SetText(mod.categoryIDtoNames[categoryID])
-				end
+				
 
 				new_cat = false
 			else
 				item:SetPoint("TOPLEFT", last_item, "TOPRIGHT", mod.border, 0)
+				item.text:Hide()
 			end
 
 			-- store this so we know where to jump from

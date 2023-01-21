@@ -122,7 +122,7 @@ local function get_item_table(self, bag, slot, bagID, itemCount, itemLink)
 	local t = {}
 	t.name = name
 	t.bag = bag
-	t.bagID = bagID
+	-- t.bagID = bagID
 	t.slot = slot
 
 	t.itemLink = itemLink
@@ -200,7 +200,7 @@ function mod:register_events(frame, events)
 	end
 	mod:SecureHookScript(frame, "OnEvent", function(self, event, ...)
 		if (self[events[event]]) then
-			if (not self.bagID) then return end
+			if (not self.bag) then return end
 			-- print(event)
 			self[events[event]](self, ...)
 		end
