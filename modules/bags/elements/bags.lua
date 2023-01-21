@@ -38,21 +38,32 @@ function mod:create_bags()
 
 	local run_bag_holder = 0
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
-
 		-- cache items
 		if (event == "PLAYER_LOGIN") then
+			C_Timer.After(1, function()
+				mod:update_bags()
+			end)
 			-- create container items for bigger and better bags
-			for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-				local min, max, step = GetContainerNumSlots(bag), 1, -1
+			-- for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+				-- local min, max, step = GetContainerNumSlots(bag), 1, -1
+
+				-- print(min, max, bag, step)
+				-- print(event)
 				
-				for slot = min, max, step do
+				-- for slot = min, max, step do
+					-- print(slot)
 					-- print("ContainerFrame"..bag.."Item"..slot)
 					-- local blizzbut = _G["ContainerFrame"..bag.."Item"..slot]
-					local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+					-- local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+					-- if (type(texture) == "table") then
+					-- 	itemLink = texture.hyperlink
+					-- end
+					-- GetItemInfo(itemLink)
+					-- print(itemLink)
 					-- if (blizzbut) then
 						-- print(blizzbut:GetID(), blizzbut:GetParent():GetID())
 					-- end
-				end
+				-- end
 
 				-- query for itemlink
 				-- local bagslots = {"0.0", "0.-1", "2.-2", "3.-3"}
@@ -60,15 +71,15 @@ function mod:create_bags()
 				-- 	local bagID, slot = strsplit(".", ids)
 				-- 	local itemLink = select(7, GetContainerItemInfo(tonumber(bagID), tonumber(slot)))
 				-- end
-			end
+			-- end
 
 			-- if (run_bag_holder == 0) then
 			-- 	run_bag_holder = 1
 
 			-- 	-- then try to create
-			-- 	C_Timer.After(2, function()
-			-- 		mod:create_bagslots(mod.bags, {"0.0", "0.1", "0.2", "0.3"})
-			-- 	end)
+				-- C_Timer.After(1, function()
+					-- mod:create_bagslots(mod.bags, {"0.0", "0.1", "0.2", "0.3"})
+				-- end)
 			-- end
 		else
 			if (GetTime() - .01 >= last_call or event == "PLAYER_ENTERING_WORLD") then -- throttle just crazy amounts of calls
