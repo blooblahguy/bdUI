@@ -68,7 +68,7 @@ local config = {
 		args = {
 			{
 				key = "resources_width",
-				value = 200,
+				value = 300,
 				min = 40,
 				max = 400,
 				step = 2,

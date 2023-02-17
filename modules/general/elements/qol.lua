@@ -39,7 +39,7 @@ function mod:create_qol()
 
 	local total = 0
 	local fps_location = CreateFrame("frame", "FPS/MS", WorldFrame)
-	fps_location:SetPoint("BOTTOM", WorldFrame, "BOTTOM", 0, WorldFrame:GetHeight() * .3)
+	fps_location:SetPoint("CENTER", WorldFrame, 0, -200)
 	fps_location:SetSize(100, 40)
 	fps_location:Hide()
 	fps_location:SetMovable(true)

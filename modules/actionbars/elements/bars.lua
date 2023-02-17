@@ -23,7 +23,7 @@ function mod:create_actionbar1()
 	end
 	cfg.actionPage = cfg.actionPage..format('[shapeshift] %d; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; [bonusbar:5] 11; [bonusbar:4] 10; [bonusbar:3] 9; [bonusbar:2] 8; [bonusbar:1] 7; 1;', GetTempShapeshiftBarIndex())
 
-	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 80}
+	cfg.frameSpawn = {"BOTTOM", UIParent, "BOTTOM", 0, 160}
 
 	local buttonName = "ActionButton"
 	local numButtons = NUM_ACTIONBAR_BUTTONS
@@ -34,15 +34,8 @@ function mod:create_actionbar1()
 	local function ToggleButtonGrid()
 		if InCombatLockdown() then return end
 		local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
-		-- print(showgrid)
-		-- if (showgrid) then
-		-- 	ACTION_BUTTON_SHOW_GRID_REASON_CVAR = 4
-		-- else
-		-- 	ACTION_BUTTON_SHOW_GRID_REASON_CVAR = 1
-		-- end
 		for i, button in next, buttonList do
 			button:SetAttribute("showgrid", showgrid, 4)
-			-- ActionButton_ShowGrid(button, ACTION_BUTTON_SHOW_GRID_REASON_EVENT)
 		end
 	end
 	if (MultiActionBar_UpdateGridVisibility) then
@@ -80,7 +73,7 @@ function mod:create_actionbar2()
 	cfg.moveName = "Actionbar 2"
 	-- cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod][@target,exists,nodead] show; hide"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"TOPLEFT", mod.bars['bar1'], "BOTTOMLEFT", 0, -defaultPadding}
+	cfg.frameSpawn = {"TOP", mod.bars['bar1'], "BOTTOM"}
 
 	local buttonList = mod:GetButtonList("MultiBarBottomLeftButton", NUM_ACTIONBAR_BUTTONS)
 	local bar2 = mod:CreateBar(buttonList, cfg)
@@ -96,7 +89,7 @@ function mod:create_actionbar3()
 	cfg.moveName = "Actionbar 3"
 	cfg.cfg = "bar3"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"TOPRIGHT", mod.bars['bar1'], "BOTTOMRIGHT", 0, -defaultPadding}
+	cfg.frameSpawn = {"TOP", mod.bars['bar2'], "BOTTOM"}
 
 	local buttonList = mod:GetButtonList("MultiBarBottomRightButton", NUM_ACTIONBAR_BUTTONS)
 	local bar3 = mod:CreateBar(buttonList, cfg)
@@ -112,7 +105,7 @@ function mod:create_actionbar4()
 	cfg.moveName = "Actionbar 4"
 	cfg.cfg = "bar4"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"RIGHT", defaultPadding, -50}
+	cfg.frameSpawn = {"RIGHT", defaultPadding, -100}
 
 	local buttonList = mod:GetButtonList("MultiBarRightButton", NUM_ACTIONBAR_BUTTONS)
 	local bar4 = mod:CreateBar(buttonList, cfg)
@@ -128,7 +121,7 @@ function mod:create_actionbar5()
 	cfg.moveName = "Actionbar 5"
 	cfg.cfg = "bar5"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"RIGHT", mod.bars['bar4'], "LEFT", -defaultPadding, 0}
+	cfg.frameSpawn = {"RIGHT", mod.bars['bar4'], "LEFT"}
 
 	local buttonList = mod:GetButtonList("MultiBarLeftButton", NUM_ACTIONBAR_BUTTONS)
 	local bar5 = mod:CreateBar(buttonList, cfg)
@@ -159,7 +152,7 @@ function mod:create_petbar()
 	cfg.frameName = "bdActionbars_PetBar"
 	cfg.moveName = "Pet Bar"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [pet] show; hide"
-	cfg.frameSpawn = {"BOTTOMRIGHT", mod.bars['bar1'], "TOPRIGHT", 0, defaultPadding}
+	cfg.frameSpawn = {"BOTTOM", mod.bars['bar1'], "TOP", 0, defaultPadding}
 
 	local buttonList = mod:GetButtonList("PetActionButton", NUM_PET_ACTION_SLOTS)
 	local petbar = mod:CreateBar(buttonList, cfg)
@@ -177,15 +170,14 @@ function mod:create_stancebar()
 	cfg.frameName = "bdActionbars_StanceBar"
 	cfg.moveName = "Stance Bar"
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-	cfg.frameSpawn = {"BOTTOMLEFT", mod.bars['bar1'], "TOPLEFT", 0, defaultPadding}
+	cfg.frameSpawn = {"BOTTOM", 0, defaultPadding}
 
 	local stances = 0
-	-- todo: fire on event to make only the correct number of stance buttons
 	for i = 1, NUM_STANCE_SLOTS do
 		local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i)
-		-- if (icon) then
-		stances = stances + 1
-		-- end
+		if (icon) then
+			stances = stances + 1
+		end
 	end
 
 	if (stances == 0) then return end
@@ -194,6 +186,28 @@ function mod:create_stancebar()
 	local buttonList = mod:GetButtonList("StanceButton", NUM_STANCE_SLOTS)
 	local stancebar = mod:CreateBar(buttonList, cfg)
 	stancebar:EnableMouse(false)
+
+	local function callback()
+		local stances = 0
+		-- todo: fire on event to make only the correct number of stance buttons
+		for i = 1, NUM_STANCE_SLOTS do
+			local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i)
+			if (icon) then
+				stances = stances + 1
+			end
+		end
+
+		if (stances == 0) then return end
+
+		stancebar.limit = stances
+		mod:LayoutButtons(stancebar, buttonList)
+	end
+
+	stancebar:RegisterEvent("PLAYER_TALENT_UPDATE")
+	stancebar:RegisterEvent("PET_TALENT_UPDATE")
+	stancebar:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+	-- config callback
+	table.insert(mod.variables.callbacks, callback)
 end
 
 --===============================================================

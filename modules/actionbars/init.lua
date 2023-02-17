@@ -8,7 +8,7 @@ local bdUI, c, l = unpack(select(2, ...))
 ]]
 --==================================================================================
 -- Initialize configuration
-local size_md = 34
+local size_md = 40
 local size_lg = 50
 local size_sm = 20
 
@@ -20,7 +20,7 @@ local function addBarConf(title, key, options)
 		rows = 1,
 		buttons = 12,
 		size = size_md,
-		spacing = 0,
+		spacing = bdUI.border,
 		scale = 1,
 		alpha = 1,
 		hotkeys = false,
@@ -247,24 +247,19 @@ local config = {
 --=========================================
 -- Bar 2
 --=========================================
-	addBarConf("Bar 2", "bar2", {
-		rows = 2,
-		size = 30
-	}),
+	addBarConf("Bar 2", "bar2"),
 
 --=========================================
 -- Bar 3
 --=========================================
-	addBarConf("Bar 3", "bar3", {
-		rows = 2,
-		size = 30
-	}),
+	addBarConf("Bar 3", "bar3"),
 
 --=========================================
 -- Bar 4
 --=========================================
 	addBarConf("Bar 4", "bar4", {
 		rows = 12,
+		mouseover = true,
 	}),
 
 --=========================================
@@ -272,6 +267,7 @@ local config = {
 --=========================================
 	addBarConf("Bar 5", "bar5", {
 		rows = 12, 
+		mouseover = true, 
 	}),
 
 --=========================================

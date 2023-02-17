@@ -30,11 +30,7 @@ function mod:config_callback()
 		end
 	end
 	
-	if (IsResting()) then
-		bdUI:set_frame_fade(uf_holder, config.unitframe_ic_alpha, config.unitframe_resting_alpha)
-	else
-		bdUI:set_frame_fade(uf_holder, config.unitframe_ic_alpha, config.unitframe_ooc_alpha)
-	end
+	bdUI:set_frame_fade(uf_holder, config.unitframe_ic_alpha, config.unitframe_resting_alpha)
 	bdUI:do_frame_fade()
 end
 
@@ -188,7 +184,7 @@ function mod:create_unitframes()
 	oUF:RegisterStyle("bdUnitFrames", layout)
 	oUF:SetActiveStyle("bdUnitFrames")
 
-	local xoff = 164
+	local xoff = 180
 	local yoff = 178
 
 	if (config.enableplayertarget) then

@@ -172,7 +172,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	local border = bdUI:get_border(frame)
 
 	-- config
-	frame.limit = c[cfg.cfg.."_buttons"] or 12
+	frame.limit = c[cfg.cfg.."_buttons"] or #buttonList
 	frame.scale = c[cfg.cfg.."_scale"] or 1
 	frame.spacing = (c[cfg.cfg.."_spacing"] or cfg.spacing or 0) + border
 	frame.width = (c[cfg.cfg.."_size"] * frame.scale) * (cfg.widthScale or 1)
@@ -183,7 +183,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	frame.hidehotkeys = c[cfg.cfg.."_hidehotkeys"] or false
 	frame.hidemacros = c[cfg.cfg.."_hidemacros"] or false
 	
-	frame.num = #buttonList
+	frame.num = frame.limit
 	frame.cols = math.floor(math.min(frame.limit, frame.num) / frame.rows)
 
 	-- register visibility driver, on init and on callback
@@ -192,18 +192,27 @@ function mod:LayoutBar(frame, buttonList, cfg)
 		frame.frameVisibilityFunc = cfg.frameVisibilityFunc
 		RegisterStateDriver(frame, cfg.frameVisibilityFunc or "visibility", cfg.frameVisibility)
 	end
+	
+	-- Fader
+	if (frame.enableFader) then
+		bdMove:CreateFader(frame, buttonList, alpha, 0, c.fade_duration)
+		frame:SetAlpha(0)
+	end
 
-	-- sizing
+	-- button positioning
+	mod:LayoutButtons(frame, buttonList)
+end
+
+function mod:LayoutButtons(frame, buttonList)
+	-- redeclare some variables
+	frame.num = frame.limit
+	frame.cols = math.floor(math.min(frame.limit, frame.num) / frame.rows)
+
+	-- size the parent bar
 	local frameWidth = frame.cols * frame.width + (frame.cols-1) * frame.spacing
 	local frameHeight = frame.rows * frame.height + (frame.rows-1) * frame.spacing
 	frame:SetSize(frameWidth, frameHeight)
 	frame:SetAlpha(frame.alpha)
-	
-	-- Fader
-	if (frame.enableFader) then
-		bdMove:CreateFader(frame, buttonList, alpha, nil, nil, c.fade_duration)
-		frame:SetAlpha(0)
-	end
 
 	-- button positioning
 	local lastRow = nil
@@ -249,8 +258,6 @@ function mod:LayoutBar(frame, buttonList, cfg)
 		index = index + 1
 	end
 end
-
-
 
 -- local function hook_cooldown(self)
 -- 	local cooldown = _G[self:GetName().."Cooldown"]

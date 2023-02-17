@@ -569,6 +569,8 @@ function lib:CreateFader(frame, children, inAlpha, outAlpha, duration)
 	frame:HookScript("OnShow", StartFadeIn)
 	frame:HookScript("OnHide", StartFadeOut)
 
+	EnterLeaveHandle(frame)
+
 	-- Hook Children
 	for i, button in next, children do
 		if not button.__faderParent then

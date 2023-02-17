@@ -87,17 +87,8 @@ local config = {
 				label = "In Combat Alpha"
 			},
 			{
-				key = "unitframe_ooc_alpha",
-				value = 1,
-				min = 0,
-				max = 1,
-				step = 0.1,
-				type = "range",
-				label = "Out of Combat Alpha"
-			},
-			{
 				key = "unitframe_resting_alpha",
-				value = 1,
+				value = .3,
 				min = 0,
 				max = 1,
 				step = 0.1,
@@ -129,16 +120,16 @@ local config = {
 			},
 			{
 				key = "playertargetwidth",
-				value = 180,
+				value = 220,
 				min = 100,
-				max = 300,
+				max = 400,
 				step = 2,
 				type = "range",
 				label = "Width"
 			},
 			{
 				key = "playertargetheight",
-				value = 26,
+				value = 32,
 				min = 4,
 				max = 60,
 				step = 2,
@@ -156,7 +147,7 @@ local config = {
 			},
 			{
 				key = "castbarheight",
-				value = 14,
+				value = 20,
 				step = 1,
 				min = 6,
 				max = 30,

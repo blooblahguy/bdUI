@@ -8,6 +8,14 @@ local player = UnitName("player")
 --=================================================
 function lib:get_save(saved_variable, name, persistent)
 	local sv = _G[saved_variable]
+
+	-- sometimes this fires early?
+	if (not sv) then
+		lib:initialize_saved_variables(saved_variable)
+	end
+
+	sv = _G[saved_variable]
+
 	if (persistent) then
 		sv.persistent[name] = sv.persistent[name] or {}
 		return sv.persistent[name]
@@ -29,26 +37,35 @@ end
 -- Initialize SavedVariables
 --=================================================
 function lib:initialize_saved_variables(saved_variable)
-	-- Default configuration
-	if (not _G[saved_variable]) then
-		_G[saved_variable] = {
-			users = {
-				[player] = {
-					profile = "default"
-				}
-			},
-			profiles = {
-				default = {}
-			}
-		}
-	end
+	_G[saved_variable] = _G[saved_variable] or {}
 
-	-- Each player login
-	if (not _G[saved_variable].users[player]) then
-		_G[saved_variable].users[player] = {
-			profile = "default"
-		}
-	end
+	_G[saved_variable].users = _G[saved_variable].users or {}
+	_G[saved_variable].users[player] = _G[saved_variable].users[player] or {}
+	_G[saved_variable].users[player].profile = _G[saved_variable].users[player].profile or "default"
+
+	_G[saved_variable].profiles = _G[saved_variable].profiles or {}
+	_G[saved_variable].profiles.default = _G[saved_variable].profiles.default or {}
+
+	-- Default configuration
+	-- if (not _G[saved_variable]) then
+	-- 	_G[saved_variable] = {
+	-- 		users = {
+	-- 			[player] = {
+	-- 				profile = "default"
+	-- 			}
+	-- 		},
+	-- 		profiles = {
+	-- 			default = {}
+	-- 		}
+	-- 	}
+	-- end
+
+	-- -- Each player login
+	-- if (not _G[saved_variable].users[player]) then
+	-- 	_G[saved_variable].users[player] = {
+	-- 		profile = "default"
+	-- 	}
+	-- end
 
 	-- Persistent: Exists between profiles and characters
 	_G[saved_variable].persistent = _G[saved_variable].persistent or {}

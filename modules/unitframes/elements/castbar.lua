@@ -24,7 +24,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 
 	if (self.Castbar) then return end
 
-	local font_size = math.restrict(config.castbarheight * 0.8, 8, 14)
+	local font_size = math.restrict(config.castbarheight * 0.6, 8, 14)
 
 
 	self.Castbar = CreateFrame("StatusBar", nil, self)
@@ -68,8 +68,8 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	
 
 	-- simplifing positioning
-	self.Castbar.Time:SetPoint("LEFT", mod.padding, 0)
-	self.Castbar.Duration:SetPoint("RIGHT", -mod.padding, 0)
+	self.Castbar.Time:SetPoint("LEFT", 6, 0)
+	self.Castbar.Duration:SetPoint("RIGHT", -6, 0)
 	self.Castbar.Text:SetPoint("CENTER")
 	if (icon) then
 		self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
@@ -106,6 +106,6 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	bdUI:set_backdrop(self.Castbar)
 
 	self.Castbar.PostCastStart = function(self, unit)
-		self.Duration:SetText(self.max)
+		self.Duration:SetText(bdUI:round(self.max, 1))
 	end
 end

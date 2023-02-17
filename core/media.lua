@@ -39,16 +39,14 @@ end)
 function bdUI:do_frame_fade()
 	if (bdUI.version >= 100000) then return end -- dragnflight breaks this stuff right now
 	for frame, info in pairs(combat_fade_frames) do
-		local ic_alpha, ooc_alpha, resting_alpha = unpack(info)
-		local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha or ooc_alpha
+		local ic_alpha, resting_alpha = unpack(info)
+		local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha
 
-		if (InCombatLockdown()) then
-			if (target_alpha > frame:GetAlpha() or frame:GetAlpha() > 0) then
-				frame:Show()
-			else
-				frame:Hide()
-			end
-			return
+		if (InCombatLockdown()) then return end
+		if (target_alpha > frame:GetAlpha() or frame:GetAlpha() > 0) then
+			frame:Show()
+		else
+			frame:Hide()
 		end
 
 		if (target_alpha > frame:GetAlpha()) then
@@ -59,6 +57,7 @@ function bdUI:do_frame_fade()
 		end
 
 		frame.fadeInfo.finishedFunc = function() 
+			if (InCombatLockdown()) then return end
 			if (frame:GetAlpha() == 0) then
 				frame:Hide()
 			else
@@ -69,8 +68,8 @@ function bdUI:do_frame_fade()
 end
 
 -- fade frame in/out of combat
-function bdUI:set_frame_fade(frame, ic_alpha, ooc_alpha, resting_alpha)
-	combat_fade_frames[frame] = {ic_alpha, ooc_alpha, resting_alpha or ooc_alpha}
+function bdUI:set_frame_fade(frame, ic_alpha, resting_alpha)
+	combat_fade_frames[frame] = {ic_alpha, resting_alpha}
 end
 
 --========================================================

@@ -64,9 +64,6 @@ function mod:create_minimap()
 			position_minimap()
 		end
 	end)
-
-	
-
 	
 
 	-- skin out textures from minimap
