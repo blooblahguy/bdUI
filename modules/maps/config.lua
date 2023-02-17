@@ -24,7 +24,7 @@ local config = {
 				min = 50,
 				max = 500,
 				step = 5,
-				value = 240
+				value = 200
 			},
 			{
 				key = "scale",

@@ -13,7 +13,7 @@ end
 function mod:move_vehicles()
 	local vehicle = _G.VehicleSeatIndicator
 	vehicle:ClearAllPoints()
-	vehicle:SetPoint("TOPRIGHT", Minimap, "BOTTOMLEFT", -10, -10)
+	vehicle:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -10, 0)
 	bdMove:set_moveable(vehicle, "Vehicle Frame")
 
 	hooksecurefunc(vehicle, 'SetPoint', set_position)

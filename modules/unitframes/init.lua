@@ -68,7 +68,7 @@ local config = {
 			},
 			{
 				key = "aurastyle",
-				value = "Icons",
+				value = "Bars",
 				type = "select",
 				options = {"Icons", "Bars", "None"},
 				label = "Aura Style"

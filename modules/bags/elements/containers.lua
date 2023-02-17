@@ -28,7 +28,7 @@ function mod:create_container(name, nomove)
 		frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 	end
 	if (name == "Bags") then
-		frame:SetPoint("BOTTOMRIGHT", -20, 20)
+		frame:SetPoint("BOTTOMRIGHT", -50, 50)
 	else
 		frame:SetPoint("TOPLEFT", 20, -20)
 	end

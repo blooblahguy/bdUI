@@ -41,6 +41,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
 	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size))
 	self.Castbar.Text:SetJustifyV("MIDDLE")
+	self.Castbar.Text:SetJustifyH("CENTER")
 
 	if (icon) then
 		self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
@@ -59,25 +60,40 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 
 	self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY")
 	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size))
+	self.Castbar.Time:SetJustifyH("LEFT")
+
+	self.Castbar.Duration = self.Castbar:CreateFontString(nil, "OVERLAY")
+	self.Castbar.Duration:SetFontObject(bdUI:get_font(font_size))
+	self.Castbar.Duration:SetJustifyH("RIGHT")
+	
+
+	-- simplifing positioning
+	self.Castbar.Time:SetPoint("LEFT", mod.padding, 0)
+	self.Castbar.Duration:SetPoint("RIGHT", -mod.padding, 0)
+	self.Castbar.Text:SetPoint("CENTER")
+	if (icon) then
+		self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
+		self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
+	end		
 
 	-- Positioning
-	if (align == "right") then
-		self.Castbar.Time:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
-		self.Castbar.Time:SetJustifyH("RIGHT")
-		self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
-		if (icon) then
-			self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar,"TOPRIGHT", mod.padding*2, 0)
-			self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
-		end
-	else
-		self.Castbar.Time:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
-		self.Castbar.Time:SetJustifyH("LEFT")
-		self.Castbar.Text:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
-		if (icon) then
-			self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
-			self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
-		end			
-	end
+	-- if (align == "right") then
+	-- 	self.Castbar.Time:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
+	-- 	self.Castbar.Time:SetJustifyH("RIGHT")
+	-- 	self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
+	-- 	if (icon) then
+	-- 		self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar,"TOPRIGHT", mod.padding*2, 0)
+	-- 		self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
+	-- 	end
+	-- else
+	-- 	self.Castbar.Time:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
+	-- 	self.Castbar.Time:SetJustifyH("LEFT")
+	-- 	self.Castbar.Text:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
+	-- 	if (icon) then
+	-- 		self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
+	-- 		self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
+	-- 	end			
+	-- end
 
 	self.Castbar.PostChannelStart = castbar_kickable
 	self.Castbar.PostChannelUpdate = castbar_kickable
@@ -88,4 +104,8 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 
 	-- bdMove:set_moveable(self.Castbar, unit.." Castbar")
 	bdUI:set_backdrop(self.Castbar)
+
+	self.Castbar.PostCastStart = function(self, unit)
+		self.Duration:SetText(self.max)
+	end
 end

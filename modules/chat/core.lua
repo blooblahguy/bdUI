@@ -36,11 +36,11 @@ function mod:initialize()
 	-- channels
 	mod:format_channels()
 
-	-- -- -- emojis
-	-- mod:create_emojis()
+	-- emojis
+	mod:create_emojis()
 	
-	-- -- -- telltarget command
-	-- mod:telltarget()
+	-- telltarget command
+	mod:telltarget()
 	
 	-- -- -- community mask
 	-- mod:create_community()

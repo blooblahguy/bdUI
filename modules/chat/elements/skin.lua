@@ -3,13 +3,13 @@ local mod = bdUI:get_module("Chat")
 
 
 local function skin_frame_bg(frame)
-	if (not frame) then return end
+	-- if (not frame) then return end
 
-	bdUI:set_backdrop(frame)
-	frame._background:SetAlpha(mod.config.bgalpha)
-	frame._background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
-	frame._background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
-	frame._border:SetAlpha(mod.config.bgalpha)
+	-- bdUI:set_backdrop(frame)
+	-- frame._background:SetAlpha(mod.config.bgalpha)
+	-- frame._background:SetPoint("TOPLEFT", ChatFrame1, "TOPLEFT", -10, 10)
+	-- frame._background:SetPoint("BOTTOMRIGHT", ChatFrame1, "BOTTOMRIGHT", 10, -10)
+	-- frame._border:SetAlpha(mod.config.bgalpha)
 end
 
 local function skin_frame(frame)
@@ -27,6 +27,7 @@ local function skin_frame(frame)
 	local buttonframe = _G[name..'ButtonFrame']
 	local thumb = _G[name..'ThumbTexture']
 	local resize = _G[name..'ResizeButton']
+	local background = _G[name..'Background']
 	local tex = {editbox:GetRegions()}
 	local tab = _G[name..'Tab']
 	local index = gsub(name,"ChatFrame","")
@@ -54,11 +55,25 @@ local function skin_frame(frame)
 	if (thumb) then
 		thumb:Hide()
 	end
+
+	-- move background
+	background:ClearAllPoints()
+	background:SetPoint("TOPLEFT", -8,  8)
+	background:SetPoint("BOTTOMRIGHT", 8, -8)
+	background.border = CreateFrame("frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
+	background.border:SetPoint("TOPLEFT", -8,  8)
+	background.border:SetPoint("BOTTOMRIGHT", 8, -8)
+	background.border:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
+	background.border:SetBackdropColor(0, 0, 0, 0)
+	background.border:SetBackdropBorderColor(unpack(bdUI.media.border))
+	hooksecurefunc(background, "SetAlpha", function(self, alpha)
+		background.border:SetAlpha(alpha)
+	end)
 	
 	-- kill textures
-	for g = 1, #CHAT_FRAME_TEXTURES do
-		_G[name..CHAT_FRAME_TEXTURES[g] ]:SetTexture(nil)
-	end
+	-- for g = 1, #CHAT_FRAME_TEXTURES do
+	-- 	_G[name..CHAT_FRAME_TEXTURES[g] ]:SetTexture(nil)
+	-- end
 	
 	-- tab style
 	-- _G[tab:GetName().."Text"]:SetFontObject(bdUI:get_font(fontSize, "OUTLINE"))
@@ -96,7 +111,7 @@ local function skin_frame(frame)
 	_G[editbox:GetName().."Left"]:Hide()
 	_G[editbox:GetName().."Mid"]:Hide()
 	_G[editbox:GetName().."Right"]:Hide()
-	for t = 6, #tex do tex[t]:SetAlpha(0) end
+	-- for t = 6, #tex do tex[t]:SetAlpha(0) end
 	editbox:ClearAllPoints()
 	if name == "ChatFrame2" then
 		editbox:SetPoint("BOTTOM",frame,"TOP",0,34)

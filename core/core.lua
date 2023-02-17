@@ -294,3 +294,17 @@ function bdUI:abbreviate_string(name)
 	end
 	return name
 end
+
+function bdUI:avg_ilvl()
+	local total = 0
+	for slot = 1, 18 do
+		if (slot ~= 4) then
+			local itemLink = GetInventoryItemLink("player", slot)
+			local ilvl = select(4, GetItemInfo(itemLink))
+
+			total = total + ilvl
+		end
+	end
+
+	print(bdUI:round(total / 17, 1))
+end

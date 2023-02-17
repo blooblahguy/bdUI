@@ -35,7 +35,7 @@ function mod:create_minimap()
 	bdUI:KillEditMode(MinimapCluster)
 
 	-- global holder
-	bdMinimap:SetPoint('TOPRIGHT', UIParent, -3, -3)
+	bdMinimap:SetPoint('TOPRIGHT', UIParent, -10, -10)
 	bdMinimap:SetSize(Minimap:GetSize())
 	bdMinimap:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
 	bdMinimap:SetBackdropColor(0,0,0,0)

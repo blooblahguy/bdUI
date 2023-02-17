@@ -69,7 +69,8 @@ local function createAuraBar(element, index)
 
 	local nameText = statusBar:CreateFontString(nil, 'OVERLAY')
 	nameText:SetFontObject(element.fontObject)
-	nameText:SetPoint('LEFT', statusBar, 'LEFT', 2, 0)
+	nameText:SetPoint('CENTER', -6, 0)
+	nameText:SetJustifyH("CENTER")
 
 	local timeText = statusBar:CreateFontString(nil, 'OVERLAY')
 	timeText:SetFontObject(element.fontObject)

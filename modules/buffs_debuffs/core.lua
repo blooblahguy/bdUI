@@ -30,7 +30,7 @@ counterSpacing["BOTTOM"] = {0, -4}
 
 -- parent frames
 local bdBuffs = CreateFrame("frame", "Buffs", UIParent, "SecureAuraHeaderTemplate")
-bdBuffs:SetPoint('TOPRIGHT', Minimap, "TOPLEFT", -10, -40)
+bdBuffs:SetPoint('TOPRIGHT', Minimap, "TOPLEFT", -10, 0)
 
 local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTemplate")
 bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -110)
@@ -202,7 +202,7 @@ end
 -- Buffs
 --==============================================
 function mod:update_buffs()
-	local buffrows = math.ceil(20/config.buffperrow)
+	local buffrows = math.ceil(40/config.buffperrow)
 	local template = string.format('bdAuraTemplate%d', config.buffsize)
 
 	-- they share some stuff
