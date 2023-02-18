@@ -339,7 +339,7 @@ function mod:create_vehicle()
 	cfg.moveName = "Vehicle Exit"
 	cfg.frameVisibility = "[canexitvehicle]c;[mounted]m;n"
 	cfg.frameVisibilityFunc = "exit"
-	cfg.frameSpawn = { "CENTER", UIParent, "CENTER", 0, -40}
+	cfg.frameSpawn = { "CENTER", UIParent, "CENTER", 0, -250}
 	--create vehicle exit button
 	local button = CreateFrame("CHECKBUTTON", "bdActionbars_VehicleExitButton", nil, "ActionButtonTemplate, SecureHandlerClickTemplate")
 	button.icon:SetTexture("Interface\\Vehicles\\UI-Vehicles-Button-Exit-Up")
@@ -383,7 +383,7 @@ function mod:create_possess()
 	cfg.frameName = "bdActionbars_PossessExitBar"
 	cfg.moveName = "Possess Exit"
 	cfg.frameVisibility = "[possessbar] show; hide"
-	cfg.frameSpawn = { "BOTTOM", mod.bars['vehiclebar'], "TOP", 0, defaultPadding }
+	cfg.frameSpawn = { "TOP", mod.bars['vehiclebar'], "BOTTOM"}
 
 	local buttonList = mod:GetButtonList("PossessButton", NUM_POSSESS_SLOTS)
 	local possess = mod:CreateBar(buttonList, cfg)

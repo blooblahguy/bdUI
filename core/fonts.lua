@@ -4,11 +4,12 @@ bdUI.fonts = {}
 
 -- dynamic font creation/fetching
 function bdUI:get_font(size, outline)
-	outline = outline or "THINOUTLINE"
-	local name = size.."_"..outline
+	local name = outline and size.."_"..outline or size
+	outline = outline and outline or ""
 	
 	if (not bdUI.fonts[name]) then
 		local font = CreateFont("BDUI_"..name)
+
 		font:SetFont(bdUI.media.font, tonumber(size), outline)
 		font:SetShadowColor(0, 0, 0, 0)
 		font:SetShadowOffset(0, 0)

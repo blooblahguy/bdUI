@@ -748,7 +748,7 @@ end
 function mod:create_container()
 	mod.raidpartyholder = CreateFrame('frame', "bdGrid", UIParent)
 	mod.raidpartyholder:SetSize(config['width'], config['height']*5)
-	mod.raidpartyholder:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 160)
+	mod.raidpartyholder:SetPoint("LEFT", UIParent, "LEFT", 10, -90)
 	bdMove:set_moveable(mod.raidpartyholder, "Raid Frames")
 
 	-- register events for resizing the box/group size

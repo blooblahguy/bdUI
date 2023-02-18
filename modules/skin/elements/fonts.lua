@@ -45,6 +45,7 @@ function bdUI:change_fonts()
 	STANDARD_TEXT_FONT = NORMAL
 
 	---
+	SetFont(ChatFontNormal,						NORMAL, 14 * fontScale, "OUTLINE")
 	SetFont(ChatBubbleFont,						NORMAL, 12 * fontScale, "OUTLINE")
 	SetFont(SystemFont_Shadow_Large_Outline,	NUMBER, 20 * fontScale, "OUTLINE")
 	SetFont(GameTooltipHeader, 					NORMAL, 14 * fontScale)

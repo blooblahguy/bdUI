@@ -1,6 +1,14 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
+local tabs = {"Left","Middle","Right","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight"}
+
+local tab_font = CreateFont("bdChat_TabFont")
+tab_font:SetFont(bdUI.media.font, 14, "OUTLINE")
+tab_font:SetShadowColor(0, 0, 0, 0)
+tab_font:SetShadowOffset(0, 0)
+
+hooksecurefunc(tab_font, "SetFont", function(...) print("chaning my font", ...) end)
 
 local function skin_frame_bg(frame)
 	-- if (not frame) then return end
@@ -12,10 +20,73 @@ local function skin_frame_bg(frame)
 	-- frame._border:SetAlpha(mod.config.bgalpha)
 end
 
-local function skin_frame(frame)
-	-- skin frames
-	local tabs = {"Left","Middle","Right","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight"}
+local function skin_tab(frame)
+	local name = frame:GetName()
+	local tab = _G[name..'Tab']
+	local old_text = _G[tab:GetName().."Text"]
+	local glow = _G[tab:GetName().."Glow"]
 
+	_G[tab:GetName().."Text"]:Hide()
+	_G[tab:GetName().."Text"].Show = noop
+
+	local text = tab:CreateFontString(nil)
+	text:SetFontObject(tab_font)
+	text:SetPoint("CENTER")
+	text:SetText(old_text:GetText())
+	-- text:SetFontObject(bdUI:get_font(14, "OUTLINE"))
+	-- text:SetFontObject(tab_font)
+	-- text:SetTextColor(1,1,1)
+	-- text:SetVertexColor(1,1,1)
+	-- text:SetAlpha(.5)
+	-- text:SetShadowOffset(0,0)
+	-- text:SetShadowColor(0,0,0,0)
+	-- -- text.bdSetTextColor = text.SetTextColor
+	-- -- text.bdSetFontObject = text.SetFontObject
+	-- text.SetTextColor = noop
+	-- text.SetFont = noop
+	-- text.SetFontObject = noop
+
+	-- local function force_font()
+	-- 	if (text:GetFontObject() ~= bdUI:get_font(14, "OUTLINE")) then
+
+	-- 	end
+	-- end
+
+	-- hooksecurefunc(text, "SetFont", function() print("set font") end)
+	-- hooksecurefunc(text, "SetFontObject", function() print("set font object") end)
+
+	-- frame:RegisterEvent("UPDATE_CHAT_WINDOWS")
+	-- frame:RegisterEvent("UPDATE_CHAT_COLOR")
+	-- frame:HookScript("OnEvent", function()
+	-- 	text:bdSetFontObject(bdUI:get_font(14, "OUTLINE"))
+	-- 	text:SetTextColor(1,1,1)
+	-- end)
+
+	hooksecurefunc(glow, "Show", function()
+		text:SetTextColor(.6, .7, 1)
+	end)
+	hooksecurefunc(glow, "Hide", function()
+		text:SetTextColor(1, 1, 1)
+	end)
+	
+	glow:SetTexture(nil)
+	glow.SetTexture = noop
+	
+	for index, value in pairs(tabs) do
+		local texture = _G[name..'Tab'..value]
+		texture:SetTexture("")
+	end
+
+	hooksecurefunc(frame,"Show",function(self)
+		_G[self:GetName().."TabText"]:SetAlpha(1)
+	end)
+
+	hooksecurefunc(frame,"Hide",function(self)
+		_G[self:GetName().."TabText"]:SetAlpha(.5)
+	end)
+end
+
+local function skin_frame(frame)
 	if (not frame) then return end
 	if (frame.skinned) then return end
 	frame.skinned = true
@@ -76,30 +147,7 @@ local function skin_frame(frame)
 	-- end
 	
 	-- tab style
-	-- _G[tab:GetName().."Text"]:SetFontObject(bdUI:get_font(fontSize, "OUTLINE"))
-	-- _G[tab:GetName().."Text"]:SetTextColor(1,1,1)
-	-- _G[tab:GetName().."Text"]:SetVertexColor(1,1,1)
-	-- _G[tab:GetName().."Text"]:SetAlpha(.5)
-	-- _G[tab:GetName().."Text"]:SetShadowOffset(0,0)
-	-- _G[tab:GetName().."Text"]:SetShadowColor(0,0,0,0)
-	-- _G[tab:GetName().."Text"].SetTextColor = noop
-	-- _G[tab:GetName().."Text"].SetVertexColor = noop
-	
-	-- _G[tab:GetName().."Glow"]:SetTexture(bdUI.media.flat)
-	-- _G[tab:GetName().."Glow"]:SetVertexColor(unpack(bdUI.media.blue))
-	-- _G[tab:GetName().."Glow"].SetVertexColor = noop
-	-- _G[tab:GetName().."Glow"].SetTextColor = noop
-	
-	-- for index, value in pairs(tabs) do
-	-- 	local texture = _G[name..'Tab'..value]
-	-- 	texture:SetTexture("")
-	-- end
-	-- hooksecurefunc(frame,"Show",function(self)
-	-- 	_G[self:GetName().."TabText"]:SetAlpha(1)
-	-- end)
-	-- hooksecurefunc(frame,"Hide",function(self)
-	-- 	_G[self:GetName().."TabText"]:SetAlpha(.5)
-	-- end)
+	skin_tab(frame)
 	
 	--hide button frame
 	buttonframe:Hide()
@@ -119,11 +167,7 @@ local function skin_frame(frame)
 		editbox:SetPoint("BOTTOM",frame,"TOP",0,10)
 	end
 	editbox:SetPoint("LEFT",frame,-8,0)
-	editbox:SetPoint("RIGHT",frame,8,0)
-
-
-
-	
+	editbox:SetPoint("RIGHT",frame,8,0)	
 end
 
 function mod:skin_chat()
@@ -190,7 +234,6 @@ function mod:skin_chat()
 	for i = 1, NUM_CHAT_WINDOWS do
 		local chatframe = _G["ChatFrame"..i]
 		skin_frame(chatframe)
-		skin_frame_bg(chatframe)
 	end
 
 	-- skin pop up chats

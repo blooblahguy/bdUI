@@ -112,7 +112,7 @@ function mod:create_tooltips()
 	--============================
 	mod.tooltipanchor = CreateFrame("frame", "bdTooltip", bdParent)
 	mod.tooltipanchor:SetSize(150, 100)
-	mod.tooltipanchor:SetPoint("RIGHT", bdParent, "RIGHT", 20, -116)
+	mod.tooltipanchor:SetPoint("RIGHT", bdParent, -100, -116)
 	bdMove:set_moveable(mod.tooltipanchor, "Tooltips")
 
 	--============================
@@ -126,8 +126,6 @@ function mod:create_tooltips()
 
 			local vspace = 8
 			local hspace = -13
-			-- local vspace = -17
-			-- local hspace = 34
 			if (vpos == "BOTTOM") then
 				vspace = -vspace
 			end
