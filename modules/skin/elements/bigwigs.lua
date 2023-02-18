@@ -29,7 +29,7 @@ local function BW_Style()
 			bar.candyBarIconFrame:ClearAllPoints()
 			bar.candyBarIconFrame:SetPoint("BOTTOMLEFT", bar, "BOTTOMLEFT", 0, 0)
 			bar.candyBarIconFrame:SetSize(20, 20)
-			bar.candyBarIconFrame:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+			bar.candyBarIconFrame:SetTexCoord(.07, .93, .07, .93)
 
 			-- bar
 			bar.candyBarBar:ClearAllPoints()

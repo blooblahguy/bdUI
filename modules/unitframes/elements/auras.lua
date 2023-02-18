@@ -30,7 +30,7 @@ mod.additional_elements.auras = function(self, unit)
 
 	self.Auras.PostCreateIcon = function(Debuffs, button)
 		bdUI:set_backdrop_basic(button)
-		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		button.icon:SetTexCoord(.07, .93, .07, .93)
 		button.cd:GetRegions():SetAlpha(0)
 		-- button:SetAlpha(0.8)
 	end

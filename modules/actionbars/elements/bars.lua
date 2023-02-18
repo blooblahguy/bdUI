@@ -308,7 +308,7 @@ function mod:create_bagbar()
 	-- ICON
 	local icon = bag:CreateTexture(nil, "ARTWORK")
 	icon:SetTexture("Interface\\Buttons\\Button-Backpack-Up")
-	icon:SetTexCoord(.1, .9, .1, .9)
+	icon:SetTexCoord(.07, .93, .07, .93)
 	icon:SetAllPoints()
 	bag:SetNormalTexture(icon)
 

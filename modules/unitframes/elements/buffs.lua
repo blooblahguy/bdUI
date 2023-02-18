@@ -32,7 +32,7 @@ mod.additional_elements.buffs = function(self, unit)
 	end
 	self.Buffs.PostCreateIcon = function(buffs, button)
 		bdUI:set_backdrop(button)
-		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		button.icon:SetTexCoord(.07, .93, .07, .93)
 		button.cd:GetRegions():SetAlpha(0)
 
 		-- blacklist

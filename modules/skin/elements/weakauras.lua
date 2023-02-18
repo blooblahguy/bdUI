@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Skinning")
 
 local function skin_wa_frame(frame)
 	if frame.icon then
-		frame.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+		frame.icon:SetTexCoord(.07, .93, .07, .93)
 		frame.icon.SetTexCoord = function() return end
 		if frame.border and not frame.bar then
 			frame.border:Hide()

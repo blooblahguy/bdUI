@@ -321,7 +321,7 @@ function mod:SkinButton(button)
 
 	-- ICON
 	if (icon) then
-		icon:SetTexCoord(.1, .9, .1, .9)
+		icon:SetTexCoord(.07, .93, .07, .93)
 		-- icon:SetDrawLayer("ARTWORK")
 	end
 

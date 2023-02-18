@@ -100,7 +100,7 @@ function mod:skin_loot()
 				button.icon = button:CreateTexture(nil, "OVERLAY")
 				button.icon:SetPoint("TOPLEFT", button)
 				button.icon:SetSize(buttonHeight - 4, buttonHeight - 4)
-				button.icon:SetTexCoord(.1, .9, .1, .9)
+				button.icon:SetTexCoord(.07, .93, .07, .93)
 
 				text:ClearAllPoints()
 				text:SetPoint("LEFT", button.icon, "RIGHT", 10, 0)

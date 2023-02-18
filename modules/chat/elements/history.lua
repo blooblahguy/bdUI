@@ -7,6 +7,8 @@ local history = CreateFrame("frame", nil)
 history:RegisterEvent("PLAYER_LOGOUT")
 history:RegisterEvent("LOADING_SCREEN_ENABLED")
 
+-- basically full credit to basicchatmods and funkydude
+
 function mod:create_history()
 	-- ensure SVs
 	BDUI_CHAT_HISTORY = BDUI_CHAT_HISTORY or {}

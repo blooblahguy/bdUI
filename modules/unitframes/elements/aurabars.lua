@@ -34,7 +34,7 @@ mod.additional_elements.aurabars = function(self, unit)
 		bar.icon.bg:SetPoint("TOPLEFT", bar.icon, "TOPLEFT", -bdUI.border, bdUI.border)
 		bar.icon.bg:SetPoint("BOTTOMRIGHT", bar.icon, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
 
-		bar.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		bar.icon:SetTexCoord(.07, .93, .07, .93)
 
 		-- blacklist
 		bar:SetScript("OnMouseDown", function(self, button)

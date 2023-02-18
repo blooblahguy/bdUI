@@ -29,7 +29,7 @@ function mod:color_names()
 				local class = select(2, UnitClass(w))
 				local colors = RAID_CLASS_COLORS[class]
 				if (colors) then
-					newMsg = gsub(newMsg, w, "|cff"..RGBPercToHex(colors.r,colors.g,colors.b).."%1|r")
+					newMsg = gsub(newMsg, w, "|cff"..RGBPercToHex(colors.r, colors.g, colors.b).."%1|r")
 				end
 			end
 		end

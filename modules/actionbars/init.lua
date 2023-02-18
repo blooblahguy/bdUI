@@ -8,7 +8,7 @@ local bdUI, c, l = unpack(select(2, ...))
 ]]
 --==================================================================================
 -- Initialize configuration
-local size_md = 40
+local size_md = 36
 local size_lg = 50
 local size_sm = 20
 
@@ -20,7 +20,7 @@ local function addBarConf(title, key, options)
 		rows = 1,
 		buttons = 12,
 		size = size_md,
-		spacing = bdUI.border,
+		spacing = 0,
 		scale = 1,
 		alpha = 1,
 		hotkeys = false,

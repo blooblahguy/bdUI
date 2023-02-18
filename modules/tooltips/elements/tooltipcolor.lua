@@ -126,7 +126,7 @@ local function skin_item_icons(self)
 			end
 
 			-- print(texture:GetTexture(), texture:IsShown())
-			texture:SetTexCoord(.1, .9, .1, .9)
+			texture:SetTexCoord(.07, .93, .07, .93)
 			-- texture.border:SetTexture(bdUI.media.flat)
 			-- texture.border:SetVertexColor(bdUI.media.backdrop)
 			-- texture.border:SetPoint("TOPLEFT", texture, -bdUI.pixel, bdUI.pixel)

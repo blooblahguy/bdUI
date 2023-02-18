@@ -39,7 +39,7 @@ function mod:create_castbar(self)
 	self.Castbar.Text:SetJustifyV("MIDDLE")
 
 	self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
-	self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+	self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
 	self.Castbar.Icon:SetDrawLayer('ARTWORK')
 	self.Castbar.Icon.bg = self.Castbar:CreateTexture(nil, "BORDER")
 	self.Castbar.Icon.bg:SetTexture(bdUI.media.flat)

@@ -143,7 +143,7 @@ function mod:create_aura(button, ...)
 	-- texture
 	button.texture = button:CreateTexture(nil, 'BORDER')
 	button.texture:SetAllPoints()
-	button.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+	button.texture:SetTexCoord(.07, .93, .07, .93)
 
 	button.count = button:CreateFontString()
 	button.count:SetPoint('BOTTOMRIGHT', -2, 2)

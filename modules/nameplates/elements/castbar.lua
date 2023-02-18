@@ -43,7 +43,7 @@ mod.elements.castbar = function(self, unit)
 	
 	-- icon
 	self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
-	self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+	self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
 	self.Castbar.Icon:SetDrawLayer('ARTWORK')
 	self.Castbar.Icon:SetSize( config.height+config.castbarheight, config.height+config.castbarheight )
 	self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", -border, 0)

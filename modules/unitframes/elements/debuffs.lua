@@ -25,6 +25,6 @@ mod.additional_elements.debuffs = function(self, unit)
 	self.Debuffs.PostCreateIcon = function(Debuffs, button)
 		bdUI:set_backdrop_basic(button)
 		button.cd:GetRegions():SetAlpha(0)
-		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		button.icon:SetTexCoord(.07, .93, .07, .93)
 	end
 end
