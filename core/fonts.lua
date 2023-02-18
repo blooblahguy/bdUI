@@ -6,6 +6,7 @@ bdUI.fonts = {}
 function bdUI:get_font(size, outline)
 	local name = outline and size.."_"..outline or size
 	outline = outline and outline or ""
+
 	
 	if (not bdUI.fonts[name]) then
 		local font = CreateFont("BDUI_"..name)

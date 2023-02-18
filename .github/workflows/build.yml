@@ -37,26 +37,6 @@ jobs:
       - name: Package Retail
         uses: BigWigsMods/packager@master
 
-      # Package for Classic
-      - name: Rename Classic toc
-        run: |
-          rm bdUI.toc
-          mv bdUI-classic.toc bdUI.toc
-      - name: Package Classic
-        uses: BigWigsMods/packager@master
-        with:
-          args: -g classic
-
-      # Package for TBC
-      - name: Rename TBC toc
-        run: |
-          rm bdUI.toc
-          mv bdUI-bcc.toc bdUI.toc
-      - name: Package BCC
-        uses: BigWigsMods/packager@master
-        with:
-          args: -g bcc
-
       # Package for WOTLKC
       - name: Rename WOTLKC toc
         run: |

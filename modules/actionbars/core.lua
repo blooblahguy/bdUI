@@ -31,8 +31,8 @@ function mod:initialize()
 
 	SetCVar("countdownForCooldowns", 1)
 
-	mod.variables.font = bdUI:get_font(c.font_size)
-	mod.variables.cooldownfont = bdUI:get_font(c.cd_font_size)
+	mod.variables.font = bdUI:get_font(c.font_size, "OUTLINE")
+	mod.variables.cooldownfont = bdUI:get_font(c.cd_font_size, "OUTLINE")
 
 	if (not c.enabled_once) then
 		SetActionBarToggles(1, 1, 1, 1, 0)
@@ -346,7 +346,7 @@ function mod:SkinButton(button)
 	
 	-- MACRO
 	if (macro) then
-		macro:SetFontObject(v.font, "THINOUTLINE")
+		macro:SetFontObject(v.font)
 		macro:SetTextColor(0.7,0.7,0.7)
 		macro:SetJustifyH("RIGHT")
 		macro:SetTextColor(1,1,1)
@@ -357,7 +357,7 @@ function mod:SkinButton(button)
 	-- COOLDOWN
 	if (cooldown) then
 		local cooldowntext = cooldown:GetRegions()
-		cooldowntext:SetFontObject(v.cooldownfont, "THINOUTLINE")
+		cooldowntext:SetFontObject(v.cooldownfont)
 		cooldowntext:SetJustifyH("CENTER")
 		cooldowntext:SetPoint("LEFT", cooldown, -20, 0)
 		cooldowntext:SetPoint("RIGHT", cooldown, 20, 0)

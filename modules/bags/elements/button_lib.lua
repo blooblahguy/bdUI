@@ -154,7 +154,7 @@ function mod:skin(self)
 	self:SetHighlightTexture(hover)
 
 	-- count
-	count:SetFontObject(bdUI:get_font(13))
+	count:SetFontObject(bdUI:get_font(13, "OUTLINE"))
 	count:SetJustifyH("RIGHT")
 	count:ClearAllPoints()
 	count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
@@ -202,7 +202,7 @@ mod.item_pool_create = function(self)
 	button:Hide()
 
 	button.text = button:CreateFontString(nil, "OVERLAY")
-	button.text:SetFontObject(bdUI:get_font(13, "THINOUTLINE"))
+	button.text:SetFontObject(bdUI:get_font(13, "OUTLINE"))
 	button.text:SetPoint("BOTTOMLEFT", button, "TOPLEFT", -2, 2)
 	button.text:SetAlpha(1)
 	button.text:SetTextColor(1, 1, 1)

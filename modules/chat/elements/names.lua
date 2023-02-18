@@ -25,7 +25,7 @@ function mod:color_names()
 		for i = 1, #words do
 			local w = words[i]
 			
-			if (w and not (w == "player" or w == "target") and UnitName(w) and UnitIsPlayer(w)) then
+			if (w and UnitName(w) == w and UnitIsPlayer(w)) then
 				local class = select(2, UnitClass(w))
 				local colors = RAID_CLASS_COLORS[class]
 				if (colors) then

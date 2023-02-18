@@ -3,7 +3,7 @@
 ## Title: |cffA02C2Fbd|rUI
 ## Author: Blooblahguy
 ## Version: @project-version@
-## SavedVariables: BDUI_SAVE
+## SavedVariables: BDUI_SAVE, BDUI_CHAT_HISTORY
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 
@@ -44,6 +44,7 @@ lib\ace\LibSharedMedia-3.0.lua
 lib\ace\LibSimpleSticky.lua
 lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
+lib\ace\LibChatAnims.lua
 
 # game versions
 versions\dragonflight\frames.lua

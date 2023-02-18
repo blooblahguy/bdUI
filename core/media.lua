@@ -40,7 +40,12 @@ function bdUI:do_frame_fade()
 	if (bdUI.version >= 100000) then return end -- dragnflight breaks this stuff right now
 	for frame, info in pairs(combat_fade_frames) do
 		local ic_alpha, resting_alpha = unpack(info)
-		local target_alpha = UnitAffectingCombat("player") and ic_alpha or IsResting() and resting_alpha
+		local target_alpha = 1
+		if UnitAffectingCombat("player") then
+			target_alpha = ic_alpha
+		elseif (IsResting()) then
+			target_alpha = resting_alpha
+		end
 
 		if (InCombatLockdown()) then return end
 		if (target_alpha > frame:GetAlpha() or frame:GetAlpha() > 0) then
