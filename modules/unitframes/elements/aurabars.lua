@@ -11,17 +11,18 @@ mod.additional_elements.aurabars = function(self, unit)
 	if (self.ResourceHolder:IsShown()) then
 		self.AuraBars:SetPoint("BOTTOMLEFT", self.ResourceHolder, "TOPLEFT", bdUI.border * 2, bdUI.border)
 	else
-		self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", bdUI.border * 2, bdUI.border)
+		self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", bdUI.border, bdUI.border)
 	end
 
 	-- self.AuraBars:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border)
 	self.AuraBars:SetHeight(60)
-	self.AuraBars:SetWidth(config.playertargetwidth - (bdUI.border * 2))
-	self.AuraBars.width = config.playertargetwidth - (bdUI.border * 2)
+	self.AuraBars:SetWidth(config.playertargetwidth - (bdUI.border))
+	self.AuraBars.width = config.playertargetwidth - (bdUI.border)
 	self.AuraBars.height = 16
+	self.AuraBars.gap = bdUI.border
 	self.AuraBars.sparkDisabled = true
 	self.AuraBars.spacing = bdUI.border
-	self.AuraBars.fontObject = bdUI:get_font(10)
+	self.AuraBars.fontObject = bdUI:get_font(10, "THINOUTLINE")
 	self.AuraBars.texture = bdUI.media.smooth
 	self.AuraBars.baseColor = bdUI.media.blue
 
@@ -29,8 +30,7 @@ mod.additional_elements.aurabars = function(self, unit)
 		bdUI:set_backdrop(bar)
 		bar.icon.bg = bar:CreateTexture(nil, "BACKGROUND")
 		bar.icon.bg:SetTexture(bdUI.media.flat)
-		-- print(bdUI.media.backdrop)
-		bar.icon.bg:SetVertexColor(unpack(bdUI.media.backdrop))
+		bar.icon.bg:SetVertexColor(unpack(bdUI.media.border))
 		bar.icon.bg:SetPoint("TOPLEFT", bar.icon, "TOPLEFT", -bdUI.border, bdUI.border)
 		bar.icon.bg:SetPoint("BOTTOMRIGHT", bar.icon, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
 

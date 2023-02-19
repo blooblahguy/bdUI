@@ -3,8 +3,9 @@ local bdUI, c, l = unpack(select(2, ...))
 bdUI.fonts = {}
 
 -- dynamic font creation/fetching
-function bdUI:get_font(size, outline)
+function bdUI:get_font(size, outline, shadow)
 	local name = outline and size.."_"..outline or size
+	name = shadow and name.."_shadow" or name
 	outline = outline and outline or ""
 
 	
@@ -12,8 +13,13 @@ function bdUI:get_font(size, outline)
 		local font = CreateFont("BDUI_"..name)
 
 		font:SetFont(bdUI.media.font, tonumber(size), outline)
-		font:SetShadowColor(0, 0, 0, 0)
-		font:SetShadowOffset(0, 0)
+		if (shadow) then
+			font:SetShadowColor(0, 0, 0, 1)
+			font:SetShadowOffset(1, -1)
+		else
+			font:SetShadowColor(0, 0, 0, 0)
+			font:SetShadowOffset(0, 0)
+		end
 
 		bdUI.fonts[name] = font
 	end

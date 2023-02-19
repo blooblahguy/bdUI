@@ -28,16 +28,16 @@ function mod:display_text(self, unit, align)
 
 	
 	if (config.textlocation == "Inside") then
-		self.Name:SetFontObject(bdUI:get_font(11))
-		self.Curhp:SetFontObject(bdUI:get_font(10))
+		self.Name:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
+		self.Curhp:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
 
 		self.Name:SetPoint(LEFT, self.TextHolder, offset, 0)
 		self.Curhp:SetPoint(RIGHT, self.TextHolder, RIGHT, -offset, 0)
 
 		self.Status:SetPoint("CENTER")
 	elseif (config.textlocation == "Outside") then
-		self.Name:SetFontObject(bdUI:get_font(13))
-		self.Curhp:SetFontObject(bdUI:get_font(10))
+		self.Name:SetFontObject(bdUI:get_font(13, "THINOUTLINE"))
+		self.Curhp:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
 		
 		self.Name:SetPoint("TOP"..RIGHT, self.TextHolder, "TOP"..LEFT, -offset, 0)
 		self.Curhp:SetPoint("TOP"..RIGHT, self.Name, "BOTTOM"..RIGHT, 0, -mod.padding)

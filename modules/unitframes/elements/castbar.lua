@@ -29,7 +29,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 
 	self.Castbar = CreateFrame("StatusBar", nil, self)
 	self.Castbar:SetFrameLevel(3)
-	self.Castbar:SetStatusBarTexture(bdUI.media.flat)
+	self.Castbar:SetStatusBarTexture(bdUI.media.smooth)
 	self.Castbar:SetStatusBarColor(.1, .4, .7, 1)
 	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
@@ -39,7 +39,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	end
 	
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size))
+	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size, nil, true))
 	self.Castbar.Text:SetJustifyV("MIDDLE")
 	self.Castbar.Text:SetJustifyH("CENTER")
 
@@ -59,11 +59,11 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self.Castbar.SafeZone:SetTexture(bdUI.media.flat)
 
 	self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size))
+	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size, nil, true))
 	self.Castbar.Time:SetJustifyH("LEFT")
 
 	self.Castbar.Duration = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Duration:SetFontObject(bdUI:get_font(font_size))
+	self.Castbar.Duration:SetFontObject(bdUI:get_font(font_size, nil, true))
 	self.Castbar.Duration:SetJustifyH("RIGHT")
 	
 

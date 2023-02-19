@@ -40,7 +40,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and select(2, UnitClass("player"
 			step = 0.1,
 			decimals = 1,
 			type = "range",
-			label = "Runes Out of Combat Alpha"
+			label = "Runes Resting Alpha"
 		},
 	}
 end
@@ -157,7 +157,7 @@ local config = {
 				step = 0.1,
 				decimals = 1,
 				type = "range",
-				label = "Out of Combat Alpha"
+				label = "Resting Alpha"
 			},
 		},
 	},
@@ -208,7 +208,7 @@ local config = {
 				step = 0.1,
 				decimals = 1,
 				type = "range",
-				label = "Out of Combat Alpha"
+				label = "Resting Alpha"
 			},
 			{
 				key = "special_1_color",

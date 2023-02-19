@@ -4,11 +4,10 @@ local mod = bdUI:get_module("Skinning")
 local function skin_wa_frame(frame)
 	if frame.icon then
 		frame.icon:SetTexCoord(.07, .93, .07, .93)
-		frame.icon.SetTexCoord = function() return end
+		frame.icon.SetTexCoord = noop
 		if frame.border and not frame.bar then
 			frame.border:Hide()
 		end
-		
 	end
 
 	bdUI:set_backdrop(frame)
@@ -53,15 +52,14 @@ wa_skin:SetScript("OnEvent", function(self, event,addon)
 end)
 
 function mod:skin_weak_auras()
-	local config = bdUI:get_module("General"):get_save()
+	if (not WeakAurasFrame) then return end
 
-	if (WeakAurasFrame) then
-		if (not config.skin_was) then return end
-		if (not WeakAuras or not WeakAuras.regions) then return end
-		for weakAura, v in pairs(WeakAuras.regions) do
-			if (WeakAuras.regions[weakAura].regionType == "icon" or WeakAuras.regions[weakAura].regionType == "aurabar") then
-				skin_wa_frame(WeakAuras.regions[weakAura].region)
-			end
+	local config = bdUI:get_module("General"):get_save()
+	if (not config.skin_was) then return end
+
+	for k, wa in pairs({WeakAurasFrame:GetChildren()}) do
+		if (wa.icon) then
+			-- skin_wa_frame(wa)
 		end
 	end
 end
