@@ -36,8 +36,8 @@ local bdDebuffs = CreateFrame("frame", "Debuffs", UIParent, "SecureAuraHeaderTem
 bdDebuffs:SetPoint('LEFT', bdParent, "CENTER", -20, -110)
 
 -- fonts
-local bufffont = bdUI:get_font(12)
-local debufffont = bdUI:get_font(12)
+local bufffont = bdUI:get_font(12, "THINOUTLINE")
+local debufffont = bdUI:get_font(12, "THINOUTLINE")
 
 --===============================================
 -- Time Function
@@ -317,8 +317,8 @@ function mod:config_callback()
 	if (InCombatLockdown()) then return end
 
 	-- font sizes
-	bufffont:SetFontObject(bdUI:get_font(config.bufffontsize))
-	debufffont:SetFontObject(bdUI:get_font(config.debufffontsize))
+	bufffont:SetFontObject(bdUI:get_font(config.bufffontsize, "THINOUTLINE"))
+	debufffont:SetFontObject(bdUI:get_font(config.debufffontsize, "THINOUTLINE"))
 
 	-- buffs
 	mod:update_buffs()
@@ -352,6 +352,9 @@ function mod:initialize()
 			TemporaryEnchantFrame:UnregisterAllEvents("UNIT_AURA")
 			TemporaryEnchantFrame:Hide()
 		end
+
+		DebuffFrame:UnregisterAllEvents("UNIT_AURA")
+		DebuffFrame:Hide()
 	end)
 
 	mod:config_callback()

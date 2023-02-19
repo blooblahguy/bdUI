@@ -159,9 +159,6 @@ local function layout(self, unit)
 	-- Name & Text
 	self.TextHolder = CreateFrame('frame', nil, self.Health)
 	self.TextHolder:SetAllPoints()
-	-- configurable text layouts
-	mod.create_all_tags(self, unit)
-	mod:create_location_tags(self, unit)
 
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 7)
@@ -173,6 +170,10 @@ local function layout(self, unit)
 	if (string.find(func, "boss")) then func = "boss" end
 	if (string.find(func, "arena")) then func = "arena" end
 	mod.custom_layout[func](self, unit)
+
+	-- configurable text layouts
+	mod.create_all_tags(self)
+	mod:create_location_tags(self, func)
 end
 
 function mod:create_unitframes()
@@ -212,14 +213,14 @@ function mod:create_unitframes()
 	-- focus
 	if (config.enablefocus) then
 		local focus = oUF:Spawn("focus")
-		focus:SetPoint("TOP", bdParent, "TOP", 0, -120)
+		focus:SetPoint("LEFT", bdParent, "CENTER", xoff, 100)
 		focus:SetParent(uf_holder)
 		bdMove:set_moveable(focus, "Focus")
 	end
 	
-	if (config.bossenable and CompactUnitFrame) then
+	if (config.bossenable and BossTargetFrameContainer) then
 		local arena_boss = CreateFrame("frame", "bdArenaBoss", uf_holder)
-		arena_boss:SetPoint("TOPRIGHT", Minimap, "BOTTOMLEFT", -10, -10)
+		arena_boss:SetPoint("RIGHT", UIParent, -400, 30)
 		arena_boss:SetSize(config.bosswidth, (config.bossheight + 30) * 5)
 		bdMove:set_moveable(arena_boss, "Boss Frames")
 		
@@ -230,7 +231,7 @@ function mod:create_unitframes()
 			if (not lastboss) then
 				boss:SetPoint("TOP", arena_boss, "TOP", 0, 0)
 			else
-				boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -30)
+				boss:SetPoint("TOP", lastboss, "BOTTOM", -2, -50)
 			end
 			boss:SetSize(config.bosswidth, config.bossheight)
 			lastboss = boss

@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
-local tabs = {"Left","Middle","Right","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight"}
+local tabs = {"Left","Middle","Right","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight","ActiveLeft","ActiveMiddle","ActiveRight"}
 local dont_fade = {}
 
 
@@ -18,6 +18,7 @@ local function skin_frame_bg(frame)
 	background.border:SetPoint("BOTTOMRIGHT", 8, -8)
 	background.border:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
 	background.border:SetBackdropColor(0, 0, 0, 0)
+	background.border:SetAlpha(background:GetAlpha())
 	background.border:SetBackdropBorderColor(unpack(bdUI.media.border))
 	hooksecurefunc(background, "SetAlpha", function(self, alpha)
 		background.border:SetAlpha(alpha)
@@ -27,12 +28,12 @@ end
 local function skin_tab(frame)
 	local name = frame:GetName()
 	local tab = _G[name..'Tab']
-	local old_text = _G[tab:GetName().."Text"]
+	local old_text = _G[tab:GetName().."Text"] or _G[tab:GetName()].Text
 	local glow = _G[tab:GetName().."Glow"]
 
 	-- replace tab text with new object
-	_G[tab:GetName().."Text"]:Hide()
-	_G[tab:GetName().."Text"].Show = noop
+	old_text:Hide()
+	old_text.Show = noop
 	local text = tab:CreateFontString(nil)
 	text:SetFontObject(bdUI:get_font(14, "THINOUTLINE"))
 	text:SetPoint("CENTER")
@@ -56,17 +57,20 @@ local function skin_tab(frame)
 	glow.SetTexture = noop
 	
 	-- clearing textures
+	bdUI:strip_textures(tab, false)
 	for index, value in pairs(tabs) do
-		local texture = _G[name..'Tab'..value]
-		texture:SetTexture("")
+		local texture = _G[name..'Tab'..value] or _G[name..'Tab'][value]
+		if (texture) then
+			texture:SetTexture("")
+		end
 	end
 
 	-- set tab alpha if our frame is shown
 	hooksecurefunc(frame, "Show", function(self)
-		_G[self:GetName().."TabText"]:SetAlpha(1)
+		text:SetAlpha(1)
 	end)
 	hooksecurefunc(frame, "Hide", function(self)
-		_G[self:GetName().."TabText"]:SetAlpha(.5)
+		text:SetAlpha(.5)
 	end)
 
 	-- stop chat fade
@@ -130,11 +134,8 @@ local function skin_frame(frame)
 	
 	--editbox
 	editbox:SetAltArrowKeyMode(false)
+	bdUI:strip_textures(editbox, false)
 	bdUI:set_backdrop(editbox)
-	_G[editbox:GetName().."Left"]:Hide()
-	_G[editbox:GetName().."Mid"]:Hide()
-	_G[editbox:GetName().."Right"]:Hide()
-	-- for t = 6, #tex do tex[t]:SetAlpha(0) end
 	editbox:ClearAllPoints()
 	if name == "ChatFrame2" then
 		editbox:SetPoint("BOTTOM",frame,"TOP",0,34)

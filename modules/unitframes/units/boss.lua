@@ -11,11 +11,13 @@ mod.custom_layout["boss"] = function(self, unit)
 	mod.additional_elements.castbar(self, unit)
 	
 	-- auras
-	self.Debuffs.initialAnchor = "TOPRIGHT"
-	self.Debuffs['growth-x'] = "LEFT"
-	self.Debuffs['growth-y'] = "DOWN"
+	self.Debuffs.initialAnchor = "BOTTOMLEFT"
+	self.Debuffs['growth-x'] = "RIGHT"
+	self.Debuffs['growth-y'] = "UP"
+	self.Debuffs.size = 20
+	self.Debuffs:SetSize(config.bosswidth / 2, config.bossheight)
 	self.Debuffs:ClearAllPoints()
-	self.Debuffs:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -5, 0)
+	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border*2)
 	-- debuff filter for both icons and bars
 	self.Debuffs.CustomFilter  = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -35,11 +37,13 @@ mod.custom_layout["boss"] = function(self, unit)
 		return true
 	end
 
-	self.Auras.initialAnchor = "TOPLEFT"
-	self.Auras['growth-x'] = "RIGHT"
-	self.Auras['growth-y'] = "DOWN"
+	self.Auras.initialAnchor = "BOTTOMRIGHT"
+	self.Auras['growth-x'] = "LEFT"
+	self.Auras['growth-y'] = "UP"
+	self.Auras.size = 20
+	self.Auras:SetSize(config.bosswidth / 2, config.bossheight)
 	self.Auras:ClearAllPoints()
-	self.Auras:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, 0)
+	self.Auras:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border*2)
 	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
@@ -101,10 +105,10 @@ mod.custom_layout["boss"] = function(self, unit)
 
 		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
 
-		self.Debuffs.size = self.Health:GetHeight()
-		self.Debuffs:SetSize(config.bosswidth, config.bossheight)
+		-- self.Debuffs.size = self.Health:GetHeight()
+		-- self.Debuffs:SetSize(config.bosswidth, config.bossheight)
 		
-		self.Auras.size = self.Health:GetHeight()
-		self.Auras:SetSize(config.bosswidth, config.bossheight)
+		-- self.Auras.size = self.Health:GetHeight()
+		-- self.Auras:SetSize(config.bosswidth, config.bossheight)
 	end
 end

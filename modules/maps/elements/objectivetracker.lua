@@ -24,9 +24,9 @@ end
 
 function mod:create_objective_tracker()
 	config = mod.config
-	if (MinimapCluster.SetHeaderUnderneath) then return end -- not messing with this in DF
+	-- if (MinimapCluster.SetHeaderUnderneath) then return end -- not messing with this in DF
 
-	local frame = ObjectiveTracker and ObjectiveTracker or ObjectiveTrackerFrame and ObjectiveTrackerFrame or WatchFrame and WatchFrame
+	local frame = ObjectiveTracker or ObjectiveTrackerFrame or WatchFrame
 	if (not frame) then return end
 
 	frame:SetClampedToScreen(false)
@@ -43,8 +43,13 @@ function mod:create_objective_tracker()
 	local function move_objective_tracker(self, rel, anchor, rel2)
 		if (anchor == quest_anchor) then return end
 		frame:ClearAllPoints()
-		frame:SetPoint("TOPLEFT", quest_anchor, -34, 0)
-		frame:SetPoint("TOPRIGHT", quest_anchor, 42, 0)
+		if (frame == ObjectiveTrackerFrame) then
+			frame:SetPoint("TOPLEFT", quest_anchor, 0, 0)
+			frame:SetPoint("TOPRIGHT", quest_anchor, 0, 0)
+		else
+			frame:SetPoint("TOPLEFT", quest_anchor, -34, 0)
+			frame:SetPoint("TOPRIGHT", quest_anchor, 42, 0)
+		end
 		local bottom = quest_anchor:GetBottom() * bdUI.scale
 		frame:SetHeight(bottom - 100)
 	end

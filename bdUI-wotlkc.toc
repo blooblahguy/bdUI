@@ -229,10 +229,6 @@ modules\tooltips\units\npc.lua
 modules\unitframes\init.lua
 modules\unitframes\functions.lua
 modules\unitframes\core.lua
-modules\unitframes\tags\hp.lua
-modules\unitframes\tags\status.lua
-modules\unitframes\tags\pp.lua
-modules\unitframes\tags\name.lua
 modules\unitframes\elements\aurabars.lua
 modules\unitframes\elements\auras.lua
 modules\unitframes\elements\buffs.lua

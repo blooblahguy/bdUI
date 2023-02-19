@@ -7,13 +7,13 @@ mod.additional_elements.buffs = function(self, unit)
 
 	-- Auras
 	self.Buffs = CreateFrame("Frame", "bdUF_Buffs", self)
-	if (self.ResourceHolder:IsShown()) then
-		self.Buffs:SetPoint("BOTTOMLEFT", self.ResourceHolder, "TOPLEFT", 0, bdUI.border)
-		self.Buffs:SetPoint("BOTTOMRIGHT", self.ResourceHolder, "TOPRIGHT", 0, bdUI.border)
-	else
-		self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 4)
-		self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-	end
+	-- if (self.ResourceHolder:IsShown()) then
+	-- 	self.Buffs:SetPoint("BOTTOMLEFT", self.ResourceHolder, "TOPLEFT", 0, bdUI.border)
+	-- 	self.Buffs:SetPoint("BOTTOMRIGHT", self.ResourceHolder, "TOPRIGHT", 0, bdUI.border)
+	-- else
+	-- self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, 0)
+	-- self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
+	-- end
 	self.Buffs:SetHeight(60)
 	self.Buffs.size = 18
 	self.Buffs.initialAnchor  = "BOTTOMLEFT"

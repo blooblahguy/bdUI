@@ -159,7 +159,7 @@ mod.custom_layout["target"] = function(self, unit)
 			self.Buffs = self.DisabledBuffs or self.Buffs
 			self.Buffs:Show()
 			self.Buffs:ClearAllPoints()
-			self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 2, 4)
+			self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 2, 2)
 			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
 			self.Buffs.size = config.target_uf_buff_size
 			self.Buffs.initialAnchor  = "BOTTOMLEFT"

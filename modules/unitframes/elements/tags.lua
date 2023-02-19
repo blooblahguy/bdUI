@@ -68,7 +68,7 @@ function mod:update_tags(self, unit)
 end
 
 -- make all tags in one file now
-function mod.create_all_tags(self, unit)
+function mod.create_all_tags(self)
 	-- classification
 	oUF.Tags.Events["bd:rarity"] = "UNIT_NAME_UPDATE UNIT_THREAT_SITUATION_UPDATE PLAYER_TARGET_CHANGED"
 	oUF.Tags.Methods["bd:rarity"] = function(unit, r)
@@ -95,11 +95,60 @@ function mod.create_all_tags(self, unit)
 	end
 	-- name
 	-- combat
+	oUF.Tags.Events["bd:combat"] = "PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED UNIT_COMBAT UNIT_FLAGS"
+	oUF.Tags.Methods["bd:combat"] = function(unit)
+		if (unit == "player" and UnitAffectingCombat(unit)) then
+			local fileWidth = 100
+			local fileHeight = 100
+			local width = 20
+			local height = 20
+			local left = 0.5
+			local right = 1
+			local top = 0
+			local bottom = 0.49
+			local xoffset = 0
+			local yoffset = 0
+
+			self.combat = self.combat or CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
+
+			return self.combat
+		end
+
+		return ""
+	end
+
+	oUF.Tags.Events["bd:resting"] = "PLAYER_UPDATE_RESTING UNIT_CONNECTION UNIT_FLAGS"
+	oUF.Tags.Methods["bd:resting"] = function(unit)
+		local config = mod:get_save()
+
+		if (unit == "player" and IsResting()) then
+			local fileWidth = 100
+			local fileHeight = 100
+			local width = 16
+			local height = 16
+			local left = 0
+			local right = 0.5
+			local top = 0
+			local bottom = 0.421875
+			local xoffset = 0
+			local yoffset = 0
+
+			self.resting = self.resting or CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left, right, top, bottom, xOffset, yOffset)
+
+			return self.resting
+		end
+
+		return ""
+	end
+
 	-- resting
 	-- current hp
 	oUF.Tags.Events['bd:curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
 	oUF.Tags.Methods['bd:curhp'] = function(unit)
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
+		if (UnitIsDead(unit) or UnitIsGhost(unit)) then
+			return bdUI:numberize(hpMax)
+		end
 		return bdUI:numberize(hp)
 	end
 
@@ -110,7 +159,7 @@ function mod.create_all_tags(self, unit)
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
 
 		if hpMax == 0 then return "|cffFFFFFF" end
-		if (UnitIsDead(unit) or UnitIsGhost(unit)) then return "|cffFF00000|r" end
+		if (UnitIsDead(unit) or UnitIsGhost(unit)) then return "|cffFF0000" end
 
 		local hpPercent = bdUI:round(hp / hpMax * 100)
 		local r, g, b = bdUI:ColorGradient(hpPercent / 100, 1,0,0, 1,.5,0, 1, 1, 1)
@@ -126,7 +175,7 @@ function mod.create_all_tags(self, unit)
 
 	-- power
 	oUF.Tags.Events['bd:curpp'] = 'UNIT_POWER_UPDATE UNIT_MAXPOWER PLAYER_TARGET_CHANGED'
-	oUF.Tags.Methods['bdUI:curpp'] = function(unit)
+	oUF.Tags.Methods['bd:curpp'] = function(unit)
 		local pType, pToken = UnitPowerType(unit)
 		local hex = RGBPercToHex(unpack(oUF.colors.power[pType]))
 		local pp, ppMax = UnitPower(unit), UnitPowerMax(unit)

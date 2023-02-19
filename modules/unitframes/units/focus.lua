@@ -11,12 +11,13 @@ mod.custom_layout["focus"] = function(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 	mod.additional_elements.castbar(self, unit)
 
-	self.Debuffs.initialAnchor = "TOPRIGHT"
-	self.Debuffs['growth-x'] = "LEFT"
+	self.Debuffs.initialAnchor = "BOTTOMLEFT"
+	self.Debuffs['growth-x'] = "RIGHT"
+	self.Debuffs['growth-y'] = "UP"
 	self.Debuffs.size = 20
-	self.Debuffs:SetSize(config.focuswidth, config.focusheight)
+	self.Debuffs:SetSize(config.focuswidth / 2, config.focusheight)
 	self.Debuffs:ClearAllPoints()
-	self.Debuffs:SetPoint("TOPRIGHT", self.Health, "TOPLEFT", -4, 0)
+	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border*2)
 	self.Debuffs.CustomFilter  = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
@@ -41,13 +42,13 @@ mod.custom_layout["focus"] = function(self, unit)
 		return true
 	end
 
-	self.Buffs.initialAnchor = "TOPLEFT"
-	self.Buffs['growth-x'] = "RIGHT"
-	self.Buffs['growth-y'] = "DOWN"
+	self.Buffs.initialAnchor = "BOTTOMRIGHT"
+	self.Buffs['growth-x'] = "LEFT"
+	self.Buffs['growth-y'] = "UP"
 	self.Buffs.size = 20
-	self.Buffs:SetSize(config.focuswidth, config.focusheight)
+	self.Buffs:SetSize(config.focuswidth / 2, config.focusheight)
 	self.Buffs:ClearAllPoints()
-	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, 0)
+	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border*3)
 	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
@@ -85,7 +86,7 @@ mod.custom_layout["focus"] = function(self, unit)
 		end
 		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.focuspower + bdUI.border)
 
-		self.Debuffs.size = self.Health:GetHeight()
-		self.Buffs.size = self.Health:GetHeight()
+		-- self.Debuffs.size = self.Health:GetHeight()
+		-- self.Buffs.size = self.Health:GetHeight()
 	end
 end

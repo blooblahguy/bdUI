@@ -170,19 +170,27 @@ local config = {
 			tags_config("Player", "player", {
 				outside_left = "",
 				inside_left = "[bd:curpp]",
-				inside_center = "[dead][resting]",
+				inside_center = "[bd:combat][bd:resting][pvp]",
 				inside_right = "[hpcolor][perhp][/hpcolor]",
 				outside_right = "",
 			}),
 			tags_config("Target", "target", {
 				inside_left = "[bd:curpp]",
-				inside_center = "[dead][offline]",
-				outside_right = "[name]",
-				inside_right = "[hpcolor][perhp][/hpcolor]",
+				inside_center = "[status]",
+				outside_right = "[name][bd:rarity]",
+				inside_right = "[hpcolor][bd:curhp] - [perhp][/hpcolor]",
 			}),
 			tags_config("Target Of Target & Pet", "targettarget"),
-			tags_config("Focus", "targettarget"),
-			tags_config("Boss", "targettarget"),
+			tags_config("Focus", "focus", {
+				inside_left = "[bd:curpp]",
+				inside_center = "[name]",
+				inside_right = "[hpcolor][bd:curhp] - [perhp][/hpcolor]",
+			}),
+			tags_config("Boss", "boss", {
+				inside_left = "[bd:curpp]",
+				inside_center = "[name]",
+				inside_right = "[hpcolor][bd:curhp] - [perhp][/hpcolor]",
+			}),
 		}
 	},
 	{
@@ -330,7 +338,7 @@ local config = {
 				key = "focuswidth",
 				type = "range",
 				label = "Width",
-				value = 240,
+				value = 220,
 				min = 50,
 				max = 300,
 				step = 2,

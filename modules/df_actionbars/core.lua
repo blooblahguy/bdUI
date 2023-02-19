@@ -95,7 +95,7 @@ function mod:skin_button(button)
 
 	-- HOTKEY
 	if (hotkey) then
-		hotkey:SetFontObject(bdUI:get_font(12))
+		hotkey:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
 		hotkey:SetJustifyH("Right")
 		hotkey:SetTextColor(1, 1, 1)
 		hotkey:ClearAllPoints()
@@ -104,7 +104,7 @@ function mod:skin_button(button)
 
 	-- COUNT
 	if (count) then
-		count:SetFontObject(bdUI:get_font(12))
+		count:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
 		count:SetTextColor(0.7,0.7,0.7)
 		count:SetJustifyH("Center")
 		count:SetTextColor(1,1,1)

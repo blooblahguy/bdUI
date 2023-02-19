@@ -39,7 +39,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	end
 	
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size, nil, true))
+	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 	self.Castbar.Text:SetJustifyV("MIDDLE")
 	self.Castbar.Text:SetJustifyH("CENTER")
 
@@ -59,11 +59,11 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self.Castbar.SafeZone:SetTexture(bdUI.media.flat)
 
 	self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size, nil, true))
+	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 	self.Castbar.Time:SetJustifyH("LEFT")
 
 	self.Castbar.Duration = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Duration:SetFontObject(bdUI:get_font(font_size, nil, true))
+	self.Castbar.Duration:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 	self.Castbar.Duration:SetJustifyH("RIGHT")
 	
 
