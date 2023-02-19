@@ -82,8 +82,6 @@ mod.custom_layout["target"] = function(self, unit)
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 	mod.additional_elements.aurabars(self, unit)
-	-- power
-	mod.tags.pp(self, unit)
 
 	-- icon buffs
 	self.Buffs:ClearAllPoints()
@@ -106,9 +104,6 @@ mod.custom_layout["target"] = function(self, unit)
 	-- aurabar debuffs
 	self.AuraBars.filter = "HARMFUL"
 	self.AuraBars.CustomFilter = debuff_filter
-	
-	-- mod.align_text(self, "right")
-	mod:display_text(self, unit, "right")
 
 	-- config callback
 	self.callback = function()
@@ -116,33 +111,31 @@ mod.custom_layout["target"] = function(self, unit)
 		self:SetSize(config.playertargetwidth, config.playertargetheight)
 		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
 
-		mod:display_text(self, unit, "right")
-
 		-- color target name if we're in combat with them
-		local total = 0
-		local name = self.Name
-		self.NameTicker = CreateFrame("frame", self)
-		self.NameTicker:RegisterEvent("PLAYER_TARGET_CHANGED")
-		local update_color = function()
-			if (UnitExists("target")) then
-				local status = UnitThreatSituation("player", "target")
-				if (status == nil) then
-					name:SetTextColor(1, 1, 1)
-				else
-					name:SetTextColor(1, .2, .2)
-				end
-			end
-		end
+		-- local total = 0
+		-- local name = self.Name
+		-- self.NameTicker = CreateFrame("frame", self)
+		-- self.NameTicker:RegisterEvent("PLAYER_TARGET_CHANGED")
+		-- local update_color = function()
+		-- 	if (UnitExists("target")) then
+		-- 		local status = UnitThreatSituation("player", "target")
+		-- 		if (status == nil) then
+		-- 			name:SetTextColor(1, 1, 1)
+		-- 		else
+		-- 			name:SetTextColor(1, .2, .2)
+		-- 		end
+		-- 	end
+		-- end
 
-		self.NameTicker:SetScript("OnEvent", update_color)
-		self.NameTicker:SetScript("OnUpdate", function(self, elapsed)
-			total = total + elapsed
-			if (total > 0.3) then
-				total = 0
+		-- self.NameTicker:SetScript("OnEvent", update_color)
+		-- self.NameTicker:SetScript("OnUpdate", function(self, elapsed)
+		-- 	total = total + elapsed
+		-- 	if (total > 0.3) then
+		-- 		total = 0
 
-				update_color()
-			end
-		end)
+		-- 		update_color()
+		-- 	end
+		-- end)
 
 		-- power
 		self.Power:SetHeight(config.playertargetpowerheight)
@@ -166,7 +159,7 @@ mod.custom_layout["target"] = function(self, unit)
 			self.Buffs = self.DisabledBuffs or self.Buffs
 			self.Buffs:Show()
 			self.Buffs:ClearAllPoints()
-			self.Buffs:SetPoint("BOTTOMLEFT", self.Name, "TOPLEFT", 2, 4)
+			self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 2, 4)
 			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
 			self.Buffs.size = config.target_uf_buff_size
 			self.Buffs.initialAnchor  = "BOTTOMLEFT"

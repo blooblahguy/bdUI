@@ -9,8 +9,6 @@ mod.custom_layout["boss"] = function(self, unit)
 	mod.additional_elements.auras(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 	mod.additional_elements.castbar(self, unit)
-
-	mod.tags.pp(self, unit)
 	
 	-- auras
 	self.Debuffs.initialAnchor = "TOPRIGHT"
@@ -61,19 +59,6 @@ mod.custom_layout["boss"] = function(self, unit)
 
 		return bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or not source or not UnitIsPlayer(source) -- this may have been casted by no one or by a boss
 	end
-
-	
-	-- text
-	self.Name:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 2)
-	self.Name:SetFontObject(bdUI:get_font(13))
-	
-	self.Curhp:ClearAllPoints()
-	self.Curhp:SetPoint("LEFT", 4, 0)
-	self.Curhp:SetFontObject(bdUI:get_font(11))
-	
-	self.Curpp:ClearAllPoints()
-	self.Curpp:SetPoint("RIGHT", -4, 0)
-	self.Curpp:SetFontObject(bdUI:get_font(11))
 
 	-- self.Auras.initialAnchor = "TOPLEFT"
 	-- self.Auras['growth-x'] = "RIGHT"

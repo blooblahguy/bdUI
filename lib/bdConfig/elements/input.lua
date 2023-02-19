@@ -39,8 +39,13 @@ local function create(options, parent)
 	label:SetText(options.label)
 	label:SetPoint("TOPLEFT", container, "TOPLEFT", 0, 0)
 
+	local width = 250
+	if (options.size == "third") then
+		width = 160
+	end
+
 	local input = CreateFrame("EditBox", nil, container)
-	input:SetSize(200,24)
+	input:SetSize(width, 24)
 	input:SetFontObject("bdConfig_font")
 	input:SetText(options.value or "")
 	input:SetTextInsets(6, 2, 2, 2)
@@ -48,15 +53,24 @@ local function create(options, parent)
 	input:SetHistoryLines(1000)
 	input:SetAutoFocus(false) 
 	input:SetScript("OnTextChanged", function(self, key) container:set(self:GetText()) end)
-	input:SetScript("OnEnterPressed", function(self, key) container:set(self:GetText()); self:ClearFocus(); end)
-	input:SetScript("OnEscapePressed", function(self, key) container:set(self:GetText()); self:ClearFocus(); end)
+	input:SetScript("OnEnterPressed", function(self, key) container:set(self:GetText()); self:ClearFocus(); container:callback() end)
+	input:SetScript("OnEscapePressed", function(self, key) container:set(self:GetText()); self:ClearFocus(); container:callback() end)
+	input:SetScript("OnEditFocusLost", function(self, key) container:set(self:GetText()); self:ClearFocus(); container:callback() end)
 	input:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 0, -2)
 	lib:create_backdrop(input)
+
+	if options.align == "right" then
+		label:ClearAllPoints()
+		label:SetPoint("TOPRIGHT", container, "TOPRIGHT", 0, 0)
+		input:ClearAllPoints()
+		input:SetPoint("TOPRIGHT", label, "BOTTOMRIGHT", 0, -2)
+	end
 
 	container.key = options.key
 	container.input = input
 	container.label = label
 	container.module = options.module
+	container.callback = options.callback
 	Mixin(container, methods)
 	container:set()
 

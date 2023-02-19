@@ -5,14 +5,9 @@ local mod = bdUI:get_module("Unitframes")
 mod.custom_layout.arena = function(self, unit)
 	local config = mod.save
 
-	self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
-	self.Curhp:SetPoint("RIGHT", self.Health, "RIGHT", -4, 0)
-
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit)
 	mod.additional_elements.auras(self, unit)
-	-- power
-	mod.tags.pp(self, unit)
 	
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
 	

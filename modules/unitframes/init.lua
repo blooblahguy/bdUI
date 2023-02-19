@@ -3,6 +3,67 @@
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
 
+local function tags_config(title, frame, options)
+	local defaults = {
+		outside_left = "",
+		inside_left = "",
+		inside_center = "[name]",
+		inside_right = "",
+		outside_right = "",
+	}
+
+	options = options or {}
+	for k, v in pairs(options) do
+		defaults[k] = v
+	end
+
+	return { 
+		key = "tab",
+		type = "tab",
+		label = title,
+		args = {
+			{
+				key = frame.."_outside_left",
+				type = "input",
+				value = defaults.outside_left,
+				label = "Outside Left",
+			},
+			{
+				key = frame.."_outside_right",
+				type = "input",
+				value = defaults.outside_right,
+				label = "Outside Right",
+				align = "right"
+			},
+			{
+				key = "clear",
+				type = "clear",
+			},
+			{
+				key = frame.."_inside_left",
+				type = "input",
+				value = defaults.inside_left,
+				label = "Inside Left",
+				size = "third"
+			},
+			{
+				key = frame.."_inside_center",
+				type = "input",
+				value = defaults.inside_center,
+				label = "Inside Center",
+				size = "third"
+			},
+			{
+				key = frame.."_inside_right",
+				type = "input",
+				value = defaults.inside_right,
+				label = "Inside Right",
+				size = "third"
+			},
+		}
+	}
+end
+
 -- Config Table
 local config = {
 	{
@@ -88,7 +149,7 @@ local config = {
 			},
 			{
 				key = "unitframe_resting_alpha",
-				value = .3,
+				value = 1,
 				min = 0,
 				max = 1,
 				step = 0.1,
@@ -101,6 +162,22 @@ local config = {
 	--=========================================
 	-- PLAYER & TARGET
 	--=========================================
+	{
+		key = "tags_tab",
+		type = "tab",
+		label = "Frame Text",
+		args = {
+			tags_config("Player", "player", {
+				outside_left = "",
+				inside_left = "[name]  [offline][dead][resting]",
+				inside_center = "[bdUI:curpp]",
+				inside_right = "[hpcolorstart][perhp][hpcolorstop]",
+				outside_right = "",
+			}),
+			tags_config("Target", "target"),
+			tags_config("Target", "targettarget"),
+		}
+	},
 	{
 		key = "playertarget_tab",
 		type = "tab",
@@ -363,13 +440,4 @@ function mod:initialize()
 	if (not mod.config.enabled) then return false end
 	
 	mod:create_unitframes()
-
-	mod:config_callback()
-	
-	-- mod.loader = CreateFrame("frame", nil, UIParent)
-	-- mod.loader:RegisterEvent("PLAYER_ENTERING_WORLD")
-	-- mod.loader:SetScript("OnEvent", function(self, event)
-	-- 	print("callback")
-	-- end)
-
 end

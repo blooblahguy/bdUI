@@ -10,20 +10,6 @@ mod.custom_layout["focus"] = function(self, unit)
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.debuffs(self, unit)
 	mod.additional_elements.castbar(self, unit)
-	-- power
-	mod.tags.pp(self, unit)
-
-	-- text
-	self.Name:SetPoint("LEFT", 4, 0)
-	self.Name:SetFontObject(bdUI:get_font(13))
-	
-	self.Curhp:ClearAllPoints()
-	self.Curhp:SetPoint("RIGHT", -4, 0)
-	self.Curhp:SetFontObject(bdUI:get_font(11))
-	
-	self.Curpp:ClearAllPoints()
-	self.Curpp:SetPoint("CENTER")
-	self.Curpp:SetFontObject(bdUI:get_font(11))
 
 	self.Debuffs.initialAnchor = "TOPRIGHT"
 	self.Debuffs['growth-x'] = "LEFT"
@@ -54,7 +40,6 @@ mod.custom_layout["focus"] = function(self, unit)
 
 		return true
 	end
-
 
 	self.Buffs.initialAnchor = "TOPLEFT"
 	self.Buffs['growth-x'] = "RIGHT"

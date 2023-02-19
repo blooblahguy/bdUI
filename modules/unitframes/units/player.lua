@@ -33,7 +33,6 @@ mod.custom_layout["player"] = function(self, unit)
 	mod.additional_elements.castbar(self, unit, "left")
 	mod.additional_elements.buffs(self, unit)
 	mod.additional_elements.aurabars(self, unit)
-	mod.tags.pp(self, unit)
 
 	local size = math.restrict(config.playertargetheight * 0.75, 8, config.playertargetheight)
 
@@ -55,8 +54,6 @@ mod.custom_layout["player"] = function(self, unit)
 	-- config callback
 	self.callback = function(self, unit, config)
 		self:SetSize(config.playertargetwidth, config.playertargetheight)
-
-		mod:display_text(self, unit, "left")
 
 		-- auras
 		if (config.aurastyle == "Bars") then

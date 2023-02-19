@@ -28,6 +28,9 @@ function mod:config_callback()
 		if (self.callback) then
 			self.callback(self, unit, config)
 		end
+
+		-- tags
+		mod:update_tags(self, unit)
 	end
 	
 	bdUI:set_frame_fade(uf_holder, config.unitframe_ic_alpha, config.unitframe_resting_alpha)
@@ -156,21 +159,14 @@ local function layout(self, unit)
 	-- Name & Text
 	self.TextHolder = CreateFrame('frame', nil, self.Health)
 	self.TextHolder:SetAllPoints()
+	-- configurable text layouts
+	mod.create_all_tags(self, unit)
+	mod:create_location_tags(self, unit)
 
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 7)
 	self.RaidTargetIndicator:SetSize(13, 13)
 	self.RaidTargetIndicator:SetPoint('CENTER', self.Health, 0, 0)
-
-	-- Tags
-	-- name
-	mod.tags.name(self, unit)
-	
-	-- status
-	mod.tags.status(self, unit)
-	
-	-- hp
-	mod.tags.hp(self, unit)
 
 	-- frame specific layouts
 	local func = unit

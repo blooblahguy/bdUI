@@ -7,7 +7,7 @@ mod.tags.name = function(self, unit)
 
 	self.Name = self.TextHolder:CreateFontString(nil, "OVERLAY")
 	self.Name:SetFontObject(bdUI:get_font(13, "THINOUTLINE"))
-	oUF.Tags.Events["bdUI:name"] = "UNIT_NAME_UPDATE"
+	oUF.Tags.Events["bdUI:name"] = "UNIT_NAME_UPDATE UNIT_THREAT_SITUATION_UPDATE PLAYER_TARGET_CHANGED"
 	oUF.Tags.Methods["bdUI:name"] = function(unit, r)
 		local name = UnitName(r or unit)
 		local c = UnitClassification(r or unit)
@@ -25,11 +25,6 @@ mod.tags.name = function(self, unit)
 		else
 			c = false
 		end
-
-		-- print(name)
-
-		-- local str = bdUI:truncate_text(name, self.Name:GetFontObject(), self.Health:GetWidth() / 2)
-		-- local str = bdUI:truncate_text(name, 
 
 		if (c) then
 			return name.." |cffbbbbbb"..c.."|r" 
