@@ -352,9 +352,10 @@ function mod:initialize()
 			TemporaryEnchantFrame:UnregisterAllEvents("UNIT_AURA")
 			TemporaryEnchantFrame:Hide()
 		end
-
-		DebuffFrame:UnregisterAllEvents("UNIT_AURA")
-		DebuffFrame:Hide()
+		if (DebuffFrame) then
+			DebuffFrame:UnregisterAllEvents("UNIT_AURA")
+			DebuffFrame:Hide()
+		end
 	end)
 
 	mod:config_callback()

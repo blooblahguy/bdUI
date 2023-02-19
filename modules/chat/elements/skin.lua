@@ -186,11 +186,6 @@ function mod:skin_chat()
 	GeneralDockManager:SetPoint(point, anchor, apoint, 0, 16)
 	GeneralDockManager:SetFrameStrata("HIGH")
 
-	--editbox font
-	-- ChatFontNormal:SetFontObject(bdUI:get_font(14, "OUTLINE"))
-	-- ChatFontNormal:SetShadowOffset(1,1)
-	-- ChatFontNormal:SetShadowColor(0,0,0)
-
 	-- skin all the default chat channels
 	for i = 1, NUM_CHAT_WINDOWS do
 		local chatframe = _G["ChatFrame"..i]

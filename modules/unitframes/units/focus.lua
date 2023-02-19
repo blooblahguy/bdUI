@@ -86,7 +86,7 @@ mod.custom_layout["focus"] = function(self, unit)
 		end
 		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.focuspower + bdUI.border)
 
-		-- self.Debuffs.size = self.Health:GetHeight()
-		-- self.Buffs.size = self.Health:GetHeight()
+		self.Debuffs.size = math.restrict(self.Health:GetHeight() * .8, 8, 20)
+		self.Buffs.size = math.restrict(self.Health:GetHeight() * .8, 8, 20)
 	end
 end

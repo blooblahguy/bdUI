@@ -110,5 +110,8 @@ mod.custom_layout["boss"] = function(self, unit)
 		
 		-- self.Auras.size = self.Health:GetHeight()
 		-- self.Auras:SetSize(config.bosswidth, config.bossheight)
+
+		self.Debuffs.size = math.restrict(self.Health:GetHeight() * .8, 8, 20)
+		self.Auras.size = math.restrict(self.Health:GetHeight() * .8, 8, 20)
 	end
 end
