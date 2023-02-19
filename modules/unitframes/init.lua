@@ -169,13 +169,20 @@ local config = {
 		args = {
 			tags_config("Player", "player", {
 				outside_left = "",
-				inside_left = "[name]  [offline][dead][resting]",
-				inside_center = "[bdUI:curpp]",
-				inside_right = "[hpcolorstart][perhp][hpcolorstop]",
+				inside_left = "[bd:curpp]",
+				inside_center = "[dead][resting]",
+				inside_right = "[hpcolor][perhp][/hpcolor]",
 				outside_right = "",
 			}),
-			tags_config("Target", "target"),
-			tags_config("Target", "targettarget"),
+			tags_config("Target", "target", {
+				inside_left = "[bd:curpp]",
+				inside_center = "[dead][offline]",
+				outside_right = "[name]",
+				inside_right = "[hpcolor][perhp][/hpcolor]",
+			}),
+			tags_config("Target Of Target & Pet", "targettarget"),
+			tags_config("Focus", "targettarget"),
+			tags_config("Boss", "targettarget"),
 		}
 	},
 	{

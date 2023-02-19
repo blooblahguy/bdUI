@@ -28,7 +28,7 @@ function mod:create_location_tags(self, unit)
 		location_tag(self, unit, location)
 	end
 
-	self.tags[unit.."_outside_left"]:SetPoint("RIGHT", self.TextHolder, "LEFT", -5, 0)
+	self.tags[unit.."_outside_left"]:SetPoint("RIGHT", self.TextHolder, "LEFT", -8, 0)
 
 	self.tags[unit.."_inside_left"]:SetPoint("LEFT", self.TextHolder, 5, 0)
 
@@ -36,7 +36,7 @@ function mod:create_location_tags(self, unit)
 
 	self.tags[unit.."_inside_right"]:SetPoint("RIGHT", self.TextHolder, -5, 0)
 
-	self.tags[unit.."_outside_right"]:SetPoint("LEFT", self.TextHolder, "RIGHT", 5, 0)
+	self.tags[unit.."_outside_right"]:SetPoint("LEFT", self.TextHolder, "RIGHT", 8, 0)
 	
 
 	mod:update_tags(self, unit)
@@ -70,84 +70,82 @@ end
 -- make all tags in one file now
 function mod.create_all_tags(self, unit)
 	-- classification
+	oUF.Tags.Events["bd:rarity"] = "UNIT_NAME_UPDATE UNIT_THREAT_SITUATION_UPDATE PLAYER_TARGET_CHANGED"
+	oUF.Tags.Methods["bd:rarity"] = function(unit, r)
+		local c = UnitClassification(r or unit)
+		
+		if(c == 'rare') then
+			c = 'R'
+		elseif(c == 'rareelite') then
+			c = 'R+'
+		elseif(c == 'elite') then
+			c = '+'
+		elseif(c == 'worldboss') then
+			c = 'B'
+		elseif(c == 'minus') then
+			c = '-'
+		else
+			c = false
+		end
+
+		if (c) then
+			return "|cffbbbbbb"..c.."|r" 
+		end
+		return ""
+	end
 	-- name
-	-- static
-	-- perc hp
+	-- combat
+	-- resting
 	-- current hp
-	oUF.Tags.Events['bdUI:curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
-	oUF.Tags.Methods['bdUI:curhp'] = function(unit)
+	oUF.Tags.Events['bd:curhp'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
+	oUF.Tags.Methods['bd:curhp'] = function(unit)
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
-
 		return bdUI:numberize(hp)
-
-		-- if (bdUI.mobhealth) then -- for classic
-		-- 	hp, hpMax = bdUI.mobhealth:GetUnitHealth(unit)
-		-- end
-
-		-- if hpMax == 0 then return "0" end
-
-		-- local hpPercent = bdUI:round(hp / hpMax * 100)
-		-- if (UnitIsDead(unit) or UnitIsGhost(unit)) then
-		-- 	return string.format("|cffFF00000 / %s|r", numberize(hpMax))
-		-- end
-
-		-- local r, g, b = bdUI:ColorGradient(hpPercent / 100, 1,0,0, 1,.5,0, 1,1,1)
-		-- local hex = RGBPercToHex(r, g, b)
-
-		-- return string.format("|cff%s%s|r | |cff%s%s%s|r", hex, numberize(hp), hex, hpPercent, "%")
 	end
 
 	-- hp color hex
-	oUF.Tags.Events['hpcolorstart'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
-	oUF.Tags.Methods['hpcolorstart'] = function(unit)
+	-- start the hex string
+	oUF.Tags.Events['hpcolor'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
+	oUF.Tags.Methods['hpcolor'] = function(unit)
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
 
-		if (bdUI.mobhealth) then -- for classic
-			hp, hpMax = bdUI.mobhealth:GetUnitHealth(unit)
-		end
-
 		if hpMax == 0 then return "|cffFFFFFF" end
+		if (UnitIsDead(unit) or UnitIsGhost(unit)) then return "|cffFF00000|r" end
 
 		local hpPercent = bdUI:round(hp / hpMax * 100)
-		if (UnitIsDead(unit) or UnitIsGhost(unit)) then
-			return "|cffFF00000|r"
-		end
-
 		local r, g, b = bdUI:ColorGradient(hpPercent / 100, 1,0,0, 1,.5,0, 1, 1, 1)
 		local hex = RGBPercToHex(r, g, b)
 
-		return string.format("|cff"..hex)
+		return "|cff"..hex
 	end
-
-	oUF.Tags.Events['hpcolorstop'] = 'UNIT_HEALTH UNIT_MAXHEALTH'
-	oUF.Tags.Methods['hpcolorstop'] = function(unit)
+	-- end the hex string
+	oUF.Tags.Events['/hpcolor'] = ''
+	oUF.Tags.Methods['/hpcolor'] = function(unit)
 		return "|r"
 	end
 
 	-- power
-	local pType, pToken = UnitPowerType("player")
-	local hex = RGBPercToHex(unpack(oUF.colors.power[pType]))
-	oUF.Tags.Events['bdUI:curpp'] = 'UNIT_POWER_UPDATE UNIT_MAXPOWER PLAYER_TARGET_CHANGED'
+	oUF.Tags.Events['bd:curpp'] = 'UNIT_POWER_UPDATE UNIT_MAXPOWER PLAYER_TARGET_CHANGED'
 	oUF.Tags.Methods['bdUI:curpp'] = function(unit)
+		local pType, pToken = UnitPowerType(unit)
+		local hex = RGBPercToHex(unpack(oUF.colors.power[pType]))
 		local pp, ppMax = UnitPower(unit), UnitPowerMax(unit)
 		if (ppMax == 0) then return "" end
 		return "|cff"..hex..bdUI:round(pp / ppMax * 100).."|r"
 	end
 
-end
+	-- power color hex
+	-- start the hex string
+	oUF.Tags.Events['ppcolor'] = 'UNIT_POWER_UPDATE UNIT_MAXPOWER PLAYER_TARGET_CHANGED'
+	oUF.Tags.Methods['ppcolor'] = function(unit)
+		local pType, pToken = UnitPowerType(unit)
+		local hex = RGBPercToHex(unpack(oUF.colors.power[pType]))
+		return "|cff"..hex
+	end
+	-- end the hex string
+	oUF.Tags.Events['/ppcolor'] = ''
+	oUF.Tags.Methods['/ppcolor'] = function(unit)
+		return "|r"
+	end
 
-mod.additional_elements.perhp = function(self, unit)
-	if (self.Perhp) then return end
-	local config = mod.config
-
-	self.Perhp = self.Health:CreateFontString(nil, "OVERLAY")
-	self.Perhp:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
-	self.Perhp:SetPoint("LEFT", self.Health, "LEFT", 4, 0)	
-
-	-- self:RegisterEvent("UNIT_POWER_UPDATE", function(self)
-	-- 	-- self.Perpp:SetTextColor(self.Power:GetStatusBarColor())
-	-- end, true)
-
-	self:Tag(self.Perhp, '[perhp]')
-	self:Tag(self.Perpp, '[perpp]')
 end
