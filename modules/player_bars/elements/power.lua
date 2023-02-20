@@ -31,7 +31,7 @@ function mod:create_power(self)
 
 	-- text
 	self.Power.text = self.Power:CreateFontString(nil, "OVERLAY")
-	self.Power.text:SetFontObject(bdUI:get_font(11))
+	self.Power.text:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
 	self.Power.text:SetJustifyV("MIDDLE")
 	self.Power.text:SetPoint("CENTER", self.Power)
 

@@ -191,10 +191,13 @@ function mod:config_nameplate(self)
 	end
 
 	self.RaidTargetIndicator:ClearAllPoints()
+	self.RaidTargetIndicator:SetSize(config.raidmarkersize, config.raidmarkersize)
 	if (config.markposition == "RIGHT") then
-		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize/2), 0)
+		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize), 0)
 	elseif (config.markposition == "LEFT") then
-		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize/2, 0)
+		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize, 0)
+	elseif (config.markposition == "CENTER") then
+		self.RaidTargetIndicator:SetPoint('CENTER')
 	else
 		self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
 	end
@@ -633,14 +636,9 @@ local function nameplate_create(self, unit)
 	-- RAID MARKER
 	--==========================================
 	self.RaidTargetIndicator = self.OverlayHolder:CreateTexture(nil, "OVERLAY", nil, 7)
-	self.RaidTargetIndicator:SetSize(config.raidmarkersize, config.raidmarkersize)
-	if (config.markposition == "RIGHT") then
-		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize/2), 0)
-	elseif (config.markposition == "LEFT") then
-		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize/2, 0)
-	else
-		self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
-	end
+	-- todo add frame glow for skull mark
+	-- hooksecurefunc(self.RaidTargetIndicator, "Show", function()
+	-- end)
 
 	--==========================================
 	-- FIXATES / TARGETS

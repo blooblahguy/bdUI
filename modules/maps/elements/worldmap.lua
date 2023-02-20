@@ -6,7 +6,7 @@ local config
 function mod:worldmap_coords()
 	mod.coords = CreateFrame("frame", nil, WorldMapFrame)
 	mod.coords.text = mod.coords:CreateFontString(nil, "OVERLAY")
-	mod.coords.text:SetFontObject(bdUI:get_font(14))
+	mod.coords.text:SetFontObject(bdUI:get_font(14, "THINOUTLINE"))
 	mod.coords.text:SetAllPoints()
 	mod.coords.text:SetJustifyH("CENTER")
 	mod.coords:SetPoint("BOTTOM", WorldMapFrame, "BOTTOM")

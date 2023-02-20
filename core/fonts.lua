@@ -4,6 +4,7 @@ bdUI.fonts = {}
 
 -- dynamic font creation/fetching
 function bdUI:get_font(size, outline, shadow)
+	size = bdUI:round(size)
 	local name = outline and size.."_"..outline or size
 	name = shadow and name.."_shadow" or name
 	outline = outline and outline or ""

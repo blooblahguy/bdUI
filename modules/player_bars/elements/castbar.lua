@@ -35,7 +35,7 @@ function mod:create_castbar(self)
 	self.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
 	
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size, nil, true))
+	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 	self.Castbar.Text:SetJustifyV("MIDDLE")
 
 	self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
@@ -52,10 +52,10 @@ function mod:create_castbar(self)
 	self.Castbar.SafeZone:SetTexture(bdUI.media.flat)
 
 	self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size, nil, true))
+	self.Castbar.Time:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 
 	self.Castbar.MaxTime = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.MaxTime:SetFontObject(bdUI:get_font(font_size, nil, true))
+	self.Castbar.MaxTime:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 
 	-- Positioning
 	self.Castbar.Time:SetPoint("LEFT", self.Castbar, "LEFT", padding, 0)

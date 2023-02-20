@@ -70,7 +70,7 @@ end
 -- make all tags in one file now
 function mod.create_all_tags(self)
 	-- classification
-	oUF.Tags.Events["bd:rarity"] = "UNIT_NAME_UPDATE UNIT_THREAT_SITUATION_UPDATE PLAYER_TARGET_CHANGED"
+	oUF.Tags.Events["bd:rarity"] = "UNIT_NAME_UPDATE PLAYER_TARGET_CHANGED"
 	oUF.Tags.Methods["bd:rarity"] = function(unit, r)
 		local c = UnitClassification(r or unit)
 		
@@ -93,7 +93,21 @@ function mod.create_all_tags(self)
 		end
 		return ""
 	end
+
 	-- name
+	oUF.Tags.Events["bd:name"] = "UNIT_NAME_UPDATE PLAYER_TARGET_CHANGED PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED UNIT_COMBAT UNIT_THREAT_SITUATION_UPDATE"
+	oUF.Tags.Methods["bd:name"] = function(unit)
+		local status = UnitThreatSituation("player", unit)
+		local r, g, b = 1, 1, 1
+		if (status ~= nil) then
+			r, g, b = 1, .2, .2
+		end
+		local hex = RGBPercToHex(r, g, b)
+		if (UnitExists(unit)) then
+			return "|cff"..hex..UnitName(unit).."|r"
+		end
+	end
+
 	-- combat
 	oUF.Tags.Events["bd:combat"] = "PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED UNIT_COMBAT UNIT_FLAGS"
 	oUF.Tags.Methods["bd:combat"] = function(unit)
