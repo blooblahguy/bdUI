@@ -50,8 +50,8 @@ function mod:create_objective_tracker()
 			frame:SetPoint("TOPLEFT", quest_anchor, -34, 0)
 			frame:SetPoint("TOPRIGHT", quest_anchor, 42, 0)
 		end
-		local bottom = quest_anchor:GetBottom() * bdUI.scale
-		frame:SetHeight(bottom - 100)
+		-- local bottom = quest_anchor:GetBottom() * bdUI.scale
+		-- frame:SetHeight(bottom - 100)
 	end
 
 	hooksecurefunc(frame, "SetPoint", move_objective_tracker)

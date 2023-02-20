@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
-local tabs = {"Left","Middle","Right","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight","ActiveLeft","ActiveMiddle","ActiveRight"}
+local texture_slices = {"Left","Middle","Mid","Right","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight","ActiveLeft","ActiveMiddle","ActiveRight"}
 local dont_fade = {}
 
 
@@ -38,6 +38,7 @@ local function skin_tab(frame)
 	text:SetFontObject(bdUI:get_font(14, "THINOUTLINE"))
 	text:SetPoint("CENTER")
 	text:SetText(old_text:GetText())
+	tab.newtext = text
 	hooksecurefunc(StaticPopup1, "Hide", function(...)
 		text:SetText(old_text:GetText())
 	end)
@@ -48,7 +49,7 @@ local function skin_tab(frame)
 
 	-- hooking tab color into glow
 	hooksecurefunc(glow, "Show", function()
-		text:SetTextColor(.6, .7, 1)
+		text:SetTextColor(.2, .3, 1)
 	end)
 	hooksecurefunc(glow, "Hide", function()
 		text:SetTextColor(1, 1, 1)
@@ -58,7 +59,7 @@ local function skin_tab(frame)
 	
 	-- clearing textures
 	bdUI:strip_textures(tab, false)
-	for index, value in pairs(tabs) do
+	for index, value in pairs(texture_slices) do
 		local texture = _G[name..'Tab'..value] or _G[name..'Tab'][value]
 		if (texture) then
 			texture:SetTexture("")
@@ -66,12 +67,12 @@ local function skin_tab(frame)
 	end
 
 	-- set tab alpha if our frame is shown
-	hooksecurefunc(frame, "Show", function(self)
-		text:SetAlpha(1)
-	end)
-	hooksecurefunc(frame, "Hide", function(self)
-		text:SetAlpha(.5)
-	end)
+	-- hooksecurefunc(frame, "Show", function(self)
+	-- 	-- text:SetAlpha(1)
+	-- end)
+	-- hooksecurefunc(frame, "Hide", function(self)
+	-- 	-- text:SetAlpha(.5)
+	-- end)
 
 	-- stop chat fade
 	if (tab:IsShown()) then
@@ -79,7 +80,7 @@ local function skin_tab(frame)
 		hooksecurefunc(tab, "Hide", function(self) self:Show() end)
 		hooksecurefunc(tab, "SetAlpha", function(self, alpha) 
 			if (alpha == 0) then
-				self:SetAlpha(0.5)
+				self:SetAlpha(1)
 				if (frame:IsShown()) then
 					self:SetAlpha(1)
 				end
@@ -134,7 +135,14 @@ local function skin_frame(frame)
 	
 	--editbox
 	editbox:SetAltArrowKeyMode(false)
-	bdUI:strip_textures(editbox, false)
+	for k, t in pairs(texture_slices) do
+		local tex = _G[editbox:GetName()..t]
+		if (tex) then
+			tex:Hide()
+			tex.Show = noop
+		end
+	end
+	-- bdUI:strip_textures(editbox, false)
 	bdUI:set_backdrop(editbox)
 	editbox:ClearAllPoints()
 	if name == "ChatFrame2" then
