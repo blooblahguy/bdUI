@@ -118,16 +118,6 @@ function mod:format_channels()
 	CHAT_RAID_WARNING_GET         = "|Hchannel:RaidWarning|hRW.|h %s: "
 	CHAT_INSTANCE_CHAT_GET        = "|Hchannel:Battleground|hI.|h %s: "
 	CHAT_INSTANCE_CHAT_LEADER_GET = "|Hchannel:Battleground|hIL.|h %s: "
-
-	
-	-- for i = 1, NUM_CHAT_WINDOWS do
-	-- 	local chatframe = _G["ChatFrame"..i]
-	-- 	if (i ~= 2) then
-	-- 		bdUI:RawHook(chatframe, "AddMessage", filter, true)
-	-- 		-- chatframe.DefaultAddMessage = chatframe.AddMessage
-	-- 		-- chatframe.AddMessage = filter
-	-- 	end
-	-- end
 	
 	SetCVar("chatClassColorOverride", 0)
 
@@ -137,25 +127,5 @@ function mod:format_channels()
 		match_strings[10] = nil
 	end
 	mod:AddChatFilter(filter)
-
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD_ACHIEVEMENT", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_COMMUNITIES_CHANNEL", filter)
-	-- ChatFrame_AddMessageEventFilter("GUILD_MOTD", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_OFFICER", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", filter)
-	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", filter)
 end
 
