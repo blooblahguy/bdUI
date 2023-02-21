@@ -1,11 +1,72 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
--- /script print(string.find("|cff110000[|r|cff003300Update|r|cff110000]|r is Away: Away", "%w+ is Away: %w+"))
--- /script print()
-local match_strings = {
-	["away"] = gsub(CHAT_AFK_GET, "%%s", "%%w+").." %w+"
-}
+-- /script print(string.find("|Hplayer:Update-Atiesh:200:WHISPER:UPDATE-ATIESH[Update] is Away: Away", ".+ is Away: .+"))
+
+-- /script print(string.gsub("You receive loot: |cff9d9d9d|Hitem:33429::::::::72:::::::::|h[Ice Cleaver]|h|r.", "You receive loot%: (.+)%[(.+)%](.+)%.", '+ %1%2%3'))
+
+-- Convert a WoW global string to a search pattern
+local makePattern = function(msg)
+	msg = string.gsub(msg, "%%d", "(%%d+)")
+	msg = string.gsub(msg, "%%s", "(.+)")
+	msg = string.gsub(msg, "%%(%d+)%$d", "%%%%%1$(%%d+)")
+	msg = string.gsub(msg, "%%(%d+)%$s", "%%%%%1$(%%s+)")
+	return msg
+end
+
+-- "You have been awarded %d Honor.";
+print(LOOT_ITEM_SELF_MULTIPLE)
+print(makePattern(LOOT_ITEM_SELF_MULTIPLE))
+
+local match_strings = {}
+match_strings[#match_strings+1] = {"|Hplayer:([^%|]+)|h%[([^%]]+)%]|h", "|Hplayer:%1|h%2|h"} -- remove_brackets from players
+match_strings[#match_strings+1] = {"%[%d%d?%. "..TRADE.."[^%]]*%]", "T"} -- trade
+match_strings[#match_strings+1] = {"%[%d%d?%. "..COMMUNITIES_DEFAULT_CHANNEL_NAME.."[^%]]*%]", "Gen"} -- general
+match_strings[#match_strings+1] = {"<Away>", "<afk>"} -- afk
+match_strings[#match_strings+1] = {"<Busy>", "<dnd>"} -- dnd
+match_strings[#match_strings+1] = {"|Hplayer:([^%|]+)|h(.+)|h says:", "|Hplayer:%1|h%2|h:"} -- says
+match_strings[#match_strings+1] = {"|Hplayer:([^%|]+)|h(.+)|h yells:", "|Hplayer:%1|h%2|h:"} -- yells
+match_strings[#match_strings+1] = {".+ "..COMMUNITIES_SETTINGS_MOTD_LABEL..".+", "GMotD"} -- gmotd
+match_strings[#match_strings+1] = {"has come online.", "+"} -- online
+match_strings[#match_strings+1] = {"has gone offline.", "-"} -- offline
+match_strings[#match_strings+1] = {'|h%[(%d+)%. (%w+)%]|h', '|h%2|h'} -- channels
+
+-- xp
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_XPGAIN_FIRSTPERSON), '|cff777777+|r %2 XP: %1'} -- something dies you gain experience
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED), '|cff777777+|r %1 XP'} -- you gained experience
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_GUILD_XPGAIN), '|cff777777+|r %1 Guild XP'} -- you gained guildxp
+-- honor
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_HONORAWARD), '|cff777777+|r %1 Honor'} -- you gained honor
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_HONORGAIN), '|cff777777+|r %3 Honor: %1'} -- you gained honor
+-- reputation
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_DECREASED), '|cffAA7777-|r %2 Reputation: %1'} -- you lost reputation
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_DECREASED_GENERIC), '|cffAA7777-|r Reputation: %1'} -- you lost reputation
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_INCREASED), '|cff777777+|r %2 Reputation: %1'} -- you gained guildxp
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_INCREASED_GENERIC), '|cff777777+|r Reputation: %1'} -- you gained guildxp
+-- loot
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_SELF), '|cff777777+|r %1'} -- loot single
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_SELF_MULTIPLE), '|cff777777+|r %1|cff999999(%2)|r'} -- loot multiple
+
+--items
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_CREATED_SELF_MULTIPLE), '|cff777777+|r %1 Created |cff999999(%2)|r'}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_CREATED_SELF), '|cff777777+|r %1 Created'}
+
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_PUSHED_SELF_MULTIPLE), '|cff777777+|r %1 |cff999999(%2)|r'}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_PUSHED_SELF), '|cff777777+|r %1'}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_REFUND_MULTIPLE), '|cff777777+|r %1 |cff999999(%2)|r'}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_REFUND), '|cff777777+|r %1'}
+match_strings[#match_strings+1] = {makePattern(CURRENCY_GAINED), '|cff777777+|r %1'}
+match_strings[#match_strings+1] = {makePattern(CURRENCY_GAINED_MULTIPLE), '|cff777777+|r %1'}
+
+
+
+local function make_plain(orig_string)
+	local str = gsub(orig_string, "|", "\124")
+	str = gsub(str, "%[", "\91")
+	str = gsub(str, "%]", "\93")
+
+	return str
+end
 
 local escapes = {
     ["|c%x%x%x%x%x%x%x%x"] = "", -- color start
@@ -25,49 +86,18 @@ end
 local function filter(msg)
 	local newMsg = msg
 
+	-- assert(false, make_plain(msg))
+
 	if (not newMsg) then return msg end
 
-	-- assert(false, msg)
-
-	if (not mod.config.pastureschatconfig) then
-		newMsg = newMsg:gsub("|Hplayer:([^%|]+)|h%[([^%]]+)%]|h", "|Hplayer:%1|h%2|h")
+	-- mass replace
+	for name, gsub_info in pairs(match_strings) do
+		local find, replace = unpack(gsub_info)
+		newMsg = string.gsub(newMsg, find, replace)
+		if (newMsg == nil) then return nil end
 	end
-	
-	-- Abbreviate
-	newMsg = newMsg:gsub("<Away>", "<afk>")
-	newMsg = newMsg:gsub("<Busy>", "<dnd>")
-
-	-- Strip yells: says: from chat
-	newMsg = newMsg:gsub("|Hplayer:([^%|]+)|h(.+)|h says:", "|Hplayer:%1|h%2|h:");
-	newMsg = newMsg:gsub("|Hplayer:([^%|]+)|h(.+)|h yells:", "|Hplayer:%1|h%2|h:");
-
-	-- Whispers are now done with globals
-	newMsg = newMsg:gsub("Guild Message of the Day:", "GMotD -")
-	
-	if (not mod.config.pastureschatconfig) then
-		newMsg = newMsg:gsub("has come online.", "+")
-		newMsg = newMsg:gsub("has gone offline.", "-")
-	end
-		
-	--channel replace (Trade and custom)
-	newMsg = newMsg:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
-
-	if (strfind(newMsg, match_strings["away"])) then
-		assert(false, newMsg)
-		-- newMsg = nil
-	end
-	
-	-- return false, newMsg, ...
-	-- local esc = unescape(msg)
-
-	-- return self.DefaultAddMessage(self, newMsg, ...)
-	-- return bdUI.hooks.AddMessage(self, newMsg, ...)
-
-	-- bdUI.hooks[self].AddMessage(self, newMsg, ...)
 
 	return newMsg
-
-	-- return self.DefaultAddMessage(self, newMsg, ...)
 end
 
 function mod:format_channels()
@@ -101,6 +131,11 @@ function mod:format_channels()
 	
 	SetCVar("chatClassColorOverride", 0)
 
+	if (mod.config.pastureschatconfig) then
+		match_strings[1] = nil
+		match_strings[9] = nil
+		match_strings[10] = nil
+	end
 	mod:AddChatFilter(filter)
 
 	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)

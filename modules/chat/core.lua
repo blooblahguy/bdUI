@@ -46,7 +46,7 @@ function mod:initialize()
 	-- mod:create_community()
 
 	-- history on reload
-	mod:create_history()
+	-- mod:create_history()
 
 	-- mod:config_callback()
 end
