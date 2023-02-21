@@ -291,6 +291,17 @@ local config = {
 				label = "Font Size",
 			},
 			{
+				key = "clear",
+				type = "clear"
+			},
+			{
+				key = "target_alert",
+				type = "select",
+				value = "Always",
+				options = {"Always", "Personal", "Hide"},
+				label = "Show Unit Target"
+			},
+			{
 				key = "heading",
 				type = "heading",
 				value = "Names"
@@ -335,18 +346,6 @@ local config = {
 				value = "HP",
 				options = {"None","HP - %", "HP", "%"},
 				label = "Nameplate Health Text",
-			},
-			{
-				key = "showcasttarget",
-				type = "toggle",
-				value = false,
-				label = "Show castbar target (experimental)",
-			},
-			{
-				key = "showcastinterrupt",
-				type = "toggle",
-				value = true,
-				label = "Show who interrupted casts",
 			},
 			{
 				key = "showhptexttargetonly",
@@ -480,13 +479,6 @@ local config = {
 		type = "tab",
 		value = "Fixates & Specials",
 		args = {
-			{
-				key = "fixatealert",
-				type = "select",
-				value = "Hide",
-				options = {"Always", "Personal", "Hide"},
-				label = "Target/Fixate Alert"
-			},
 			{
 				key = "specialunits",
 				type = "list",

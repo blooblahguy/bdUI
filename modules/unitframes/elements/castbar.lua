@@ -1,8 +1,14 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
-local function castbar_kickable(self)
-	if (self.notInterruptible) then
+local function castbar_kickable(self, unit)
+	-- set cast duration
+	self.Duration:SetText(bdUI:round(self.max, 1))
+
+	-- find out if its kickable
+	local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo(unit)
+	self:SetAlpha(1)
+	if (notInterruptible) then
 		if (self.Icon) then
 			self.Icon:SetDesaturated(1)
 		end
@@ -33,6 +39,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self.Castbar:SetStatusBarColor(.1, .4, .7, 1)
 	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
+	self.Castbar.timeToHold = 1.2
 	if (self.Power) then
 		self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -bdUI.border)
 		self.Castbar:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
@@ -74,38 +81,33 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	if (icon) then
 		self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
 		self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
-	end		
+	end
 
-	-- Positioning
-	-- if (align == "right") then
-	-- 	self.Castbar.Time:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
-	-- 	self.Castbar.Time:SetJustifyH("RIGHT")
-	-- 	self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
-	-- 	if (icon) then
-	-- 		self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar,"TOPRIGHT", mod.padding*2, 0)
-	-- 		self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
-	-- 	end
-	-- else
-	-- 	self.Castbar.Time:SetPoint("LEFT", self.Castbar, "LEFT", mod.padding, 0)
-	-- 	self.Castbar.Time:SetJustifyH("LEFT")
-	-- 	self.Castbar.Text:SetPoint("RIGHT", self.Castbar, "RIGHT", -mod.padding, 0)
-	-- 	if (icon) then
-	-- 		self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
-	-- 		self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
-	-- 	end			
-	-- end
-
-	self.Castbar.PostChannelStart = castbar_kickable
-	self.Castbar.PostChannelUpdate = castbar_kickable
-	self.Castbar.PostCastStart = castbar_kickable
-	self.Castbar.PostCastDelayed = castbar_kickable
-	self.Castbar.PostCastNotInterruptible = castbar_kickable
-	self.Castbar.PostCastInterruptible = castbar_kickable
-
-	-- bdMove:set_moveable(self.Castbar, unit.." Castbar")
 	bdUI:set_backdrop(self.Castbar)
 
-	self.Castbar.PostCastStart = function(self, unit)
-		self.Duration:SetText(bdUI:round(self.max, 1))
+	-- attribute who interrupted this cast
+	function self.Castbar:CastbarAttribute() 
+		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo()
+		-- print(event)
+		if (event == "SPELL_INTERRUPT") then
+			-- print(self.unit, destName, sourceName)
+			if (not UnitName(self.unit) == destName) then return end
+			-- print(self.unit, destName, sourceName)
+			if (UnitExists(sourceName)) then
+				-- print("color it?", self.Castbar)
+				self.Castbar:SetAlpha(0.8)
+				self.Castbar:SetStatusBarColor(unpack(bdUI.media.red))
+				-- print(self.Castbar.Text, "|cff"..mod:autoUnitColorHex(sourceName)..UnitName(sourceName).."|r Interrupted")
+				self.Castbar.Text:SetText("|cff"..bdUI:get_class_color_hex(select(2, UnitClass(sourceName)))..UnitName(sourceName).."|r Interrupted")
+				-- self.Castbar.AttributeText:SetText("")
+			end
+		end
 	end
+	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.Castbar.CastbarAttribute, true)
+
+	-- check if kickable
+	self.Castbar.PostCastStart = castbar_kickable
+	self.Castbar.PostChannelStart = castbar_kickable
+	self.Castbar.PostCastNotInterruptible = castbar_kickable
+	self.Castbar.PostCastInterruptible = castbar_kickable
 end

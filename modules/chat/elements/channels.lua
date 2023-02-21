@@ -1,6 +1,12 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
+-- /script print(string.find("|cff110000[|r|cff003300Update|r|cff110000]|r is Away: Away", "%w+ is Away: %w+"))
+-- /script print()
+local match_strings = {
+	["away"] = gsub(CHAT_AFK_GET, "%%s", "%%w+").." %w+"
+}
+
 local escapes = {
     ["|c%x%x%x%x%x%x%x%x"] = "", -- color start
     ["|r"] = "", -- color end
@@ -16,8 +22,10 @@ local function unescape(str)
 end
 
 -- local function filter(chatFrame, event, msg, ...)
-local function filter(self, msg, ...)
+local function filter(msg)
 	local newMsg = msg
+
+	if (not newMsg) then return msg end
 
 	-- assert(false, msg)
 
@@ -43,14 +51,21 @@ local function filter(self, msg, ...)
 		
 	--channel replace (Trade and custom)
 	newMsg = newMsg:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
+
+	if (strfind(newMsg, match_strings["away"])) then
+		assert(false, newMsg)
+		-- newMsg = nil
+	end
 	
 	-- return false, newMsg, ...
 	-- local esc = unescape(msg)
 
 	-- return self.DefaultAddMessage(self, newMsg, ...)
-	-- return bdUI.hooks.AddMessage(self, newMSG, ...)
+	-- return bdUI.hooks.AddMessage(self, newMsg, ...)
 
-	bdUI.hooks[self].AddMessage(self, newMsg, ...)
+	-- bdUI.hooks[self].AddMessage(self, newMsg, ...)
+
+	return newMsg
 
 	-- return self.DefaultAddMessage(self, newMsg, ...)
 end
@@ -85,6 +100,8 @@ function mod:format_channels()
 	-- end
 	
 	SetCVar("chatClassColorOverride", 0)
+
+	mod:AddChatFilter(filter)
 
 	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
 	-- ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)

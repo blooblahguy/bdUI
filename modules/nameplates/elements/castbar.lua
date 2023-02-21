@@ -4,9 +4,10 @@ local mod = bdUI:get_module("Nameplates")
 --==============================================
 -- Show Kickable Casts
 --==============================================
-local function kickable_cast(self)
+local function kickable_cast(self, unit)
+	local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo(unit)
 	self:SetAlpha(1)
-	if (self.notInterruptible) then
+	if (notInterruptible) then
 		self.Icon:SetDesaturated(1)
 		self:SetStatusBarColor(unpack(config.nonkickable))
 	else
@@ -18,6 +19,17 @@ local function kickable_cast(self)
 	self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -border, 0)
 	self.Icon.bg:SetPoint("TOPLEFT", self.Icon, "TOPLEFT", -border, border)
 	self.Icon.bg:SetPoint("BOTTOMRIGHT", self.Icon, "BOTTOMRIGHT", border, -border)
+
+	-- shows who's targeted on cast
+	-- C_Timer.After(0.1, function()
+	-- 	local target = unit.."target"
+	-- 	self.AttributeText:SetText("")
+	-- 	-- attribute who this cast is targeting
+	-- 	if (UnitExists(target) and config.showcasttarget) then
+	-- 		self.AttributeText:SetText(UnitName(target))
+	-- 		self.AttributeText:SetTextColor(mod:autoUnitColor(target))
+	-- 	end
+	-- end)
 end
 
 -- castbar element
@@ -31,15 +43,12 @@ mod.elements.castbar = function(self, unit)
 	self.Castbar:SetStatusBarColor(unpack(config.kickable))
 	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -border)
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -config.castbarheight)
+	self.Castbar.timeToHold = 1.2
 	
 	-- text
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
 	self.Castbar.Text:SetJustifyH("LEFT")
 	self.Castbar.Text:SetPoint("LEFT", self.Castbar, "LEFT", 10, 0)
-
-	self.Castbar.AttributeText = self.Castbar:CreateFontString(nil, "OVERLAY")
-	self.Castbar.AttributeText:SetJustifyH("RIGHT")
-	self.Castbar.AttributeText:SetPoint("RIGHT", self.Castbar, "RIGHT", -10, 0)
 	
 	-- icon
 	self.Castbar.Icon = self.Castbar:CreateTexture(nil, "OVERLAY")
@@ -55,41 +64,23 @@ mod.elements.castbar = function(self, unit)
 	self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
 	self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
 
-	-- Combat log based extra information
+	-- attribute who interrupted this cast
 	function self.Castbar:CastbarAttribute() 
-		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo();
-
-		if (event == 'SPELL_CAST_START') then
-			if (self.unit ~= mod.guid_plates[sourceGUID]) then return end
-
-			destName = mod.guid_plates[sourceGUID].."target"
-
-			self.Castbar.AttributeText:SetText("")
-			-- attribute who this cast is targeting
-			if (UnitExists(destName) and config.showcasttarget) then
-				self.Castbar.AttributeText:SetText(UnitName(destName))
-				self.Castbar.AttributeText:SetTextColor(mod:autoUnitColor(destName))
-			end
-		elseif (event == "SPELL_INTERRUPT" and config.showcastinterrupt) then
-			-- attribute who interrupted this cast
+		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo()
+		if (event == "SPELL_INTERRUPT") then
+			if (not UnitName(self.unit) == destName) then return end
 			if (UnitExists(sourceName)) then
-				self.Castbar.AttributeText:SetText(UnitName(sourceName))
-				self.Castbar.AttributeText:SetTextColor(mod:autoUnitColor(sourceName))
+				self.Castbar:SetAlpha(0.8)
+				self.Castbar:SetStatusBarColor(unpack(bdUI.media.red))
+				self.Castbar.Text:SetText("|cff"..mod:autoUnitColorHex(sourceName)..UnitName(sourceName).."|r Interrupted")
 			end
 		end
 	end
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.Castbar.CastbarAttribute, true)
 
-	-- interrupted delay
-	self.Castbar.PostCastInterrupted = function(self, unit)
-		self.holdTime = 0.7
-		self:SetAlpha(0.7)
-		self:SetStatusBarColor(unpack(bdUI.media.red))
-	end
-
 	-- Change color if cast is kickable or not
+	self.Castbar.PostCastStart = kickable_cast
 	self.Castbar.PostChannelStart = kickable_cast
 	self.Castbar.PostCastNotInterruptible = kickable_cast
 	self.Castbar.PostCastInterruptible = kickable_cast
-	self.Castbar.PostCastStart = kickable_cast
 end

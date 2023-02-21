@@ -644,7 +644,7 @@ local function nameplate_create(self, unit)
 	-- FIXATES / TARGETS
 	--==========================================
 	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
-	self.FixateAlert:SetPoint("TOPRIGHT", self.OverlayHolder, "BOTTOMRIGHT", -4, -4)
+	self.FixateAlert:SetPoint("LEFT", self.OverlayHolder, "RIGHT", 12, 0)
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
 		self:Hide()
 

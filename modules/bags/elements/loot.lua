@@ -169,7 +169,7 @@ function mod:skin_loot()
 				model:FreezeAnimation(0, 0)
 			else
 				model:ClearModel()
-				model:SetModel("PARTICLES\\Lootfx_green.m2")
+				-- model:SetModel("PARTICLES\\Lootfx_green.m2")
 			end
 		end
 

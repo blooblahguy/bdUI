@@ -54,6 +54,11 @@ function mod:autoUnitColor(unit)
 	end
 end
 
+function mod:autoUnitColorHex(unit)
+	return RGBPercToHex(mod:autoUnitColor(unit))
+end
+
+
 local function unitColor(self, tapDenied, isPlayer, reaction, status)
 	config = mod:get_save()
 

@@ -31,7 +31,7 @@ function mod:initialize()
 	mod:create_chat_bubbles()
 	
 	-- names
-	mod:color_names()
+	-- mod:color_names()
 	
 	-- channels
 	mod:format_channels()
@@ -51,6 +51,7 @@ function mod:initialize()
 	-- mod:config_callback()
 end
 
+-- when config changes
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config

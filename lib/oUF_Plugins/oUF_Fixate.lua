@@ -13,9 +13,10 @@ local function RGBPercToHex(r, g, b)
 	return string.format("%02x%02x%02x", r*255, g*255, b*255)
 end
 
-local function Update(self)
-	local element = self.FixateAlert
+local function Update(self, event, unit)
 	if (not self.unit) then return end
+	local element = self.FixateAlert
+
 	-- if (not UnitIsUnit(unit, self.unit)) then return end
 
 	--[[ Callback: FixateAlert:PreUpdate()
@@ -65,6 +66,7 @@ end
 local function Enable(self, unit)
 	local element = self.FixateAlert
 	if (element and not oUF.classic) then
+	
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 		element.throttle = element.throttle or 0.1
@@ -81,7 +83,7 @@ local function Enable(self, unit)
 			local color = RGBPercToHex(cc.r, cc.g, cc.b)
 			if (unit and UnitIsUnit(unit, "player")) then
 				self:SetAlpha(1)
-				self:SetText_Old("|cffFF0000-->|r |cff"..color..unit.."|r |cffFF0000<--|r")
+				self:SetText_Old("|cffFF0000>|r|cff"..color..unit.."|r|cffFF0000<|r")
 			else
 				self:SetAlpha(0.8)
 				self:SetText_Old("|cff"..color..unit.."|r")
@@ -91,27 +93,28 @@ local function Enable(self, unit)
 		element:Hide()
 
 		-- self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Path) -- todo, account for combat log fixates
-		self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path, true)
-		self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
-		self:RegisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
-		self:RegisterEvent("UNIT_TARGET", Path)
-		self:RegisterEvent("PLAYER_TARGET_CHANGED", Path)
-		self:RegisterEvent('UNIT_SPELLCAST_START', Path)
-		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_START', Path)
-		self:RegisterEvent('UNIT_SPELLCAST_STOP', Path)
-		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', Path)
-		self:RegisterEvent('UNIT_SPELLCAST_DELAYED', Path)
-		self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', Path)
-		self:RegisterEvent('UNIT_SPELLCAST_FAILED', Path)
-		self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
+		-- self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path, true)
+		-- self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
+		-- self:RegisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
+		-- self:RegisterEvent("UNIT_TARGET", Path)
+		-- self:RegisterEvent("PLAYER_TARGET_CHANGED", Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_START', Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_START', Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_STOP', Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_DELAYED', Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_FAILED', Path)
+		-- self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
 		-- moving to just an on update
-		-- self:HookScript("OnUpdate", function(self, elapsed)
-		-- 	total = total + elapsed
-		-- 	if (total > element.throttle) then
-		-- 		total = 0
-		-- 		Path(self)
-		-- 	end
-		-- end)
+		element.updater = element.updater or CreateFrame("frame", nil, self)
+		element.updater:SetScript("OnUpdate", function(updater, elapsed)
+			total = total + elapsed
+			if (total > element.throttle) then
+				total = 0
+				Path(self)
+			end
+		end)
 
 		return true
 	end
@@ -121,21 +124,22 @@ local function Disable(self)
 	local element = self.FixateAlert
 	if (element) then
 		element:Hide()
+		element.updater:SetScript("OnUpdate", function() return end)
 
 		-- self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Path) -- todo, account for combat log fixates
-		self:UnregisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path, true)
-		self:UnregisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
-		self:UnregisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
-		self:UnregisterEvent("UNIT_TARGET", Path)
-		self:UnregisterEvent("PLAYER_TARGET_CHANGED", Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_START', Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_START', Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_STOP', Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_DELAYED', Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_FAILED', Path)
-		self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
+		-- self:UnregisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path, true)
+		-- self:UnregisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
+		-- self:UnregisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
+		-- self:UnregisterEvent("UNIT_TARGET", Path)
+		-- self:UnregisterEvent("PLAYER_TARGET_CHANGED", Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_START', Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_START', Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_STOP', Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_STOP', Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_DELAYED', Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_CHANNEL_UPDATE', Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_FAILED', Path)
+		-- self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
 	end
 end
 

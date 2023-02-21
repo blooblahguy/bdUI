@@ -404,6 +404,9 @@ function bdUI:get_class_color_rgb(class)
 	local colors = RAID_CLASS_COLORS[class]
 	return colors.r, colors.g, colors.b
 end
+function bdUI:get_class_color_hex(class)
+	return RGBPercToHex(bdUI:get_class_color_rgb(class))
+end
 
 function bdUI:ColorGradient(perc, ...)
 	if perc >= 1 then
