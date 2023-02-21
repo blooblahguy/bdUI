@@ -159,7 +159,6 @@ function mod:config_nameplate(self)
 	self.Curpower:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
 	self.FixateAlert:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
 	self.Castbar.Text:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
-	self.Castbar.AttributeText:SetFontObject(bdUI:get_font(config.font_size, "THINOUTLINE"))
 
 	-- Config Auras
 	if (config.name_position == "Inside") then
@@ -644,7 +643,7 @@ local function nameplate_create(self, unit)
 	-- FIXATES / TARGETS
 	--==========================================
 	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
-	self.FixateAlert:SetPoint("LEFT", self.OverlayHolder, "RIGHT", 12, 0)
+	self.FixateAlert:SetPoint("TOPRIGHT", self.OverlayHolder, "BOTTOMRIGHT", -4, -4)
 	function self.FixateAlert:PostUpdate(unit, target, isTargeting, isTargetingPlayer)
 		self:Hide()
 

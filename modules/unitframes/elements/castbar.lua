@@ -88,18 +88,12 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	-- attribute who interrupted this cast
 	function self.Castbar:CastbarAttribute() 
 		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo()
-		-- print(event)
 		if (event == "SPELL_INTERRUPT") then
-			-- print(self.unit, destName, sourceName)
 			if (not UnitName(self.unit) == destName) then return end
-			-- print(self.unit, destName, sourceName)
 			if (UnitExists(sourceName)) then
-				-- print("color it?", self.Castbar)
 				self.Castbar:SetAlpha(0.8)
 				self.Castbar:SetStatusBarColor(unpack(bdUI.media.red))
-				-- print(self.Castbar.Text, "|cff"..mod:autoUnitColorHex(sourceName)..UnitName(sourceName).."|r Interrupted")
 				self.Castbar.Text:SetText("|cff"..bdUI:get_class_color_hex(select(2, UnitClass(sourceName)))..UnitName(sourceName).."|r Interrupted")
-				-- self.Castbar.AttributeText:SetText("")
 			end
 		end
 	end

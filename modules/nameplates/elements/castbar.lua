@@ -19,17 +19,6 @@ local function kickable_cast(self, unit)
 	self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -border, 0)
 	self.Icon.bg:SetPoint("TOPLEFT", self.Icon, "TOPLEFT", -border, border)
 	self.Icon.bg:SetPoint("BOTTOMRIGHT", self.Icon, "BOTTOMRIGHT", border, -border)
-
-	-- shows who's targeted on cast
-	-- C_Timer.After(0.1, function()
-	-- 	local target = unit.."target"
-	-- 	self.AttributeText:SetText("")
-	-- 	-- attribute who this cast is targeting
-	-- 	if (UnitExists(target) and config.showcasttarget) then
-	-- 		self.AttributeText:SetText(UnitName(target))
-	-- 		self.AttributeText:SetTextColor(mod:autoUnitColor(target))
-	-- 	end
-	-- end)
 end
 
 -- castbar element
