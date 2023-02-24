@@ -42,7 +42,7 @@ function mod:auto_greed_loot()
 end
 
 function mod:skin_loot()
-	if (not mod.config.skinloot) then return end
+	if (not mod.config.skinloot or bdUI.version >= 100000) then return end
 	local p, r, spacing_x, spacing_y = "TOP", "BOTTOM", 0, -4
 
 	LootFrame:SetMovable(true)

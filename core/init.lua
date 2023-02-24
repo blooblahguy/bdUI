@@ -81,6 +81,7 @@ bdUI.developer = developer_names[select(1, UnitName("player"))]
 bdUI.level_cap = GetMaxPlayerLevel() --MAX_PLAYER_LEVEL_TABLE[GetAccountExpansionLevel()]
 
 local versions = {}
+versions[109999] = "dragonflight"
 versions[99999] = "shadowlands"
 versions[89999] = "bfa"
 versions[79999] = "legion"

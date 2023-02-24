@@ -6,6 +6,9 @@ local mod = bdUI:get_module("Nameplates")
 --==============================================
 local function kickable_cast(self, unit)
 	local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo(unit)
+	if (not name) then
+		name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId = UnitChannelInfo(unit)
+	end
 	self:SetAlpha(1)
 	if (notInterruptible) then
 		self.Icon:SetDesaturated(1)

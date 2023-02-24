@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
-local texture_slices = {"Left","Middle","Mid","Right","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight","ActiveLeft","ActiveMiddle","ActiveRight"}
+local texture_slices = {"Left","Middle","Mid","Right","FocusLeft","FocusMid","FocusRight","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight","ActiveLeft","ActiveMiddle","ActiveRight"}
 local dont_fade = {}
 
 
