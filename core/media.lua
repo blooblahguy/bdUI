@@ -307,33 +307,33 @@ function bdUI:set_backdrop(frame, force_border)
 		self.r:SetDrawLayer(layer)
 	end
 	frame.set_border_size = function(self, size)
-		frame.t:SetHeight(size)
-		frame.b:SetHeight(size)
-		frame.l:SetWidth(size)
-		frame.r:SetWidth(size)
+		self.t:SetHeight(size)
+		self.b:SetHeight(size)
+		self.l:SetWidth(size)
+		self.r:SetWidth(size)
 
-		frame.t:SetPoint("BOTTOMLEFT", frame._background, "TOPLEFT", -size, 0)
-		frame.t:SetPoint("BOTTOMRIGHT", frame._background, "TOPRIGHT", size, 0)
+		self.t:SetPoint("BOTTOMLEFT", frame._background, "TOPLEFT", -size, 0)
+		self.t:SetPoint("BOTTOMRIGHT", frame._background, "TOPRIGHT", size, 0)
 
-		frame.l:SetPoint("TOPRIGHT", frame._background, "TOPLEFT", 0, size)
-		frame.l:SetPoint("BOTTOMRIGHT", frame._background, "BOTTOMLEFT", 0, -size)
+		self.l:SetPoint("TOPRIGHT", frame._background, "TOPLEFT", 0, size)
+		self.l:SetPoint("BOTTOMRIGHT", frame._background, "BOTTOMLEFT", 0, -size)
 
-		frame.r:SetPoint("TOPLEFT", frame._background, "TOPRIGHT", 0, size)
-		frame.r:SetPoint("BOTTOMLEFT", frame._background, "BOTTOMRIGHT", 0, -size)
+		self.r:SetPoint("TOPLEFT", frame._background, "TOPRIGHT", 0, size)
+		self.r:SetPoint("BOTTOMLEFT", frame._background, "BOTTOMRIGHT", 0, -size)
 		
-		frame.b:SetPoint("TOPLEFT", frame._background, "BOTTOMLEFT", -size, 0)
-		frame.b:SetPoint("TOPRIGHT", frame._background, "BOTTOMRIGHT", size, 0)
+		self.b:SetPoint("TOPLEFT", frame._background, "BOTTOMLEFT", -size, 0)
+		self.b:SetPoint("TOPRIGHT", frame._background, "BOTTOMRIGHT", size, 0)
 
 		if (size == 0) then
-			frame.t:Hide()
-			frame.l:Hide()
-			frame.r:Hide()
-			frame.b:Hide()
+			self.t:Hide()
+			self.l:Hide()
+			self.r:Hide()
+			self.b:Hide()
 		else
-			frame.t:Show()
-			frame.l:Show()
-			frame.r:Show()
-			frame.b:Show()
+			self.t:Show()
+			self.l:Show()
+			self.r:Show()
+			self.b:Show()
 		end
 	end 
 
@@ -383,6 +383,8 @@ function bdUI:create_shadow(frame, offset)
 
 		shadow:set_size(border * shadow.offset)
 	end)
+
+	return shadow
 end
 
 function bdUI:set_highlight(frame, icon)

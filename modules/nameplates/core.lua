@@ -12,6 +12,8 @@ mod.elements = {}
 local tanks = {}
 local meTank = false
 
+-- local lib_glow = LibStub("LibCustomGlow-1.0")
+
 -- Aura Styling
 local function PostCreateIcon(self, button)
 	bdUI:set_backdrop(button, true)
@@ -133,9 +135,6 @@ role_collection:SetScript("OnEvent", store_tanks)
 
 function mod:config_nameplate(self)
 	border = bdUI:get_border(self)
-
-	-- Health
-	self.Health._shadow:SetColor(unpack(config.glowcolor))
 
 	-- Castbar
 	local cbi_size = (config.height+config.castbarheight) * config.castbariconscale
@@ -268,13 +267,13 @@ local function find_target(self, event, unit)
 			self.target_arrows:Show()
 		end
 		if (not UnitIsUnit(unit, "player")) then
-			self.Health._shadow:Show()
+			-- self.Health._shadow:Show()
 		end
 	else
 		self.isTarget = false
 		-- print(self:GetParent():GetAlpha())
 		-- self:SetAlpha(self:GetParent():GetAlpha())
-		self.Health._shadow:Hide()
+		-- self.Health._shadow:Hide()
 		self.target_arrows:Hide()
 	end
 
@@ -428,11 +427,10 @@ local function nameplate_create(self, unit)
 	self.Health.colorClass = true
 	self.Health.colorReaction = true
 	self.Health.frequentUpdates = true
-	bdUI:create_shadow(self.Health, 6)
-	-- self.Health._shadow = self.Health:CreateTexture(nil, "BACKGROUND", -8)
-	-- self.Health._shadow:SetTexture(bdUI.media.highlight)
-	-- self.Health._shadow:SetAlpha(0.8)
-	self.Health._shadow:SetColor(unpack(config.glowcolor))
+
+	-- glow alert
+	-- self.Health.Glow = CreateFrame("frame", "bdUI:nameplate_glow", self.Health)
+	-- self.Health.Glow:SetAllPoints()
 
 	-- THREAT
 	self.Health.UpdateColor = noop -- this is done by update_threat
@@ -634,7 +632,24 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- RAID MARKER
 	--==========================================
+	local marker_colors = {
+		[1] = {1, 1, .44, .8},
+		[2] = {1, .73, .19, .8},
+		[3] = {.79, .2, 1, .8},
+		[4] = {.47, 1, .4, .8},
+		[5] = {.94, .94, .94, .8},
+		[6] = {.36, .78, 1, .8},
+		[7] = {1, .43, .43, .8},
+		[8] = {1, 1, 1, .8},
+	}
 	self.RaidTargetIndicator = self.OverlayHolder:CreateTexture(nil, "OVERLAY", nil, 7)
+	-- self.RaidTargetIndicator.parent = self
+	-- self.RaidTargetIndicator.PostUpdate = function(self, index)
+	-- 	if (not index) then lib_glow.PixelGlow_Stop(self.parent.Health.Glow) return end
+	-- 	border = bdUI:get_border(self)
+	-- 	lib_glow.PixelGlow_Start(self.parent.Health.Glow, marker_colors[index], 10, nil, nil, border)
+	-- 	-- print(index)
+	-- end
 	-- todo add frame glow for skull mark
 	-- hooksecurefunc(self.RaidTargetIndicator, "Show", function()
 	-- end)
@@ -745,13 +760,12 @@ local function nameplate_create(self, unit)
 		local border = bdUI:get_border(self)
 
 		bdUI:set_backdrop(self.Health, true)
-
-		-- self.Health._shadow:SetPoint("TOPLEFT", -20, 3)
-		-- self.Health._shadow:SetPoint("BOTTOMRIGHT", 20, -3)
+		self.Health:set_border_size(border)
 
 		-- castbars
 		if (self.Castbar) then
 			bdUI:set_backdrop(self.Castbar, true)
+			self.Castbar:set_border_size(border)
 
 			self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
 			self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
@@ -767,6 +781,7 @@ local function nameplate_create(self, unit)
 			for index = 1, 5 do
 				local bar = self.ClassicComboPoints[index]
 				bdUI:set_backdrop(bar, true)
+				bar:set_border_size(border)
 				bar:SetSize(width, border * 3)
 				bar:ClearAllPoints()
 				

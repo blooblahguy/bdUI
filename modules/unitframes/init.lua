@@ -180,7 +180,8 @@ local config = {
 				outside_right = "[bd:name] [bd:rarity]",
 				inside_right = "[hpcolor][bd:curhp] - [perhp][/hpcolor]",
 			}),
-			tags_config("Target Of Target & Pet", "targettarget"),
+			tags_config("Target Of Target", "targettarget"),
+			tags_config("Pet", "pet"),
 			tags_config("Focus", "focus", {
 				inside_left = "[bd:curpp]",
 				inside_center = "[name]",

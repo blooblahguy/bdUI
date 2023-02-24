@@ -343,7 +343,7 @@ local config = {
 			{
 				key = "hptext",
 				type = "select",
-				value = "HP",
+				value = "%",
 				options = {"None","HP - %", "HP", "%"},
 				label = "Nameplate Health Text",
 			},
