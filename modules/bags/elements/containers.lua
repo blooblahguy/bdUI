@@ -104,8 +104,7 @@ function mod:create_container(name, nomove)
 	-- 		self.Instructions:Hide()
 	-- 	end
 	-- end)
-
-	searchBox:SetScript("OnTextChanged", function(self, ...)
+	searchBox.update = function(self, ...)
 		if (not frame.all_items) then return end
 		local find = search_sanitize(self:GetText())
 		
@@ -134,7 +133,11 @@ function mod:create_container(name, nomove)
 				end
 			end
 		end
-	end)
+	end
+	
+	searchBox:SetScript("OnTextChanged", searchBox.update)
+
+	frame.searchBox = searchBox
 
 	local icon = _G[searchBox:GetName().."SearchIcon"]
 	icon:ClearAllPoints()

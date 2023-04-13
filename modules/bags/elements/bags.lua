@@ -170,6 +170,7 @@ function mod:update_bags()
 
 	-- now loop through and display items
 	mod:draw_bag()
+
 end
 
 -- don't mess with categories or releasing frames, just show or hide items that have been used but leave category positions
@@ -190,4 +191,6 @@ function mod:draw_bag()
 		local height = mod.bags.currencies:GetHeight()
 		mod.bags:SetHeight(mod.bags:GetHeight() + height)
 	end
+
+	mod.bags.searchBox:update()
 end

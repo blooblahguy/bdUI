@@ -159,6 +159,8 @@ function mod:draw_bank()
 	mod:position_categories(mod.bank.categories, config.bankbuttonsize, config.bankbuttonsperrow)
 
 	mod:hide_blizzard_bank()
+
+	mod.bank.searchBox:update()
 end
 
 function mod:hide_blizzard_bank()
