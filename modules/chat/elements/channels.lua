@@ -30,36 +30,50 @@ match_strings[#match_strings+1] = {"has come online.", "+"} -- online
 match_strings[#match_strings+1] = {"has gone offline.", "-"} -- offline
 match_strings[#match_strings+1] = {'|h%[(%d+)%. (%w+)%]|h', '|h%2|h'} -- channels
 
-local function add_basic_formatting(replacement_string)
-	return "|cffAAAAAA+ "..replacement_string.. "|r"
+local function add_basic_formatting(replacement_string, color)
+	if (not color) then
+		color = "AAAAAA"
+	end
+
+	return "|cff"..color..replacement_string.. "|r"
 end
 -- xp
-match_strings[#match_strings+1] = {makePattern(COMBATLOG_XPGAIN_FIRSTPERSON), add_basic_formatting('%2 XP: %1')} -- something dies you gain experience
-match_strings[#match_strings+1] = {makePattern(COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED), add_basic_formatting('%1 XP')} -- you gained experience
-match_strings[#match_strings+1] = {makePattern(COMBATLOG_GUILD_XPGAIN), add_basic_formatting('%1 Guild XP')} -- you gained guildxp
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_XPGAIN_FIRSTPERSON), add_basic_formatting('%2 XP: %1', "4488FF")} -- something dies you gain experience
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED), add_basic_formatting('%1 XP', "4488FF")} -- you gained experience
+match_strings[#match_strings+1] = {makePattern(COMBATLOG_GUILD_XPGAIN), add_basic_formatting('%1 Guild XP', "4488FF")} -- you gained guildxp
 
 -- honor
 match_strings[#match_strings+1] = {makePattern(COMBATLOG_HONORAWARD), add_basic_formatting('%1 Honor')} -- you gained honor
 match_strings[#match_strings+1] = {makePattern(COMBATLOG_HONORGAIN), add_basic_formatting('%3 Honor: %1')} -- you gained honor
 
 -- reputation
-match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_DECREASED), add_basic_formatting('%2 Reputation: %1')} -- you lost reputation
-match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_DECREASED_GENERIC), add_basic_formatting('Reputation: %1')} -- you lost reputation
-match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_INCREASED), add_basic_formatting('%2 Reputation: %1')} -- you gained guildxp
-match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_INCREASED_GENERIC), add_basic_formatting('Reputation: %1')} -- you gained guildxp
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_DECREASED), add_basic_formatting('%2 Reputation: %1', "22FF66")} -- you lost reputation
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_DECREASED_GENERIC), add_basic_formatting('Reputation: %1', "22FF66")} -- you lost reputation
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_INCREASED), add_basic_formatting('%2 Reputation: %1', "22FF66")} -- you gained guildxp
+match_strings[#match_strings+1] = {makePattern(FACTION_STANDING_INCREASED_GENERIC), add_basic_formatting('Reputation: %1', "22FF66")} -- you gained guildxp
 
 -- loot
-match_strings[#match_strings+1] = {makePattern(CURRENCY_GAINED_MULTIPLE), add_basic_formatting('%2 %1')}
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_SELF_MULTIPLE), add_basic_formatting('%2 %1')} -- loot multiple
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_CREATED_SELF_MULTIPLE), add_basic_formatting('%2 %1 Created')}
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_PUSHED_SELF_MULTIPLE), add_basic_formatting('%2 %1')}
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_REFUND_MULTIPLE), add_basic_formatting('%2 %1')}
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_SELF), add_basic_formatting('%1')} -- loot single
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_CREATED_SELF), add_basic_formatting('%1 Created')}
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_PUSHED_SELF), add_basic_formatting('%1')}
-match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_REFUND), add_basic_formatting('%1')}
-match_strings[#match_strings+1] = {makePattern(CURRENCY_GAINED), add_basic_formatting('%1')}
+match_strings[#match_strings+1] = {makePattern(CURRENCY_GAINED_MULTIPLE), add_basic_formatting('+ %2 %1')}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_SELF_MULTIPLE), add_basic_formatting('+ %2 %1')} -- loot multiple
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_CREATED_SELF_MULTIPLE), add_basic_formatting('+ %2 %1 Created')}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_PUSHED_SELF_MULTIPLE), add_basic_formatting('+ %2 %1')}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_REFUND_MULTIPLE), add_basic_formatting('+ %2 %1')}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_SELF), add_basic_formatting('+ %1')} -- loot single
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_CREATED_SELF), add_basic_formatting('+ %1 Created')}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_PUSHED_SELF), add_basic_formatting('+ %1')}
+match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_REFUND), add_basic_formatting('+ %1')}
+match_strings[#match_strings+1] = {makePattern(CURRENCY_GAINED), add_basic_formatting('+ %1')}
 
+-- loot rolls
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_GREED), add_basic_formatting("Greed %2 for: %1", "00AA11")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_GREED_SELF), add_basic_formatting("|HlootHistory:%1|h[Loot]|h: Greed selected for: %2", "00AA11")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_NEED), add_basic_formatting("Need %2 for: %1", "FFAA00")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_NEED_SELF), add_basic_formatting("|HlootHistory:%1|h[Loot]|h: Need selected for: %2", "FFAA00")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_PASSED), add_basic_formatting("Pass %2 for: %1")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_PASSED_SELF), add_basic_formatting("|HlootHistory:%1|h[Loot]|h: Pass selected for: %2")}
+
+-- LOOT_ROLL_DISENCHANT = "%s has selected Disenchant for: %s";
+-- LOOT_ROLL_DISENCHANT_SELF = "|HlootHistory:%d|h[Loot]|h: You have selected Disenchant for: %s";
 
 
 local function make_plain(orig_string)

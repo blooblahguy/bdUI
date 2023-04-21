@@ -31,7 +31,7 @@ function mod:initialize()
 	mod:create_chat_bubbles()
 	
 	-- names
-	-- mod:color_names()
+	mod:color_names()
 	
 	-- channels
 	mod:format_channels()
