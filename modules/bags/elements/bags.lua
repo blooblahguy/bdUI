@@ -99,6 +99,8 @@ function mod:update_bags()
 	local keyName = GetItemClassInfo(13)
 	mod.categoryNamestoID[keyName] = 13
 	
+
+	bdUI:profile_start("bag update loop", 1)
 	-- first gather all items up
 	for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
 		local min, max, step = GetContainerNumSlots(bag), 1, -1
@@ -155,6 +157,7 @@ function mod:update_bags()
 			end
 		end
 	end
+	bdUI:profile_stop("bag update loop", 1)
 
 	if (config.showfreespaceasone and freeslot) then
 		mod.categoryIDtoNames[200] = "Bag"
@@ -169,7 +172,9 @@ function mod:update_bags()
 	end
 
 	-- now loop through and display items
+	bdUI:profile_start("bag draw", 1)
 	mod:draw_bag()
+	bdUI:profile_stop("bag draw", 1)
 
 end
 
@@ -184,13 +189,19 @@ function mod:draw_bag()
 
 	mod.current_parent = mod.bags -- we want new frames to parent to bags
 	
+	bdUI:profile_start("bag draw items", 3)
 	mod:position_items(mod.bags.categories, config.buttonsize, config.buttonsperrow)
+	bdUI:profile_stop("bag draw items", 3)
+	bdUI:profile_start("bag draw categopries", 3)
 	mod:position_categories(mod.bags.categories, config.buttonsize, config.buttonsperrow)
+	bdUI:profile_stop("bag draw categopries", 3)
 
 	if (mod.bags.currencies) then
 		local height = mod.bags.currencies:GetHeight()
 		mod.bags:SetHeight(mod.bags:GetHeight() + height)
 	end
 
+	bdUI:profile_start("bag search update", 3)
 	mod.bags.searchBox:update()
+	bdUI:profile_stop("bag search update", 3)
 end

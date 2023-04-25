@@ -23,36 +23,39 @@ local bindTypes = {
 
 
 -- Tradability
-function mod:is_item_tradeable(itemLink)
+function mod:is_item_tradeable(bag, slot)
+	bdUI:profile_start("item tradeable", 1)
 	local isTradable = false
 	local tradableString = BIND_TRADE_TIME_REMAINING:utf8sub(0, 24):lower()
 	local sellableString = REFUND_TIME_REMAINING:utf8sub(0, 24):lower() -- for testing
 
 	-- the tooltip for trading actually only shows up on bag tooltips, so we have to do this
-	for bag = 0, 4 do
-		for slot = 1, GetContainerNumSlots(bag) do
-			local bagItemLink = GetContainerItemLink(bag, slot)
+	-- for bag = 0, 4 do
+	-- 	for slot = 1, GetContainerNumSlots(bag) do
+	-- 		local bagItemLink = GetContainerItemLink(bag, slot)
 			
-			if (bagItemLink and bagItemLink == itemLink) then
-				tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
-				tooltip:SetBagItem(bag, slot)
+	-- 		if (bagItemLink and bagItemLink == itemLink) then
+	tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
+	tooltip:SetBagItem(bag, slot)
 
-				for i = 1, 150 do
-					local line = _G['bdUIItemScanTextLeft'..i]
-					local text = line and line:GetText() and line:GetText():lower()
+	for i = 1, 150 do
+		local line = _G['bdUIItemScanTextLeft'..i]
+		local text = line and line:GetText() and line:GetText():lower()
 
-					if (not text) then break end
+		if (not text) then break end
 
-					if (string.find(text, tradableString) ~= nil) then
-						isTradable = true
-						break
-					end
-				end
-
-			end
+		if (string.find(text, tradableString) ~= nil) then
+			isTradable = true
+			break
 		end
+
 	end
 
+	-- 		end
+	-- 	end
+	-- end
+
+	bdUI:profile_stop("item tradeable", 1)
 	return isTradable
 end
 

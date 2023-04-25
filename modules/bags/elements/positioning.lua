@@ -61,6 +61,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 		end
 		
 		-- sort automatically, we don't need no stinking manual sort
+		bdUI:profile_start("sort categories", 3)
 		table.sort(items, function(a, b)
 			if (a.itemLink == nil and b.itemLink == nil) then return end
 			-- sort by rarity
@@ -76,7 +77,9 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 
 			return a.name < b.name
 		end)
+		bdUI:profile_stop("sort categories", 3)
 
+		bdUI:profile_start("item loop", 1)
 		-- now position items inside of frame
 		for itemName, itemInfo in pairs(items) do
 			local item = mod.current_parent.item_pool:Acquire()
@@ -96,7 +99,8 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			item.texture = itemInfo.texture
 			item.itemID = itemInfo.itemID
 			item.rarity = itemInfo.rarity
-			item.tradeable = mod:is_item_tradeable(itemInfo.itemLink) and "tradeable" or ""
+			item.itemEquipLoc = itemInfo.itemEquipLoc
+			item.tradeable = itemInfo.itemEquipLoc ~= "" and mod:is_item_tradeable(itemInfo.bag, itemInfo.slot) and "tradeable" or ""
 
 			table.insert(mod.current_parent.all_items, item)
 
@@ -187,6 +191,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 			-- last_item = item
 			-- row_items = row_items + 1
 		end
+		bdUI:profile_stop("item loop", 1)
 	end
 
 	mod.current_parent:SetWidth(mod.spacing * 2 + (buttonsperrow + 1) * (buttonsize + mod.border))
