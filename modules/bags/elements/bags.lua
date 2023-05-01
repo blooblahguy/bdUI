@@ -95,9 +95,9 @@ function mod:update_bags()
 	local freeslots = 0
 	local freeslot = nil
 	mod.bags.categories = {}
-	mod.categoryIDtoNames[13] = GetItemClassInfo(13)
-	local keyName = GetItemClassInfo(13)
-	mod.categoryNamestoID[keyName] = 13
+	-- mod.categoryIDtoNames[13] = GetItemClassInfo(13)
+	-- local keyName = GetItemClassInfo(13)
+	-- mod.categoryNamestoID[keyName] = 13
 	
 
 	bdUI:profile_start("bag update loop", 1)
@@ -140,7 +140,7 @@ function mod:update_bags()
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 
 				-- run through filters to see where i truly belong
-				itemType, itemTypeID = mod:filter_category(itemLink, itemType, itemTypeID, itemSubType, itemSubTypeID, itemEquipLoc)
+				itemType, itemTypeID = mod:filter_category(itemLink)
 				
 				if (not itemType) then itemType = GetItemClassInfo(13) end;
 				if (not itemTypeID) then itemTypeID = 13 end;
