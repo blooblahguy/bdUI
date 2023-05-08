@@ -65,11 +65,11 @@ match_strings[#match_strings+1] = {makePattern(LOOT_ITEM_REFUND), add_basic_form
 match_strings[#match_strings+1] = {makePattern(CURRENCY_GAINED), add_basic_formatting('+ %1')}
 
 -- loot rolls
-match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_GREED), add_basic_formatting("Greed %2 for: %1", "00AA11")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_GREED), add_basic_formatting("Greed %2 by %1", "00AA11")}
 match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_GREED_SELF), add_basic_formatting("|HlootHistory:%1|h[Loot]|h: Greed selected for: %2", "00AA11")}
-match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_NEED), add_basic_formatting("Need %2 for: %1", "FFAA00")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_NEED), add_basic_formatting("Need %2 by %1", "FFAA00")}
 match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_NEED_SELF), add_basic_formatting("|HlootHistory:%1|h[Loot]|h: Need selected for: %2", "FFAA00")}
-match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_PASSED), add_basic_formatting("Pass %2 for: %1")}
+match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_PASSED), add_basic_formatting("Pass %2 by %1")}
 match_strings[#match_strings+1] = {makePattern(LOOT_ROLL_PASSED_SELF), add_basic_formatting("|HlootHistory:%1|h[Loot]|h: Pass selected for: %2")}
 
 -- LOOT_ROLL_DISENCHANT = "%s has selected Disenchant for: %s";

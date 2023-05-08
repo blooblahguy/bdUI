@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30402
 
 ## Title: |cffA02C2Fbd|rUI |cff3FC7EB[WOTLK]|r
 ## Author: Blooblahguy
@@ -19,8 +19,8 @@
 core\init.lua
 lib\ace\LibStub.lua
 lib\fixes\blizzard_bugs.lua
-lib\fixes\TaintLess.xml
-lib\fixes\InspectFix.lua
+# lib\fixes\TaintLess.xml
+# lib\fixes\InspectFix.lua
 lib\fixes\LibStrataFix.lua
 
 # Locales
