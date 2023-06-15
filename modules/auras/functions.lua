@@ -35,6 +35,11 @@ local is_whitelisted = function(self, name, spellID, castByMe, isBossDebuff, nam
 	auras = mod.auras
 	name = bdUI:sanitize(name)
 
+	-- special ones always show
+	if (bdUI.aura_lists.special[name]) then
+		return true
+	end
+
 	-- whitelisted if in raid
 	if (bdUI:is_whitelist_raid(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return true

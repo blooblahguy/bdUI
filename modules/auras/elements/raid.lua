@@ -705,10 +705,6 @@ local auras = {
 	["Link Essence"] = true,
 	["Pierce Soul"] = true,
 	["Arthura's Crushing Gaze"] = true,
-
-	-- argent crusade
-	["Defend"] = true,
-
 }
 
 -- bdUI.aura_lists.raid = auras

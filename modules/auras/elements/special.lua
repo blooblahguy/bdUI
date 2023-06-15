@@ -10,6 +10,10 @@ local special = {
 
 	["Ember Blast"] = true,
 	["Soul Infusion"] = true,
+
+	-- totgc
+	["Penetrating Cold"] = true,
+
 }
 
 for k,v in pairs(special) do bdUI.aura_lists.special[k] = v end

@@ -22,6 +22,10 @@ local auras = {
 	["Vigilance"] = true,
 	["Shockwave"] = true,
 	['Intimidating Shout'] = true,
+	['Sunder Armor'] = true,
+	['Mortal Strike'] = true,
+	['Disarm'] = true,
+	['Intimidating Shout'] = true,
 	
 	-- Druids
 	["Barkskin"] = true,
@@ -100,6 +104,9 @@ local auras = {
 	-- Hunters
 	["Aspect of the Turtle"] = true,
 	["Roar of Sacrifice"] = true,
+	["Ice Trap"] = true,
+	["Aimed Shot"] = true,
+	["Wing Clip"] = true,
 	
 	-- Priests
 	["Dispersion"] = true,
@@ -109,6 +116,9 @@ local auras = {
 	["Mind Bomb"] = true,
 	["Surrender Soul"] = true,
 	["Guardian Spirit"] = true,
+	["Psychic Scream"] = true,
+	["Psychic Horror"] = true,
+	["Silence"] = true,
 	
 	-- Demon hunters
 	['Blur'] = true,
