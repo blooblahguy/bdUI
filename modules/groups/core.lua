@@ -87,7 +87,10 @@ end
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
-	if (not config.enabled_raid) then return false end
+
+	if (not config.enabled_raid) then
+		return false
+	end
 
 	mod.highlights = bdUI:lowercase_table(config.specialalerts)
 	
@@ -99,6 +102,17 @@ function mod:config_callback()
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
 	end
+
+	if (not config.enabled_raid) then
+		mod.raidpartyholder:Hide()
+	end
+
+	if (not config.pets_enable) then
+		mod.petsholder:Hide()
+	end
+
+	mod.petsholder:Show()
+	mod.raidpartyholder:Show()
 end
 
 --===============================================

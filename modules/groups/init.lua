@@ -87,6 +87,13 @@ local config = {
 							-- 	size = "third"
 							-- },
 							{
+								key = "pets_enable",
+								type = "toggle",
+								value = "true",
+								label = "Enable pet frames",
+								size = "full"
+							},
+							{
 								key = "pets_width",
 								type = "range",
 								value = 52,
