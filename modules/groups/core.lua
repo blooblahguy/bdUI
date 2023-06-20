@@ -740,7 +740,7 @@ function mod:initialize()
 
 		mod:update_header(mod.frameHeader)
 
-		mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid,party,solo',
+		mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid,party',
 			"showParty", true,
 			"showSolo", false,
 			"showRaid", true,
