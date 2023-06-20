@@ -191,7 +191,7 @@ function mod:create_stancebar()
 	stancebar:EnableMouse(false)
 
 	stancebar.callback = function()
-		print("stance check")
+		-- print("stance check")
 		local stances = 0
 		-- todo: fire on event to make only the correct number of stance buttons
 		for i = 1, NUM_STANCE_SLOTS do
