@@ -33,6 +33,10 @@ local function update_frame(self)
 
 	self:SetSize(config.width, config.height)
 	self.Short:SetWidth(config.width)
+	if (not UnitIsPlayer(self.unit)) then
+		self:SetSize(config.pets_width, config.pets_height)
+		self.Short:SetWidth(config.pets_width)
+	end	
 
 	local role = UnitGroupRolesAssigned(self.unit)
 
@@ -90,7 +94,7 @@ function mod:config_callback()
 	-- prevent case where callback is called before frameHeader initialization
 	if (not mod.frameHeader) then return end
 
-	mod:resize_container()
+	mod:resize_container(mod.frameHeader)
 
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
@@ -639,42 +643,42 @@ end
 --======================================================
 -- Update the raidframe header with new configuration values
 --======================================================
-function mod:update_header()
+function mod:update_header(header)
 	if (InCombatLockdown()) then return end
 
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
 
 	-- reize the container if necessary
-	mod:resize_container()
+	mod:resize_container(header)
 
 	-- growth/spacing
-	mod.frameHeader:SetAttribute("columnAnchorPoint", new_group_anchor)
-	mod.frameHeader:SetAttribute("point", new_player_anchor)
+	header:SetAttribute("columnAnchorPoint", new_group_anchor)
+	header:SetAttribute("point", new_player_anchor)
 
 	if (config.group_growth == "Right") then
-		mod.frameHeader:SetAttribute("columnSpacing", xOffset)
+		header:SetAttribute("columnSpacing", xOffset)
 	else
-		mod.frameHeader:SetAttribute("columnSpacing", -yOffset)
+		header:SetAttribute("columnSpacing", -yOffset)
 	end
 
-	mod.frameHeader:SetAttribute("yOffset", yOffset)
-	mod.frameHeader:SetAttribute("xOffset", xOffset)
+	header:SetAttribute("yOffset", yOffset)
+	header:SetAttribute("xOffset", xOffset)
 
 	-- what to show
-	mod.frameHeader:SetAttribute("showpartyleadericon", config.showpartyleadericon)
+	header:SetAttribute("showpartyleadericon", config.showpartyleadericon)
 	
 	-- when to show
-	mod.frameHeader:SetAttribute("showSolo", config.showsolo)
-	mod.frameHeader:SetAttribute("maxColumns", num_groups)
+	header:SetAttribute("showSolo", config.showsolo)
+	header:SetAttribute("maxColumns", num_groups)
 	
 	-- width/height
-	mod.frameHeader:SetAttribute("initial-width", config.width)
-	mod.frameHeader:SetAttribute("initial-height", config.height)
+	header:SetAttribute("initial-width", config.width)
+	header:SetAttribute("initial-height", config.height)
 	
 	-- grouping/sorting
-	mod.frameHeader:SetAttribute("groupBy", group_by)
-	mod.frameHeader:SetAttribute("groupingOrder", group_sort)
-	mod.frameHeader:SetAttribute("sortMethod", sort_method)
+	header:SetAttribute("groupBy", group_by)
+	header:SetAttribute("groupingOrder", group_sort)
+	header:SetAttribute("sortMethod", sort_method)
 end
 
 function style_callback(self)
@@ -702,8 +706,8 @@ function mod:initialize()
 	-- make sure we can store grid aliases
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
 
-	-- hold the raid frames
-	mod:create_container()
+	-- hold the raid and pet frames
+	mod:create_containers()
 
 	-- send to factory
 	oUF:RegisterStyle('bdGrid', layout)
@@ -734,7 +738,31 @@ function mod:initialize()
 			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
 		)
 
-		mod:update_header()
+		mod:update_header(mod.frameHeader)
+
+		mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid,party,solo',
+			"showParty", true,
+			"showSolo", false,
+			"showRaid", true,
+			"initial-scale", 1,
+			"unitsPerColumn", 5,
+			"columnSpacing", yOffset,
+			"xOffset", xOffset,
+			"yOffset", yOffset,
+			"maxColumns", num_groups,
+			"groupingOrder", group_sort,
+			"sortMethod", sort_method,
+			"columnAnchorPoint", new_group_anchor,
+			"initial-width", config.pets_width,
+			"initial-height", config.pets_height,
+			"point", new_player_anchor,
+			"groupBy", group_by,
+			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.pets_width, config.pets_height)
+		)
+
+		mod.petframeHeader:SetPoint("CENTER", UIParent)
+
+		mod:update_header(mod.petframeHeader)
 	end)
 
 	-- disable blizzard things
@@ -745,32 +773,68 @@ end
 --===============================================
 -- Raid container, match layout of groups
 --===============================================
-function mod:create_container()
-	mod.raidpartyholder = CreateFrame('frame', "bdGrid", UIParent)
-	mod.raidpartyholder:SetSize(config['width'], config['height']*5)
-	mod.raidpartyholder:SetPoint("LEFT", UIParent, "LEFT", 10, -90)
-	bdMove:set_moveable(mod.raidpartyholder, "Raid Frames")
+function mod:create_containers()
+
+	-- raid and party
+	local raid_party = CreateFrame('frame', "bdGrid", UIParent)
+	raid_party:SetSize(config['width'], config['height']*5)
+	raid_party:SetPoint("LEFT", UIParent, "LEFT", 10, -90)
+	bdMove:set_moveable(raid_party, "Raid Frames")
 
 	-- register events for resizing the box/group size
-	mod.raidpartyholder:RegisterEvent("PLAYER_REGEN_ENABLED")
-	mod.raidpartyholder:RegisterEvent("PLAYER_ENTERING_WORLD")
-	mod.raidpartyholder:RegisterEvent("RAID_ROSTER_UPDATE")
-	mod.raidpartyholder:RegisterEvent("GROUP_JOINED")
-	mod.raidpartyholder:RegisterEvent("GROUP_ROSTER_UPDATE")
-	mod.raidpartyholder:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	mod.raidpartyholder:SetScript("OnEvent", function(self, event, arg1)
+	raid_party:RegisterEvent("PLAYER_REGEN_ENABLED")
+	raid_party:RegisterEvent("PLAYER_ENTERING_WORLD")
+	raid_party:RegisterEvent("RAID_ROSTER_UPDATE")
+	raid_party:RegisterEvent("GROUP_JOINED")
+	raid_party:RegisterEvent("GROUP_ROSTER_UPDATE")
+	raid_party:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	raid_party:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "PLAYER_ENTERING_WORLD") then
 			C_Timer.After(2, function()
-				mod:update_header()
+				mod:update_header(mod.frameHeader)
 			end)
 		end
 
-		mod:update_header()
+		mod:update_header(mod.frameHeader)
 	end)
+
+	mod.raidpartyholder = raid_party
+
+	-- pets
+	local pets_holder = CreateFrame('frame', "bdGrid", UIParent)
+	pets_holder:SetSize(config['width'], config['height']*5)
+	pets_holder:SetPoint("LEFT", raid_party, "RIGHT", 10, 0)
+	bdMove:set_moveable(pets_holder, "Pet Frames")
+
+	-- register events for resizing the box/group size
+	pets_holder:RegisterEvent("PLAYER_REGEN_ENABLED")
+	pets_holder:RegisterEvent("PLAYER_ENTERING_WORLD")
+	pets_holder:RegisterEvent("RAID_ROSTER_UPDATE")
+	pets_holder:RegisterEvent("GROUP_JOINED")
+	pets_holder:RegisterEvent("GROUP_ROSTER_UPDATE")
+	pets_holder:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	pets_holder:SetScript("OnEvent", function(self, event, arg1)
+		if (event == "PLAYER_ENTERING_WORLD") then
+			C_Timer.After(2, function()
+				mod:update_header(mod.petframeHeader)
+			end)
+		end
+
+		mod:update_header(mod.petframeHeader)
+	end)
+
+	mod.petsholder = pets_holder
 end
 
-function mod:resize_container()
-	mod.frameHeader:ClearAllPoints();
+function mod:resize_container(header)
+	header:ClearAllPoints();
+
+	local width = config.width
+	local height = config.height
+	if (header == mod.petframeHeader) then
+		width = config.pets_width
+		height = config.pets_height
+	end
 
 	local size = 5
 	if (bdUI.version >= 80000) then
@@ -779,31 +843,36 @@ function mod:resize_container()
 
 	-- change where to start the growth of groups
 	if (config.group_growth == "Right") then
-		mod.raidpartyholder:SetSize(config.width*5+8, config.height*5+8)
+		mod.raidpartyholder:SetSize(width*5+8, height*5+8)
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
 		
 	elseif (config.group_growth == "Left") then
-		mod.raidpartyholder:SetSize(config.width*5+8, config.height*5+8)
+		mod.raidpartyholder:SetSize(width*5+8, height*5+8)
 		hgrowth = "RIGHT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
 		
 	elseif (config.group_growth == "Upwards") then
-		mod.raidpartyholder:SetSize(config.width*5+8, config.height*4+8)
+		mod.raidpartyholder:SetSize(width*5+8, height*4+8)
 		hgrowth = "LEFT"
 		vgrowth = "BOTTOM"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end
 		
 	elseif (config.group_growth == "Downwards") then
-		mod.raidpartyholder:SetSize(config.width*5+8, config.height*4+8)
+		mod.raidpartyholder:SetSize(width*5+8, height*4+8)
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end
 	end
 
-	mod.frameHeader:SetPoint(vgrowth..hgrowth, mod.raidpartyholder, vgrowth..hgrowth, 0, 0)
+	if (header == mod.frameHeader) then
+		header:SetPoint(vgrowth..hgrowth, mod.raidpartyholder, vgrowth..hgrowth, 0, 0)
+	else
+		header:SetPoint(vgrowth..hgrowth, mod.petsholder, vgrowth..hgrowth, 0, 0)
+	end
+
 end
 
 --==============================================
