@@ -14,7 +14,7 @@ local config = {
 			{
 				key = "font",
 				type = "select",
-				value = bdUI.media.font,
+				value = "PTSansNarrow",
 				options = fonts,
 				label = "Font",
 				size = "full",

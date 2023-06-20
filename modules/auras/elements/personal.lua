@@ -31,7 +31,7 @@ local class = {
 		
 	},
 	DRUID = {
-		
+		["Innervate"] = true,
 	},
 	WARRIOR = {
 		
