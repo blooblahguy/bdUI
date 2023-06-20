@@ -2,7 +2,7 @@
 -- INIT
 --===============================================
 local bdUI, c, l = unpack(select(2, ...))
--- local fonts = bdUI:get_fonts()
+local fonts = bdUI:get_fonts()
 
 -- Config Table
 local config = {
@@ -11,16 +11,15 @@ local config = {
 		type = "tab",
 		label = "Style",
 		args = {
-			-- {
-			-- 	key = "font",
-			-- 	type = "select",
-			-- 	value = bdUI.media.font,
-			-- 	options = fonts,
-			-- 	label = "Font",
-			-- 	size = "full",
-			-- 	action = "bdUI/fonts",
-			-- 	lookup = bdUI.get_fonts
-			-- },
+			{
+				key = "font",
+				type = "select",
+				value = bdUI.media.font,
+				options = fonts,
+				label = "Font",
+				size = "full",
+				lookup = bdUI.get_fonts,
+			},
 			{
 				key = "set_ui_scale",
 				type = "toggle",

@@ -153,8 +153,8 @@ local function skin_frame(frame)
 	editbox:SetPoint("LEFT",frame,-8,0)
 	editbox:SetPoint("RIGHT",frame,8,0)	
 
-	local name, size = frame:GetFont()
-	frame:SetFont(bdUI.media.font, size, "THINOUTLINE")
+	local name, size = frame:GetFont(size, "THINOUTLINE")
+	frame:SetFontObject(bdUI:get_font(size, "THINOUTLINE"))
 	frame:SetShadowColor(0, 0, 0, 0)
 	frame:SetShadowOffset(0, 0)
 

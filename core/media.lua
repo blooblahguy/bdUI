@@ -84,6 +84,8 @@ end
 --========================================================
 
 function bdUI:frame_group(container, direction, ...)
+	if (not container) then return end
+	
 	direction = string.lower(direction) or "down"
 	local last = nil
 	local height = 0

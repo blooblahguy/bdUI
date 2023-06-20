@@ -160,6 +160,11 @@ function mod:CreateBar(buttonList, cfg)
 		cfg.blizzardBar:EnableMouse(false)
 	end
 
+	-- events
+	if (frame.callback) then
+		frame:HookScript("OnEvent", frame.callback)
+	end
+
 	mod.bars[cfg.cfg] = frame
 
 	return frame
@@ -207,6 +212,11 @@ function mod:LayoutButtons(frame, buttonList)
 	-- redeclare some variables
 	frame.num = frame.limit
 	frame.cols = math.floor(math.min(frame.limit, frame.num) / frame.rows)
+
+	if (frame.limit == 0) then
+		frame:Hide()
+	end
+	frame:Show()
 
 	-- size the parent bar
 	local frameWidth = frame.cols * frame.width + (frame.cols-1) * frame.spacing

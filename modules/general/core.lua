@@ -16,6 +16,8 @@ function mod:config_callback()
 	mod:SetUIScale()
 
 	mod:create_fighttimer()
+
+	bdUI:do_action("bdUI/fonts")
 end
 
 function mod:SetUIScale()

@@ -140,6 +140,10 @@ local function create(options, parent)
 		end)
 	end
 
+	
+
+	dropdown:populate(options.options)
+
 	-- hook into actions for updates
 	if (options.action) then
 		lib:add_action(options.action, function(value)
@@ -149,9 +153,13 @@ local function create(options, parent)
 		end)
 	end
 
-	dropdown:populate(options.options)
+	-- lib:do_action(options.action)
 
 	-- skin(dropdown)
+
+	-- options.callback(dropdown)
+
+	container:set()
 
 	return container
 end

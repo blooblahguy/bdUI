@@ -163,7 +163,10 @@ end
 -- StanceBar
 --===============================================================
 function mod:create_stancebar()
-	if (not NUM_STANCE_SLOTS) then return end
+	print("stance check")
+
+	NUM_STANCE_SLOTS = NUM_STANCE_SLOTS or 10
+
 	cfg = {}
 	cfg.cfg = "stancebar"
 	cfg.blizzardBar = StanceBarFrame
@@ -172,22 +175,23 @@ function mod:create_stancebar()
 	cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
 	cfg.frameSpawn = {"BOTTOM", 0, defaultPadding}
 
-	local stances = 0
-	for i = 1, NUM_STANCE_SLOTS do
-		local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i)
-		if (icon) then
-			stances = stances + 1
-		end
-	end
+	-- local stances = 0
+	-- for i = 1, NUM_STANCE_SLOTS do
+	-- 	local icon, name, active, castable, spellId = GetShapeshiftFormInfo(i)
+	-- 	if (icon) then
+	-- 		stances = stances + 1
+	-- 	end
+	-- end
 
-	if (stances == 0) then return end
+	-- if (stances == 0) then return end
 
 	-- local buttonList = mod:GetButtonList("StanceButton", stances)
 	local buttonList = mod:GetButtonList("StanceButton", NUM_STANCE_SLOTS)
 	local stancebar = mod:CreateBar(buttonList, cfg)
 	stancebar:EnableMouse(false)
 
-	local function callback()
+	stancebar.callback = function()
+		print("stance check")
 		local stances = 0
 		-- todo: fire on event to make only the correct number of stance buttons
 		for i = 1, NUM_STANCE_SLOTS do
@@ -205,9 +209,16 @@ function mod:create_stancebar()
 
 	stancebar:RegisterEvent("PLAYER_TALENT_UPDATE")
 	stancebar:RegisterEvent("PET_TALENT_UPDATE")
+	stancebar:RegisterEvent("PLAYER_ENTERING_WORLD")
 	stancebar:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+	stancebar:RegisterEvent("UPDATE_SHAPESHIFT_COOLDOWN")
+	stancebar:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+	stancebar:RegisterEvent("UNIT_MODEL_CHANGED")
+
 	-- config callback
-	table.insert(mod.variables.callbacks, callback)
+	table.insert(mod.variables.callbacks, stancebar.callback)
+
+	stancebar.callback()
 end
 
 --===============================================================

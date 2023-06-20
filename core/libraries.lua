@@ -20,4 +20,4 @@ bdUI.bdConfig = ns.bdConfig:new("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
 
 -- set better fonts for libraries
 bdMove.media.font = bdUI.media.font
-bdUI.shared:Register("font", "PTSansNarrow (bdUI)", bdUI.media.font)
+bdUI.shared:Register("font", "PTSansNarrow", bdUI.media.font)
