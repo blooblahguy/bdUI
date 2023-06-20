@@ -12,7 +12,7 @@ local config = {
 		label = "Style",
 		args = {
 			{
-				key = "font",
+				key = "ui_font",
 				type = "select",
 				value = "PTSansNarrow",
 				options = fonts,

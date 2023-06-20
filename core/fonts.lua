@@ -56,7 +56,7 @@ end
 
 -- -- font changed or initialized
 bdUI:add_action("profile_change,bdUI/fonts", function()
-	bdUI.media.font_name = bdUI:get_module("General"):get_save().font
+	bdUI.media.font_name = bdUI:get_module("General"):get_save().ui_font
 	bdUI.media.font = bdUI.shared:Fetch("font", bdUI.media.font_name)
 
 	bdUI.update_fonts()
