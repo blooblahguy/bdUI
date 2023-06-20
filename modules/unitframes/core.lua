@@ -63,7 +63,8 @@ local function layout(self, unit)
 	self.Health.colorDisconnected = true
 	self.Health.PreUpdate = function(self, unit)
 		self.colorSmooth = true
-		if (UnitIsPlayer(unit) or (UnitPlayerControlled(unit) and not UnitIsPlayer(unit))) then
+		-- if (UnitIsPlayer(unit) or (UnitPlayerControlled(unit) and not UnitIsPlayer(unit))) then
+		if (UnitIsPlayer(unit)) then
 			self.colorReaction = false
 			local _, class = UnitClass(unit)
 			local cc = oUF.colors.class[class]
