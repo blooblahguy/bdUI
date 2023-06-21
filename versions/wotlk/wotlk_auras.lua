@@ -31,6 +31,49 @@ special["Chains of Kel'Thuzad"] = true
 raidauras["Tail Lash"] = true
 
 
+-- ulduar
+raidauras["Pursued"] = true
+special["Hodir's Fury"] = true
+raidauras["Unquenchable Flames"] = true
+raidauras["Flame Buffet"] = true
+raidauras["Slag Pot"] = true
+raidauras["Flame Jets"] = true
+special["Gravity Bomb"] = true
+raidauras["Searing Light"] = true
+raidauras["Static Disruption"] = true
+raidauras["Overwhelming Power"] = true
+raidauras["Rune of Death"] = true
+special["Fusion Punch"] = true
+raidauras["Phase Punch"] = true
+raidauras["Black Hole"] = true
+raidauras["Stone Grip"] = true
+raidauras["Crunch Armor"] = true
+raidauras["Feral Pounce"] = true
+raidauras["Rip Flesh"] = true
+raidauras["Freeze"] = true
+raidauras["Biting Cold"] = true
+raidauras["Unbalancing Strike"] = true
+raidauras["Low Blow"] = true
+raidauras["Frost Nova"] = true
+raidauras["Unstable Energy"] = true
+special["Nature's Fury"] = true
+raidauras["Iron Roots"] = true
+raidauras["Napalm Shell"] = true
+special["Plasma Blast"] = true
+raidauras["Shadow Crash"] = true
+raidauras["Mark of the Faceless"] = true
+raidauras["Searing Flames"] = true
+raidauras["Brain Link"] = true
+special["Sara's Fervor"] = true
+special["Squeeze"] = true
+raidauras["Draining Poison"] = true
+raidauras["Black Plague"] = true
+raidauras["Sara's Blessing"] = true
+raidauras["Apathy"] = true
+raidauras["Black Plague"] = true
+special["Malady of the Mind"] = true
+special["Dominate Mind"] = true
+special["Curse of Doom"] = true
 
 -- togc
 special["Paralytic Toxin"] = true
