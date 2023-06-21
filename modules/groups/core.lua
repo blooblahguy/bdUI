@@ -31,9 +31,12 @@ local dispelColors = {
 local function update_frame(self)
 	if (InCombatLockdown()) then return end
 
+	local parent = self:GetParent():GetName()
+	-- print(self:GetParent():GetName(), self:GetParent():GetParent():GetName())
+
 	self:SetSize(config.width, config.height)
 	self.Short:SetWidth(config.width)
-	if (not UnitIsPlayer(self.unit)) then
+	if (parent == "oUF_bdGridRaid2") then
 		self:SetSize(config.pets_width, config.pets_height)
 		self.Short:SetWidth(config.pets_width)
 	end	
@@ -698,12 +701,52 @@ function mod:update_header(header)
 	header:SetAttribute("sortMethod", sort_method)
 end
 
-function style_callback(self)
-	-- print(self.unit)
+local function GetPetUnit(kind, index)
+	if ( kind == "RAID" ) then
+		return "raidpet"..index;
+	elseif ( index > 0 ) then
+		return "partypet"..index;
+	else
+		return "pet";
+	end
 end
 
+function mod:update_pet_header(header)
+	if (InCombatLockdown()) then return end
 
+	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
 
+	-- reize the container if necessary
+	mod:resize_container(header)
+
+	-- growth/spacing
+	header:SetAttribute("columnAnchorPoint", new_group_anchor)
+	header:SetAttribute("point", new_player_anchor)
+
+	if (config.group_growth == "Right") then
+		header:SetAttribute("columnSpacing", xOffset)
+	else
+		header:SetAttribute("columnSpacing", -yOffset)
+	end
+
+	header:SetAttribute("yOffset", yOffset)
+	header:SetAttribute("xOffset", xOffset)
+
+	-- what to show
+	header:SetAttribute("showpartyleadericon", config.showpartyleadericon)
+	
+	-- when to show
+	header:SetAttribute("maxColumns", num_groups)
+	
+	-- width/height
+	header:SetAttribute("initial-width", config.pets_width)
+	header:SetAttribute("initial-height", config.pets_height)
+	
+	-- grouping/sorting
+	-- header:SetAttribute("groupBy", group_by)
+	-- header:SetAttribute("groupingOrder", group_sort)
+	-- header:SetAttribute("sortMethod", sort_method)
+end
 
 
 --======================================================
@@ -755,29 +798,63 @@ function mod:initialize()
 
 		mod:update_header(mod.frameHeader)
 
+		-- header:SetAttribute("strictFiltering", true)
+		local pets = {"pet"}
+		for i = 1, 40 do
+			table.insert(pets, "raidpet"..i)
+			table.insert(pets, "partypet"..i)
+		end
+		pets = table.concat(pets, ",")
+
+		-- header:SetAttribute("nameList", pets)
+
+		-- header:SetAttribute("useOwnerUnit", true) -- the owner's unit string is set on managed frames "unit" attribute (instead of pet's)
+		-- header:SetAttribute("filterOnPet", true) -- pet names are used when sorting/filtering the list
 		mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid,party',
 			"showParty", true,
 			"showSolo", false,
 			"showRaid", true,
+			"strictFiltering", true,
 			"initial-scale", 1,
 			"unitsPerColumn", 5,
 			"columnSpacing", yOffset,
 			"xOffset", xOffset,
 			"yOffset", yOffset,
 			"maxColumns", num_groups,
-			"groupingOrder", group_sort,
-			"sortMethod", sort_method,
+			"maxColumns", pets,
+			-- "groupingOrder", group_sort,
+			-- "sortMethod", sort_method,
 			"columnAnchorPoint", new_group_anchor,
 			"initial-width", config.pets_width,
 			"initial-height", config.pets_height,
 			"point", new_player_anchor,
-			"groupBy", group_by,
+			-- "groupBy", group_by,
 			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.pets_width, config.pets_height)
 		)
+		-- mod.petframeHeader:SetAttribute("customFilter", function(self, unit)
+			-- Check if the unit is a pet
+			-- return UnitIsUnit(unit, unit.."pet")
+			-- local isPet = UnitIsUnit(unit, unit.."pet")
+			-- Check if the unit is a vehicle
+			-- local isVehicle = UnitHasVehicleUI(unit)
+			
+			-- Filter out vehicles and include pets
+			-- if isPet and not isVehicle then
+			-- return true
+			-- end
+			
+			-- Check if the unit is a player's pet
+			-- local owner = UnitGUID(unit.."pet")
+			-- if owner and UnitIsPlayer(owner) then
+			-- return true
+			-- end
+			
+			-- return false
+		-- end)
 
 		mod.petframeHeader:SetPoint("CENTER", UIParent)
 
-		mod:update_header(mod.petframeHeader)
+		mod:update_pet_header(mod.petframeHeader)
 	end)
 
 	-- disable blizzard things
@@ -816,7 +893,7 @@ function mod:create_containers()
 	mod.raidpartyholder = raid_party
 
 	-- pets
-	local pets_holder = CreateFrame('frame', "bdGrid", UIParent)
+	local pets_holder = CreateFrame('frame', "bdGridPets", UIParent)
 	pets_holder:SetSize(config['width'], config['height']*5)
 	pets_holder:SetPoint("LEFT", raid_party, "RIGHT", 10, 0)
 	bdMove:set_moveable(pets_holder, "Pet Frames")
@@ -844,9 +921,13 @@ end
 function mod:resize_container(header)
 	header:ClearAllPoints();
 
-	local width = config.width
-	local height = config.height
-	if (header == mod.petframeHeader) then
+	local width
+	local height
+	if (header == mod.frameHeader) then
+		width = config.width
+		height = config.height
+	else
+	-- if (header == mod.petframeHeader) then
 		width = config.pets_width
 		height = config.pets_height
 	end

@@ -161,9 +161,9 @@ function mod.create_all_tags(self)
 	oUF.Tags.Methods['bd:curhp'] = function(unit)
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
 		if (UnitIsDead(unit) or UnitIsGhost(unit)) then
-			return bdUI:numberize(hpMax)
+			return bdUI:numberize(hpMax, 1)
 		end
-		return bdUI:numberize(hp)
+		return bdUI:numberize(hp, 1)
 	end
 
 	-- hp color hex
