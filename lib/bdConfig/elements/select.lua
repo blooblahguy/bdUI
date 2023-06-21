@@ -13,8 +13,6 @@ local methods = {
 		self.save[self.key] = value
 
 		self.dropdown:populate()
-
-		self.callback(self.dropdown)
 	end,
 	-- return value from profile[key]
 	["get"] = function(self)

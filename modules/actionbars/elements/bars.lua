@@ -163,8 +163,6 @@ end
 -- StanceBar
 --===============================================================
 function mod:create_stancebar()
-	print("stance check")
-
 	NUM_STANCE_SLOTS = NUM_STANCE_SLOTS or 10
 
 	cfg = {}
@@ -191,7 +189,6 @@ function mod:create_stancebar()
 	stancebar:EnableMouse(false)
 
 	stancebar.callback = function()
-		-- print("stance check")
 		local stances = 0
 		-- todo: fire on event to make only the correct number of stance buttons
 		for i = 1, NUM_STANCE_SLOTS do
@@ -380,7 +377,7 @@ function mod:create_vehicle()
 
 	--[canexitvehicle] is not triggered on taxi, exit workaround
 	vehicle:SetAttribute("_onstate-exit", [[ if CanExitVehicle and CanExitVehicle() then self:Show() else self:Hide() end ]])
-	if CanExitVehicle and (not CanExitVehicle()) then vehicle:Hide() end
+	if not CanExitVehicle() then vehicle:Hide() end
 end
 
 --===============================================================

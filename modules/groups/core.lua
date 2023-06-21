@@ -88,8 +88,20 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
 
+
+	if (not config.pets_enable) then
+		mod.petsholder:Hide()
+		-- mod.petframeHeader:Hide()
+	else
+		mod.petsholder:Show()
+		-- mod.petframeHeader:Show()
+	end
+
 	if (not config.enabled_raid) then
+		mod.raidpartyholder:Hide()
 		return false
+	else
+		mod.raidpartyholder:Show()
 	end
 
 	mod.highlights = bdUI:lowercase_table(config.specialalerts)
@@ -103,16 +115,7 @@ function mod:config_callback()
 		update_frame(self)
 	end
 
-	if (not config.enabled_raid) then
-		mod.raidpartyholder:Hide()
-	end
-
-	if (not config.pets_enable) then
-		mod.petsholder:Hide()
-	end
-
-	mod.petsholder:Show()
-	mod.raidpartyholder:Show()
+	
 end
 
 --===============================================
@@ -699,9 +702,7 @@ function style_callback(self)
 	-- print(self.unit)
 end
 
-local function newlayout_test(...)
-	print("test", ...)
-end
+
 
 
 
