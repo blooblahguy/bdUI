@@ -317,8 +317,8 @@ function mod:config_callback()
 	if (InCombatLockdown()) then return end
 
 	-- font sizes
-	bufffont:SetFontObject(bdUI:get_font(config.bufffontsize, "THINOUTLINE"))
-	debufffont:SetFontObject(bdUI:get_font(config.debufffontsize, "THINOUTLINE"))
+	bufffont = bdUI:get_font(config.bufffontsize, "THINOUTLINE")
+	debufffont = bdUI:get_font(config.debufffontsize, "THINOUTLINE")
 
 	-- buffs
 	mod:update_buffs()
