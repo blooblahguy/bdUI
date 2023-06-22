@@ -92,7 +92,7 @@ function mod:config_callback()
 	config = mod.config
 
 
-	if (not config.pets_enable) then
+	if (not config.pets_frame_enable) then
 		mod.petsholder:Hide()
 		-- mod.petframeHeader:Hide()
 	else
@@ -112,7 +112,8 @@ function mod:config_callback()
 	-- prevent case where callback is called before frameHeader initialization
 	if (not mod.frameHeader) then return end
 
-	mod:resize_container(mod.frameHeader)
+	mod:resize_container(mod.frameHeader, config.width, config.height)
+	mod:resize_container(mod.petframeHeader, config.pets_width, config.pets_height)
 
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
@@ -669,7 +670,7 @@ function mod:update_header(header)
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
 
 	-- reize the container if necessary
-	mod:resize_container(header)
+	mod:resize_container(header, config.width, config.height)
 
 	-- growth/spacing
 	header:SetAttribute("columnAnchorPoint", new_group_anchor)
@@ -717,7 +718,7 @@ function mod:update_pet_header(header)
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
 
 	-- reize the container if necessary
-	mod:resize_container(header)
+	mod:resize_container(header, config.pets_width, config.pets_height)
 
 	-- growth/spacing
 	header:SetAttribute("columnAnchorPoint", new_group_anchor)
@@ -731,9 +732,6 @@ function mod:update_pet_header(header)
 
 	header:SetAttribute("yOffset", yOffset)
 	header:SetAttribute("xOffset", xOffset)
-
-	-- what to show
-	header:SetAttribute("showpartyleadericon", config.showpartyleadericon)
 	
 	-- when to show
 	header:SetAttribute("maxColumns", num_groups)
@@ -743,9 +741,17 @@ function mod:update_pet_header(header)
 	header:SetAttribute("initial-height", config.pets_height)
 	
 	-- grouping/sorting
-	-- header:SetAttribute("groupBy", group_by)
-	-- header:SetAttribute("groupingOrder", group_sort)
-	-- header:SetAttribute("sortMethod", sort_method)
+	header:SetAttribute("groupBy", false)
+	header:SetAttribute("groupingOrder", group_sort)
+	header:SetAttribute("sortMethod", sort_method)
+
+	-- local pets = {"pet"}
+	-- for i = 1, 40 do
+	-- 	table.insert(pets, "raidpet"..i)
+	-- 	table.insert(pets, "partypet"..i)
+	-- end
+	-- pets = table.concat(pets, ",")
+	-- header:SetAttribute("nameList", pets)
 end
 
 
@@ -799,22 +805,15 @@ function mod:initialize()
 		mod:update_header(mod.frameHeader)
 
 		-- header:SetAttribute("strictFiltering", true)
-		local pets = {"pet"}
-		for i = 1, 40 do
-			table.insert(pets, "raidpet"..i)
-			table.insert(pets, "partypet"..i)
-		end
-		pets = table.concat(pets, ",")
 
-		-- header:SetAttribute("nameList", pets)
 
 		-- header:SetAttribute("useOwnerUnit", true) -- the owner's unit string is set on managed frames "unit" attribute (instead of pet's)
 		-- header:SetAttribute("filterOnPet", true) -- pet names are used when sorting/filtering the list
-		mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid,party',
-			"showParty", true,
+		mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid',
+			"showParty", false,
 			"showSolo", false,
 			"showRaid", true,
-			"strictFiltering", true,
+			-- "strictFiltering", true,
 			"initial-scale", 1,
 			"unitsPerColumn", 5,
 			"columnSpacing", yOffset,
@@ -831,34 +830,15 @@ function mod:initialize()
 			-- "groupBy", group_by,
 			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.pets_width, config.pets_height)
 		)
-		-- mod.petframeHeader:SetAttribute("customFilter", function(self, unit)
-			-- Check if the unit is a pet
-			-- return UnitIsUnit(unit, unit.."pet")
-			-- local isPet = UnitIsUnit(unit, unit.."pet")
-			-- Check if the unit is a vehicle
-			-- local isVehicle = UnitHasVehicleUI(unit)
-			
-			-- Filter out vehicles and include pets
-			-- if isPet and not isVehicle then
-			-- return true
-			-- end
-			
-			-- Check if the unit is a player's pet
-			-- local owner = UnitGUID(unit.."pet")
-			-- if owner and UnitIsPlayer(owner) then
-			-- return true
-			-- end
-			
-			-- return false
-		-- end)
 
+		
 		mod.petframeHeader:SetPoint("CENTER", UIParent)
 
 		mod:update_pet_header(mod.petframeHeader)
 	end)
 
 	-- disable blizzard things
-	mod:disable_blizzard()
+	-- mod:disable_blizzard()
 end
 
 
@@ -908,87 +888,91 @@ function mod:create_containers()
 	pets_holder:SetScript("OnEvent", function(self, event, arg1)
 		if (event == "PLAYER_ENTERING_WORLD") then
 			C_Timer.After(2, function()
-				mod:update_header(mod.petframeHeader)
+				mod:update_pet_header(mod.petframeHeader)
 			end)
 		end
 
-		mod:update_header(mod.petframeHeader)
+		mod:update_pet_header(mod.petframeHeader)
 	end)
 
 	mod.petsholder = pets_holder
 end
 
-function mod:resize_container(header)
+function mod:resize_container(header, unit_width, unit_height)
 	header:ClearAllPoints();
 
-	local width
-	local height
-	if (header == mod.frameHeader) then
-		width = config.width
-		height = config.height
-	else
-	-- if (header == mod.petframeHeader) then
-		width = config.pets_width
-		height = config.pets_height
+	local num_groups = 5
+	if (bdUI.version >= 80000) then
+		num_groups = 4
 	end
 
-	local size = 5
-	if (bdUI.version >= 80000) then
-		size = 4
+	local container
+	if (header == mod.frameHeader) then
+		container = mod.raidpartyholder
+	else
+		container = mod.petsholder
+		num_groups = 2
 	end
+
+	local container_width
+	local container_height
+	local num_units = 5 -- this just for math readability
 
 	-- change where to start the growth of groups
 	if (config.group_growth == "Right") then
-		mod.raidpartyholder:SetSize(width*5+8, height*5+8)
+		container_width = unit_width * num_groups
+		container_height = unit_height * num_units
+
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
 		
 	elseif (config.group_growth == "Left") then
-		mod.raidpartyholder:SetSize(width*5+8, height*5+8)
+		container_width = unit_width * num_groups
+		container_height = unit_height * num_units
+
 		hgrowth = "RIGHT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
 		
 	elseif (config.group_growth == "Upwards") then
-		mod.raidpartyholder:SetSize(width*5+8, height*4+8)
+		container_width = unit_width * num_units
+		container_height = unit_height * num_groups
+
 		hgrowth = "LEFT"
 		vgrowth = "BOTTOM"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end
 		
 	elseif (config.group_growth == "Downwards") then
-		mod.raidpartyholder:SetSize(width*5+8, height*4+8)
+		container_width = unit_width * num_units
+		container_height = unit_height * num_groups
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end
 	end
 
-	if (header == mod.frameHeader) then
-		header:SetPoint(vgrowth..hgrowth, mod.raidpartyholder, vgrowth..hgrowth, 0, 0)
-	else
-		header:SetPoint(vgrowth..hgrowth, mod.petsholder, vgrowth..hgrowth, 0, 0)
-	end
-
+	container:SetSize(container_width + 8, container_height + 8)
+	header:SetPoint(vgrowth..hgrowth, container, vgrowth..hgrowth, 0, 0)
 end
 
 --==============================================
 -- Disable blizzard raid frames
 --==============================================
-function mod:disable_blizzard()
-	-- local addonDisabler = CreateFrame("frame", nil)
-	-- addonDisabler:RegisterEvent("ADDON_LOADED")
-	-- addonDisabler:RegisterEvent("PLAYER_REGEN_ENABLED")
-	-- addonDisabler:SetScript("OnEvent", function(self, event, addon)
-	-- 	if (InCombatLockdown()) then return end
+-- function mod:disable_blizzard()
+-- 	-- local addonDisabler = CreateFrame("frame", nil)
+-- 	-- addonDisabler:RegisterEvent("ADDON_LOADED")
+-- 	-- addonDisabler:RegisterEvent("PLAYER_REGEN_ENABLED")
+-- 	-- addonDisabler:SetScript("OnEvent", function(self, event, addon)
+-- 	-- 	if (InCombatLockdown()) then return end
 
-	-- 	if (CompactUnitFrameProfiles) then
-	-- 		-- CompactUnitFrameProfiles:UnregisterAllEvents()
-	-- 		-- CompactRaidFrameManagerContainerResizeFrame:Hide()
-	-- 	end
-	-- 	if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
-	-- 		-- CompactRaidFrameManager:UnregisterAllEvents() 
-	-- 		-- CompactRaidFrameContainer:UnregisterAllEvents() 
-	-- 	end
-	-- 	-- addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
-	-- end)
-end
+-- 	-- 	if (CompactUnitFrameProfiles) then
+-- 	-- 		-- CompactUnitFrameProfiles:UnregisterAllEvents()
+-- 	-- 		-- CompactRaidFrameManagerContainerResizeFrame:Hide()
+-- 	-- 	end
+-- 	-- 	if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
+-- 	-- 		-- CompactRaidFrameManager:UnregisterAllEvents() 
+-- 	-- 		-- CompactRaidFrameContainer:UnregisterAllEvents() 
+-- 	-- 	end
+-- 	-- 	-- addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
+-- 	-- end)
+-- end
