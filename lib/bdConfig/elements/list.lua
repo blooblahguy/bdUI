@@ -35,6 +35,7 @@ local methods = {
 		self.input:SetScript("OnUpdate",function(self, elapsed)
 			total = total + elapsed
 			if (total > 2.5) then
+				total = 0
 				self.alert:SetAlpha(self.alert:GetAlpha()-0.02)
 				
 				if (self.alert:GetAlpha() <= 0.05) then

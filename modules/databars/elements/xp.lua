@@ -39,13 +39,13 @@ function mod:create_xp()
 		local mxp = UnitXPMax("player")
 		local rxp = GetXPExhaustion("player")
 
-		if (event == "PLAYER_ENTERING_WORLD") then
-			if (UnitName("player") == "Update") then
-				C_Timer.After(2, function()
-					self:SetScript("OnUpdate", alert_can_level)
-				end)
-			end
-		end
+		-- if (event == "PLAYER_ENTERING_WORLD") then
+		-- 	if (UnitName("player") == "Update") then
+		-- 		C_Timer.After(2, function()
+		-- 			self:SetScript("OnUpdate", alert_can_level)
+		-- 		end)
+		-- 	end
+		-- end
 		-- alert_can_level()
 
 		-- make sure it's enabled

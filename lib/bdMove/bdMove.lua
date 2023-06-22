@@ -498,8 +498,13 @@ local function CreateFaderAnimation(frame)
 	frame.fader:HookScript("OnFinished", function(self)
 		self.__owner:SetAlpha(self.finAlpha)
 	end)
-	frame.fader:HookScript("OnUpdate", function(self)
-		self.__owner:SetAlpha(self.__animFrame:GetAlpha())
+	local total = 0
+	frame.fader:HookScript("OnUpdate", function(self, elapsed)
+		total = total + elapsed
+		if (total >= 0.05) then
+			total = 0
+			self.__owner:SetAlpha(self.__animFrame:GetAlpha())
+		end
 	end)
 end
 

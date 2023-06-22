@@ -157,20 +157,25 @@ end
 
 do
 	local deg, atan2 = math.deg, math.atan2
-	local function onUpdate(self)
-		local mx, my = Minimap:GetCenter()
-		local px, py = GetCursorPosition()
-		local scale = Minimap:GetEffectiveScale()
-		px, py = px / scale, py / scale
-		local pos = 225
-		if self.db then
-			pos = deg(atan2(py - my, px - mx)) % 360
-			self.db.minimapPos = pos
-		else
-			pos = deg(atan2(py - my, px - mx)) % 360
-			self.minimapPos = pos
+	local delay = 0
+	local function onUpdate(self, elapsed)
+		delay = delay + elapsed
+		if (delay >= 0.05) then
+			delay = 0
+			local mx, my = Minimap:GetCenter()
+			local px, py = GetCursorPosition()
+			local scale = Minimap:GetEffectiveScale()
+			px, py = px / scale, py / scale
+			local pos = 225
+			if self.db then
+				pos = deg(atan2(py - my, px - mx)) % 360
+				self.db.minimapPos = pos
+			else
+				pos = deg(atan2(py - my, px - mx)) % 360
+				self.minimapPos = pos
+			end
+			updatePosition(self, pos)
 		end
-		updatePosition(self, pos)
 	end
 
 	function onDragStart(self)
