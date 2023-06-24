@@ -809,27 +809,31 @@ function mod:initialize()
 
 		-- header:SetAttribute("useOwnerUnit", true) -- the owner's unit string is set on managed frames "unit" attribute (instead of pet's)
 		-- header:SetAttribute("filterOnPet", true) -- pet names are used when sorting/filtering the list
-		mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid',
-			"showParty", false,
-			"showSolo", false,
-			"showRaid", true,
-			-- "strictFiltering", true,
-			"initial-scale", 1,
-			"unitsPerColumn", 5,
-			"columnSpacing", yOffset,
-			"xOffset", xOffset,
-			"yOffset", yOffset,
-			"maxColumns", num_groups,
-			"maxColumns", pets,
-			-- "groupingOrder", group_sort,
-			-- "sortMethod", sort_method,
-			"columnAnchorPoint", new_group_anchor,
-			"initial-width", config.pets_width,
-			"initial-height", config.pets_height,
-			"point", new_player_anchor,
-			-- "groupBy", group_by,
-			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.pets_width, config.pets_height)
-		)
+		if (config.pets_frame_enable) then
+			mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid',
+				"showParty", false,
+				"showSolo", false,
+				"showRaid", true,
+				-- "strictFiltering", true,
+				"initial-scale", 1,
+				"unitsPerColumn", 5,
+				"columnSpacing", yOffset,
+				"xOffset", xOffset,
+				"yOffset", yOffset,
+				"maxColumns", num_groups,
+				"maxColumns", pets,
+				-- "groupingOrder", group_sort,
+				-- "sortMethod", sort_method,
+				"columnAnchorPoint", new_group_anchor,
+				"initial-width", config.pets_width,
+				"initial-height", config.pets_height,
+				"point", new_player_anchor,
+				-- "groupBy", group_by,
+				'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.pets_width, config.pets_height)
+			)
+		else
+			mod.petframeHeader = CreateFrame("frame", nil)
+		end
 
 		
 		mod.petframeHeader:SetPoint("CENTER", UIParent)

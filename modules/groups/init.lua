@@ -87,7 +87,7 @@ local config = {
 							-- 	size = "third"
 							-- },
 							{
-								key = "pets_enable",
+								key = "pets_frame_enable",
 								type = "toggle",
 								value = true,
 								label = "Enable pet frames",
