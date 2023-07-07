@@ -64,11 +64,13 @@ end
 --=========================================
 -- Main tooltip hook
 --=========================================
+
 local function update_unit_tooltip(self, unit)
 	if (self:IsForbidden() or self:IsProtected()) then return end -- don't mess with forbidden frames, which sometimes randomly happens
 
-	-- unit = not unit and GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
-	unit = "mouseover"
+	if (not unit) then
+		unit = GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
+	end
 
 	self.unit = unit
 	self.ilvl = nil
@@ -104,7 +106,15 @@ local function update_unit_tooltip(self, unit)
 
 		minwidth = math.max(minwidth, strlen(text) * 6.65)
 	end
-	self:SetMinimumWidth(math.min(minwidth, 110))
+	self:SetMinimumWidth(math.min(minwidth, 130))
+end
+
+local function retail_update_unit_tooltip(self, unitGUID)
+	if (self:IsForbidden() or self:IsProtected()) then return end
+
+	local name, unit, guid = TooltipUtil.GetDisplayedUnit(self)
+
+	update_unit_tooltip(self, unit)
 end
 
 function mod:create_tooltips()
@@ -169,7 +179,7 @@ function mod:create_tooltips()
 	-- hook main styling functions
 	--============================
 	if (TooltipDataProcessor) then
-		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, update_unit_tooltip);
+		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, retail_update_unit_tooltip);
 		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, add_ilvl);
 	else
 		GameTooltip:HookScript('OnTooltipSetUnit', update_unit_tooltip)

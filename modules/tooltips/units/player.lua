@@ -37,6 +37,7 @@ function mod:player_tooltip(self, unit)
 	end
 
 	-- Color level by difficulty
+	-- print(unit)
 	local level = UnitLevel(unit)
 	self.levelColor = GetQuestDifficultyColor(level)
 	if level == -1 then
