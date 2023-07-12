@@ -106,6 +106,14 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.Castbar.CastbarAttribute, true)
 
 	-- check if kickable
+
+
+
+
+
+
+
+	
 	self.Castbar.PostCastStart = castbar_kickable
 	self.Castbar.PostChannelStart = castbar_kickable
 	self.Castbar.PostCastNotInterruptible = castbar_kickable

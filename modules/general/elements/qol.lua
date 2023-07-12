@@ -95,11 +95,13 @@ function mod:create_qol()
 	ms.text:SetJustifyH("LEFT")
 	fps_location.ms = ms
 
-	hooksecurefunc("ToggleFramerate", function()
-		fps_location:SetShown(not fps_location:IsShown())
-		FramerateLabel:Hide()
-		FramerateText:Hide()
-	end)
+	if (ToggleFramerate) then
+		hooksecurefunc("ToggleFramerate", function()
+			fps_location:SetShown(not fps_location:IsShown())
+			FramerateLabel:Hide()
+			FramerateText:Hide()
+		end)
+	end
 
 
 end
