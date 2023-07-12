@@ -68,36 +68,36 @@ local function initialize()
 	mod.raid_holder = raid_party
 
 	-- send to factory
-	oUF:Factory(function(self)
-		self:SetActiveStyle('bdGrid')
+	-- oUF:Factory(function(self)
+	oUF:SetActiveStyle('bdGrid')
 
-		-- Initial header spawning
-		local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
+	-- Initial header spawning
+	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
 
-		-- ouf gives us secureheader
-		mod.frameHeader = self:SpawnHeader(nil, nil, 'raid,party,solo',
-			"showParty", true,
-			"showPlayer", true,
-			"showSolo", config.showSolo,
-			"showRaid", true,
-			"initial-scale", 1,
-			"unitsPerColumn", 5,
-			"columnSpacing", yOffset,
-			"xOffset", xOffset,
-			"yOffset", yOffset,
-			"maxColumns", num_groups,
-			"groupingOrder", group_sort,
-			"sortMethod", sort_method,
-			"columnAnchorPoint", new_group_anchor,
-			"initial-width", config.width,
-			"initial-height", config.height,
-			"point", new_player_anchor,
-			"groupBy", group_by,
-			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
-		)
+	-- ouf gives us secureheader
+	mod.frameHeader = oUF:SpawnHeader(nil, nil, 'raid,party,solo',
+		"showParty", true,
+		"showPlayer", true,
+		"showSolo", config.showSolo,
+		"showRaid", true,
+		"initial-scale", 1,
+		"unitsPerColumn", 5,
+		"columnSpacing", yOffset,
+		"xOffset", xOffset,
+		"yOffset", yOffset,
+		"maxColumns", num_groups,
+		"groupingOrder", group_sort,
+		"sortMethod", sort_method,
+		"columnAnchorPoint", new_group_anchor,
+		"initial-width", config.width,
+		"initial-height", config.height,
+		"point", new_player_anchor,
+		"groupBy", group_by,
+		'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
+	)
 
-		update_raid_header()
-	end)
+	update_raid_header()
+	-- end)
 end
 
 local function callback()
@@ -115,13 +115,16 @@ local function disable(_config)
 	mod.raid_holder:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
 
 	mod.raid_holder:Hide()
+	mod.frameHeader:SetAttribute("showParty", false)
+	mod.frameHeader:SetAttribute("showSolo", false)
+	mod.frameHeader:SetAttribute("showRaid", false)
 
 	return false
 end
 
 local function enable(_config)
 	config = _config
-	print("test", config)
+
 	-- run first time
 	if (not initialized) then
 		initialize()
@@ -135,6 +138,9 @@ local function enable(_config)
 
 	-- show the frame
 	mod.raid_holder:Show()
+	mod.frameHeader:SetAttribute("showParty", true)
+	mod.frameHeader:SetAttribute("showSolo", config.showSolo)
+	mod.frameHeader:SetAttribute("showRaid", true)
 
 	-- register callbacks
 	mod.raid_holder:RegisterEvent("PLAYER_REGEN_ENABLED")
