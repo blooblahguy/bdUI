@@ -65,27 +65,40 @@ local function update_frame(self)
 	self.Buffs.size = config.buffSize
 	self.Debuffs.size = config.debuffSize
 
-	if (config.showGroupNumbers and IsInRaid()) then
-		self.Group:Show()
-	else
-		self.Group:Hide()
-	end
 
+	-- range
 	self.Range = {
 		insideAlpha = config.inrangealpha,
 		outsideAlpha = config.outofrangealpha,
 	}
 
+	-- role
 	if (not config.roleicon) then
 		self.GroupRoleIndicator:Hide()
 	end
 
-	
+	-- groups numbers
 	if (config.showGroupNumbers and IsInRaid()) then
 		self.Group:Show()
 	else
 		self.Group:Hide()
 	end
+
+	-- frame coloring
+	if (config.invert) then
+		self.Health.colorClass = false
+		self.Health:SetStatusBarColor(unpack(bdUI.media.backdrop))
+		self.bdHealthPrediction.absorbBar:SetStatusBarColor(1, 1, 1, .1)
+		self.bdHealthPrediction.overAbsorb:SetStatusBarColor(1, 1, 1, .1)
+	else
+		self.Health.colorClass = true
+		self.Health._background:SetVertexColor(unpack(bdUI.media.backdrop))
+		self.Short:SetTextColor(1, 1, 1)
+		self.bdHealthPrediction.absorbBar:SetStatusBarColor(0, 0, 0, .4)
+		self.bdHealthPrediction.overAbsorb:SetStatusBarColor(0, 0, 0, .4)
+	end
+
+	-- self.Health:ForceUpdate()
 end
 
 
@@ -150,23 +163,16 @@ local function layout(self, unit)
 	self.Health.colorReaction = true
 	self.Health.colorHealth = true
 	bdUI:set_backdrop(self.Health)
+
 	function self.Health.PostUpdateColor(s, unit, r, g, b)
-		-- local r, g, b = self.Health:GetStatusBarColor()
+		local r, g, b = self.Health:GetStatusBarColor()
 		if (r == nil) then return end
-		local bg = bdUI.media.backdrop
 		
 		if (config.invert) then
-			self.Health:SetStatusBarColor(unpack(bdUI.media.backdrop))
 			self.Health._background:SetVertexColor(r / 2, g / 2, b / 2)
-			self.Short:SetTextColor(r*1.1, g*1.1, b*1.1)
-			self.bdHealthPrediction.absorbBar:SetStatusBarColor(1, 1, 1, .1)
-			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(1, 1, 1, .1)
+			self.Short:SetTextColor(r * 1.1, g * 1.1, b * 1.1)
 		else
 			self.Health:SetStatusBarColor(r / 1.5, g / 1.5, b / 1.5)
-			self.Health._background:SetVertexColor(unpack(bdUI.media.backdrop))
-			self.Short:SetTextColor(1, 1, 1)
-			self.bdHealthPrediction.absorbBar:SetStatusBarColor(0, 0, 0, .4)
-			self.bdHealthPrediction.overAbsorb:SetStatusBarColor(0, 0, 0, .4)
 		end
 	end
 
