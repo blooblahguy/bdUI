@@ -36,6 +36,8 @@ local function update_frame(self)
 
 	self:SetSize(config.width, config.height)
 	self.Short:SetWidth(config.width)
+
+	-- pets
 	if (parent == "oUF_bdGridRaid2") then
 		self:SetSize(config.pets_width, config.pets_height)
 		self.Short:SetWidth(config.pets_width)
@@ -91,35 +93,11 @@ function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
 
-
-	if (not config.pets_frame_enable) then
-		mod.petsholder:Hide()
-		-- mod.petframeHeader:Hide()
-	else
-		mod.petsholder:Show()
-		-- mod.petframeHeader:Show()
-	end
-
-	if (not config.enabled_raid) then
-		mod.raidpartyholder:Hide()
-		return false
-	else
-		mod.raidpartyholder:Show()
-	end
-
 	mod.highlights = bdUI:lowercase_table(config.specialalerts)
-	
-	-- prevent case where callback is called before frameHeader initialization
-	if (not mod.frameHeader) then return end
-
-	mod:resize_container(mod.frameHeader, config.width, config.height)
-	mod:resize_container(mod.petframeHeader, config.pets_width, config.pets_height)
 
 	for k, self in pairs(mod.frames) do
 		update_frame(self)
 	end
-
-	
 end
 
 --===============================================
@@ -127,6 +105,7 @@ end
 --===============================================
 local index = 0;
 local function layout(self, unit)
+	
 	self:RegisterForClicks('AnyDown')
 	index = index + 1
 	self.index = index
@@ -140,7 +119,7 @@ local function layout(self, unit)
 	else
 		self.unit = unit
 	end
-	
+
 	-- Disable tooltips			
 	self:SetScript('OnEnter', function(self)
 		-- self.Health.highlight:Show()
@@ -632,7 +611,6 @@ function mod:get_attributes()
 		[170] = 5, -- Path of Ascension: Wisdom	scenario
 		[171] = 5, -- Path of Ascension: Humility	scenario
 	}
-
 	
 	num_groups = config.num_groups
 	if (config.intel_groups) then
@@ -656,104 +634,8 @@ function mod:get_attributes()
 	xOffset = bdUI.pixel * (xOffset or 2)
 	yOffset = bdUI.pixel * (yOffset or 2)
 
-	-- print(xOffset)
-
 	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 end
-
---======================================================
--- Update the raidframe header with new configuration values
---======================================================
-function mod:update_header(header)
-	if (InCombatLockdown()) then return end
-
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
-
-	-- reize the container if necessary
-	mod:resize_container(header, config.width, config.height)
-
-	-- growth/spacing
-	header:SetAttribute("columnAnchorPoint", new_group_anchor)
-	header:SetAttribute("point", new_player_anchor)
-
-	if (config.group_growth == "Right") then
-		header:SetAttribute("columnSpacing", xOffset)
-	else
-		header:SetAttribute("columnSpacing", -yOffset)
-	end
-
-	header:SetAttribute("yOffset", yOffset)
-	header:SetAttribute("xOffset", xOffset)
-
-	-- what to show
-	header:SetAttribute("showpartyleadericon", config.showpartyleadericon)
-	
-	-- when to show
-	header:SetAttribute("showSolo", config.showsolo)
-	header:SetAttribute("maxColumns", num_groups)
-	
-	-- width/height
-	header:SetAttribute("initial-width", config.width)
-	header:SetAttribute("initial-height", config.height)
-	
-	-- grouping/sorting
-	header:SetAttribute("groupBy", group_by)
-	header:SetAttribute("groupingOrder", group_sort)
-	header:SetAttribute("sortMethod", sort_method)
-end
-
-local function GetPetUnit(kind, index)
-	if ( kind == "RAID" ) then
-		return "raidpet"..index;
-	elseif ( index > 0 ) then
-		return "partypet"..index;
-	else
-		return "pet";
-	end
-end
-
-function mod:update_pet_header(header)
-	if (InCombatLockdown()) then return end
-
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
-
-	-- reize the container if necessary
-	mod:resize_container(header, config.pets_width, config.pets_height)
-
-	-- growth/spacing
-	header:SetAttribute("columnAnchorPoint", new_group_anchor)
-	header:SetAttribute("point", new_player_anchor)
-
-	if (config.group_growth == "Right") then
-		header:SetAttribute("columnSpacing", xOffset)
-	else
-		header:SetAttribute("columnSpacing", -yOffset)
-	end
-
-	header:SetAttribute("yOffset", yOffset)
-	header:SetAttribute("xOffset", xOffset)
-	
-	-- when to show
-	header:SetAttribute("maxColumns", num_groups)
-	
-	-- width/height
-	header:SetAttribute("initial-width", config.pets_width)
-	header:SetAttribute("initial-height", config.pets_height)
-	
-	-- grouping/sorting
-	header:SetAttribute("groupBy", false)
-	header:SetAttribute("groupingOrder", group_sort)
-	header:SetAttribute("sortMethod", sort_method)
-
-	-- local pets = {"pet"}
-	-- for i = 1, 40 do
-	-- 	table.insert(pets, "raidpet"..i)
-	-- 	table.insert(pets, "partypet"..i)
-	-- end
-	-- pets = table.concat(pets, ",")
-	-- header:SetAttribute("nameList", pets)
-end
-
 
 --======================================================
 -- Initialize
@@ -762,160 +644,30 @@ function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
 
-	-- exit if not initialized
-	if (not config.enabled_raid) then return false end
+	-- style that all frames will use (raid, party, pet, arena)
+	oUF:RegisterStyle('bdGrid', layout)
 
+	-- bring auras to lowercase
 	mod.highlights = bdUI:lowercase_table(config.specialalerts)
 
 	-- make sure we can store grid aliases
 	bdUI.persistent.GridAliases = bdUI.persistent.GridAliases or {}
-
-	-- hold the raid and pet frames
-	mod:create_containers()
-
-	-- send to factory
-	oUF:RegisterStyle('bdGrid', layout)
-	oUF:Factory(function(self)
-		self:SetActiveStyle('bdGrid')
-
-		-- Initial header spawning
-		local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
-
-		mod.frameHeader = self:SpawnHeader(nil, nil, 'raid,party,solo',
-			"showParty", true,
-			"showPlayer", true,
-			"showSolo", config.showSolo,
-			"showRaid", true,
-			"initial-scale", 1,
-			"unitsPerColumn", 5,
-			"columnSpacing", yOffset,
-			"xOffset", xOffset,
-			"yOffset", yOffset,
-			"maxColumns", num_groups,
-			"groupingOrder", group_sort,
-			"sortMethod", sort_method,
-			"columnAnchorPoint", new_group_anchor,
-			"initial-width", config.width,
-			"initial-height", config.height,
-			"point", new_player_anchor,
-			"groupBy", group_by,
-			'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
-		)
-
-		mod:update_header(mod.frameHeader)
-
-		-- header:SetAttribute("strictFiltering", true)
-
-
-		-- header:SetAttribute("useOwnerUnit", true) -- the owner's unit string is set on managed frames "unit" attribute (instead of pet's)
-		-- header:SetAttribute("filterOnPet", true) -- pet names are used when sorting/filtering the list
-		if (config.pets_frame_enable) then
-			mod.petframeHeader = self:SpawnHeader(nil, "SecureGroupPetHeaderTemplate", 'raid',
-				"showParty", false,
-				"showSolo", false,
-				"showRaid", true,
-				-- "strictFiltering", true,
-				"initial-scale", 1,
-				"unitsPerColumn", 5,
-				"columnSpacing", yOffset,
-				"xOffset", xOffset,
-				"yOffset", yOffset,
-				"maxColumns", num_groups,
-				"maxColumns", pets,
-				-- "groupingOrder", group_sort,
-				-- "sortMethod", sort_method,
-				"columnAnchorPoint", new_group_anchor,
-				"initial-width", config.pets_width,
-				"initial-height", config.pets_height,
-				"point", new_player_anchor,
-				-- "groupBy", group_by,
-				'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.pets_width, config.pets_height)
-			)
-		else
-			mod.petframeHeader = CreateFrame("frame", nil)
-		end
-
-		
-		mod.petframeHeader:SetPoint("CENTER", UIParent)
-
-		mod:update_pet_header(mod.petframeHeader)
-	end)
 
 	-- disable blizzard things
 	-- mod:disable_blizzard()
 end
 
 
---===============================================
--- Raid container, match layout of groups
---===============================================
-function mod:create_containers()
-
-	-- raid and party
-	local raid_party = CreateFrame('frame', "bdGrid", UIParent)
-	raid_party:SetSize(config['width'], config['height']*5)
-	raid_party:SetPoint("LEFT", UIParent, "LEFT", 10, -90)
-	bdMove:set_moveable(raid_party, "Raid Frames")
-
-	-- register events for resizing the box/group size
-	raid_party:RegisterEvent("PLAYER_REGEN_ENABLED")
-	raid_party:RegisterEvent("PLAYER_ENTERING_WORLD")
-	raid_party:RegisterEvent("RAID_ROSTER_UPDATE")
-	raid_party:RegisterEvent("GROUP_JOINED")
-	raid_party:RegisterEvent("GROUP_ROSTER_UPDATE")
-	raid_party:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	raid_party:SetScript("OnEvent", function(self, event, arg1)
-		if (event == "PLAYER_ENTERING_WORLD") then
-			C_Timer.After(2, function()
-				mod:update_header(mod.frameHeader)
-			end)
-		end
-
-		mod:update_header(mod.frameHeader)
-	end)
-
-	mod.raidpartyholder = raid_party
-
-	-- pets
-	local pets_holder = CreateFrame('frame', "bdGridPets", UIParent)
-	pets_holder:SetSize(config['width'], config['height']*5)
-	pets_holder:SetPoint("LEFT", raid_party, "RIGHT", 10, 0)
-	bdMove:set_moveable(pets_holder, "Pet Frames")
-
-	-- register events for resizing the box/group size
-	pets_holder:RegisterEvent("PLAYER_REGEN_ENABLED")
-	pets_holder:RegisterEvent("PLAYER_ENTERING_WORLD")
-	pets_holder:RegisterEvent("RAID_ROSTER_UPDATE")
-	pets_holder:RegisterEvent("GROUP_JOINED")
-	pets_holder:RegisterEvent("GROUP_ROSTER_UPDATE")
-	pets_holder:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	pets_holder:SetScript("OnEvent", function(self, event, arg1)
-		if (event == "PLAYER_ENTERING_WORLD") then
-			C_Timer.After(2, function()
-				mod:update_pet_header(mod.petframeHeader)
-			end)
-		end
-
-		mod:update_pet_header(mod.petframeHeader)
-	end)
-
-	mod.petsholder = pets_holder
-end
-
-function mod:resize_container(header, unit_width, unit_height)
+-- resizes the given container so that it outlines how many groups/units are in
+function mod:resize_container(header, container, unit_width, unit_height, num_groups)
 	header:ClearAllPoints();
 
-	local num_groups = 5
-	if (bdUI.version >= 80000) then
-		num_groups = 4
-	end
-
-	local container
-	if (header == mod.frameHeader) then
-		container = mod.raidpartyholder
-	else
-		container = mod.petsholder
-		num_groups = 2
+	-- default group size
+	if (not num_groups) then
+		num_groups = 5
+		if (bdUI.version >= 80000) then
+			num_groups = 4
+		end
 	end
 
 	local container_width

@@ -182,6 +182,10 @@ modules\groups\core.lua
 modules\groups\elements\alias.lua
 modules\groups\elements\tags.lua
 modules\groups\elements\dispel_glow.lua
+modules\groups\units\raid.lua
+modules\groups\units\arena.lua
+modules\groups\units\pets.lua
+modules\groups\units\party.lua
 
 # Maps
 modules\maps\config.lua
