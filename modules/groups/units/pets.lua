@@ -98,6 +98,7 @@ local function callback()
 end
 
 local function disable(_config)
+	if (not mod.petframeHeader) then return end
 	config = _config
 	mod.pets_holder:RegisterEvent("PLAYER_REGEN_ENABLED")
 	mod.pets_holder:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -117,15 +118,16 @@ end
 
 local function enable(_config)
 	config = _config
-	-- run first time
-	if (not initialized) then
-		initialize()
-		initialized = true
-	end
 
 	-- disable it
 	if (not config.pets_frame_enable) then
 		return false
+	end
+
+	-- run first time
+	if (not initialized) then
+		initialize()
+		initialized = true
 	end
 
 	-- show the frame

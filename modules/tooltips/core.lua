@@ -72,6 +72,8 @@ local function update_unit_tooltip(self, unit)
 		unit = GetMouseFocus() and GetMouseFocus():GetAttribute("unit") or unit
 	end
 
+	-- unit = unit or "mouseover"
+
 	self.unit = unit
 	self.ilvl = nil
 	self.spec = nil

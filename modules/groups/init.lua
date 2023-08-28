@@ -89,7 +89,7 @@ local config = {
 							{
 								key = "pets_frame_enable",
 								type = "toggle",
-								value = true,
+								value = false,
 								label = "Enable pet frames",
 								size = "full"
 							},

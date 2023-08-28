@@ -106,6 +106,7 @@ local function callback()
 end
 
 local function disable(_config)
+	if (not mod.frameHeader) then return end
 	config = _config
 	mod.raid_holder:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	mod.raid_holder:UnregisterEvent("PLAYER_ENTERING_WORLD")
@@ -125,15 +126,15 @@ end
 local function enable(_config)
 	config = _config
 
+	-- disable it
+	if (not config.enabled_raid) then
+		return false
+	end
+
 	-- run first time
 	if (not initialized) then
 		initialize()
 		initialized = true
-	end
-
-	-- disable it
-	if (not config.enabled_raid) then
-		return false
 	end
 
 	-- show the frame
