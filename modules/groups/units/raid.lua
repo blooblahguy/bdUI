@@ -107,6 +107,7 @@ end
 
 local function disable(_config)
 	if (not mod.frameHeader) then return end
+
 	config = _config
 	mod.raid_holder:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	mod.raid_holder:UnregisterEvent("PLAYER_ENTERING_WORLD")
