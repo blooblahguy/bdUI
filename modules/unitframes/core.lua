@@ -118,44 +118,44 @@ local function layout(self, unit)
 	-- Healing & Damage Absorbs
 	--===============================================
 	-- Heal predections
-    local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
+	local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
 	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
 	incomingHeals:SetStatusBarColor(0.6,1,0.6,.2)
 	incomingHeals:Hide()
 
 	-- Damage Absorbs
-    local absorbBar = CreateFrame('StatusBar', nil, self.Health)
+	local absorbBar = CreateFrame('StatusBar', nil, self.Health)
 	absorbBar:SetStatusBarTexture(bdUI.media.flat)
 	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
 	absorbBar:Hide()
 	local overAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overAbsorbBar:SetAllPoints()
+	overAbsorbBar:SetAllPoints()
 	overAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overAbsorbBar:SetStatusBarColor(.1, .1, .2, .6)
 	overAbsorbBar:Hide()
 
 	-- Healing Absorbs
-    local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    healAbsorbBar:SetReverseFill(true)
+	local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
+	healAbsorbBar:SetReverseFill(true)
 	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 	healAbsorbBar:Hide()
 	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overHealAbsorbBar:SetReverseFill(true)
+	overHealAbsorbBar:SetReverseFill(true)
 	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
 	overHealAbsorbBar:Hide()
 
 	-- Register and callback
-    self.bdHealthPrediction = {
-        incomingHeals = incomingHeals,
+	self.bdHealthPrediction = {
+		incomingHeals = incomingHeals,
 
-        absorbBar = absorbBar,
+		absorbBar = absorbBar,
 		overAbsorb = overAbsorbBar,
 
-        healAbsorbBar = healAbsorbBar,
-        overHealAbsorb = overHealAbsorbBar,
-    }
+		healAbsorbBar = healAbsorbBar,
+		overHealAbsorb = overHealAbsorbBar,
+	}
 
 	-- Name & Text
 	self.TextHolder = CreateFrame('frame', nil, self.Health)
