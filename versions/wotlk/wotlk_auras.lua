@@ -97,6 +97,45 @@ raidauras["Expose Weakness"] = true
 raidauras["Acid-Drenched Mandibles"] = true
 raidauras["Freezing Slash"] = true
 
+-- ICC
+raidauras["Impaled"] = true
+raidauras["Touch of Insignificance"] = true
+raidauras["Death and Decay"] = true
+special["Dominate Mind"] = true
+raidauras["Rending Throw"] = true
+raidauras["Wounding Strike"] = true
+raidauras["Rune of Blood"] = true
+raidauras["Boiling Blood"] = true
+special["Mark of the Fallen Champion"] = true
+special["Gas Spore"] = true
+raidauras["Gastric Bloat"] = true
+raidauras["Inoculated"] = true
+raidauras["Vile Gas"] = true
+special["Mutated Infection"] = true
+raidauras["Plague Sickness"] = true
+raidauras["Unbound Plague"] = true
+raidauras["Gas Variable"] = true
+raidauras["Ooze Variable"] = true
+special["Volatile Ooze Adhesive"] = true
+raidauras["Shadow Prison"] = true
+raidauras["Shadow Resonance"] = true
+raidauras["Delirious Slash"] = true
+special["Pact of the Darkfallen"] = true
+raidauras["Blood Mirror"] = true
+raidauras["Twisted Nightmares"] = true
+raidauras["Chilled to the Bone"] = true
+raidauras["Unchained Magic"] = true
+raidauras["Instability"] = true
+raidauras["Ice Tomb"] = true
+raidauras["Asphyxiation"] = true
+raidauras["Mystic Buffet"] = true
+special["Frost Beacon"] = true
+raidauras["Soul Shriek"] = true
+special["Infest"] = true
+special["Defile"] = true
+raidauras["Soul Reaper"] = true
+
+
 -- lowercase these
 raidauras = bdUI:lowercase_table(raidauras)
 special = bdUI:lowercase_table(special)
