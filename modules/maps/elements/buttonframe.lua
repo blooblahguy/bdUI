@@ -20,6 +20,10 @@ manualTarget['ZygorGuidesViewerMapIcon'] = true
 manualTarget['MiniMapBattlefieldFrame'] = true
 manualTarget['PeggledMinimapIcon'] = true
 manualTarget['QueueStatusMinimapButton'] = true
+manualTarget['MiniMapLFGFrame'] = true
+if (MiniMapLFGFrame) then
+	MiniMapLFGFrame:SetParent(Minimap)
+end
 
 -- don't touch these
 ignoreFrames['bdMinimap'] = true
