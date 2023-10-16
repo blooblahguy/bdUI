@@ -157,7 +157,7 @@ function bdUI:kill(frame)
 end
 
 local lockedFrames = {}
-function bdUI:LockParent(frame, parent)
+local function LockParent(frame, parent)
 	if lockedFrames[frame] and parent ~= bdUI.hidden then
 		frame:SetParent(bdUI.hidden)
 	end
@@ -166,15 +166,14 @@ end
 function bdUI:HideFrame(frame, doNotReparent)
 	if not frame then return end
 
-	local lockParent = doNotReparent == 1
-	if lockParent or not doNotReparent then
-		local originalParent = frame:GetParent()
-		frame:SetParent(bdUI.hidden)
+	-- local lockParent = doNotReparent == 1
+	-- print("hide frame")
+	local originalParent = frame:GetParent()
+	frame:SetParent(bdUI.hidden)
 
-		if lockParent and not lockedFrames[frame] then
-			hooksecurefunc(frame, 'SetParent', LockParent)
-			lockedFrames[frame] = originalParent
-		end
+	if not doNotReparent and not lockedFrames[frame] then
+		hooksecurefunc(frame, 'SetParent', LockParent)
+		lockedFrames[frame] = originalParent
 	end
 end
 

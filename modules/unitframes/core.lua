@@ -18,6 +18,28 @@ RegisterStateDriver(UFParent, 'visibility', '[petbattle] hide; show')
 local uf_holder = CreateFrame('Frame', nil, UFParent)
 uf_holder:SetFrameStrata('LOW')
 
+function mod:disable_castbars()
+	if (CastingBarFrame_SetUnit) then
+		CastingBarFrame_SetUnit(_G.CastingBarFrame)
+		CastingBarFrame_SetUnit(_G.PetCastingBarFrame)
+	else
+		bdUI:HideFrame(_G.CastingBarFrame)
+		bdUI:HideFrame(_G.PlayerCastingBarFrame)
+		bdUI:HideFrame(_G.PetCastingBarFrame)		
+	end
+end
+
+function mod:enable_castbars()
+	if (CastingBarFrame_SetUnit) then
+		CastingBarFrame_OnLoad(_G.CastingBarFrame, 'player', true, false)
+		PetCastingBarFrame_OnLoad(_G.PetCastingBarFrame)
+	else
+		bdUI:UnHideFrame(_G.CastingBarFrame)
+		bdUI:UnHideFrame(_G.PlayerCastingBarFrame)
+		bdUI:UnHideFrame(_G.PetCastingBarFrame)
+	end
+end
+
 --===============================================
 -- Config callback
 --===============================================
@@ -35,13 +57,9 @@ function mod:config_callback()
 		end
 
 		if (config.enablecastbars) then
-			bdUI:HideFrame(_G.CastingBarFrame)
-			bdUI:HideFrame(_G.PlayerCastingBarFrame)
-			bdUI:HideFrame(_G.PetCastingBarFrame)
+			mod:disable_castbars()
 		else
-			bdUI:UnHideFrame(_G.CastingBarFrame)
-			bdUI:UnHideFrame(_G.PlayerCastingBarFrame)
-			bdUI:UnHideFrame(_G.PetCastingBarFrame)
+			mod:enable_castbars()
 		end
 
 		-- tags

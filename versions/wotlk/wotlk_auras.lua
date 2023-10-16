@@ -98,42 +98,84 @@ raidauras["Acid-Drenched Mandibles"] = true
 raidauras["Freezing Slash"] = true
 
 -- ICC
+-- marrowgar
 raidauras["Impaled"] = true
+
+-- deathwhisper
+raidauras["Curse of Torpor"] = true
 raidauras["Touch of Insignificance"] = true
 raidauras["Death and Decay"] = true
 special["Dominate Mind"] = true
+
+-- gunship
 raidauras["Rending Throw"] = true
 raidauras["Wounding Strike"] = true
+
+-- saurfang
 raidauras["Rune of Blood"] = true
 raidauras["Boiling Blood"] = true
 special["Mark of the Fallen Champion"] = true
+
+--festergut
 special["Gas Spore"] = true
 raidauras["Gastric Bloat"] = true
-raidauras["Inoculated"] = true
 raidauras["Vile Gas"] = true
+raidauras["Inoculated"] = true
+
+-- rotface
 special["Mutated Infection"] = true
+
+-- putricide
 raidauras["Plague Sickness"] = true
+special["Mutated Plague"] = true
 raidauras["Unbound Plague"] = true
 raidauras["Gas Variable"] = true
 raidauras["Ooze Variable"] = true
+raidauras["Gaseous Bloat"] = true
 special["Volatile Ooze Adhesive"] = true
+
+-- council
 raidauras["Shadow Prison"] = true
 raidauras["Shadow Resonance"] = true
 raidauras["Delirious Slash"] = true
+raidauras["Glittering Sparks"] = true
+
+-- queen
 special["Pact of the Darkfallen"] = true
 raidauras["Blood Mirror"] = true
 raidauras["Twisted Nightmares"] = true
+raidauras["Swarming Shadows"] = true
+raidauras["Soul Shriek"] = true
+
+-- sindragosa
 raidauras["Chilled to the Bone"] = true
 raidauras["Unchained Magic"] = true
 raidauras["Instability"] = true
 raidauras["Ice Tomb"] = true
+special["Frost Beacon"] = true
 raidauras["Asphyxiation"] = true
 raidauras["Mystic Buffet"] = true
-special["Frost Beacon"] = true
-raidauras["Soul Shriek"] = true
+
+-- lk
 special["Infest"] = true
 special["Defile"] = true
+special["Necrotic Plague"] = true
 raidauras["Soul Reaper"] = true
+raidauras["Pain and Suffering"] = true
+raidauras["Harvest Soul"] = true
+
+-- valithria
+raidauras["Gut Spray"] = true
+
+
+-- ICC TRASH
+raidauras["Shield Bash"] = true
+raidauras["Web Wrap"] = true
+raidauras["Consuming Shadows"] = true
+raidauras["Dark Reckoning"] = true
+raidauras["Focused Attacks"] = true
+raidauras["Mortal Wound"] = true
+
 
 
 -- lowercase these

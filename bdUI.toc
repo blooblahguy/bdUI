@@ -45,6 +45,7 @@ lib\ace\LibSimpleSticky.lua
 lib\ace\LibDataBroker-1.1.lua
 lib\ace\LibDBIcon-1.0.lua
 lib\ace\LibChatAnims.lua
+lib\ace\LibDispel.lua
 
 # game versions
 versions\dragonflight\frames.lua
