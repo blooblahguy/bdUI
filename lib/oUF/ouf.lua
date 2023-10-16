@@ -1,5 +1,6 @@
 local parent, ns = ...
-local global = GetAddOnMetadata and GetAddOnMetadata(parent, 'X-oUF') or C_AddOns.GetAddOnMetadata(parent, 'X-oUF')
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+local global = GetAddOnMetadata(parent, 'X-oUF')
 local _VERSION = '@project-version@'
 if(_VERSION:find('project%-version')) then
 	_VERSION = 'devel'
@@ -26,11 +27,13 @@ local unpack, tinsert, tremove = unpack, tinsert, tremove
 local next, time, wipe, type = next, time, wipe, type
 local select, pairs, ipairs = select, pairs, ipairs
 local strupper, strsplit = strupper, strsplit
+local hooksecurefunc = hooksecurefunc
 
 local SecureButton_GetUnit = SecureButton_GetUnit
 local SecureButton_GetModifiedUnit = SecureButton_GetModifiedUnit
 local GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
 
+local PingableType_UnitFrameMixin = PingableType_UnitFrameMixin
 local SecureHandlerSetFrameRef = SecureHandlerSetFrameRef
 local RegisterAttributeDriver = RegisterAttributeDriver
 local UnregisterUnitWatch = UnregisterUnitWatch
@@ -39,12 +42,12 @@ local CreateFrame = CreateFrame
 local IsLoggedIn = IsLoggedIn
 local UnitGUID = UnitGUID
 local SetCVar = SetCVar
+local Mixin = Mixin
 -- end
 
 local UFParent = CreateFrame('Frame', (global or parent) .. 'Parent', UIParent, 'SecureHandlerStateTemplate')
 UFParent:SetFrameStrata('LOW')
 RegisterStateDriver(UFParent, 'visibility', '[petbattle] hide; show')
-oUF.UFParent = UFParent
 
 local function updateActiveUnit(self, event)
 	-- Calculate units to work with
@@ -171,6 +174,21 @@ for k, v in next, {
 		return active and active[name]
 	end,
 
+	--[[ frame:SetEnabled(enabled, asState)
+	* self    - unit frame
+	* enabled - on or off
+	* asState - if true, the frame's "state-unitexists" attribute will be set to a boolean value denoting whether the
+	            unit exists; if false, the frame will be shown if its unit exists, and hidden if it does not (boolean)
+	--]]
+	SetEnabled = function(self, enabled, asState)
+		if enabled then
+			RegisterUnitWatch(self, asState)
+		else
+			UnregisterUnitWatch(self)
+			self:Hide()
+		end
+	end,
+
 	--[[ frame:Enable(asState)
 	Used to toggle the visibility of a unit frame based on the existence of its unit. This is a reference to
 	`RegisterUnitWatch`.
@@ -268,9 +286,9 @@ end
 -- boss6-8 exsist in some encounters, but unit event registration seems to be
 -- completely broken for them, so instead we use OnUpdate to update them.
 local eventlessUnits = {
-	['boss6'] = true,
-	['boss7'] = true,
-	['boss8'] = true,
+	boss6 = true,
+	boss7 = true,
+	boss8 = true
 }
 
 local function isEventlessUnit(unit)
@@ -297,6 +315,18 @@ local function initObject(unit, style, styleFunc, header, ...)
 		-- Expose the frame through oUF.objects.
 		tinsert(objects, object)
 
+		--[[ frame.IsPingable
+		This boolean can be set to false to disable the frame from being pingable. Enabled by default.
+		--]]
+		--[[ Override: frame:GetContextualPingType()
+		Used to define which contextual ping is used for the frame.
+		By default this wraps `C_Ping.GetContextualPingTypeForUnit(UnitGUID(frame.unit))`.
+		--]]
+		if PingableType_UnitFrameMixin then
+			object:SetAttribute('ping-receiver', true)
+			Mixin(object, PingableType_UnitFrameMixin)
+		end
+
 		-- We have to force update the frames when PEW fires.
 		-- It's also important to evaluate units before running an update
 		-- because sometimes events that are required for unit updates end up
@@ -322,12 +352,11 @@ local function initObject(unit, style, styleFunc, header, ...)
 			-- No header means it's a frame created through :Spawn().
 			object:SetAttribute('*type1', 'target')
 			object:SetAttribute('*type2', 'togglemenu')
+			object:SetAttribute('toggleForVehicle', true)
 
 			if(isEventlessUnit(objectUnit)) then
 				oUF:HandleEventlessUnit(object)
 			else
-				-- No need to enable this for eventless units.
-				object:SetAttribute('toggleForVehicle', true)
 				oUF:HandleUnit(object)
 			end
 		else
@@ -785,11 +814,7 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 	-- and because forbidden nameplates exist, we have to allow default nameplate
 	-- driver to create, update, and remove Blizz nameplates.
 	-- Disable only not forbidden nameplates.
-	_G.NamePlateDriverFrame:HookScript('OnEvent', function(_, event, unit)
-		if(event == 'NAME_PLATE_UNIT_ADDED' and unit) then
-			self:DisableBlizzard(unit)
-		end
-	end)
+	hooksecurefunc(_G.NamePlateDriverFrame, 'AcquireUnitFrame', oUF.DisableNamePlate)
 
 	local eventHandler = CreateFrame('Frame', 'oUF_NamePlateDriver')
 	eventHandler:RegisterEvent('NAME_PLATE_UNIT_ADDED')
@@ -816,13 +841,15 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 			end
 		elseif(event == 'PLAYER_TARGET_CHANGED') then
 			local nameplate = GetNamePlateForUnit('target')
+			local unitFrame = nameplate and nameplate.unitFrame
+
 			if(nameplateCallback) then
-				nameplateCallback(nameplate and nameplate.unitFrame, event, 'target')
+				nameplateCallback(unitFrame, event, 'target')
 			end
 
 			-- UAE is called after the callback to reduce the number of
 			-- ForceUpdate calls layout devs have to do themselves
-			if(nameplate) then
+			if unitFrame and unitFrame.UpdateAllElements then
 				nameplate.unitFrame:UpdateAllElements(event)
 			end
 		elseif(event == 'UNIT_FACTION' and unit) then
@@ -858,7 +885,9 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 
 			-- UAE is called after the callback to reduce the number of
 			-- ForceUpdate calls layout devs have to do themselves
-			nameplate.unitFrame:UpdateAllElements(event)
+			if nameplate.unitFrame.UpdateAllElements then
+				nameplate.unitFrame:UpdateAllElements(event)
+			end
 		elseif(event == 'NAME_PLATE_UNIT_REMOVED' and unit) then
 			local nameplate = GetNamePlateForUnit(unit)
 			if(not nameplate) then return end
@@ -931,7 +960,7 @@ do -- ShouldSkipAuraUpdate by Blizzard (implemented and heavily modified by Simp
 	eventFrame:RegisterEvent('PLAYER_LEAVING_WORLD')
 
 	if oUF.isRetail then
-		eventFrame:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED')
+		eventFrame:RegisterUnitEvent('PLAYER_SPECIALIZATION_CHANGED', 'player')
 	end
 
 	eventFrame:SetScript('OnEvent', function(_, event)

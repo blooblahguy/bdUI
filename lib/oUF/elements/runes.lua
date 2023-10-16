@@ -101,7 +101,7 @@ end
 
 local function ColorRune(self, bar, runeType)
 	local color = runeType and self.colors.runes[runeType] or self.colors.power.RUNES
-	local r, g, b = color[1], color[2], color[3]
+	local r, g, b = color.r, color.g, color.b
 	bar:SetStatusBarColor(r, g, b)
 
 	local bg = bar.bg
@@ -159,7 +159,11 @@ local function UpdateColor(self, event, runeID, alt)
 	end
 end
 
-local function ColorPath(self, event, ...)
+local function ColorPath(self, event, arg1, ...)
+	if event == 'PLAYER_SPECIALIZATION_CHANGED' and arg1 ~= 'player' then
+		return -- ignore others
+	end
+
 	--[[ Override: Runes.UpdateColor(self, event, ...)
 	Used to completely override the internal function for updating the widgets' colors.
 
@@ -167,7 +171,7 @@ local function ColorPath(self, event, ...)
 	* event - the event triggering the update (string)
 	* ...   - the arguments accompanying the event
 	--]]
-	(self.Runes.UpdateColor or UpdateColor) (self, event, ...)
+	(self.Runes.UpdateColor or UpdateColor) (self, event, arg1, ...)
 end
 
 local function Update(self, event)
@@ -257,13 +261,12 @@ local function Enable(self, unit)
 		element.ForceUpdate = ForceUpdate
 
 		for _, rune in ipairs(element) do
-			if(rune:IsObjectType('StatusBar') and not (rune:GetStatusBarTexture() or rune:GetStatusBarAtlas())) then
+			if rune:IsObjectType('StatusBar') and not rune:GetStatusBarTexture() then
 				rune:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 			end
 		end
 
-		
-		if element.IsObjectType and element:IsObjectType("Frame") then
+				if element.IsObjectType and element:IsObjectType("Frame") then
 			element:Show()
 		end
 		-- end block
@@ -287,8 +290,7 @@ local function Disable(self)
 			rune:Hide()
 		end
 
-		
-		if element.IsObjectType and element:IsObjectType("Frame") then
+				if element.IsObjectType and element:IsObjectType("Frame") then
 			element:Hide()
 		end
 		-- end block

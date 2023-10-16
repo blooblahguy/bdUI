@@ -10,7 +10,12 @@ mod.units = {}
 mod.custom_layout = {}
 mod.additional_elements = {}
 mod.tags = {}
-local uf_holder = CreateFrame('Frame', nil, oUF.UFParent)
+
+local UFParent = CreateFrame('Frame', 'bdUI_UFParent', UIParent, 'SecureHandlerStateTemplate')
+UFParent:SetFrameStrata('LOW')
+RegisterStateDriver(UFParent, 'visibility', '[petbattle] hide; show')
+
+local uf_holder = CreateFrame('Frame', nil, UFParent)
 uf_holder:SetFrameStrata('LOW')
 
 --===============================================
@@ -27,6 +32,16 @@ function mod:config_callback()
 
 		if (self.callback) then
 			self.callback(self, unit, config)
+		end
+
+		if (config.enablecastbars) then
+			bdUI:HideFrame(_G.CastingBarFrame)
+			bdUI:HideFrame(_G.PlayerCastingBarFrame)
+			bdUI:HideFrame(_G.PetCastingBarFrame)
+		else
+			bdUI:UnHideFrame(_G.CastingBarFrame)
+			bdUI:UnHideFrame(_G.PlayerCastingBarFrame)
+			bdUI:UnHideFrame(_G.PetCastingBarFrame)
 		end
 
 		-- tags
@@ -219,7 +234,7 @@ function mod:create_unitframes()
 		bdMove:set_moveable(focus, "Focus")
 	end
 	
-	if (config.bossenable and BossTargetFrameContainer) then
+	if (config.bossenable and Boss1TargetFrame) then
 		local arena_boss = CreateFrame("frame", "bdArenaBoss", uf_holder)
 		arena_boss:SetPoint("RIGHT", UIParent, -400, 30)
 		arena_boss:SetSize(config.bosswidth, (config.bossheight + 30) * 5)

@@ -22,18 +22,18 @@ mod.additional_elements.buffs = function(self, unit)
 	self.Buffs['growth-y'] = "UP"
 	self.Buffs['growth-x'] = "RIGHT"
 
-	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
 
 		-- for blacklisting
 		button.spell = name
 
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 	end
-	self.Buffs.PostCreateIcon = function(buffs, button)
+	self.Buffs.PostCreateButton = function(buffs, button)
 		bdUI:set_backdrop(button)
-		button.icon:SetTexCoord(.07, .93, .07, .93)
-		button.cd:GetRegions():SetAlpha(0)
+		button.Icon:SetTexCoord(.07, .93, .07, .93)
+		button.Cooldown:GetRegions():SetAlpha(0)
 
 		-- blacklist
 		button:SetScript("OnMouseDown", function(self, button)

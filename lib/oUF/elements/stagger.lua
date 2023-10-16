@@ -34,13 +34,11 @@ if(select(2, UnitClass('player')) ~= 'MONK') then return end
 local _, ns = ...
 local oUF = ns.oUF
 
-
 local GetSpecialization = GetSpecialization
 local UnitHasVehiclePlayerFrameUI = UnitHasVehiclePlayerFrameUI
 local UnitHealthMax = UnitHealthMax
 local UnitIsUnit = UnitIsUnit
 local UnitStagger = UnitStagger
--- GLOBALS: MonkStaggerBar
 -- end block
 
 -- sourced from FrameXML/Constants.lua
@@ -65,20 +63,14 @@ local function UpdateColor(self, event, unit)
 	local colors = self.colors.power[BREWMASTER_POWER_BAR_NAME]
 	local perc = (element.cur or 0) / (element.max or 1)
 
-	local color
-	if(perc >= STAGGER_RED_TRANSITION) then
-		color = colors and colors[STAGGER_RED_INDEX]
-	elseif(perc > STAGGER_YELLOW_TRANSITION) then
-		color = colors and colors[STAGGER_YELLOW_INDEX]
-	else
-		color = colors and colors[STAGGER_GREEN_INDEX]
-	end
+	local index = (perc >= STAGGER_RED_TRANSITION and STAGGER_RED_INDEX) or (perc >= STAGGER_YELLOW_TRANSITION and STAGGER_YELLOW_INDEX) or STAGGER_GREEN_INDEX
+	local color = colors and colors[index]
 
 	local r, g, b
 	if color then
-		r, g, b = color[1], color[2], color[3]
+		r, g, b = color.r, color.g, color.b
 
-		if b then
+		if r then
 			element:SetStatusBarColor(r, g, b)
 
 			local bg = element.bg
@@ -219,15 +211,9 @@ local function Enable(self, unit)
 		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
 
-		if(element:IsObjectType('StatusBar') and not (element:GetStatusBarTexture() or element:GetStatusBarAtlas())) then
+		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
-
-		MonkStaggerBar:UnregisterEvent('PLAYER_ENTERING_WORLD')
-		MonkStaggerBar:UnregisterEvent('PLAYER_SPECIALIZATION_CHANGED')
-		MonkStaggerBar:UnregisterEvent('UNIT_DISPLAYPOWER')
-		MonkStaggerBar:UnregisterEvent('UNIT_EXITED_VEHICLE')
-		MonkStaggerBar:UnregisterEvent('UPDATE_VEHICLE_ACTIONBAR')
 
 		-- do not change this without taking Visibility into account
 		element:Hide()
@@ -244,12 +230,6 @@ local function Disable(self)
 		self:UnregisterEvent('UNIT_AURA', Path)
 		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
-
-		MonkStaggerBar:RegisterEvent('PLAYER_ENTERING_WORLD')
-		MonkStaggerBar:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED')
-		MonkStaggerBar:RegisterEvent('UNIT_DISPLAYPOWER')
-		MonkStaggerBar:RegisterEvent('UNIT_EXITED_VEHICLE')
-		MonkStaggerBar:RegisterEvent('UPDATE_VEHICLE_ACTIONBAR')
 	end
 end
 

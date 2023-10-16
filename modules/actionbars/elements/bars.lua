@@ -345,8 +345,8 @@ function mod:create_vehicle()
 	cfg.cfg = "vehiclebar"
 	cfg.frameName = "bdActionbars_VehicleExitBar"
 	cfg.moveName = "Vehicle Exit"
-	cfg.frameVisibility = "[canexitvehicle]c;[mounted]m;n"
-	cfg.frameVisibilityFunc = "exit"
+	cfg.frameVisibility = "[canexitvehicle][petbattle][overridebar][vehicleui][possessbar] show; hide"
+	
 	cfg.frameSpawn = { "CENTER", UIParent, "CENTER", 0, -250}
 	--create vehicle exit button
 	local button = CreateFrame("CHECKBUTTON", "bdActionbars_VehicleExitButton", nil, "ActionButtonTemplate, SecureHandlerClickTemplate")
@@ -375,9 +375,10 @@ function mod:create_vehicle()
 	local buttonList = { button }
 	local vehicle = mod:CreateBar(buttonList, cfg)
 
+	-- cfg.frameVisibilityFunc = "exit"
 	--[canexitvehicle] is not triggered on taxi, exit workaround
-	vehicle:SetAttribute("_onstate-exit", [[ if CanExitVehicle and CanExitVehicle() then self:Show() else self:Hide() end ]])
-	if not CanExitVehicle() then vehicle:Hide() end
+	-- vehicle:SetAttribute("_onstate-exit", [[ if CanExitVehicle and CanExitVehicle() then self:Show() else self:Hide() end ]])
+	-- if not CanExitVehicle() then vehicle:Hide() end
 end
 
 --===============================================================

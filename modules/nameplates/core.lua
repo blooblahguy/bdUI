@@ -15,34 +15,34 @@ local meTank = false
 -- local lib_glow = LibStub("LibCustomGlow-1.0")
 
 -- Aura Styling
-local function PostCreateIcon(self, button)
+local function PostCreateButton(self, button)
 	bdUI:set_backdrop(button, true)
 
-	local cdtext = button.cd:GetRegions()
+	local cdtext = button.Cooldown:GetRegions()
 	cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size, "THINOUTLINE"))
 	cdtext:SetJustifyH("CENTER")
 	cdtext:ClearAllPoints()
 	cdtext:SetAllPoints(button)
 	self.last_timer_size = config.debuff_timer_size
 	
-	button.count:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
-	button.count:SetTextColor(1,.8,.3)
-	button.count:SetJustifyH("RIGHT")
-	button.count:ClearAllPoints()
-	button.count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
+	button.Count:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
+	button.Count:SetTextColor(1,.8,.3)
+	button.Count:SetJustifyH("RIGHT")
+	button.Count:ClearAllPoints()
+	button.Count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
 	
-	button.icon:SetTexCoord(0.08, 0.9, 0.20, 0.74)
+	button.Icon:SetTexCoord(0.08, 0.9, 0.20, 0.74)
 	
-	button.cd:SetReverse(true)
-	button.cd:SetHideCountdownNumbers(false)
+	button.Cooldown:SetReverse(true)
+	button.Cooldown:SetHideCountdownNumbers(false)
 end
 
-local function PostUpdateIcon(self, unit, button, index, position)
+local function PostUpdateButton(self, unit, button, index, position)
 	local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-	bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+	bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 
 	if (self.last_timer_size ~= config.debuff_timer_size) then
-		local cdtext = button.cd:GetRegions()
+		local cdtext = button.Cooldown:GetRegions()
 		cdtext:SetFontObject(bdUI:get_font(config.debuff_timer_size, "THINOUTLINE"))
 	end
 	self.last_timer_size = config.debuff_timer_size
@@ -559,7 +559,7 @@ local function nameplate_create(self, unit)
 	self.QuestProgress = CreateFrame("Frame", "bdUF_QuestProgress", self.Health)
 	self.QuestProgress:SetPoint("LEFT", self.Name, "RIGHT", 4, 0)
 	self.QuestProgress:SetSize(20, 20)
-	self.QuestProgress.PostUpdateIcon = function(self, texture, key)
+	self.QuestProgress.PostUpdateButton = function(self, texture, key)
 		-- local border = bdUI:get_border(self.QuestProgress.icon) 
 		self.Name:SetTextColor(1, 0, 0)
 		if (not self.QuestProgress.icon.bg) then
@@ -700,8 +700,8 @@ local function nameplate_create(self, unit)
 	self.Buffs.num = 5
 	self.Buffs['growth-y'] = "UP"
 	self.Buffs['growth-x'] = "LEFT"
-	self.Buffs.PostCreateIcon = PostCreateIcon
-	self.Buffs.PostUpdateIcon = PostUpdateIcon
+	self.Buffs.PostCreateButton = PostCreateButton
+	self.Buffs.PostUpdateButton = PostUpdateButton
 	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
@@ -729,8 +729,8 @@ local function nameplate_create(self, unit)
 	self.Debuffs.num = 5
 	self.Debuffs['growth-y'] = "UP"
 	self.Debuffs['growth-x'] = "RIGHT"
-	self.Debuffs.PostCreateIcon = PostCreateIcon
-	self.Debuffs.PostUpdateIcon = PostUpdateIcon
+	self.Debuffs.PostCreateButton = PostCreateButton
+	self.Debuffs.PostUpdateButton = PostUpdateButton
 	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false

@@ -171,7 +171,7 @@ local function UpdateColor(self, event, unit)
 	end
 
 	if(atlas) then
-		element:SetStatusBarAtlas(atlas)
+		element:SetStatusBarTexture(atlas)
 		element:SetStatusBarColor(1, 1, 1)
 	elseif(b) then
 		element:SetStatusBarColor(r, g, b)
@@ -380,8 +380,6 @@ local function Enable(self)
 		element.SetColorThreat = SetColorThreat
 		element.SetFrequentUpdates = SetFrequentUpdates
 
-		oUF:RegisterEvent(self, 'UNIT_MAXPOWER', Path)
-
 		if(element.frequentUpdates) then
 			oUF:RegisterEvent(self, 'UNIT_POWER_FREQUENT', Path)
 		else
@@ -405,10 +403,11 @@ local function Enable(self)
 		end
 
 		oUF:RegisterEvent(self, 'UNIT_DISPLAYPOWER', Path)
+		oUF:RegisterEvent(self, 'UNIT_MAXPOWER', Path)
 		oUF:RegisterEvent(self, 'UNIT_POWER_BAR_HIDE', Path)
 		oUF:RegisterEvent(self, 'UNIT_POWER_BAR_SHOW', Path)
 
-		if(element:IsObjectType('StatusBar') and not (element:GetStatusBarTexture() or element:GetStatusBarAtlas())) then
+		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
 

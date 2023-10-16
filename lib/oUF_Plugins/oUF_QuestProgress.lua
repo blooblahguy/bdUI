@@ -187,8 +187,8 @@ local function UpdateIcon(self, texture, key)
 		element.icon:SetSize(element:GetHeight(), element:GetHeight())
 	end
 
-	if (element.PostUpdateIcon) then
-		element.PostUpdateIcon(self, texture, key)
+	if (element.PostUpdateButton) then
+		element.PostUpdateButton(self, texture, key)
 	end
 end
 

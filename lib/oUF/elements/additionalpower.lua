@@ -59,7 +59,6 @@ local oUF = ns.oUF
 
 local _, playerClass = UnitClass('player')
 
-
 local unpack = unpack
 local CopyTable = CopyTable
 local UnitIsUnit = UnitIsUnit
@@ -72,7 +71,8 @@ local UnitPowerType = UnitPowerType
 -- sourced from FrameXML/AlternatePowerBar.lua
 local POWER_NAME = _G.ADDITIONAL_POWER_BAR_NAME or 'MANA'
 local POWER_INDEX = _G.ADDITIONAL_POWER_BAR_INDEX or 0
-local ALT_MANA_INFO = _G.ALT_MANA_BAR_PAIR_DISPLAY_INFO or {DRUID={[8]=true}, SHAMAN={[11]=true}, PRIEST={[13]=true}}
+local ALT_POWER_INFO = _G.ALT_POWER_BAR_PAIR_DISPLAY_INFO or _G.ALT_MANA_BAR_PAIR_DISPLAY_INFO or {DRUID={[8]=true}, SHAMAN={[11]=true}, PRIEST={[13]=true}}
+-- NOTE: ALT_POWER and ALT_MANA have different table structures! so update this later if needed.
 
 local function UpdateColor(self, event, unit, powerType)
 	if(not (unit and UnitIsUnit(unit, 'player') and powerType == POWER_NAME)) then return end
@@ -88,7 +88,7 @@ local function UpdateColor(self, event, unit, powerType)
 	end
 
 	if(color) then
-		r, g, b = color[1], color[2], color[3]
+		r, g, b = color.r, color.g, color.b
 	end
 
 	if(b) then
@@ -282,10 +282,10 @@ local function Enable(self, unit)
 		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 
 		if(not element.displayPairs) then
-			element.displayPairs = CopyTable(ALT_MANA_INFO)
+			element.displayPairs = CopyTable(ALT_POWER_INFO)
 		end
 
-		if(element:IsObjectType('StatusBar') and not (element:GetStatusBarTexture() or element:GetStatusBarAtlas())) then
+		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
 

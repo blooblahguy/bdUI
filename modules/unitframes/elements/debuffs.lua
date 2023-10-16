@@ -17,14 +17,14 @@ mod.additional_elements.debuffs = function(self, unit)
 	self.Debuffs['growth-y'] = "UP"
 	self.Debuffs['growth-x'] = "LEFT"
 
-	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 	end
 
-	self.Debuffs.PostCreateIcon = function(Debuffs, button)
+	self.Debuffs.PostCreateButton = function(Debuffs, button)
 		bdUI:set_backdrop_basic(button)
-		button.cd:GetRegions():SetAlpha(0)
-		button.icon:SetTexCoord(.07, .93, .07, .93)
+		button.Cooldown:GetRegions():SetAlpha(0)
+		button.Icon:SetTexCoord(.07, .93, .07, .93)
 	end
 end

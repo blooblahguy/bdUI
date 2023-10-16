@@ -166,10 +166,11 @@ function mod:skin_loot()
 			if (UnitExists("target")) then
 				model:SetUnit("target")
 				model:SetCamera(0)
-				model:FreezeAnimation(0, 0)
+				-- model:FreezeAnimation(0, 0)
 			else
 				model:ClearModel()
 				-- model:SetModel("PARTICLES\\Lootfx_green.m2")
+				model:SetModel("player")
 			end
 		end
 

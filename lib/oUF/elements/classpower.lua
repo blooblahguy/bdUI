@@ -59,6 +59,7 @@ local SPELL_POWER_SOUL_SHARDS = Enum.PowerType.SoulShards or 7
 local SPELL_POWER_HOLY_POWER = Enum.PowerType.HolyPower or 9
 local SPELL_POWER_CHI = Enum.PowerType.Chi or 12
 local SPELL_POWER_ARCANE_CHARGES = Enum.PowerType.ArcaneCharges or 16
+local SPELL_POWER_ESSENCE = Enum.PowerType.Essence or 19
 
 -- Holds the class specific stuff.
 local ClassPowerID, ClassPowerType
@@ -67,7 +68,8 @@ local RequireSpec, RequirePower, RequireSpell
 
 local function UpdateColor(element, powerType)
 	local color = element.__owner.colors.power[powerType]
-	local r, g, b = color[1], color[2], color[3]
+	local r, g, b = color.r, color.g, color.b
+
 	for i = 1, #element do
 		local bar = element[i]
 		bar:SetStatusBarColor(r, g, b)
@@ -112,23 +114,20 @@ local function Update(self, event, unit, powerType)
 	local cur, max, mod, oldMax, chargedPoints
 	if(event ~= 'ClassPowerDisable') then
 		local powerID = unit == 'vehicle' and SPELL_POWER_COMBO_POINTS or ClassPowerID
-		cur = not oUF.isRetail and powerType == 'COMBO_POINTS' and GetComboPoints(unit, 'target') or UnitPower(unit, powerID, true)
+
 		max = UnitPowerMax(unit, powerID)
 		mod = UnitPowerDisplayMod(powerID)
+		chargedPoints = oUF.isRetail and GetUnitChargedPowerPoints(unit)
 
-		-- mod should never be 0, but according to Blizz code it can actually happen
-		cur = mod == 0 and 0 or cur / mod
+		-- UNIT_POWER_POINT_CHARGE doesn't provide a power type
+		powerType = powerType or ClassPowerType
 
-		-- BUG: Destruction is supposed to show partial soulshards, but Affliction and Demonology should only show full ones
-		if oUF.isRetail and (ClassPowerType == 'SOUL_SHARDS' and GetSpecialization() ~= SPEC_WARLOCK_DESTRUCTION) then
-			cur = cur - cur % 1
-		end
-
-		if oUF.isRetail and (PlayerClass == 'ROGUE') then
-			chargedPoints = GetUnitChargedPowerPoints(unit)
-
-			-- UNIT_POWER_POINT_CHARGE doesn't provide a power type
-			powerType = powerType or ClassPowerType
+		if mod == 0 then -- mod should never be 0, but according to Blizz code it can actually happen
+			cur = 0
+		elseif oUF.isRetail and (ClassPowerType == 'SOUL_SHARDS' and GetSpecialization() == SPEC_WARLOCK_DESTRUCTION) then -- destro locks are special
+			cur = UnitPower(unit, powerID, true) / mod
+		else
+			cur = not oUF.isRetail and powerType == 'COMBO_POINTS' and GetComboPoints(unit, 'target') or UnitPower(unit, powerID)
 		end
 
 		local numActive = cur + 0.9
@@ -256,14 +255,14 @@ end
 
 do
 	function ClassPowerEnable(self)
-		self:RegisterEvent('UNIT_POWER_FREQUENT', Path)
 		self:RegisterEvent('UNIT_MAXPOWER', Path)
+		self:RegisterEvent('UNIT_POWER_UPDATE', Path)
 
 		if not oUF.isRetail then
 			self:RegisterEvent('PLAYER_TARGET_CHANGED', VisibilityPath, true)
 		end
 
-		if oUF.isRetail and (PlayerClass == 'ROGUE') then
+		if oUF.isRetail then -- according to Blizz any class may receive this event due to specific spell auras
 			self:RegisterEvent('UNIT_POWER_POINT_CHARGE', Path)
 		end
 
@@ -277,7 +276,7 @@ do
 	end
 
 	function ClassPowerDisable(self)
-		self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
+		self:UnregisterEvent('UNIT_POWER_UPDATE', Path)
 		self:UnregisterEvent('UNIT_MAXPOWER', Path)
 
 		if oUF.isRetail then
@@ -317,6 +316,9 @@ do
 		ClassPowerID = SPELL_POWER_ARCANE_CHARGES
 		ClassPowerType = 'ARCANE_CHARGES'
 		RequireSpec = SPEC_MAGE_ARCANE
+	elseif(PlayerClass == 'EVOKER') then
+		ClassPowerID = SPELL_POWER_ESSENCE
+		ClassPowerType = 'ESSENCE'
 	end
 end
 
@@ -340,8 +342,8 @@ local function Enable(self, unit)
 
 		for i = 1, #element do
 			local bar = element[i]
-			if(bar:IsObjectType('StatusBar')) then
-				if(not (bar:GetStatusBarTexture() or bar:GetStatusBarAtlas())) then
+			if bar:IsObjectType('StatusBar') then
+				if not bar:GetStatusBarTexture() then
 					bar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 				end
 

@@ -10,7 +10,7 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 	end
 
 	-- classic
-	duration, expirationTime = bdUI:update_duration(button.cd, unit, spellId, source, name, duration, expirationTime)
+	duration, expirationTime = bdUI:update_duration(button.Cooldown, unit, spellId, source, name, duration, expirationTime)
 
 	if (bdUI:is_blacklisted(name)) then
 		return false

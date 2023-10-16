@@ -328,7 +328,7 @@ local function layout(self, unit)
 		return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 
-	self.Buffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
 		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
 
 		local dispelColors = {
@@ -340,11 +340,11 @@ local function layout(self, unit)
 
 		button:set_border_color(unpack(bdUI.media.border))
 
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 	end
 
-	self.Buffs.PostCreateIcon = function(self, button) 
-		local region = button.cd:GetRegions()
+	self.Buffs.PostCreateButton = function(self, button) 
+		local region = button.Cooldown:GetRegions()
 		button:SetAlpha(0.8)
 		region:SetAlpha(1)
 		region:Show()
@@ -352,15 +352,15 @@ local function layout(self, unit)
 			region:SetTextHeight(config.buffSize)
 			region:SetJustifyH("CENTER")
 			region:SetJustifyV("MIDDLE")
-			region:SetPoint("TOPLEFT", button.cd, "TOPLEFT", -config.buffSize, 0)
-			region:SetPoint("BOTTOMRIGHT", button.cd, "BOTTOMRIGHT", config.buffSize, 0)
+			region:SetPoint("TOPLEFT", button.Cooldown, "TOPLEFT", -config.buffSize, 0)
+			region:SetPoint("BOTTOMRIGHT", button.Cooldown, "BOTTOMRIGHT", config.buffSize, 0)
 		else
 			region:SetAlpha(0)
 			region:Hide()
 		end
 
-		button.cd:SetReverse(true)
-		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		button.Cooldown:SetReverse(true)
+		button.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 		bdUI:set_backdrop(button)
 	end
 	
@@ -449,13 +449,13 @@ local function layout(self, unit)
 			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
 		end
 
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 
 		return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 
-	self.Debuffs.PostCreateIcon = function(self, button)
-		local region = button.cd:GetRegions()
+	self.Debuffs.PostCreateButton = function(self, button)
+		local region = button.Cooldown:GetRegions()
 		button:SetAlpha(0.8)
 		
 		if (config.showDebuffTimers) then
@@ -465,18 +465,18 @@ local function layout(self, unit)
 			region:SetJustifyV("MIDDLE")
 			region:ClearAllPoints()
 			region:SetPoint("CENTER")
-			-- region:SetPoint("TOPLEFT", button.cd, "TOPLEFT", -config.debuffSize, 0)
-			-- region:SetPoint("BOTTOMRIGHT", button.cd, "BOTTOMRIGHT", config.debuffSize, 0)
+			-- region:SetPoint("TOPLEFT", button.Cooldown, "TOPLEFT", -config.debuffSize, 0)
+			-- region:SetPoint("BOTTOMRIGHT", button.Cooldown, "BOTTOMRIGHT", config.debuffSize, 0)
 		else
 			region:SetAlpha(0)
 		end
 
-		button.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		button.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 		bdUI:set_backdrop(button)
 	end
 
-	self.Debuffs.PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		bdUI:update_duration(button.cd, unit, spellID, caster, name, duration, expiration)
+	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 
 		-- color borders of debuffs
 		if (dispelColors[debuffType]) then

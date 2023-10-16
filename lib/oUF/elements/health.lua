@@ -113,7 +113,7 @@ local function UpdateColor(self, event, unit)
 	end
 
 	if(color) then
-		r, g, b = color[1], color[2], color[3]
+		r, g, b = color.r, color.g, color.b
 	end
 
 	if(b) then
@@ -310,10 +310,10 @@ local function Enable(self)
 
 		oUF:RegisterEvent(self, 'UNIT_MAXHEALTH', Path)
 
-		if oUF.isRetail then
-			oUF:RegisterEvent(self, 'UNIT_HEALTH', Path)
-		else
+		if oUF.isClassic then
 			oUF:RegisterEvent(self, 'UNIT_HEALTH_FREQUENT', Path)
+		else
+			oUF:RegisterEvent(self, 'UNIT_HEALTH', Path)
 		end
 
 		if(element.colorDisconnected) then
@@ -334,7 +334,7 @@ local function Enable(self)
 			oUF:RegisterEvent(self, 'UNIT_THREAT_LIST_UPDATE', ColorPath)
 		end
 
-		if(element:IsObjectType('StatusBar') and not (element:GetStatusBarTexture() or element:GetStatusBarAtlas())) then
+		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
 
@@ -349,10 +349,10 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
-		if oUF.isRetail then
-			oUF:UnregisterEvent(self, 'UNIT_HEALTH', Path)
-		else
+		if oUF.isClassic then
 			oUF:UnregisterEvent(self, 'UNIT_HEALTH_FREQUENT', Path)
+		else
+			oUF:UnregisterEvent(self, 'UNIT_HEALTH', Path)
 		end
 
 		oUF:UnregisterEvent(self, 'UNIT_MAXHEALTH', Path)
