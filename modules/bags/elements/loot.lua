@@ -170,7 +170,8 @@ function mod:skin_loot()
 			else
 				model:ClearModel()
 				-- model:SetModel("PARTICLES\\Lootfx_green.m2")
-				model:SetModel("player")
+				-- model:SetModel("player")
+				model:SetUnit("player")
 			end
 		end
 

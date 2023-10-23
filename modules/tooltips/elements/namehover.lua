@@ -21,7 +21,7 @@ function mod:create_mouseover_tooltips()
 		self.text:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y+15)
 	end)
 	motooltip:SetScript("OnEvent", function(self)
-		if GetMouseFocus():GetName()~="WorldFrame" then return end
+		if GetMouseFocus() and GetMouseFocus():GetName()~="WorldFrame" then return end
 		local name = UnitName("mouseover")
 		if not name then return end
 		
