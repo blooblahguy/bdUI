@@ -24,15 +24,15 @@ local function PostCreateButton(self, button)
 	cdtext:ClearAllPoints()
 	cdtext:SetAllPoints(button)
 	self.last_timer_size = config.debuff_timer_size
-	
+
 	button.Count:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
-	button.Count:SetTextColor(1,.8,.3)
+	button.Count:SetTextColor(1, .8, .3)
 	button.Count:SetJustifyH("RIGHT")
 	button.Count:ClearAllPoints()
 	button.Count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
-	
+
 	button.Icon:SetTexCoord(0.08, 0.9, 0.20, 0.74)
-	
+
 	button.Cooldown:SetReverse(true)
 	button.Cooldown:SetHideCountdownNumbers(false)
 end
@@ -113,7 +113,7 @@ local function store_tanks()
 	-- store a list of the tanks in the group
 	tanks = {}
 	for i = 1, IsInRaid() and 25 or 5 do
-		local unit = IsInRaid() and "raid"..i or "party"..i
+		local unit = IsInRaid() and "raid" .. i or "party" .. i
 		if (UnitExists(unit)) then
 			if UnitGroupRolesAssigned(unit) == "TANK" or GetPartyAssignment("MAINTANK", unit) then
 				tanks[select(1, UnitName(unit))] = true
@@ -137,9 +137,9 @@ function mod:config_nameplate(self)
 	border = bdUI:get_border(self)
 
 	-- Castbar
-	local cbi_size = (config.height+config.castbarheight) * config.castbariconscale
+	local cbi_size = (config.height + config.castbarheight) * config.castbariconscale
 	self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar, "BOTTOMLEFT", 2, 0)
-	self.Castbar.Icon:SetSize( cbi_size, cbi_size )
+	self.Castbar.Icon:SetSize(cbi_size, cbi_size)
 	self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -border, border)
 	self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", border, -border)
 
@@ -164,8 +164,8 @@ function mod:config_nameplate(self)
 		self.AuraHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8)
 		self.AuraHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 8)
 	else
-		self.AuraHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8+config.name_offset)
-		self.AuraHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 8+config.name_offset)
+		self.AuraHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8 + config.name_offset)
+		self.AuraHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 8 + config.name_offset)
 	end
 	if (config.disableauras) then
 		self.Buffs:Hide()
@@ -191,20 +191,22 @@ function mod:config_nameplate(self)
 	self.RaidTargetIndicator:ClearAllPoints()
 	self.RaidTargetIndicator:SetSize(config.raidmarkersize, config.raidmarkersize)
 	if (config.markposition == "RIGHT") then
-		self.RaidTargetIndicator:SetPoint('LEFT', self, "RIGHT", (config.raidmarkersize), 0)
+		self.RaidTargetIndicator:SetPoint("LEFT", self, "RIGHT", (config.raidmarkersize), 0)
 	elseif (config.markposition == "LEFT") then
-		self.RaidTargetIndicator:SetPoint('RIGHT', self, "LEFT", -config.raidmarkersize, 0)
+		self.RaidTargetIndicator:SetPoint("RIGHT", self, "LEFT", -config.raidmarkersize, 0)
 	elseif (config.markposition == "CENTER") then
-		self.RaidTargetIndicator:SetPoint('CENTER')
+		self.RaidTargetIndicator:SetPoint("CENTER")
 	else
-		self.RaidTargetIndicator:SetPoint('BOTTOM', self, "TOP", 0, config.raidmarkersize)
+		self.RaidTargetIndicator:SetPoint("BOTTOM", self, "TOP", 0, config.raidmarkersize)
 	end
 end
 
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
-	if (not config.enabled) then return false end
+	if (not config.enabled) then
+		return false
+	end
 
 	mod.cache = {}
 	collectgarbage()
@@ -215,7 +217,7 @@ function mod:config_callback()
 	mod.lists.fixateMobs = bdUI:lowercase_table(config.fixateMobs)
 
 	mod:show_class_resources(self)
-	
+
 	-- Update nameplate sizing
 	mod:nameplate_size()
 
@@ -267,7 +269,7 @@ local function find_target(self, event, unit)
 			self.target_arrows:Show()
 		end
 		if (not UnitIsUnit(unit, "player")) then
-			-- self.Health._shadow:Show()
+		-- self.Health._shadow:Show()
 		end
 	else
 		self.isTarget = false
@@ -300,7 +302,7 @@ local function store_unit_information(self, unit)
 
 	-- I'm a tank
 	-- self.meTank = tanks[select(1, UnitName("player"))]
-	
+
 	-- Tank has aggro
 	self.themTank = false
 	for player, v in pairs(tanks) do
@@ -320,11 +322,19 @@ end
 -- THREAT
 --==============================================
 local function update_threat(self, event, unit)
-	if(not unit or not self.unit == unit) then return false end
-	
-	if (event == "NAME_PLATE_UNIT_REMOVED") then return false end
-	if (event == "OnShow") then return false end
-	if (event == "OnUpdate") then return false end
+	if (not unit or not self.unit == unit) then
+		return false
+	end
+
+	if (event == "NAME_PLATE_UNIT_REMOVED") then
+		return false
+	end
+	if (event == "OnShow") then
+		return false
+	end
+	if (event == "OnUpdate") then
+		return false
+	end
 
 	-- store these values for reuse
 	store_unit_information(self, unit)
@@ -365,7 +375,9 @@ end
 -- Primary callback
 --==============================================
 local function nameplate_callback(self, event, unit)
-	if (not self) then return end
+	if (not self) then
+		return
+	end
 	nameplates[self] = self
 	-- self.unit = unit
 
@@ -409,7 +421,7 @@ end
 local function nameplate_create(self, unit)
 	border = bdUI:get_border(self)
 	nameplates[self] = self
-	
+
 	self:SetPoint("BOTTOMLEFT", 0, math.floor(config.targetingBottomPadding))
 	self:SetPoint("BOTTOMRIGHT", 0, math.floor(config.targetingBottomPadding))
 	self:SetPoint("TOPLEFT", 0, -math.floor(config.targetingTopPadding))
@@ -447,28 +459,27 @@ local function nameplate_create(self, unit)
 	--==========================================
 	-- DAMAGE ABSORBS
 	--==========================================
-    local absorbBar = CreateFrame('StatusBar', nil, self.Health)
-    absorbBar:SetAllPoints()
+	local absorbBar = CreateFrame("StatusBar", nil, self.Health)
+	absorbBar:SetAllPoints()
 	absorbBar:SetStatusBarTexture(bdUI.media.flat)
 	absorbBar:SetStatusBarColor(.1, .1, .2, .6)
 	absorbBar:Hide()
-	local overAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
-    overAbsorbBar:SetAllPoints()
+	local overAbsorbBar = CreateFrame("StatusBar", nil, self.Health)
+	overAbsorbBar:SetAllPoints()
 	overAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
 	overAbsorbBar:SetStatusBarColor(.1, .1, .2, .6)
 	overAbsorbBar:Hide()
 
 	-- Register and callback
-    self.HealthPrediction = {
-        absorbBar = absorbBar,
+	self.HealthPrediction = {
+		absorbBar = absorbBar,
 		overAbsorb = overAbsorbBar,
-
-        maxOverflow = 1,
-    }
+		maxOverflow = 1
+	}
 
 	function self.HealthPrediction.PostUpdate(self, unit, myIncomingHeal, otherIncomingHeal, absorba, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
 		-- if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
-		
+
 		local absorb = UnitGetTotalAbsorbs and UnitGetTotalAbsorbs(unit) or 0
 		local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 
@@ -482,7 +493,7 @@ local function nameplate_create(self, unit)
 		else
 			self.overAbsorb:Hide()
 		end
-		
+
 		self.overAbsorb:SetMinMaxValues(0, UnitHealthMax(unit))
 		self.overAbsorb:SetValue(overA)
 
@@ -551,7 +562,7 @@ local function nameplate_create(self, unit)
 
 		return name
 	end
-	self:Tag(self.Name, '[bd_name]')	
+	self:Tag(self.Name, "[bd_name]")
 
 	--==========================================
 	-- QUEST ICON
@@ -560,7 +571,7 @@ local function nameplate_create(self, unit)
 	self.QuestProgress:SetPoint("LEFT", self.Name, "RIGHT", 4, 0)
 	self.QuestProgress:SetSize(20, 20)
 	self.QuestProgress.PostUpdateButton = function(self, texture, key)
-		-- local border = bdUI:get_border(self.QuestProgress.icon) 
+		-- local border = bdUI:get_border(self.QuestProgress.icon)
 		self.Name:SetTextColor(1, 0, 0)
 		if (not self.QuestProgress.icon.bg) then
 			self.QuestProgress.icon.bg = self.QuestProgress:CreateTexture(nil, "BACKGROUND")
@@ -592,15 +603,17 @@ local function nameplate_create(self, unit)
 
 	oUF.Tags.Events["bdncurhp"] = "UNIT_HEALTH UNIT_MAXHEALTH"
 	oUF.Tags.Methods["bdncurhp"] = function(unit)
-		if (config.hptext == "None") then return '' end
+		if (config.hptext == "None") then
+			return ""
+		end
 		local hp, hpMax = UnitHealth(unit), UnitHealthMax(unit)
 		if (bdUI.mobhealth) then
 			hp, hpMax, found = bdUI.mobhealth:GetUnitHealth(unit)
 		end
 
-		local hpPercent = bdUI:round(hp / hpMax * 100,1)
+		local hpPercent = bdUI:round(hp / hpMax * 100, 1)
 		hp = bdUI:numberize(hp)
-		
+
 		if (config.hptext == "HP - %") then
 			return table.concat({hp, hpPercent}, " - ")
 		elseif (config.hptext == "HP") then
@@ -609,7 +622,7 @@ local function nameplate_create(self, unit)
 			return hpPercent
 		end
 	end
-	self:Tag(self.Curhp, '[bdncurhp]')
+	self:Tag(self.Curhp, "[bdncurhp]")
 
 	--==========================================
 	-- UNIT POWER
@@ -619,15 +632,17 @@ local function nameplate_create(self, unit)
 	self.Curpower:SetAlpha(0.8)
 	self.Curpower:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
 	local pp, ppMax, ppPercent
-	oUF.Tags.Events['bdncurpower'] = 'UNIT_POWER_UPDATE'
-	oUF.Tags.Methods['bdncurpower'] = function(unit)
+	oUF.Tags.Events["bdncurpower"] = "UNIT_POWER_UPDATE"
+	oUF.Tags.Methods["bdncurpower"] = function(unit)
 		pp, ppMax, ppPercent = UnitPower(unit), UnitPowerMax(unit), 0
-		if (pp == 0 or ppMax == 0) then return '' end
+		if (pp == 0 or ppMax == 0) then
+			return ""
+		end
 		ppPercent = (pp / ppMax) * 100
 
-		return floor(ppPercent);
+		return floor(ppPercent)
 	end
-	self:Tag(self.Curpower, '[bdncurpower]')
+	self:Tag(self.Curpower, "[bdncurpower]")
 
 	--==========================================
 	-- RAID MARKER
@@ -640,7 +655,7 @@ local function nameplate_create(self, unit)
 		[5] = {.94, .94, .94, .8},
 		[6] = {.36, .78, 1, .8},
 		[7] = {1, .43, .43, .8},
-		[8] = {1, 1, 1, .8},
+		[8] = {1, 1, 1, .8}
 	}
 	self.RaidTargetIndicator = self.OverlayHolder:CreateTexture(nil, "OVERLAY", nil, 7)
 	-- self.RaidTargetIndicator.parent = self
@@ -658,23 +673,25 @@ local function nameplate_create(self, unit)
 	-- FIXATES / TARGETS
 	--==========================================
 	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
-	self.FixateAlert:SetPoint("TOPRIGHT", self.OverlayHolder, "BOTTOMRIGHT", -4, -4)
-	self.FixateAlert.PostUpdate = function(self, unit, target, isTargeting, isTargetingPlayer)
-		-- print(unit, UnitName(unit), target, isTargeting, isTargetingPlayer)
+	self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
+	self.FixateAlert.PostUpdate = function(self, unit, targetUnit, isTargeting, isTargetingPlayer)
+
 		self:Hide()
 
-		if (not isTargeting) then return end
+		if (not isTargeting) then
+			return
+		end
 
 		-- show no matter what
 		if (mod.lists.fixateMobs[UnitName(unit):lower()]) then
 			self:Show()
-			self:SetText(UnitName(target))
+			self:SetText(UnitName(targetUnit))
 			return
 		end
 
-		if (config.fixatealert == "Always" or (config.fixatealert == "Personal" and isTargetingPlayer)) then
+		if (config.target_alert == "Always" or (config.target_alert == "Personal" and isTargetingPlayer)) then
 			self:Show()
-			self:SetText(UnitName(target))
+			self:SetText(UnitName(targetUnit))
 		end
 	end
 
@@ -694,12 +711,12 @@ local function nameplate_create(self, unit)
 	self.Buffs:SetSize(config.width / 2, config.raidbefuffs)
 	self.Buffs:EnableMouse(false)
 	self.Buffs.size = config.raidbefuffs * config.scale
-	self.Buffs.initialAnchor  = "BOTTOMRIGHT"
+	self.Buffs.initialAnchor = "BOTTOMRIGHT"
 	self.Buffs.disableMouse = true
 	self.Buffs.spacing = 2
 	self.Buffs.num = 5
-	self.Buffs['growth-y'] = "UP"
-	self.Buffs['growth-x'] = "LEFT"
+	self.Buffs["growth-y"] = "UP"
+	self.Buffs["growth-x"] = "LEFT"
 	self.Buffs.PostCreateButton = PostCreateButton
 	self.Buffs.PostUpdateButton = PostUpdateButton
 	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
@@ -723,12 +740,12 @@ local function nameplate_create(self, unit)
 	self.Debuffs:SetSize(config.width / 2, config.raidbefuffs)
 	self.Debuffs:EnableMouse(false)
 	self.Debuffs.size = config.raidbefuffs * config.scale
-	self.Debuffs.initialAnchor  = "BOTTOMLEFT"
+	self.Debuffs.initialAnchor = "BOTTOMLEFT"
 	self.Debuffs.disableMouse = true
 	self.Debuffs.spacing = 2
 	self.Debuffs.num = 5
-	self.Debuffs['growth-y'] = "UP"
-	self.Debuffs['growth-x'] = "RIGHT"
+	self.Debuffs["growth-y"] = "UP"
+	self.Debuffs["growth-x"] = "RIGHT"
 	self.Debuffs.PostCreateButton = PostCreateButton
 	self.Debuffs.PostUpdateButton = PostUpdateButton
 	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
@@ -752,7 +769,7 @@ local function nameplate_create(self, unit)
 		if (class == "ROGUE" or class == "DRUID") then
 			mod.elements.combopoints(self, unit)
 		end
-    end
+	end
 
 	--==========================================
 	-- Pixel Perfect
@@ -785,11 +802,11 @@ local function nameplate_create(self, unit)
 				bar:set_border_size(border)
 				bar:SetSize(width, border * 3)
 				bar:ClearAllPoints()
-				
+
 				if (not last) then
 					bar:SetPoint("BOTTOMLEFT", self.Health)
 				else
-					bar:SetPoint('LEFT', last, "RIGHT", gap, 0)
+					bar:SetPoint("LEFT", last, "RIGHT", gap, 0)
 				end
 
 				last = bar
@@ -799,7 +816,9 @@ local function nameplate_create(self, unit)
 end
 
 local function disable_class_power()
-	if (not ClassNameplateManaBarFrame) then return end
+	if (not ClassNameplateManaBarFrame) then
+		return
+	end
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_DISPLAYPOWER")
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_POWER_FREQUENT")
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_MAXPOWER")
@@ -814,10 +833,14 @@ function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
 
-	if (not config.enabled) then return end
+	if (not config.enabled) then
+		return
+	end
 
 	-- migrate from some weird old naming
-	if config.fixatealert == "All" then config.fixatealert = "Always" end
+	if config.target_alert == "All" then
+		config.target_alert = "Always"
+	end
 
 	-- woopsie reset from before
 	if (config.stackingspeed == 0) then
