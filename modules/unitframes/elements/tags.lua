@@ -95,17 +95,17 @@ function mod.create_all_tags(self)
 	end
 
 	-- name
-	oUF.Tags.Events["bd:name"] = "UNIT_NAME_UPDATE PLAYER_TARGET_CHANGED PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED UNIT_COMBAT UNIT_THREAT_SITUATION_UPDATE"
+	oUF.Tags.Events["bd:name"] = "UNIT_NAME_UPDATE PLAYER_TARGET_CHANGED PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED UNIT_COMBAT UNIT_FLAGS UNIT_THREAT_SITUATION_UPDATE"
 	oUF.Tags.Methods["bd:name"] = function(unit)
+		if (not UnitExists(unit)) then return end
+
 		local status = UnitThreatSituation("player", unit)
 		local r, g, b = 1, 1, 1
 		if (status ~= nil) then
 			r, g, b = 1, .2, .2
 		end
 		local hex = RGBPercToHex(r, g, b)
-		if (UnitExists(unit)) then
-			return "|cff"..hex..UnitName(unit).."|r"
-		end
+		return "|cff"..hex..UnitName(unit).."|r"
 	end
 
 	-- combat
