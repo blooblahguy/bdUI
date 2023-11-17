@@ -99,6 +99,7 @@ raidauras["Freezing Slash"] = true
 
 -- ICC
 -- marrowgar
+raidauras["Coldflame"] = true
 raidauras["Impaled"] = true
 
 -- deathwhisper
