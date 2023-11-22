@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Player Bars")
 local config
-local coclors 
+local coclors
 
 -- local function update(self, event)
 -- 	-- set values first

@@ -11,14 +11,16 @@ mod.additional_elements.debuffs = function(self, unit)
 	self.Debuffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
 	self.Debuffs:SetHeight(60)
 	self.Debuffs.size = 18
-	self.Debuffs.initialAnchor  = "BOTTOMRIGHT"
+	self.Debuffs.initialAnchor = "BOTTOMRIGHT"
 	self.Debuffs.spacing = bdUI.border
 	self.Debuffs.num = 20
 	self.Debuffs['growth-y'] = "UP"
 	self.Debuffs['growth-x'] = "LEFT"
 
-	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
+		isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
+			button.filter)
 		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 	end
 

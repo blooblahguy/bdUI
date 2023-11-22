@@ -7,7 +7,7 @@ mod.npc_style = function(self, event, unit)
 	if (self.smartColors) then
 		self.Name:SetTextColor(unpack(self.smartColors))
 	end
-	
+
 	if (self.currentStyle and self.currentStyle == "npc") then return end
 	self.currentStyle = "npc"
 

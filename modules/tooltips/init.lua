@@ -38,7 +38,7 @@ local config = {
 				key = "anchor",
 				type = "select",
 				value = "Frame",
-				options = {"Frame", "Mouse"},
+				options = { "Frame", "Mouse" },
 				label = "Tooltip Anchor"
 			},
 			-- {
@@ -87,7 +87,7 @@ local config = {
 			}
 		}
 	},
-	
+
 }
 
 local mod = bdUI:register_module("Tooltips", config)
@@ -105,7 +105,7 @@ function mod:initialize()
 	-- elements
 	--============================
 	mod:create_castby()
-	
+
 	mod:color_tooltips()
 	mod:fix_healthbars()
 	mod:create_unit_info()
@@ -121,10 +121,8 @@ function mod:initialize()
 	f:SetScript("OnEvent", function(self, event)
 		SetCVar("showQuestTrackingTooltips", IsInRaid() and 0 or 1)
 	end)
-
 end
 
 function mod:config_callback()
 	mod.config = mod:get_save()
-
 end

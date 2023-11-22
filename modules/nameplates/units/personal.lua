@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Nameplates")
 
 mod.personal_style = function(self, event, unit)
 	local config = mod.config
-	
+
 	if (self.currentStyle and self.currentStyle == "personal") then return end
 	self.currentStyle = "personal"
 
@@ -25,7 +25,7 @@ mod.personal_style = function(self, event, unit)
 	self.Curpower:Hide()
 	-- if (config.hptext == "None" or config.showhptexttargetonly) then
 	-- else
-		-- self.Curhp:Show()
+	-- self.Curhp:Show()
 	-- end
 
 	-- self:SetHeight()

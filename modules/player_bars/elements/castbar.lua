@@ -33,7 +33,7 @@ function mod:create_castbar(self)
 	self.Castbar:SetPoint("TOPRIGHT", self.CastbarHolder)
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.CastbarHolder)
 	self.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
-	
+
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
 	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 	self.Castbar.Text:SetJustifyV("MIDDLE")
@@ -63,7 +63,7 @@ function mod:create_castbar(self)
 	self.Castbar.MaxTime:SetPoint("RIGHT", self.Castbar, "RIGHT", -padding, 0)
 	self.Castbar.MaxTime:SetJustifyH("RIGHT")
 	self.Castbar.Text:SetPoint("CENTER", self.Castbar, "CENTER", -padding, 0)
-	self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -bdUI.border, 0)
+	self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar, "TOPLEFT", -bdUI.border, 0)
 	self.Castbar.Icon:SetSize(config.castbar_height, config.castbar_height)
 
 	-- self.Castbar.PostChannelStart = castbar_kickable

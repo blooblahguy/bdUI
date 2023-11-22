@@ -17,19 +17,19 @@ local function tags_config(title, frame, options)
 		defaults[k] = v
 	end
 
-	return { 
+	return {
 		key = "tab",
 		type = "tab",
 		label = title,
 		args = {
 			{
-				key = frame.."_outside_left",
+				key = frame .. "_outside_left",
 				type = "input",
 				value = defaults.outside_left,
 				label = "Outside Left",
 			},
 			{
-				key = frame.."_outside_right",
+				key = frame .. "_outside_right",
 				type = "input",
 				value = defaults.outside_right,
 				label = "Outside Right",
@@ -40,21 +40,21 @@ local function tags_config(title, frame, options)
 				type = "clear",
 			},
 			{
-				key = frame.."_inside_left",
+				key = frame .. "_inside_left",
 				type = "input",
 				value = defaults.inside_left,
 				label = "Inside Left",
 				size = "third"
 			},
 			{
-				key = frame.."_inside_center",
+				key = frame .. "_inside_center",
 				type = "input",
 				value = defaults.inside_center,
 				label = "Inside Center",
 				size = "third"
 			},
 			{
-				key = frame.."_inside_right",
+				key = frame .. "_inside_right",
 				type = "input",
 				value = defaults.inside_right,
 				label = "Inside Right",
@@ -124,14 +124,14 @@ local config = {
 				key = "textlocation",
 				value = "Outside",
 				type = "select",
-				options = {"Outside", "Inside", "Minimal"},
+				options = { "Outside", "Inside", "Minimal" },
 				label = "Text Display"
 			},
 			{
 				key = "aurastyle",
 				value = "Bars",
 				type = "select",
-				options = {"Icons", "Bars", "None"},
+				options = { "Icons", "Bars", "None" },
 				label = "Aura Style"
 			},
 			{
@@ -299,7 +299,7 @@ local config = {
 						type = "range",
 						label = "Target Buff size"
 					},
-					
+
 					-- {
 					-- 	key = "uf_buff_target_match_player",
 					-- 	type = "toggle",
@@ -318,7 +318,7 @@ local config = {
 					-- },
 				}
 			}
-			
+
 		}
 	},
 	--=========================================
@@ -454,6 +454,6 @@ local mod = bdUI:register_module("Unitframes", config)
 function mod:initialize()
 	mod.config = mod:get_save()
 	if (not mod.config.enabled) then return false end
-	
+
 	mod:create_unitframes()
 end

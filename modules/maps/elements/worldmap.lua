@@ -17,21 +17,21 @@ function mod:worldmap_coords()
 		total = total + elapsed
 		if (total >= 0.2) then
 			total = 0
-			
+
 			-- Player
 			local uiMapID = C_Map.GetBestMapForUnit("player")
 			if (not uiMapID) then return end
 			local position = C_Map.GetPlayerMapPosition(uiMapID, "player")
 			if (not position) then return end
-			
+
 			local pX, pY = position:GetXY()
 			local nick = '';
 
 			if (not pX) then return end
-			pX = pX*100
-			pY = pY*100
-			pX = math.floor(pX*10)/10
-			pY = math.floor(pY*10)/10
+			pX = pX * 100
+			pY = pY * 100
+			pX = math.floor(pX * 10) / 10
+			pY = math.floor(pY * 10) / 10
 			if pX == 0.0 or pY == 0.0 then
 				Nick = "N/A";
 			else
@@ -45,7 +45,7 @@ function mod:worldmap_coords()
 			local cX, cY = WorldMapFrame:GetNormalizedCursorPosition()
 			cX = cX * 100
 			cY = cY * 100
-			
+
 			if cX < 0 or cX > 100 or cY < 0 or cY > 100 then
 				cursor = "N/A"
 			else

@@ -52,4 +52,3 @@ function mod:wotlk_stat_summaries()
 	-- 	end
 	-- end
 end
-

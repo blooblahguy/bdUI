@@ -11,11 +11,11 @@ local function wotlk_runes(self)
 	local width = (config.resources_width - (gap * 5)) / 6
 	for index = 1, 6 do
 		-- Position and size of the rune bar indicators
-		local rune = CreateFrame('StatusBar', "bdPlayerBarsRune"..index, self.RuneHolder)
+		local rune = CreateFrame('StatusBar', "bdPlayerBarsRune" .. index, self.RuneHolder)
 		rune:SetStatusBarTexture(bdUI.media.flat)
 		rune:ClearAllPoints()
 		bdUI:set_backdrop(rune)
-		
+
 		if (not last) then
 			rune:SetPoint("LEFT", self.RuneHolder, 0, bdUI.border)
 		else
@@ -26,7 +26,7 @@ local function wotlk_runes(self)
 		runes[index] = rune
 	end
 
-    -- Register with oUF
+	-- Register with oUF
 	self.WOTLKRunes = runes
 	self.bdUIRunes = runes
 end
@@ -42,7 +42,6 @@ function mod:create_runes(self)
 		self.RuneHolder:Show()
 		wotlk_runes(self)
 	end
-	
 end
 
 local function path() end

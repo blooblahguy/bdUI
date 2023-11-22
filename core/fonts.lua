@@ -5,13 +5,13 @@ bdUI.fonts = {}
 -- dynamic font creation/fetching
 function bdUI:get_font(size, outline, shadow)
 	size = bdUI:round(size)
-	local name = outline and size.."_"..outline or size
-	name = shadow and name.."_shadow" or name
+	local name = outline and size .. "_" .. outline or size
+	name = shadow and name .. "_shadow" or name
 	outline = outline and outline or ""
 
-	
+
 	if (not bdUI.fonts[name]) then
-		local font = CreateFont("BDUI_"..name)
+		local font = CreateFont("BDUI_" .. name)
 
 		font:SetFont(bdUI.media.font, tonumber(size), outline)
 		if (shadow) then
@@ -31,7 +31,6 @@ end
 -- update the objects that the ui uses
 function bdUI:update_fonts()
 	for font_name, font in pairs(bdUI.fonts) do
-
 		local config_font_path = bdUI.media.font
 
 		local size, outline, shadow = strsplit("_", font_name)

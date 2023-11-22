@@ -4,8 +4,6 @@ local bdUI, c, l = unpack(select(2, ...))
 -- Themes
 --========================================================
 function bdUI:register_theme(name, callback)
-	
-	
 	-- callback()
 end
 
@@ -61,7 +59,7 @@ function bdUI:do_frame_fade()
 			UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), target_alpha)
 		end
 
-		frame.fadeInfo.finishedFunc = function() 
+		frame.fadeInfo.finishedFunc = function()
 			if (InCombatLockdown()) then return end
 			if (frame:GetAlpha() == 0) then
 				frame:Hide()
@@ -74,7 +72,7 @@ end
 
 -- fade frame in/out of combat
 function bdUI:set_frame_fade(frame, ic_alpha, resting_alpha)
-	combat_fade_frames[frame] = {ic_alpha, resting_alpha}
+	combat_fade_frames[frame] = { ic_alpha, resting_alpha }
 end
 
 --========================================================
@@ -85,12 +83,12 @@ end
 
 function bdUI:frame_group(container, direction, ...)
 	if (not container) then return end
-	
+
 	direction = string.lower(direction) or "down"
 	local last = nil
 	local height = 0
 	local width = 0
-	local children = {...}
+	local children = { ... }
 
 	-- first, do height, and hook vision
 	for k, frame in pairs(children) do
@@ -167,7 +165,7 @@ end
 
 function bdUI:increase_brightness(r, percent)
 	r = bdUI:range_lerp(r, 0, 1, 0, 255)
-	r = r + math.floor( percent / 100 * 255 )
+	r = r + math.floor(percent / 100 * 255)
 	r = bdUI:range_lerp(r, 0, 255, 0, 1)
 	return r
 end
@@ -179,6 +177,7 @@ function bdUI:brighten_color(r, g, b, percent)
 
 	return r, g, b
 end
+
 function bdUI:strip_textures(object, strip_text)
 	if (not object) then return end
 	for i = 1, object:GetNumRegions() do
@@ -196,7 +195,7 @@ function bdUI:strip_textures(object, strip_text)
 				region.Show = noop
 			end
 		end
-	end	
+	end
 end
 
 function bdUI:set_backdrop_basic(frame, force)
@@ -205,7 +204,7 @@ function bdUI:set_backdrop_basic(frame, force)
 	if (not frame.SetBackdrop) then
 		Mixin(frame, BackdropTemplateMixin)
 	end
-	frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})--, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
+	frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border }) --, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
 	frame:SetBackdropColor(unpack(bdUI.media.backdrop))
 	frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 
@@ -214,7 +213,7 @@ function bdUI:set_backdrop_basic(frame, force)
 	bdUI:add_action("bdUI/border_size, loaded", function()
 		local border = bdUI:get_border(frame)
 
-		frame:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
+		frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border })
 		frame:SetBackdropColor(unpack(bdUI.media.backdrop))
 		frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 	end)
@@ -302,7 +301,7 @@ function bdUI:set_backdrop(frame, force_border)
 		-- OVERLAY
 		-- HIGHLIGHT
 		-- self:SetDrawLayer(layer)
-		
+
 		self.t:SetDrawLayer(layer)
 		self.b:SetDrawLayer(layer)
 		self.l:SetDrawLayer(layer)
@@ -322,7 +321,7 @@ function bdUI:set_backdrop(frame, force_border)
 
 		self.r:SetPoint("TOPLEFT", frame._background, "TOPRIGHT", 0, size)
 		self.r:SetPoint("BOTTOMLEFT", frame._background, "BOTTOMRIGHT", 0, -size)
-		
+
 		self.b:SetPoint("TOPLEFT", frame._background, "BOTTOMLEFT", -size, 0)
 		self.b:SetPoint("TOPRIGHT", frame._background, "BOTTOMRIGHT", size, 0)
 
@@ -337,7 +336,7 @@ function bdUI:set_backdrop(frame, force_border)
 			self.r:Show()
 			self.b:Show()
 		end
-	end 
+	end
 
 	frame:set_border_size(border)
 
@@ -350,7 +349,7 @@ end
 
 function bdUI:create_shadow(frame, offset)
 	if frame._shadow then return end
-	
+
 	local shadow = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 	shadow:SetFrameLevel(1)
 	shadow:SetFrameStrata(frame:GetFrameStrata())
@@ -371,9 +370,10 @@ function bdUI:create_shadow(frame, offset)
 		shadow:SetPoint("TOPRIGHT", offset, offset)
 		shadow:SetPoint("BOTTOMRIGHT", offset, -offset)
 
-		shadow:SetBackdrop( { 
-			edgeFile = bdUI.media.shadow, edgeSize = offset,
-			insets = {left = offset, right = offset, top = offset, bottom = offset},
+		shadow:SetBackdrop({
+			edgeFile = bdUI.media.shadow,
+			edgeSize = offset,
+			insets = { left = offset, right = offset, top = offset, bottom = offset },
 		})
 	end
 
@@ -408,6 +408,7 @@ function bdUI:get_class_color_rgb(class)
 	local colors = RAID_CLASS_COLORS[class]
 	return colors.r, colors.g, colors.b
 end
+
 function bdUI:get_class_color_hex(class)
 	return RGBPercToHex(bdUI:get_class_color_rgb(class))
 end
@@ -420,13 +421,13 @@ function bdUI:ColorGradient(perc, ...)
 		local r, g, b = ...
 		return r, g, b
 	end
-	
+
 	local num = select('#', ...) / 3
 
-	local segment, relperc = math.modf(perc*(num-1))
-	local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
+	local segment, relperc = math.modf(perc * (num - 1))
+	local r1, g1, b1, r2, g2, b2 = select((segment * 3) + 1, ...)
 
-	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
+	return r1 + (r2 - r1) * relperc, g1 + (g2 - g1) * relperc, b1 + (b2 - b1) * relperc
 end
 
 function RGBToHex(r, g, b)
@@ -452,7 +453,7 @@ end
 
 function HexToRGBPerc(hex)
 	local rhex, ghex, bhex = string.sub(hex, 1, 2), string.sub(hex, 3, 4), string.sub(hex, 5, 6)
-	return tonumber(rhex, 16)/255, tonumber(ghex, 16)/255, tonumber(bhex, 16)/255
+	return tonumber(rhex, 16) / 255, tonumber(ghex, 16) / 255, tonumber(bhex, 16) / 255
 end
 
 function RGBPercToHex(r, g, b)
@@ -464,25 +465,25 @@ function RGBPercToHex(r, g, b)
 	r = r <= 1 and r >= 0 and r or 0
 	g = g <= 1 and g >= 0 and g or 0
 	b = b <= 1 and b >= 0 and b or 0
-	return string.format("%02x%02x%02x", r*255, g*255, b*255)
+	return string.format("%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 
 GetQuadrant = GetQuadrant or function(frame)
-	local x,y = frame:GetCenter()
-	local hhalf = (x > UIParent:GetWidth()/2) and "RIGHT" or "LEFT"
-	local vhalf = (y > UIParent:GetHeight()/2) and "TOP" or "BOTTOM"
-	return vhalf..hhalf, vhalf, hhalf
+	local x, y = frame:GetCenter()
+	local hhalf = (x > UIParent:GetWidth() / 2) and "RIGHT" or "LEFT"
+	local vhalf = (y > UIParent:GetHeight() / 2) and "TOP" or "BOTTOM"
+	return vhalf .. hhalf, vhalf, hhalf
 end
 
 -- lua doesn't have a good function for round
 function bdUI:round(num, idp)
-	local mult = 10^(idp or 0)
+	local mult = 10 ^ (idp or 0)
 	return floor(num * mult + 0.5) / mult
 end
 
 -- math clamp
-function math.clamp( _in, low, high )
-	return math.min( math.max( _in, low ), high )
+function math.clamp(_in, low, high)
+	return math.min(math.max(_in, low), high)
 end
 
 function math.restrict(_in, low, high)
@@ -493,10 +494,10 @@ end
 
 function bdUI:numberize(n, decimals)
 	decimals = decimals or 0
-	if n >= 10^6 then
-		return string.format("%."..decimals.."fm", n / 10^6)
-	elseif n >= 10^3 then
-		return string.format("%."..decimals.."fk", n / 10^3)
+	if n >= 10 ^ 6 then
+		return string.format("%." .. decimals .. "fm", n / 10 ^ 6)
+	elseif n >= 10 ^ 3 then
+		return string.format("%." .. decimals .. "fk", n / 10 ^ 3)
 	else
 		return tostring(n)
 	end
@@ -519,28 +520,28 @@ function bdUI:skin_button(f, small, color)
 	local colors = bdUI.media.backdrop
 	local hovercolors = bdUI.media.blue
 	if (color == "red") then
-		colors = {.6,.1,.1,0.6}
-		hovercolors = {.6,.1,.1,1}
+		colors = { .6, .1, .1, 0.6 }
+		hovercolors = { .6, .1, .1, 1 }
 	elseif (color == "blue") then
 		colors = bdUI.media.blue
-		hovercolors = {0,0.55,.85,1}
+		hovercolors = { 0, 0.55, .85, 1 }
 	elseif (color == "dark") then
 		colors = bdUI.media.backdrop
-		hovercolors = {.1,.1,.1,1}
+		hovercolors = { .1, .1, .1, 1 }
 	end
 	if (not f.SetBackdrop) then
 		Mixin(f, BackdropTemplateMixin)
 	end
-	f:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 2, insets = {left=2,top=2,right=2,bottom=2}})
-	f:SetBackdropColor(unpack(colors)) 
+	f:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = 2, insets = { left = 2, top = 2, right = 2, bottom = 2 } })
+	f:SetBackdropColor(unpack(colors))
 	f:SetBackdropBorderColor(unpack(bdUI.media.border))
-	f:SetPushedTextOffset(0,-1)
+	f:SetPushedTextOffset(0, -1)
 	f:SetScale(1)
-	
-	f:SetWidth(f:GetTextWidth()+22)
-	
+
+	f:SetWidth(f:GetTextWidth() + 22)
+
 	--if (f:GetWidth() < 24) then
-	if (small and f:GetWidth() <= 24 ) then
+	if (small and f:GetWidth() <= 24) then
 		f:SetWidth(20)
 	end
 
@@ -548,7 +549,7 @@ function bdUI:skin_button(f, small, color)
 	f.highlighter:SetTexture(bdUI.media.flat)
 	f.highlighter:SetVertexColor(1, 1, 1)
 	f.highlighter:SetAlpha(.1)
-	
+
 	if (small) then
 		f:SetNormalFontObject(bdUI:get_font(11))
 		f:SetHighlightFontObject(bdUI:get_font(11))
@@ -558,14 +559,14 @@ function bdUI:skin_button(f, small, color)
 		f:SetHighlightFontObject(bdUI:get_font(13))
 		f:SetHeight(28)
 	end
-	
-	f:HookScript("OnEnter", function(f) 
-		f:SetBackdropColor(unpack(hovercolors)) 
+
+	f:HookScript("OnEnter", function(f)
+		f:SetBackdropColor(unpack(hovercolors))
 	end)
-	f:HookScript("OnLeave", function(f) 
-		f:SetBackdropColor(unpack(colors)) 
+	f:HookScript("OnLeave", function(f)
+		f:SetBackdropColor(unpack(colors))
 	end)
-	
+
 	return true
 end
 

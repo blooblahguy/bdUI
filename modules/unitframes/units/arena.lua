@@ -8,9 +8,9 @@ mod.custom_layout.arena = function(self, unit)
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit)
 	mod.additional_elements.auras(self, unit)
-	
+
 	self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
-	
+
 	mod.align_text(self)
 
 	-- config callback

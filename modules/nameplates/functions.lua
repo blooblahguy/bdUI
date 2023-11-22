@@ -9,22 +9,22 @@ local mod = bdUI:get_module("Nameplates")
 -- place custom functionality here
 --===============================================
 local colors = {}
-colors.tapped = {.6,.6,.6}
-colors.offline = {.6,.6,.6}
+colors.tapped = { .6, .6, .6 }
+colors.offline = { .6, .6, .6 }
 colors.reaction = {}
 colors.class = {}
 
 -- class colors
 for eclass, color in next, RAID_CLASS_COLORS do
 	if not colors.class[eclass] then
-		colors.class[eclass] = {color.r, color.g, color.b}
+		colors.class[eclass] = { color.r, color.g, color.b }
 	end
 end
 
 -- faction colors
 for eclass, color in next, FACTION_BAR_COLORS do
 	if not colors.reaction[eclass] then
-		colors.reaction[eclass] = {color.r, color.g, color.b}
+		colors.reaction[eclass] = { color.r, color.g, color.b }
 	end
 end
 
@@ -58,7 +58,6 @@ function mod:autoUnitColorHex(unit)
 	return RGBPercToHex(mod:autoUnitColor(unit))
 end
 
-
 local function unitColor(self, tapDenied, isPlayer, reaction, status)
 	config = mod:get_save()
 
@@ -75,11 +74,11 @@ local function unitColor(self, tapDenied, isPlayer, reaction, status)
 	else
 		if (status == 3) then -- securely tanking
 			return config.threatcolor
-		-- elseif (targetRole == "TANK") then -- another tank has threat threat
-		-- 	return config.othertankcolor
+			-- elseif (targetRole == "TANK") then -- another tank has threat threat
+			-- 	return config.othertankcolor
 		elseif (status == 2 or status == 1) then -- near or over tank threat
 			return config.threatdangercolor
-		else -- on threat table, but not near tank threat
+		else                               -- on threat table, but not near tank threat
 			return config.nothreatcolor
 		end
 	end
@@ -90,18 +89,18 @@ mod.unitColor = unitColor --memoize(unitColor, mod.cache)
 function mod:numberize(v)
 	if v <= 9999 then return v end
 	if v >= 1000000000 then
-		local value = format("%.1fb", v/1000000000)
+		local value = format("%.1fb", v / 1000000000)
 		return value
 	elseif v >= 1000000 then
-		local value = format("%.1fm", v/1000000)
+		local value = format("%.1fm", v / 1000000)
 		return value
 	elseif v >= 10000 then
-		local value = format("%.1fk", v/1000)
+		local value = format("%.1fk", v / 1000)
 		return value
 	end
 end
 
 function mod:round(num, numDecimalPlaces)
-	local mult = 10^(numDecimalPlaces or 0)
+	local mult = 10 ^ (numDecimalPlaces or 0)
 	return floor(num * mult + 0.5) / mult
 end

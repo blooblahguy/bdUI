@@ -2,25 +2,25 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Skinning")
 
 local function DBM_Style()
-	
+
 end
 
 local function BW_Style()
 	if not BigWigs then return end
 	-- local bars = BigWigs:GetPlugin("Bars", true)
 	-- if not bars then return end
-	
+
 	BigWigsAPI:RegisterBarStyle("Big Dumb", {
 		apiVersion = 1,
 		version = 1,
 		-- barHeight = 16,
 		GetSpacing = function(bar) return 8 end,
-		ApplyStyle = function(bar) 			
+		ApplyStyle = function(bar)
 			bar.bg = CreateFrame('frame', nil, bar)
 			bar.bg:SetFrameStrata("BACKGROUND")
 			bar.bg:SetAllPoints(bar.candyBarBar)
 			bdUI:set_backdrop(bar.bg)
-			
+
 			bar.ibg = CreateFrame('frame', nil, bar)
 			bar.ibg:SetFrameStrata("BACKGROUND")
 			bar.ibg:SetAllPoints(bar.candyBarIconFrame)
@@ -39,25 +39,24 @@ local function BW_Style()
 			bar.candyBarBar:SetStatusBarTexture(bdUI.media.flat)
 			bar.candyBarBar.OldSetPoint = bar.candyBarBar.SetPoint
 			bar.candyBarBar.SetPoint = function() return end
-			
+
 			bar.candyBarDuration:SetFont(bdUI.media.font, 14, "THINOUTLINE")
-			bar.candyBarDuration:SetShadowOffset(0,0)
+			bar.candyBarDuration:SetShadowOffset(0, 0)
 			bar.candyBarDuration:SetJustifyH("RIGHT")
 			bar.candyBarDuration:ClearAllPoints()
 			bar.candyBarDuration:SetPoint("BOTTOMRIGHT", bar.candyBarBar, "TOPRIGHT", 2, 2)
-			
+
 			bar.candyBarLabel:SetFont(bdUI.media.font, 13, "THINOUTLINE")
-			bar.candyBarLabel:SetShadowOffset(0,0)
+			bar.candyBarLabel:SetShadowOffset(0, 0)
 			bar.candyBarLabel:SetJustifyH("LEFT")
 			bar.candyBarLabel:ClearAllPoints()
 			bar.candyBarLabel:SetPoint("BOTTOMLEFT", bar.candyBarBar, "TOPLEFT", -2, 2)
-					
+
 			bar.candyBarBackground:SetTexture(bdUI.media.flat)
-			bar.candyBarBackground:SetVertexColor(.1,.1,.1,.4)
+			bar.candyBarBackground:SetVertexColor(.1, .1, .1, .4)
 			bar.candyBarBackground.SetVertexColor = function() return end
-			
 		end,
-		BarStopped = function(bar) 
+		BarStopped = function(bar)
 			bar.candyBarBar.SetPoint = bar.candyBarBar.OldSetPoint
 		end,
 		GetStyleName = function() return "BigDumb" end,
@@ -78,9 +77,9 @@ bm:SetScript("OnEvent", function(self, event, msg)
 		end
 	elseif event == "PLAYER_LOGIN" then
 		if IsAddOnLoaded("BigWigs") then
-            BW_Style()
-        elseif IsAddOnLoaded("DBM-Core") then
-            DBM_Style()
-        end
+			BW_Style()
+		elseif IsAddOnLoaded("DBM-Core") then
+			DBM_Style()
+		end
 	end
 end)

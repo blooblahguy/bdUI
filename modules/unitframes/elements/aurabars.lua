@@ -41,19 +41,20 @@ mod.additional_elements.aurabars = function(self, unit)
 			if (not IsShiftKeyDown() or not IsAltKeyDown() or not IsAltKeyDown() or not button == "MiddleButton") then return end
 			local name = self.spell:lower()
 			local auras = bdUI:get_module("Auras")
-			
+
 			auras:get_save().blacklist[name] = true
 			auras:store_lowercase_auras()
 			bdUI.caches.auras = {}
 
-			bdUI:debug("Blacklisted "..name)
+			bdUI:debug("Blacklisted " .. name)
 
 			self:GetParent():ForceUpdate()
 		end)
 	end
 
 	-- set better colors
-	self.AuraBars.PostUpdateBar = function(self, unit, statusBar, index, position, duration, expiration, debuffType, isStealable)
+	self.AuraBars.PostUpdateBar = function(self, unit, statusBar, index, position, duration, expiration, debuffType,
+		isStealable)
 		-- dump(bdUI.classColor)
 		statusBar:SetStatusBarColor(bdUI.classColor:GetRGB())
 	end

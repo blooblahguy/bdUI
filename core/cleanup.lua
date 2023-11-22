@@ -10,6 +10,5 @@ function bdUI:cleanup_db()
 	end
 	for k, module in pairs(bdUI.modules) do
 		local save = module:get_save()
-
 	end
 end

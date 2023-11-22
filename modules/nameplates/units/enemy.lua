@@ -17,14 +17,14 @@ mod.enemy_style = function(self, event, unit)
 			self.Name:Hide()
 		end
 	end
-	self.Name:SetTextColor(1,1,1)
+	self.Name:SetTextColor(1, 1, 1)
 	self.Name:ClearAllPoints()
 	if (config.name_position == "Inside" and self.currentStyle == "enemy") then
 		self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
 	else
 		self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.name_offset)
 	end
-	
+
 	if (self.currentStyle and self.currentStyle == "enemy") then return end
 	self.currentStyle = "enemy"
 

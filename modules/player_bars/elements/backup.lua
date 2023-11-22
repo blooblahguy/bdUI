@@ -5,7 +5,7 @@ local class = select(2, UnitClass("player"))
 
 local function getDisplayPower(unit)
 	local _, min, _, _, _, _, showOnRaid = UnitAlternatePowerInfo(unit)
-	if(showOnRaid) then
+	if (showOnRaid) then
 		return ALTERNATE_POWER_INDEX, min
 	end
 end
@@ -51,7 +51,7 @@ mod.create_resources = function(self, unit)
 	bdMove:set_moveable(self.Resources, "Player Resources")
 
 	-- For Power Display
-	
+
 	self.Resources.power = CreateFrame("statusbar", "bdPowerResource", self.Resources)
 	self.Resources.power:SetSize(config.resources_width, config.resources_power_height)
 	self.Resources.power:SetStatusBarTexture(bdUI.media.flat)
@@ -87,6 +87,7 @@ mod.create_resources = function(self, unit)
 		end
 		self:SetStatusBarColor(r * 0.8, g * 0.8, b * 0.8)
 	end
+
 	self.Resources.power.__owner = self
 	self.Resources.power.text = self.Resources.power:CreateFontString(nil, "OVERLAY")
 	self.Resources.power.text:SetFontObject(bdUI:get_font(11))
@@ -133,7 +134,6 @@ mod.create_resources = function(self, unit)
 			totem.bg.multiplier = 0.4
 			self.TotemBar[index] = totem
 		end
-
 	elseif (class == "DEATHKNIGHT") then
 		-- Necrostrike Indicator
 		-- self.Health.NecroticOverlay = self.Resources.secondary:CreateTexture(nil, "OVERLAY", self.Resources.secondary)
@@ -168,7 +168,7 @@ mod.create_resources = function(self, unit)
 			end
 
 			self.Runes[index] = rune
-		end		
+		end
 	elseif (class == "MONK") then
 		-- also add stagger bar
 		self.Stagger = CreateFrame('StatusBar', nil, self.Resources.secondary)
@@ -200,7 +200,6 @@ mod.create_resources = function(self, unit)
 
 		-- resize available bars
 		function self.ClassPower:PostUpdate(cur, max, changed, powerType)
-			
 			if (not self.__isEnabled) then
 				self.__owner.Resources.primary:Hide()
 				return

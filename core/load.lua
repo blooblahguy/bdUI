@@ -23,11 +23,11 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- BDUI_SAVE = BDUI_SAVE or {}
 
 		-- overwrite some ouf colors
-		bdUI.oUF.colors.power[0] = {46/255, 130/255, 215/255}
-		bdUI.oUF.colors.power["MANA"] = {46/255, 130/255, 215/255}
+		bdUI.oUF.colors.power[0] = { 46 / 255, 130 / 255, 215 / 255 }
+		bdUI.oUF.colors.power["MANA"] = { 46 / 255, 130 / 255, 215 / 255 }
 		-- bdUI.oUF.colors.power["RAGE"] = {220/255, 30/255, 30/255}
 		bdUI.oUF.colors.power["ENERGY"] = bdUI.oUF.colors.class["ROGUE"]
-		bdUI.oUF.colors.power.ARCANE_CHARGES = {55/255, 139/255, 224/255}
+		bdUI.oUF.colors.power.ARCANE_CHARGES = { 55 / 255, 139 / 255, 224 / 255 }
 
 		-- Load bdConfig now that we have saved variables
 		bdUI.config_instance = bdUI.bdConfig:load()
@@ -86,10 +86,10 @@ loader:SetScript("OnEvent", function(self, event, addon)
 						else
 							bdUI.bdConfig.header.lock:Click()
 						end
-					end	
+					end
 				end,
 				OnTooltipShow = function(tt)
-					tt:AddLine(bdUI.colorString.."Config")
+					tt:AddLine(bdUI.colorString .. "Config")
 					tt:AddLine("|cffFFAA33Left Click:|r |cff00FF00Open bdUI Config|r")
 					tt:AddLine("|cffFFAA33Right Click:|r |cff00FF00Toggle lock/unlock|r")
 					tt:AddLine("|cffFFAA33Ctrl+Left Click:|r |cff00FF00Reload UI|r")
@@ -105,7 +105,6 @@ loader:SetScript("OnEvent", function(self, event, addon)
 				bdUI_configButton:Register("bdUI", minimapIcon, BDUI_SAVE.MinimapIcon)
 			end
 		end
-
 	end
 end)
 

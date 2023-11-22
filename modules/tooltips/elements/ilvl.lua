@@ -14,7 +14,8 @@ local function add_ilvl(tooltip)
 	if (not mod.config.show_ilvls or not mod.config.enablett) then return end
 	if (not tooltip.GetItem) then return end -- dragonflight
 	local item = tooltip:GetItem()
-	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent = GetItemInfo(item)
+	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent =
+	GetItemInfo(item)
 	if (not itemLevel or itemEquipLoc == "") then return end
 	tooltip:AddDoubleLine("Item Level", itemLevel, nil, nil, nil, 1, 1, 1)
 	-- tooltip:AddLine("Item Level: "..itemLevel)
@@ -63,4 +64,3 @@ function mod:create_ilvl()
 	-- 	end
 	-- end
 end
-

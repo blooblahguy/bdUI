@@ -1,7 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 
-local function buffFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
+local function buffFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff,
+	nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
 	if (bdUI:is_blacklisted(name)) then
 		-- print("blacklisted", name)
 		return false
@@ -34,7 +35,8 @@ local function buffFilter(self, nameplate, unit, name, source, castByMe, debuffT
 	return false
 end
 
-local function debuffFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
+local function debuffFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff,
+	nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
 	if (bdUI:is_blacklisted(name)) then
 		-- print("blacklisted", name)
 		return false
@@ -61,7 +63,8 @@ local function debuffFilter(self, nameplate, unit, name, source, castByMe, debuf
 	return false
 end
 
-local function auraFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
+local function auraFilter(self, nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff,
+	nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
 	-- print(nameplate, unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, highlightPurge, highlightEnrage)
 	-- blacklist is priority
 	if (bdUI:is_blacklisted(name)) then
@@ -98,7 +101,7 @@ local function auraFilter(self, nameplate, unit, name, source, castByMe, debuffT
 		-- print("enrage", name)
 		return true
 	end
-	
+
 	return false
 end
 mod.auraFilter = memoize(auraFilter, mod.cache)

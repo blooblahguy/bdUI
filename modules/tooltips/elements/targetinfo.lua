@@ -12,7 +12,7 @@ local function target_info(self, unit)
 	self.unit = unit
 	self.ilvl = nil
 	self.spec = nil
-	
+
 	if (IsShiftKeyDown()) then
 		mod:getAverageItemLevel(self, self.unit)
 	end
@@ -26,21 +26,21 @@ local function target_info(self, unit)
 			mod:getAverageItemLevel(self, "mouseover")
 		else
 			if (self.ilvl) then
-				_G["GameTooltipTextLeft"..self.ilvl]:SetText("")
-				_G["GameTooltipTextLeft"..self.ilvl]:Hide()
-				_G["GameTooltipTextRight"..self.ilvl]:SetText("")
-				_G["GameTooltipTextRight"..self.ilvl]:Hide()
+				_G["GameTooltipTextLeft" .. self.ilvl]:SetText("")
+				_G["GameTooltipTextLeft" .. self.ilvl]:Hide()
+				_G["GameTooltipTextRight" .. self.ilvl]:SetText("")
+				_G["GameTooltipTextRight" .. self.ilvl]:Hide()
 
-				_G["GameTooltipTextLeft"..self.spec]:SetText("")
-				_G["GameTooltipTextLeft"..self.spec]:Hide()
-				_G["GameTooltipTextRight"..self.spec]:SetText("")
-				_G["GameTooltipTextRight"..self.spec]:Hide()
+				_G["GameTooltipTextLeft" .. self.spec]:SetText("")
+				_G["GameTooltipTextLeft" .. self.spec]:Hide()
+				_G["GameTooltipTextRight" .. self.spec]:SetText("")
+				_G["GameTooltipTextRight" .. self.spec]:Hide()
 
 				self:Show()
 			end
 		end
 	end)
-	
+
 	self._extra = true
 end
 
@@ -78,7 +78,7 @@ local function returnUnitItemLevel(unit)
 	local ilvl = 0
 	local mainHandEquipLoc, offHandEquipLoc
 	local numSlots = 0
-	
+
 	for slot = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do
 		if slot ~= INVSLOT_BODY and slot ~= INVSLOT_TABARD then
 			local itemLink = GetInventoryItemLink(unit, slot)
@@ -92,7 +92,7 @@ local function returnUnitItemLevel(unit)
 	end
 
 	if (ilvl > 0 and numSlots > 0) then
-		return math.floor((ilvl / numSlots)+0.5)
+		return math.floor((ilvl / numSlots) + 0.5)
 	else
 		return 0
 	end
@@ -103,7 +103,7 @@ local function returnUnitSpecialization(unit)
 	local id, name, description, icon, background, role, class = GetSpecializationInfoByID(currentSpec)
 
 	if (name) then
-		return "|T"..icon..":12|t "..name
+		return "|T" .. icon .. ":12|t " .. name
 	end
 	return ""
 end
@@ -112,15 +112,15 @@ local function populateTooltip(tooltip, ilvl, spec)
 	local numlines = tooltip:NumLines()
 
 	if (tooltip.ilvl) then
-		_G["GameTooltipTextLeft"..tooltip.ilvl]:SetText("iLvl")
-		_G["GameTooltipTextLeft"..tooltip.ilvl]:Show()
-		_G["GameTooltipTextRight"..tooltip.ilvl]:SetText(ilvl)
-		_G["GameTooltipTextRight"..tooltip.ilvl]:Show()
-		
-		_G["GameTooltipTextLeft"..tooltip.spec]:SetText("Spec")
-		_G["GameTooltipTextLeft"..tooltip.spec]:Show()
-		_G["GameTooltipTextRight"..tooltip.spec]:SetText(spec)
-		_G["GameTooltipTextRight"..tooltip.spec]:Show()
+		_G["GameTooltipTextLeft" .. tooltip.ilvl]:SetText("iLvl")
+		_G["GameTooltipTextLeft" .. tooltip.ilvl]:Show()
+		_G["GameTooltipTextRight" .. tooltip.ilvl]:SetText(ilvl)
+		_G["GameTooltipTextRight" .. tooltip.ilvl]:Show()
+
+		_G["GameTooltipTextLeft" .. tooltip.spec]:SetText("Spec")
+		_G["GameTooltipTextLeft" .. tooltip.spec]:Show()
+		_G["GameTooltipTextRight" .. tooltip.spec]:SetText(spec)
+		_G["GameTooltipTextRight" .. tooltip.spec]:Show()
 	else
 		tooltip:AddDoubleLine("iLvl", ilvl, .7, .7, .7, unpack(tooltip.levelColor))
 		tooltip:AddDoubleLine("Spec", spec, .7, .7, .7, unpack(tooltip.namecolor))
@@ -134,7 +134,6 @@ end
 local function inspectReady(self, event, guid)
 	local inspectUnit = inspector.inspectUnit
 	if inspectUnit and UnitGUID(inspectUnit) == guid then
-		
 		local delay = 0
 		-- we gotta wait for items from the server
 		local count = returnItemCount(inspectUnit)
@@ -147,7 +146,7 @@ local function inspectReady(self, event, guid)
 			local spec = returnUnitSpecialization(inspectUnit) -- Get unit spec
 
 			if (ilvl > 0) then
-				stored_units[guid] = {GetTime(), ilvl, spec}
+				stored_units[guid] = { GetTime(), ilvl, spec }
 				populateTooltip(tooltip, ilvl, spec)
 			end
 
@@ -156,7 +155,6 @@ local function inspectReady(self, event, guid)
 			inspector.inspectUnit = nil
 		end)
 	end
-		
 end
 
 -- Request the average item level of a unit to be calculated

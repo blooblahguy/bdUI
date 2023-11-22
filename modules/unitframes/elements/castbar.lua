@@ -6,7 +6,8 @@ local function castbar_kickable(self, unit)
 	self.Duration:SetText(bdUI:round(self.max, 1))
 
 	-- find out if its kickable
-	local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo(unit)
+	local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo(
+	unit)
 	if (not name) then
 		name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId = UnitChannelInfo(unit)
 	end
@@ -26,7 +27,7 @@ end
 
 mod.additional_elements.castbar = function(self, unit, align, icon)
 	local config = mod.config
-	if (not config.enablecastbars) then 
+	if (not config.enablecastbars) then
 		self:DisableElement("Castbar")
 		return
 	end
@@ -47,7 +48,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 		self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -bdUI.border)
 		self.Castbar:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
 	end
-	
+
 	self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY")
 	self.Castbar.Text:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 	self.Castbar.Text:SetJustifyV("MIDDLE")
@@ -75,22 +76,23 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self.Castbar.Duration = self.Castbar:CreateFontString(nil, "OVERLAY")
 	self.Castbar.Duration:SetFontObject(bdUI:get_font(font_size, "THINOUTLINE"))
 	self.Castbar.Duration:SetJustifyH("RIGHT")
-	
+
 
 	-- simplifing positioning
 	self.Castbar.Time:SetPoint("LEFT", 6, 0)
 	self.Castbar.Duration:SetPoint("RIGHT", -6, 0)
 	self.Castbar.Text:SetPoint("CENTER")
 	if (icon) then
-		self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar,"TOPLEFT", -mod.padding*2, 0)
+		self.Castbar.Icon:SetPoint("TOPRIGHT", self.Castbar, "TOPLEFT", -mod.padding * 2, 0)
 		self.Castbar.Icon:SetSize(config.castbarheight * 1.5, config.castbarheight * 1.5)
 	end
 
 	bdUI:set_backdrop(self.Castbar)
 
 	-- attribute who interrupted this cast
-	function self.Castbar:CastbarAttribute() 
-		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo()
+	function self.Castbar:CastbarAttribute()
+		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool =
+		CombatLogGetCurrentEventInfo()
 
 		if (event == "SPELL_INTERRUPT" and UnitExists(sourceName)) then
 			local unit_kicked = destGUID
@@ -99,10 +101,12 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 			if (unit_kicked == this_nameplate) then
 				self.Castbar:SetAlpha(0.8)
 				self.Castbar:SetStatusBarColor(unpack(bdUI.media.red))
-				self.Castbar.Text:SetText("|cff"..mod:autoUnitColorHex(sourceName)..UnitName(sourceName).."|r Interrupted")
+				self.Castbar.Text:SetText("|cff" ..
+				mod:autoUnitColorHex(sourceName) .. UnitName(sourceName) .. "|r Interrupted")
 			end
 		end
 	end
+
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", self.Castbar.CastbarAttribute, true)
 
 	-- check if kickable
@@ -113,7 +117,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 
 
 
-	
+
 	self.Castbar.PostCastStart = castbar_kickable
 	self.Castbar.PostChannelStart = castbar_kickable
 	self.Castbar.PostCastNotInterruptible = castbar_kickable

@@ -1,7 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
-local buff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+local buff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source,
+	isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 	isBossDebuff = isBossDebuff or false
 	nameplateShowAll = nameplateShowAll or false
 	nameplateShowPersonal = nameplateShowPersonal or false
@@ -14,7 +15,7 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
-	
+
 	-- force show if whitelisted
 	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		return true
@@ -34,38 +35,39 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 end
 
 -- debuff filter for both icons and bars
-local debuff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+local debuff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source,
+	isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 	isBossDebuff = isBossDebuff or false
 	nameplateShowAll = nameplateShowAll or false
 	nameplateShowPersonal = nameplateShowPersonal or false
 	local castByMe = false
 	if (source) then
-		castByMe =  UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+		castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
 	end
 
 	-- don't show if blacklisted
 	if (bdUI:is_blacklisted(name)) then
 		return false
 	end
-	
+
 	-- check if this is a nameplate whitelist thing from blizzard
 	if (bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)) then
 		-- print("whitelisted nameplate", name)
 		return true
 	end
-	
+
 	-- force show if whitelisted
 	if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 		-- print("whitelisted", name)
 		return true
 	end
-	
+
 	-- if its cast by me and isn't permanent
 	if (duration < 300 and castByMe) then -- cast by a player, but not a mount or an aura
 		-- print("me", name)
 		return true
 	end
-	
+
 	if (not castByPlayer and not source) then
 		-- print("else", name, castByPlayer, source, nameplateShowPersonal, nameplateShowAll)
 		return true
@@ -75,7 +77,7 @@ end
 -- target specific elements
 mod.custom_layout["target"] = function(self, unit)
 	local config = mod.save
-	
+
 	-- adding in the elements
 	mod.additional_elements.power(self, unit)
 	mod.additional_elements.castbar(self, unit, "right")
@@ -89,7 +91,7 @@ mod.custom_layout["target"] = function(self, unit)
 	self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
 	self.Buffs.size = config.target_uf_buff_size
 	self.Buffs['growth-x'] = "LEFT"
-	self.Buffs.initialAnchor  = "BOTTOMRIGHT"
+	self.Buffs.initialAnchor = "BOTTOMRIGHT"
 	self.Buffs.CustomFilter = buff_filter
 
 	-- icon debuffs
@@ -136,16 +138,16 @@ mod.custom_layout["target"] = function(self, unit)
 			self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 2, 2)
 			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
 			self.Buffs.size = config.target_uf_buff_size
-			self.Buffs.initialAnchor  = "BOTTOMLEFT"
+			self.Buffs.initialAnchor = "BOTTOMLEFT"
 			self.Buffs["growth-x"] = "RIGHT"
 		elseif (config.aurastyle == "Icons") then
 			self.Debuffs = self.DisabledDebuffs or self.Debuffs
 			self.Debuffs.size = config.target_uf_debuff_size
 			self.Debuffs:Show()
-			
+
 			self:DisableElement("AuraBars")
 			self.AuraBars:Hide()
-			
+
 			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
 			self.Buffs = self.DisabledBuffs or self.Buffs
 			self.Buffs:Show()

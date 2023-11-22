@@ -5,16 +5,16 @@ function CreateCaseInsensitiveTable()
 	local metatbl = {}
 
 	function metatbl.__index(table, key)
-		if(type(key) == "string") then
-		key = key:lower()
+		if (type(key) == "string") then
+			key = key:lower()
 		end
 
 		return rawget(table, key)
 	end
 
 	function metatbl.__newindex(table, key, value)
-		if(type(key) == "string") then
-		key = key:lower()
+		if (type(key) == "string") then
+			key = key:lower()
 		end
 
 		rawset(table, key, value)
@@ -27,26 +27,26 @@ end
 
 -- sort pairs
 function bdUI:spairs(t, order)
-    -- collect the keys
-    local keys = {}
-    for k in pairs(t) do keys[#keys+1] = k end
+	-- collect the keys
+	local keys = {}
+	for k in pairs(t) do keys[#keys + 1] = k end
 
-    -- if order function given, sort by it by passing the table and keys a, b,
-    -- otherwise just sort the keys 
-    if order then
-        table.sort(keys, function(a,b) return order(a, b) end)
-    else
-        table.sort(keys)
-    end
+	-- if order function given, sort by it by passing the table and keys a, b,
+	-- otherwise just sort the keys
+	if order then
+		table.sort(keys, function(a, b) return order(a, b) end)
+	else
+		table.sort(keys)
+	end
 
-    -- return the iterator function
-    local i = 0
-    return function()
-        i = i + 1
-        if keys[i] then
-            return keys[i], t[keys[i]]
-        end
-    end
+	-- return the iterator function
+	local i = 0
+	return function()
+		i = i + 1
+		if keys[i] then
+			return keys[i], t[keys[i]]
+		end
+	end
 end
 
 -- swaps keys and values in table
@@ -74,9 +74,9 @@ function bdUI:truncate_text(text, fontObject, targetWidth)
 
 	-- if (width <= targetWidth) then return end
 
-	local auto = {"Elysian", "of", "the", "and"}
+	local auto = { "Elysian", "of", "the", "and" }
 
-	local words = {strsplit(" ", text)}
+	local words = { strsplit(" ", text) }
 	for k, word in pairs(words) do
 		print(word)
 	end
@@ -104,11 +104,11 @@ end
 function bdUI:apply_cvars()
 	if (InCombatLockdown()) then return end
 	bdUI.cvars_ignore = true
-	
+
 	-- loop through and set our own
 	for name, value in pairs(bdUI.cvars) do
 		if (value == "default") then
-			SetCVar(name, GetCVarDefault(name))	
+			SetCVar(name, GetCVarDefault(name))
 		else
 			SetCVar(name, value)
 		end
@@ -207,7 +207,7 @@ function bdUI:GetQuadrant(frame)
 	y = y * UIParent:GetScale()
 	local hhalf = (x > UIParent:GetWidth() / 2) and "RIGHT" or "LEFT"
 	local vhalf = (y > UIParent:GetHeight() / 2) and "TOP" or "BOTTOM"
-	return vhalf..hhalf, vhalf, hhalf
+	return vhalf .. hhalf, vhalf, hhalf
 end
 
 --==============================================
@@ -217,7 +217,7 @@ bdUI.eventer = CreateFrame("frame", nil, bdParent)
 --================================================
 -- register events in a single frame
 function bdUI:RegisterEvent(event, callback)
-	local event = {strsplit(",", event)} or {event}
+	local event = { strsplit(",", event) } or { event }
 
 	for k, e in pairs(event) do
 		e = strtrim(e)
@@ -228,6 +228,7 @@ function bdUI:RegisterEvent(event, callback)
 		bdUI.eventer:RegisterEvent(e)
 	end
 end
+
 function bdUI:UnregisterEvent(event, callback)
 	if (bdUI.events[event]) then
 		for k, v in pairs(bdUI.events[event]) do
@@ -246,13 +247,13 @@ bdUI.eventer:SetScript("OnEvent", function(self, ...)
 		end
 	end
 end)
-	
+
 
 --==============================================
 -- Developer Functions
 --==============================================
 function bdUI:debug(...)
-	print(bdUI.colorString.."UI: "..tostring(table.concat({...}, " ")))
+	print(bdUI.colorString .. "UI: " .. tostring(table.concat({ ... }, " ")))
 end
 
 -- no operation function
@@ -264,7 +265,7 @@ function dump_functions(tbl, indent)
 		formatting = string.rep("  ", indent) .. k .. ": "
 		if type(v) == "table" then
 			print(formatting)
-			dump(v, indent+1)
+			dump(v, indent + 1)
 		else
 			if string.find(tostring(v), "function") ~= nil then
 				print(formatting .. tostring(v))
@@ -274,15 +275,15 @@ function dump_functions(tbl, indent)
 end
 
 -- Dump table to chat
-function dump (tbl, indent)
+function dump(tbl, indent)
 	if not indent then indent = 0 end
 	for k, v in pairs(tbl) do
 		formatting = string.rep("  ", indent) .. k .. ": "
 		if type(v) == "table" then
 			print(formatting)
-			dump(v, indent+1)
+			dump(v, indent + 1)
 		elseif type(v) == 'boolean' then
-			print(formatting .. tostring(v))      
+			print(formatting .. tostring(v))
 		else
 			print(formatting .. tostring(v))
 		end

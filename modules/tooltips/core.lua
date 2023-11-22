@@ -12,8 +12,8 @@ local function kill_texture(tex)
 	tex.Show = noop
 end
 
- local function texture_strip(frame)
- 	local ignore = {}
+local function texture_strip(frame)
+	local ignore = {}
 	if (frame._background) then
 		ignore[frame._background] = true
 		ignore[frame._border] = true
@@ -24,14 +24,14 @@ end
 		ignore[frame.b] = true
 	end
 
- 	-- ignore[GameTooltipStatusBar] = true
- 	for k, v in pairs({frame:GetRegions()}) do
- 		if v:GetObjectType() == "Texture" then
- 			if (not ignore[v]) then
- 				kill_texture(v)
- 			end
- 		end
- 	end
+	-- ignore[GameTooltipStatusBar] = true
+	for k, v in pairs({ frame:GetRegions() }) do
+		if v:GetObjectType() == "Texture" then
+			if (not ignore[v]) then
+				kill_texture(v)
+			end
+		end
+	end
 end
 
 -- hook functions and skin
@@ -55,7 +55,8 @@ local function add_ilvl(tooltip)
 	if (not tooltip.GetItem) then return end -- dragonflight
 	local item = tooltip:GetItem()
 	if (not item) then return end
-	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent = GetItemInfo(item)
+	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent =
+	GetItemInfo(item)
 	if (not itemLevel or itemEquipLoc == "") then return end
 	tooltip:AddDoubleLine("Item Level", itemLevel, nil, nil, nil, 1, 1, 1)
 	-- tooltip:AddLine("Item Level: "..itemLevel)
@@ -102,10 +103,10 @@ local function update_unit_tooltip(self)
 	end
 
 	-- update width
-	-- get in here to update level and creature 
+	-- get in here to update level and creature
 	local minwidth = 0
 	for i = 2, self:NumLines() do
-		local line = _G['GameTooltipTextLeft'..i]
+		local line = _G['GameTooltipTextLeft' .. i]
 		local text = line and line:GetText();
 		if (not text) then break end
 
@@ -136,7 +137,7 @@ function mod:create_tooltips()
 	--============================
 	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(self, parent)
 		local config = mod.config
-	
+
 		if (config.anchor == "Frame") then
 			local position, vpos, hpos = bdUI:GetQuadrant(mod.tooltipanchor)
 
@@ -190,16 +191,11 @@ function mod:create_tooltips()
 		GameTooltip:HookScript('OnTooltipSetUnit', update_unit_tooltip)
 		GameTooltip:HookScript("OnTooltipSetItem", add_ilvl)
 	end
-	
+
 	-- mod:RegisterEvent("PLAYER_LOGIN")
 	-- mod:SetScript("OnEvent", function()
 	-- 	if (LibDBIconTooltip) then
 	-- 		LibDBIconTooltip:SetScript('OnShow', hook_and_skin)
 	-- 	end
 	-- end)
-
 end
-
-
-
-

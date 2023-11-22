@@ -14,8 +14,8 @@ bdMove = LibStub("bdMove-1.0")
 LibStub("AceHook-3.0"):Embed(bdUI)
 
 -- Load bdConfig
-ns.bdConfig.media.font = "Interface\\Addons\\"..addonName.."\\core\\media\\PTSansNarrow.ttf"
-ns.bdConfig.media.font_bold = "Interface\\Addons\\"..addonName.."\\core\\media\\PTSansNarrow.ttf"
+ns.bdConfig.media.font = "Interface\\Addons\\" .. addonName .. "\\core\\media\\PTSansNarrow.ttf"
+ns.bdConfig.media.font_bold = "Interface\\Addons\\" .. addonName .. "\\core\\media\\PTSansNarrow.ttf"
 bdUI.bdConfig = ns.bdConfig:new("bdUI", "BDUI_SAVE", bdMove.toggle_lock)
 
 -- set better fonts for libraries

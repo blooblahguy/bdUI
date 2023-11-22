@@ -3,7 +3,7 @@ local mod = bdUI:get_module("Nameplates")
 
 mod.friendly_style = function(self, event, unit)
 	local config = mod.config
-	
+
 	self.Name:SetTextColor(unpack(self.smartColors))
 	self.Name:SetAlpha(config.friendnamealpha)
 
@@ -40,5 +40,4 @@ mod.friendly_style = function(self, event, unit)
 
 	-- power
 	-- self.Power:Hide()
-	
 end

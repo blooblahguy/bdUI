@@ -4,13 +4,13 @@
 local bdUI, c, l = unpack(select(2, ...))
 
 local fixateMobs = {}
-fixateMobs['Tormented Fragment'] = true
-fixateMobs['Razorjaw Gladiator'] = true
-fixateMobs['Sickly Tadpole'] = true
-fixateMobs['Soul Residue'] = true
-fixateMobs['Nightmare Ichor'] = true
-fixateMobs['Atrigan'] = true
-fixateMobs['Tester'] = true
+fixateMobs["Tormented Fragment"] = true
+fixateMobs["Razorjaw Gladiator"] = true
+fixateMobs["Sickly Tadpole"] = true
+fixateMobs["Soul Residue"] = true
+fixateMobs["Nightmare Ichor"] = true
+fixateMobs["Atrigan"] = true
+fixateMobs["Tester"] = true
 
 local specialMobs = {}
 specialMobs["Fel Explosives"] = true
@@ -51,7 +51,8 @@ local config = {
 			{
 				key = "text",
 				type = "text",
-				value = "*Because of the restrictions blizzard places on nameplates, you may have to type /reload to see certain changes take place."
+				value =
+				"*Because of the restrictions blizzard places on nameplates, you may have to type /reload to see certain changes take place."
 			},
 			{
 				key = "heading",
@@ -65,7 +66,7 @@ local config = {
 				step = 0.1,
 				min = 0,
 				max = 1,
-				label = "Global Nameplate Scale",
+				label = "Global Nameplate Scale"
 			},
 			{
 				key = "width",
@@ -74,7 +75,7 @@ local config = {
 				min = 30,
 				max = 250,
 				step = 2,
-				label = "Nameplates Width",
+				label = "Nameplates Width"
 			},
 			{
 				key = "height",
@@ -83,16 +84,16 @@ local config = {
 				min = 4,
 				max = 50,
 				step = 2,
-				label = "Nameplates Height",
+				label = "Nameplates Height"
 			},
 			{
-				key= "targetingTopPadding",
+				key = "targetingTopPadding",
 				type = "range",
 				value = 10,
 				min = 0,
 				max = 30,
 				step = 2,
-				label = "Click target padding top",
+				label = "Click target padding top"
 			},
 			{
 				key = "targetingBottomPadding",
@@ -101,7 +102,7 @@ local config = {
 				min = 0,
 				max = 30,
 				step = 2,
-				label = "Click target padding bottom",
+				label = "Click target padding bottom"
 			},
 			{
 				key = "castbarheight",
@@ -110,7 +111,7 @@ local config = {
 				min = 4,
 				max = 50,
 				step = 2,
-				label = "Castbar Height",
+				label = "Castbar Height"
 			},
 			{
 				key = "castbariconscale",
@@ -119,7 +120,7 @@ local config = {
 				min = 0.1,
 				max = 1,
 				step = 0.1,
-				label = "Castbar Icon Scale",
+				label = "Castbar Icon Scale"
 			},
 			{
 				key = "heading",
@@ -133,33 +134,33 @@ local config = {
 				min = 0,
 				max = 1,
 				step = 0.1,
-				label = "Friendly Name Opacity",
+				label = "Friendly Name Opacity"
 			},
 			{
 				key = "friendlynamehack",
 				type = "toggle",
 				value = false,
-				label = "Friendly Names in Raid",
+				label = "Friendly Names in Raid"
 			},
 			{
 				key = "show_target_indicator",
 				type = "toggle",
 				value = true,
-				label = "Show current target indicator",
+				label = "Show current target indicator"
 			},
 			{
 				key = "show_class_resources",
 				type = "select",
 				values = "All",
-				options = {"None", "ROGUE", "DRUID", "All"},
+				options = { "None", "ROGUE", "DRUID", "All" },
 				label = "Show Class Resources",
-				tooltip = "Things like rogue combat points, holy power",
+				tooltip = "Things like rogue combat points, holy power"
 			},
 			{
 				key = "friendlyplates",
 				type = "toggle",
 				value = false,
-				label = "Show friendly nameplate healthbars",
+				label = "Show friendly nameplate healthbars"
 			},
 			-- {
 			-- 	key = "verticalspacing",
@@ -170,7 +171,7 @@ local config = {
 			-- 	step = 0.1,
 			-- 	label = "Vertical Spacing",
 			-- },
-			
+
 			{
 				key = "nameplatedistance",
 				type = "range",
@@ -178,20 +179,20 @@ local config = {
 				min = 10,
 				max = 100,
 				step = 1,
-				label = "Nameplates Draw Distance",
+				label = "Nameplates Draw Distance"
 			},
 			{
 				key = "hidecasticon",
 				type = "toggle",
 				value = false,
-				label = "Hide Castbar Icon",
+				label = "Hide Castbar Icon"
 			},
 			{
 				key = "enablequests",
 				type = "toggle",
 				value = true,
-				label = "Enable Quest Display on Nameplates",
-			},
+				label = "Enable Quest Display on Nameplates"
+			}
 		}
 	},
 	{
@@ -202,9 +203,9 @@ local config = {
 			{
 				key = "stacking",
 				type = "select",
-				options = {"Stacking", "Overlapping"},
+				options = { "Stacking", "Overlapping" },
 				value = "Stacking",
-				label = "Positioning Behavior",
+				label = "Positioning Behavior"
 			},
 			{
 				key = "stackingspeed",
@@ -214,7 +215,7 @@ local config = {
 				max = 1,
 				step = 0.1,
 				decimals = 1,
-				label = "Positioning speed",
+				label = "Positioning speed"
 			},
 			{
 				key = "largerscale",
@@ -223,7 +224,7 @@ local config = {
 				min = 0.8,
 				max = 2,
 				step = 0.1,
-				label = "Boss nameplate scale",
+				label = "Boss nameplate scale"
 			},
 			{
 				key = "unselectedalpha",
@@ -232,7 +233,7 @@ local config = {
 				min = 0.1,
 				max = 1,
 				step = 0.1,
-				label = "Unselected alpha",
+				label = "Unselected alpha"
 			},
 			{
 				key = "selectedscale",
@@ -241,7 +242,7 @@ local config = {
 				min = 0.1,
 				max = 2,
 				step = 0.1,
-				label = "Selected Scale",
+				label = "Selected Scale"
 			},
 			{
 				key = "occludedalpha",
@@ -250,8 +251,8 @@ local config = {
 				min = 0.1,
 				max = 1,
 				step = 0.1,
-				label = "Occluded nameplate alpha",
-			},
+				label = "Occluded nameplate alpha"
+			}
 			-- {
 			-- 	key = "oocalpha",
 			-- 	type = "range",
@@ -270,7 +271,6 @@ local config = {
 			-- 	step = 0.1,
 			-- 	label = "Out of combat nameplates scale",
 			-- },
-			
 		}
 	},
 	--=======================================
@@ -288,7 +288,7 @@ local config = {
 				min = 8,
 				max = 24,
 				step = 1,
-				label = "Font Size",
+				label = "Font Size"
 			},
 			{
 				key = "clear",
@@ -298,7 +298,7 @@ local config = {
 				key = "target_alert",
 				type = "select",
 				value = "Always",
-				options = {"Always", "Personal", "Hide"},
+				options = { "Always", "Personal", "Hide" },
 				label = "Show Unit Target"
 			},
 			{
@@ -310,8 +310,8 @@ local config = {
 				key = "name_position",
 				type = "select",
 				value = "Inside",
-				options = {"Inside", "Outside"},
-				label = "Name positioning",
+				options = { "Inside", "Outside" },
+				label = "Name positioning"
 			},
 			{
 				key = "name_offset",
@@ -320,20 +320,20 @@ local config = {
 				min = -20,
 				max = 20,
 				step = 1,
-				label = "Name Text offset (positioned outside)",
+				label = "Name Text offset (positioned outside)"
 			},
 			{
 				key = "hideEnemyNames",
 				type = "select",
 				value = "Always Show",
-				options = {"Always Show", "Always Hide", "Only Target", "Hide in Arena"},
-				label = "Hide Enemy Names",
+				options = { "Always Show", "Always Hide", "Only Target", "Hide in Arena" },
+				label = "Hide Enemy Names"
 			},
 			{
 				key = "hidefriendnames",
 				type = "toggle",
 				value = false,
-				label = "Hide Friendly Names",
+				label = "Hide Friendly Names"
 			},
 			{
 				key = "heading",
@@ -344,32 +344,32 @@ local config = {
 				key = "hptext",
 				type = "select",
 				value = "%",
-				options = {"None","HP - %", "HP", "%"},
-				label = "Nameplate Health Text",
+				options = { "None", "HP - %", "HP", "%" },
+				label = "Nameplate Health Text"
 			},
 			{
 				key = "showhptexttargetonly",
 				type = "toggle",
 				value = false,
-				label = "Show Health Text on target only",
+				label = "Show Health Text on target only"
 			},
 			{
 				key = "showenergy",
 				type = "toggle",
 				value = false,
-				label = "Show energy value on healthbar",
+				label = "Show energy value on healthbar"
 			},
 			{
 				key = "clear",
-				type = "clear",
+				type = "clear"
 			},
 			{
 				key = "markposition",
 				type = "select",
 				value = "CENTER",
-				options = {"LEFT","TOP","RIGHT","CENTER"},
+				options = { "LEFT", "TOP", "RIGHT", "CENTER" },
 				label = "Raid Marker position",
-				tooltip = "Where raid markers should be positioned on the nameplate.",
+				tooltip = "Where raid markers should be positioned on the nameplate."
 			},
 			{
 				key = "raidmarkersize",
@@ -378,8 +378,8 @@ local config = {
 				min = 10,
 				max = 50,
 				step = 2,
-				label = "Raid Marker Icon Size",
-			},
+				label = "Raid Marker Icon Size"
+			}
 		}
 	},
 	--=======================================
@@ -393,55 +393,55 @@ local config = {
 			{
 				key = "kickable",
 				type = "color",
-				value = {.1, .4, .7, 1},
+				value = { .1, .4, .7, 1 },
 				label = "Interruptable Cast Color"
 			},
 			{
 				key = "nonkickable",
 				type = "color",
-				value = {.7, .7, .7, 1},
+				value = { .7, .7, .7, 1 },
 				label = "Non-Interruptable Cast Color"
 			},
 			{
 				key = "glowcolor",
 				type = "color",
-				value = {1, 1, 1, 0.6},
+				value = { 1, 1, 1, 0.6 },
 				label = "Target Glow Color"
 			},
 			{
 				key = "threatcolor",
 				type = "color",
-				value = {.79, .3, .21, 1},
+				value = { .79, .3, .21, 1 },
 				label = "Have Aggro Color"
 			},
 			{
 				key = "othertankcolor",
 				type = "color",
-				value = {.83, .2, .51, 1},
+				value = { .83, .2, .51, 1 },
 				label = "Another Tank has Aggro Color"
 			},
 			{
 				key = "nothreatcolor",
 				type = "color",
-				value = {0.3, 1, 0.3, 1},
+				value = { 0.3, 1, 0.3, 1 },
 				label = "No Aggro Color"
 			},
 			{
 				key = "threatdangercolor",
 				type = "color",
-				value = {1, .8, 0.5, 1},
+				value = { 1, .8, 0.5, 1 },
 				label = "Danger Aggro Color"
 			},
 			{
 				key = "executecolor",
 				type = "color",
-				value = {.1, .4, .7,1},
+				value = { .1, .4, .7, 1 },
 				label = "Execute Range Color"
 			},
 			{
 				key = "specialcolor",
 				type = "color",
-				value = {.8, .4, 1, 1},
+				value = { .8, .4, 1, 1 },
 				label = "Special Unit Color"
 			},
 			{
@@ -467,8 +467,8 @@ local config = {
 				min = 0,
 				max = 40,
 				step = 5,
-				label = "Execute range",
-			},
+				label = "Execute range"
+			}
 		}
 	},
 	-------------
@@ -485,7 +485,8 @@ local config = {
 				value = specialMobs,
 				autoadd = specialMobs,
 				label = "Special Unit List",
-				tooltip = "Units who's name are in this list will have their healthbar colored with the 'Special Unit Color' "
+				tooltip =
+				"Units who's name are in this list will have their healthbar colored with the 'Special Unit Color' "
 			},
 			{
 				key = "fixateMobs",
@@ -501,7 +502,7 @@ local config = {
 				value = specialSpells,
 				label = "Special Spell List",
 				tooltip = "Units who have an aura in this list will be colored with 'Special Unit Color'."
-			},
+			}
 		}
 	},
 	-------------
@@ -522,13 +523,13 @@ local config = {
 				key = "highlightPurge",
 				type = "toggle",
 				value = true,
-				label = "Highlight magic auras",
+				label = "Highlight magic auras"
 			},
 			{
 				key = "highlightEnrage",
 				type = "toggle",
 				value = true,
-				label = "Automatically show enrages",
+				label = "Automatically show enrages"
 			},
 			{
 				key = "raidbefuffs",
@@ -537,7 +538,7 @@ local config = {
 				min = 20,
 				max = 100,
 				step = 2,
-				label = "Debuff Size",
+				label = "Debuff Size"
 			},
 			{
 				key = "debuff_timer_size",
@@ -546,14 +547,16 @@ local config = {
 				min = 8,
 				max = 24,
 				step = 1,
-				label = "Debuff Timer Size",
+				label = "Debuff Timer Size"
 			},
 			{
 				key = "link_to_auras",
 				type = "link",
 				value = "Go to Auras configuration",
-				callback = function() bdUI.bdConfig:get_module("Auras"):select() end
-			},
+				callback = function()
+					bdUI.bdConfig:get_module("Auras"):select()
+				end
+			}
 			-- {
 			-- 	key = "text",
 			-- 	type = "text",
@@ -581,7 +584,7 @@ local config = {
 			-- 	tooltip="Useful if you want to blacklist any auras that Blizzard tracks by default.",
 			-- },
 		}
-	},
+	}
 }
 
 local mod = bdUI:register_module("Nameplates", config)

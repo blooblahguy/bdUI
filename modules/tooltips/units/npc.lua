@@ -21,27 +21,28 @@ function mod:npc_tooltip(self, unit)
 	-- local faction = GameTooltip:NumLines() >= 2 and _G["GameTooltipTextLeft"..GameTooltip:NumLines()]
 	local faction, faction_index = GameTooltip:LastLine()
 	local standings = {
-		{"Unknown", ""},
-		{"Hated", "cc0000"},
-		{"Hostile", "ff0000"},
-		{"Unfriendly", "f26000"},
-		{"Neutral", "e4e400"},
-		{"Friendly", "33ff33"},
-		{"Honored", "5fe65d"},
-		{"Revered", "53e9bc"},
-		{"Exalted", "2ee6e6"},
+		{ "Unknown",    "" },
+		{ "Hated",      "cc0000" },
+		{ "Hostile",    "ff0000" },
+		{ "Unfriendly", "f26000" },
+		{ "Neutral",    "e4e400" },
+		{ "Friendly",   "33ff33" },
+		{ "Honored",    "5fe65d" },
+		{ "Revered",    "53e9bc" },
+		{ "Exalted",    "2ee6e6" },
 	}
 
 	if (faction) then
 		for factionIndex = 1, GetNumFactions() do
-			local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = GetFactionInfo(factionIndex)
-				if (not isHeader and name == faction:GetText() and standingId > 0) then
-					local info, color = unpack(standings[standingId + 1])
-					faction:SetText(name.." (|cff"..color..info.."|r)")
+			local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild =
+			GetFactionInfo(factionIndex)
+			if (not isHeader and name == faction:GetText() and standingId > 0) then
+				local info, color = unpack(standings[standingId + 1])
+				faction:SetText(name .. " (|cff" .. color .. info .. "|r)")
 
-					break
-				end
-		  end
+				break
+			end
+		end
 	end
 
 	-- color leveling
@@ -55,13 +56,14 @@ function mod:npc_tooltip(self, unit)
 		local levelColor = GetQuestDifficultyColor(level)
 		if level == -1 then
 			level = '??'
-			levelColor = {r = 1, g = 0, b = 0}
+			levelColor = { r = 1, g = 0, b = 0 }
 		end
 
 		-- Friend / Enemy coloring
 		local r, g, b = _G['GameTooltipTextLeft1']:GetTextColor()
-		local friendColor = {r = r, g = g, b = b}
-		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffFFFF00%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), creatureType, classification)
+		local friendColor = { r = r, g = g, b = b }
+		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffFFFF00%s|r', RGBPercToHex(levelColor), level,
+			RGBPercToHex(friendColor), creatureType, classification)
 	end
 
 	-- hide quest things in raid

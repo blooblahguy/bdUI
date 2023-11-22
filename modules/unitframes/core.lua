@@ -25,7 +25,7 @@ function mod:disable_castbars()
 	else
 		bdUI:HideFrame(_G.CastingBarFrame)
 		bdUI:HideFrame(_G.PlayerCastingBarFrame)
-		bdUI:HideFrame(_G.PetCastingBarFrame)		
+		bdUI:HideFrame(_G.PetCastingBarFrame)
 	end
 end
 
@@ -65,7 +65,7 @@ function mod:config_callback()
 		-- tags
 		mod:update_tags(self, unit)
 	end
-	
+
 	bdUI:set_frame_fade(uf_holder, config.unitframe_ic_alpha, config.unitframe_resting_alpha)
 	bdUI:do_frame_fade()
 end
@@ -107,7 +107,7 @@ local function layout(self, unit)
 				r, g, b,
 				r, g, b,
 			}
-		elseif(UnitReaction(unit, 'player')) then
+		elseif (UnitReaction(unit, 'player')) then
 			self.colorReaction = true
 			local _, class = UnitClass(unit)
 			local cc = oUF.colors.reaction[UnitReaction(unit, 'player')]
@@ -125,7 +125,7 @@ local function layout(self, unit)
 	self.Health.highlight = self.Health:CreateTexture(nil, "OVERLAY")
 	self.Health.highlight:SetTexture(bdUI.media.flat)
 	self.Health.highlight:SetAllPoints()
-	self.Health.highlight:SetVertexColor(1,1,1,.05)
+	self.Health.highlight:SetVertexColor(1, 1, 1, .05)
 	self.Health.highlight:Hide()
 
 	-- Range
@@ -153,7 +153,7 @@ local function layout(self, unit)
 	-- Heal predections
 	local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
 	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
-	incomingHeals:SetStatusBarColor(0.6,1,0.6,.2)
+	incomingHeals:SetStatusBarColor(0.6, 1, 0.6, .2)
 	incomingHeals:Hide()
 
 	-- Damage Absorbs
@@ -171,12 +171,12 @@ local function layout(self, unit)
 	local healAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
 	healAbsorbBar:SetReverseFill(true)
 	healAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
-	healAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	healAbsorbBar:SetStatusBarColor(.3, 0, 0, .5)
 	healAbsorbBar:Hide()
 	local overHealAbsorbBar = CreateFrame('StatusBar', nil, self.Health)
 	overHealAbsorbBar:SetReverseFill(true)
 	overHealAbsorbBar:SetStatusBarTexture(bdUI.media.flat)
-	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0,.5)
+	overHealAbsorbBar:SetStatusBarColor(.3, 0, 0, .5)
 	overHealAbsorbBar:Hide()
 
 	-- Register and callback
@@ -224,7 +224,7 @@ function mod:create_unitframes()
 		player:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff)
 		player:SetParent(uf_holder)
 		bdMove:set_moveable(player, "Player")
-	
+
 		-- target
 		local target = oUF:Spawn("target")
 		target:SetPoint("LEFT", bdParent, "CENTER", xoff, -yoff)
@@ -233,17 +233,17 @@ function mod:create_unitframes()
 
 		-- targetoftarget
 		local targettarget = oUF:Spawn("targettarget")
-		targettarget:SetPoint("TOPRIGHT", target, "BOTTOMRIGHT", 0, -config.castbarheight-20)
+		targettarget:SetPoint("TOPRIGHT", target, "BOTTOMRIGHT", 0, -config.castbarheight - 20)
 		targettarget:SetParent(uf_holder)
 		bdMove:set_moveable(targettarget, "Target of Target")
-	
+
 		-- pet
 		local pet = oUF:Spawn("pet")
-		pet:SetPoint("TOPLEFT", player, "BOTTOMLEFT", 0, -config.castbarheight-20)
+		pet:SetPoint("TOPLEFT", player, "BOTTOMLEFT", 0, -config.castbarheight - 20)
 		pet:SetParent(uf_holder)
 		bdMove:set_moveable(pet, "Pet")
 	end
-	
+
 	-- focus
 	if (config.enablefocus) then
 		local focus = oUF:Spawn("focus")
@@ -251,17 +251,17 @@ function mod:create_unitframes()
 		focus:SetParent(uf_holder)
 		bdMove:set_moveable(focus, "Focus")
 	end
-	
+
 	if (config.bossenable and Boss1TargetFrame) then
 		local arena_boss = CreateFrame("frame", "bdArenaBoss", uf_holder)
 		arena_boss:SetPoint("RIGHT", UIParent, -400, 30)
 		arena_boss:SetSize(config.bosswidth, (config.bossheight + 30) * 5)
 		bdMove:set_moveable(arena_boss, "Boss Frames")
-		
+
 		-- boss
 		local lastboss = nil
 		for i = 1, 5 do
-			local boss = oUF:Spawn("boss"..i, nil)
+			local boss = oUF:Spawn("boss" .. i, nil)
 			if (not lastboss) then
 				boss:SetPoint("TOP", arena_boss, "TOP", 0, 0)
 			else
@@ -270,7 +270,7 @@ function mod:create_unitframes()
 			boss:SetSize(config.bosswidth, config.bossheight)
 			lastboss = boss
 		end
-		
+
 		-- -- arena
 		-- local lastarena = nil
 		-- for i = 1, 5 do

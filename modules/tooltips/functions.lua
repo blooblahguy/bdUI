@@ -13,13 +13,13 @@ local mod = bdUI:get_module("Tooltips")
 -----------------------------------
 function mod:skin(tooltip)
 	bdUI:set_backdrop(tooltip)
-	
+
 	mod:strip(tooltip)
 	tooltip:SetScale(1)
 end
 
 function mod:strip(frame)
-	local regions = {frame:GetRegions()}
+	local regions = { frame:GetRegions() }
 
 	for k, v in pairs(regions) do
 		if (not v.protected) then
@@ -36,28 +36,28 @@ end
 function mod:getUnitColor(unit)
 	unit = unit or "mouseover"
 	local reaction = UnitReaction(unit, "player") or 5
-	
+
 	if UnitIsPlayer(unit) then
 		local _, class = UnitClass(unit)
 		local color = RAID_CLASS_COLORS[class]
 		return color.r, color.g, color.b
 	elseif UnitCanAttack("player", unit) then
 		if UnitIsDead(unit) then
-			return 136/255, 136/255, 136/255
+			return 136 / 255, 136 / 255, 136 / 255
 		else
-			if reaction<4 then
-				return 1, 68/255, 68/255
-			elseif reaction==4 then
-				return 1, 1, 68/255
+			if reaction < 4 then
+				return 1, 68 / 255, 68 / 255
+			elseif reaction == 4 then
+				return 1, 1, 68 / 255
 			end
 		end
 	else
 		if (reaction < 4) then
-			return 48/255, 113/255, 191/255
-		-- elseif (UnitClass(unit)) then
-		-- 	local _, class = UnitClass(unit)
-		-- 	local color = RAID_CLASS_COLORS[class]
-		-- 	return color.r, color.g, color.b 
+			return 48 / 255, 113 / 255, 191 / 255
+			-- elseif (UnitClass(unit)) then
+			-- 	local _, class = UnitClass(unit)
+			-- 	local color = RAID_CLASS_COLORS[class]
+			-- 	return color.r, color.g, color.b
 		else
 			return 1, 1, 1
 		end
@@ -68,22 +68,22 @@ end
 -- Colors
 ------------------------------------
 local colors = {}
-colors.tapped = {.6,.6,.6}
-colors.offline = {.6,.6,.6}
+colors.tapped = { .6, .6, .6 }
+colors.offline = { .6, .6, .6 }
 colors.reaction = {}
 colors.class = {}
 
 -- class colors
 for eclass, color in next, RAID_CLASS_COLORS do
 	if not colors.class[eclass] then
-		colors.class[eclass] = {color.r, color.g, color.b}
+		colors.class[eclass] = { color.r, color.g, color.b }
 	end
 end
 
 -- faction colors
 for eclass, color in next, FACTION_BAR_COLORS do
 	if not colors.reaction[eclass] then
-		colors.reaction[eclass] = {color.r, color.g, color.b}
+		colors.reaction[eclass] = { color.r, color.g, color.b }
 	end
 end
 

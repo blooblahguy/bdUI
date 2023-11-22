@@ -20,4 +20,6 @@ MiniMapTrackingDropDown = MiniMapTrackingDropDown or MinimapCluster.Tracking.But
 -- 	end
 -- end)
 
-print(bdUI.colorString.."UI: "..'Dragonflight pre-patch has made many things extremely difficult to modify, so for now some features may be disabled. Some items can only be moved or configured using the blizzard "Edit Mode" feature.')
+print(bdUI.colorString ..
+"UI: " ..
+'Dragonflight pre-patch has made many things extremely difficult to modify, so for now some features may be disabled. Some items can only be moved or configured using the blizzard "Edit Mode" feature.')

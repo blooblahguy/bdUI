@@ -16,14 +16,16 @@ mod.additional_elements.buffs = function(self, unit)
 	-- end
 	self.Buffs:SetHeight(60)
 	self.Buffs.size = 18
-	self.Buffs.initialAnchor  = "BOTTOMLEFT"
+	self.Buffs.initialAnchor = "BOTTOMLEFT"
 	self.Buffs.spacing = bdUI.border
 	self.Buffs.num = 20
 	self.Buffs['growth-y'] = "UP"
 	self.Buffs['growth-x'] = "RIGHT"
 
-	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
+		isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
+			button.filter)
 
 		-- for blacklisting
 		button.spell = name
@@ -40,12 +42,12 @@ mod.additional_elements.buffs = function(self, unit)
 			if (not IsShiftKeyDown() or not IsAltKeyDown() or not IsAltKeyDown() or not button == "MiddleButton") then return end
 			local name = self.spell:lower()
 			local auras = bdUI:get_module("Auras")
-			
+
 			auras:get_save().blacklist[name] = true
 			auras:store_lowercase_auras()
 			bdUI.caches.auras = {}
 
-			bdUI:debug("Blacklisted "..name)
+			bdUI:debug("Blacklisted " .. name)
 
 			self:GetParent():ForceUpdate()
 		end)

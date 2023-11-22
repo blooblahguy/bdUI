@@ -1,7 +1,8 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
-local buff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+local buff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source,
+	isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 	isBossDebuff = isBossDebuff or false
 	nameplateShowAll = nameplateShowAll or false
 	local castByMe = false
@@ -10,7 +11,8 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 	end
 
 	-- classic
-	duration, expirationTime = bdUI:update_duration(button.Cooldown, unit, spellId, source, name, duration, expirationTime)
+	duration, expirationTime = bdUI:update_duration(button.Cooldown, unit, spellId, source, name, duration,
+		expirationTime)
 
 	if (bdUI:is_blacklisted(name)) then
 		return false
@@ -50,7 +52,7 @@ mod.custom_layout["player"] = function(self, unit)
 
 	self.Buffs.CustomFilter = buff_filter
 	self.AuraBars.CustomFilter = buff_filter
-	
+
 	-- config callback
 	self.callback = function(self, unit, config)
 		self:SetSize(config.playertargetwidth, config.playertargetheight)

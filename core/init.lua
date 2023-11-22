@@ -2,8 +2,8 @@ local addonName, ns = ...
 
 local engine = ns
 engine[1] = CreateFrame("Frame", nil, UIParent) -- core ui
-engine[2] = {} -- config
-engine[3] = {} -- locale
+engine[2] = {}                                  -- config
+engine[3] = {}                                  -- locale
 bdUI = engine[1]
 bdUI.caches = {}
 bdUI.name = addonName
@@ -25,26 +25,26 @@ bdUI.aura_lists.special = {}
 bdUI.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
 	arial = "fonts\\ARIALN.ttf",
-	smooth = "Interface\\Addons\\"..addonName.."\\core\\media\\smooth.tga",
-	font = "Interface\\Addons\\"..addonName.."\\core\\media\\PTSansNarrow.ttf",
-	myriad = "Interface\\Addons\\"..addonName.."\\core\\media\\Myriad.ttf",
-	arrow = "Interface\\Addons\\"..addonName.."\\core\\media\\arrow.tga",
-	align = "Interface\\Addons\\"..addonName.."\\core\\media\\align.tga",
-	shadow = "Interface\\Addons\\"..addonName.."\\mcore\\media\\shadow.blp",
-	highlight = "Interface\\Addons\\"..addonName.."\\core\\media\\highlight.blp",
+	smooth = "Interface\\Addons\\" .. addonName .. "\\core\\media\\smooth.tga",
+	font = "Interface\\Addons\\" .. addonName .. "\\core\\media\\PTSansNarrow.ttf",
+	myriad = "Interface\\Addons\\" .. addonName .. "\\core\\media\\Myriad.ttf",
+	arrow = "Interface\\Addons\\" .. addonName .. "\\core\\media\\arrow.tga",
+	align = "Interface\\Addons\\" .. addonName .. "\\core\\media\\align.tga",
+	shadow = "Interface\\Addons\\" .. addonName .. "\\mcore\\media\\shadow.blp",
+	highlight = "Interface\\Addons\\" .. addonName .. "\\core\\media\\highlight.blp",
 	fonts = {},
 	backgrounds = {},
-	border = {.03, .04, .05, 1},
-	backdrop = {.08, .09, .11, 0.9},
-	red = {.62, .17, .18, 1},
-	blue = {.2, .4, 0.8, 1},
-	green = {.1, .7, 0.3, 1},
+	border = { .03, .04, .05, 1 },
+	backdrop = { .08, .09, .11, 0.9 },
+	red = { .62, .17, .18, 1 },
+	blue = { .2, .4, 0.8, 1 },
+	green = { .1, .7, 0.3, 1 },
 }
 
 -- bdUI.media.font = bdUI.media.other_font
 
 --===================================================================
--- Scale & Alt-UIParent 
+-- Scale & Alt-UIParent
 --===================================================================
 bdParent = CreateFrame("frame", "bdUIParent", UIParent)
 bdParent:SetPoint("TOPLEFT", UIParent)
@@ -58,6 +58,7 @@ function bdUI:calculate_scale()
 	bdUI.border = bdUI.pixel * 2
 	bdParent:SetScale(bdUI.pixel)
 end
+
 bdUI:calculate_scale()
 
 bdUI.hidden = CreateFrame("frame", nil, nil)
@@ -105,8 +106,9 @@ function bdUI:get_game_version()
 	end
 
 	bdUI.version = version
-	bdUI.expansion = game 
+	bdUI.expansion = game
 
 	return game, tocversion
 end
+
 bdUI:get_game_version()

@@ -9,7 +9,7 @@ mod.additional_elements.power = function(self, unit)
 	self.Power = CreateFrame("StatusBar", nil, self)
 	self.Power:SetStatusBarTexture(bdUI.media.flat)
 	self.Power:ClearAllPoints()
-	
+
 	self.Power:SetHeight(config.playertargetpowerheight)
 	self.Power.frequentUpdates = true
 	self.Power.colorPower = true

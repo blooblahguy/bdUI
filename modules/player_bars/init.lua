@@ -60,7 +60,7 @@ local config = {
 		type = "text",
 		value = "The resource settings show things like mana, combo points, totems, stagger, castbar, and more.",
 	},
-	
+
 	{
 		key = "general_tab",
 		type = "tab",
@@ -212,13 +212,13 @@ local config = {
 			},
 			{
 				key = "special_1_color",
-				value = {.81, .76, .36},
+				value = { .81, .76, .36 },
 				type = "color",
 				label = "Special 1 Color"
 			},
 			{
 				key = "special_2_color",
-				value = {.51, .85, .46},
+				value = { .51, .85, .46 },
 				type = "color",
 				label = "Special 2 Color"
 			},

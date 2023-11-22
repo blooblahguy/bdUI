@@ -28,16 +28,16 @@ function mod:minimap_skin()
 
 	-- fixes texture issue with non round minimaps
 	Minimap:EnableMouse(true)
-	if (Minimap.SetQuestBlobRingAlpha) then	
+	if (Minimap.SetQuestBlobRingAlpha) then
 		Minimap:SetQuestBlobRingAlpha(0)
 	end
-	if (Minimap.SetArchBlobRingAlpha) then	
+	if (Minimap.SetArchBlobRingAlpha) then
 		Minimap:SetArchBlobRingAlpha(0)
 	end
-	if (Minimap.SetArchBlobRingScalar) then	
+	if (Minimap.SetArchBlobRingScalar) then
 		Minimap:SetArchBlobRingScalar(0)
 	end
-	if (Minimap.SetQuestBlobRingScalar) then	
+	if (Minimap.SetQuestBlobRingScalar) then
 		Minimap:SetQuestBlobRingScalar(0)
 	end
 end

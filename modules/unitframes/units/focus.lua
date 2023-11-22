@@ -17,14 +17,15 @@ mod.custom_layout["focus"] = function(self, unit)
 	self.Debuffs.size = 20
 	self.Debuffs:SetSize(config.focuswidth / 2, config.focusheight)
 	self.Debuffs:ClearAllPoints()
-	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border*2)
-	self.Debuffs.CustomFilter  = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border * 2)
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
+		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
 		local castByMe = false
 		if (source) then
-			castByMe =  UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
+			castByMe = UnitIsUnit(source, "player") or UnitIsUnit(source, "pet") or UnitIsUnit(source, "vehicle")
 		end
 
 		if (bdUI:is_blacklisted(name)) then
@@ -35,7 +36,7 @@ mod.custom_layout["focus"] = function(self, unit)
 			return true
 		end
 
-		if (not castByMe) then 
+		if (not castByMe) then
 			return false
 		end
 
@@ -48,8 +49,9 @@ mod.custom_layout["focus"] = function(self, unit)
 	self.Buffs.size = 20
 	self.Buffs:SetSize(config.focuswidth / 2, config.focusheight)
 	self.Buffs:ClearAllPoints()
-	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border*3)
-	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border * 3)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
+		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
@@ -61,7 +63,7 @@ mod.custom_layout["focus"] = function(self, unit)
 		if (bdUI:is_blacklisted(name)) then
 			return false
 		end
-		
+
 		if (bdUI:is_whitelisted(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)) then
 			return true
 		end
@@ -76,7 +78,7 @@ mod.custom_layout["focus"] = function(self, unit)
 
 		return not castByPlayer or not source or not UnitIsPlayer(source)
 	end
-	
+
 	-- config callback
 	self.callback = function()
 		self.Power:SetHeight(config.focuspower)

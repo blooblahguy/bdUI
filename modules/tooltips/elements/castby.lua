@@ -8,7 +8,7 @@ function mod:create_castby()
 
 		if (not name) then return end
 		if (not UnitIsPlayer(name)) then return end
-		
+
 		self:AddDoubleLine("Cast by:", name, nil, nil, nil, mod:getUnitColor(name))
 		self:Show()
 	end)

@@ -10,7 +10,7 @@ local wrapText = function(text)
 			local last = text:gsub("(.*\n)(.*)", "%2")
 			local startPos = last:find(str)
 			if startPos and startPos >= 45 then
-				local newText = last:sub(1, startPos+1).."\n"..last:sub(startPos+3, last:len())
+				local newText = last:sub(1, startPos + 1) .. "\n" .. last:sub(startPos + 3, last:len())
 				text = text:gsub(last, newText)
 			end
 		end
@@ -21,9 +21,9 @@ end
 -- last line
 GameTooltip["LastLine"] = function(self)
 	local lines = self:NumLines(true)
-	
+
 	for i = 10, 1, -1 do
-		local line = _G["GameTooltipTextLeft"..i]
+		local line = _G["GameTooltipTextLeft" .. i]
 		local text = line and line:GetText()
 		if (text) then
 			return line, i - 1
@@ -51,16 +51,16 @@ GameTooltip["GetLine"] = function(self, num)
 		num = tonumber(num)
 		return num
 	else
-		return _G["GameTooltipTextLeft"..num]
+		return _G["GameTooltipTextLeft" .. num]
 	end
 end
 
 --Find a line
-GameTooltip["FindLine"] = function(self, msg, exact, from) 
+GameTooltip["FindLine"] = function(self, msg, exact, from)
 	if not msg then return end
 	local lines = self:NumLines(true)
 	for i = from or 1, lines do
-		local line = _G["GameTooltipTextLeft"..i]
+		local line = _G["GameTooltipTextLeft" .. i]
 		local text = line and line:GetText()
 		if text and ((exact and text == msg) or (not exact and text:find(msg))) then
 			return line, i
@@ -75,7 +75,7 @@ GameTooltip["NumLines"] = function(self, ignoreDeleted)
 		local line, realLines, i = true, 0, 0
 		while line do
 			i = i + 1
-			line = _G[self:GetName().."TextLeft"..i]
+			line = _G[self:GetName() .. "TextLeft" .. i]
 			local text = line and line:GetText()
 			if text and string.len(text) > 0 then
 				realLines = realLines + 1
@@ -93,32 +93,32 @@ GameTooltip["DeleteLine"] = function(self, line, exact)
 	local numLines, originalNum, barNum = self:NumLines()
 	local line2 = false
 	if type(line) == "number" then
-		line = _G["GameTooltipTextLeft"..line]
-		line2 = _G["GameTooltipTextRight"..line]
+		line = _G["GameTooltipTextLeft" .. line]
+		line2 = _G["GameTooltipTextRight" .. line]
 	elseif type(line) == "string" then
 		line = self:FindLine(line, exact)
 	end
 	if line then
 		originalNum = self:GetLine(line)
-		line2 = _G["GameTooltipTextRight"..originalNum]
+		line2 = _G["GameTooltipTextRight" .. originalNum]
 		-- print(originalNum)
-		if line ~= _G["GameTooltipTextLeft"..numLines] then
+		if line ~= _G["GameTooltipTextLeft" .. numLines] then
 			local number = self:GetLine(line)
 			local tbl = {}
-			for i = number+1, numLines do
-				tbl[i-1] = _G["GameTooltipTextLeft"..i]
+			for i = number + 1, numLines do
+				tbl[i - 1] = _G["GameTooltipTextLeft" .. i]
 			end
 			for k, v in pairs(tbl) do
 				local text = v:GetText()
-				local newLine = _G["GameTooltipTextLeft"..k]
-				if v:GetStringHeight() > select(2,v:GetFont()) then
+				local newLine = _G["GameTooltipTextLeft" .. k]
+				if v:GetStringHeight() > select(2, v:GetFont()) then
 					text = wrapText(text)
 				end
 				newLine.deleted = v.deleted
 				newLine:SetText(text)
 				newLine:SetTextColor(v:GetTextColor())
 			end
-			line = _G["GameTooltipTextLeft"..numLines]
+			line = _G["GameTooltipTextLeft" .. numLines]
 			if not line then return end
 		end
 		line.deleted = true
@@ -138,6 +138,6 @@ GameTooltip["GetLines"] = function(self, num)
 		num = tonumber(num)
 		return num
 	else
-		return _G["GameTooltipTextLeft"..num]
+		return _G["GameTooltipTextLeft" .. num]
 	end
 end

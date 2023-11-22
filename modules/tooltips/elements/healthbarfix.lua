@@ -5,7 +5,7 @@ local function update_healthbars(self, unit)
 	if (self._healthbars) then return end
 
 	local function update_color(self)
-		self:SetStatusBarColor( mod:getUnitColor() )
+		self:SetStatusBarColor(mod:getUnitColor())
 	end
 
 	GameTooltipStatusBar:ClearAllPoints()
@@ -18,7 +18,7 @@ local function update_healthbars(self, unit)
 	GameTooltipStatusBar:SetScript("OnEvent", function(self, event, unit)
 		if (not UnitExists("mouseover")) then return end
 		if (event == "UNIT_HEALTH" and not UnitIsUnit("mouseover", unit)) then return end
-		
+
 		local hp, hpmax = UnitHealth("mouseover"), UnitHealthMax("mouseover")
 		self:SetMinMaxValues(0, hpmax)
 		self:SetValue(hp)
@@ -31,7 +31,7 @@ local function update_healthbars(self, unit)
 			perc = ''
 		end
 		self.text:SetText(perc)
-		
+
 		update_color(self)
 	end)
 

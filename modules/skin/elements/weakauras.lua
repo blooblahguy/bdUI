@@ -18,14 +18,14 @@ local function skin_wa_frame(frame)
 		-- print("stacks", fontHeight)
 		frame.stacks:SetFontObject(bdUI:get_font(fontHeight))
 	end
-	
+
 	if frame.timer then
 		local font, fontHeight, outline = frame.timer:GetFont()
 		fontHeight = fontHeight > 0 and fontHeight or 14;
 		-- print("timer", fontHeight)
 		frame.timer:SetFontObject(bdUI:get_font(fontHeight))
 	end
-	
+
 	if frame.text then
 		local font, fontHeight, outline = frame.text:GetFont()
 		fontHeight = fontHeight > 0 and fontHeight or 18;
@@ -43,7 +43,7 @@ end
 -- run on wa events
 local wa_skin = CreateFrame("Frame")
 wa_skin:RegisterEvent("ADDON_LOADED")
-wa_skin:SetScript("OnEvent", function(self, event,addon)
+wa_skin:SetScript("OnEvent", function(self, event, addon)
 	if (event == "ADDON_LOADED" and not addon == "WeakAuras") then return end
 
 	C_Timer.After(1, function()
@@ -57,7 +57,7 @@ function mod:skin_weak_auras()
 	local config = bdUI:get_module("General"):get_save()
 	if (not config.skin_was) then return end
 
-	for k, wa in pairs({WeakAurasFrame:GetChildren()}) do
+	for k, wa in pairs({ WeakAurasFrame:GetChildren() }) do
 		if (wa.icon) then
 			-- skin_wa_frame(wa)
 		end

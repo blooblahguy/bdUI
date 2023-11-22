@@ -5,22 +5,22 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
 local colors = {}
-colors.tapped = {.6,.6,.6}
-colors.offline = {.6,.6,.6}
+colors.tapped = { .6, .6, .6 }
+colors.offline = { .6, .6, .6 }
 colors.reaction = {}
 colors.class = {}
 
 -- class colors
 for eclass, color in next, RAID_CLASS_COLORS do
 	if not colors.class[eclass] then
-		colors.class[eclass] = {color.r, color.g, color.b}
+		colors.class[eclass] = { color.r, color.g, color.b }
 	end
 end
 
 -- faction colors
 for eclass, color in next, FACTION_BAR_COLORS do
 	if not colors.reaction[eclass] then
-		colors.reaction[eclass] = {color.r, color.g, color.b}
+		colors.reaction[eclass] = { color.r, color.g, color.b }
 	end
 end
 
@@ -46,7 +46,7 @@ function mod:display_text(self, unit, align)
 		RIGHT = "LEFT"
 	end
 
-	
+
 	if (config.textlocation == "Inside") then
 		self.Name:SetFontObject(bdUI:get_font(11, "THINOUTLINE"))
 		self.Curhp:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
@@ -58,9 +58,9 @@ function mod:display_text(self, unit, align)
 	elseif (config.textlocation == "Outside") then
 		self.Name:SetFontObject(bdUI:get_font(13, "THINOUTLINE"))
 		self.Curhp:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
-		
-		self.Name:SetPoint("TOP"..RIGHT, self.TextHolder, "TOP"..LEFT, -offset, 0)
-		self.Curhp:SetPoint("TOP"..RIGHT, self.Name, "BOTTOM"..RIGHT, 0, -mod.padding)
+
+		self.Name:SetPoint("TOP" .. RIGHT, self.TextHolder, "TOP" .. LEFT, -offset, 0)
+		self.Curhp:SetPoint("TOP" .. RIGHT, self.Name, "BOTTOM" .. RIGHT, 0, -mod.padding)
 		self.Curpp:SetPoint(LEFT, offset, 0)
 
 		self.Status:SetPoint(RIGHT, -offset, 0)
@@ -68,9 +68,7 @@ function mod:display_text(self, unit, align)
 		if (unit == "player") then
 			self.Name:Hide()
 		end
-
 	end
-
 end
 
 mod.align_text = function(self, align)

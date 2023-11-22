@@ -52,7 +52,7 @@ local global_patterns = {
 	["SPELL_USE_ALL_FOCUS"] = "Consumed 100% |CFFFFCC33Fokus|r.",
 	["SPELL_USE_ALL_HEALTH"] = "Consumed 100% |CFF00FF00Health|r.",
 	["SPELL_USE_ALL_MANA"] = "Consumed 100% |CFF3399FFMana|r.",
-	
+
 	["SPELL_USE_ALL_RAGE"] = "Consumed 100% |CFFCC3333Rage|r.",
 	["RAGE_COST"] = "|CFFCC3333%s Rage|r",
 
@@ -117,12 +117,11 @@ local tooltips = {
 local function skin_item_icons(self)
 	local texture
 	for i = 1, 10 do
-		texture = _G[self:GetName().."Texture"..i]
+		texture = _G[self:GetName() .. "Texture" .. i]
 
 		if texture and texture:GetTexture() then
 			if (not texture.border) then
 				-- texture.border = self:CreateTexture(nil, "BACKGROUND")
-				
 			end
 
 			-- print(texture:GetTexture(), texture:IsShown())
@@ -133,7 +132,7 @@ local function skin_item_icons(self)
 			-- texture.border:SetPoint("BOTTOMRIGHT", texture, bdUI.pixel, -bdUI.pixel)
 			-- texture.border:SetShown(texture:IsShown())
 		end
--- 		local text = line and line:GetText()
+		-- 		local text = line and line:GetText()
 	end
 end
 
@@ -190,7 +189,6 @@ function mod:color_tooltips()
 				try_global_overwrite_secure(self)
 			end
 		end)
-		
 	end
 
 	-- bdUI:SecureHookScript(GameTooltip, "OnShow", try_global_overwrite_secure) -- testing this to see if it doesn't trigger taints

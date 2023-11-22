@@ -5,8 +5,8 @@ local config
 local collapsed = false
 
 local function collapse()
-	if (ObjectiveTracker_Collapse) then 
-		ObjectiveTracker_Collapse() 
+	if (ObjectiveTracker_Collapse) then
+		ObjectiveTracker_Collapse()
 	elseif (WatchFrameCollapseExpandButton and not collapsed) then
 		collapsed = true
 		WatchFrameCollapseExpandButton:Click()
@@ -14,7 +14,7 @@ local function collapse()
 end
 
 local function expand()
-	if (ObjectiveTracker_Expand) then 
+	if (ObjectiveTracker_Expand) then
 		ObjectiveTracker_Expand()
 	elseif (WatchFrameCollapseExpandButton and collapsed) then
 		collapsed = false
@@ -60,7 +60,7 @@ function mod:create_objective_tracker()
 
 	-- auto collapse in combat
 	local f = CreateFrame("Frame")
-	f:SetScript("OnEvent",function(self, event, addon)
+	f:SetScript("OnEvent", function(self, event, addon)
 		if (event == "ENCOUNTER_START" or (event == "PLAYER_ENTERING_WORLD" and IsInRaid())) then
 			collapse()
 		elseif (event == "ENCOUNTER_END" and not IsInRaid()) then

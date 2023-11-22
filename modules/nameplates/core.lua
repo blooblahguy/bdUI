@@ -38,7 +38,8 @@ local function PostCreateButton(self, button)
 end
 
 local function PostUpdateButton(self, unit, button, index, position)
-	local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+	local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
+		button.filter)
 	bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 
 	if (self.last_timer_size ~= config.debuff_timer_size) then
@@ -50,9 +51,9 @@ local function PostUpdateButton(self, unit, button, index, position)
 	button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
 	if (config.highlightPurge and (isStealable or debuffType == "Magic")) then -- purge alert
 		button._border:SetVertexColor(unpack(config.purgeColor))
-	elseif (config.highlightEnrage and debuffType == "") then -- enrage alert
+	elseif (config.highlightEnrage and debuffType == "") then               -- enrage alert
 		button._border:SetVertexColor(unpack(config.enrageColor))
-	else -- neither
+	else                                                                    -- neither
 		button._border:SetVertexColor(unpack(bdUI.media.border))
 	end
 end
@@ -69,12 +70,15 @@ function mod:force_size()
 		forced = false
 	end
 end
+
 function mod:nameplate_size()
 	if (InCombatLockdown()) then return end
 
 	C_NamePlate.SetNamePlateFriendlySize(config.width, 0.1)
-	C_NamePlate.SetNamePlateEnemySize(config.width, (config.height + config.targetingTopPadding + config.targetingBottomPadding))
-	C_NamePlate.SetNamePlateSelfSize(config.width, (config.height / 2 + config.targetingTopPadding + config.targetingBottomPadding))
+	C_NamePlate.SetNamePlateEnemySize(config.width,
+		(config.height + config.targetingTopPadding + config.targetingBottomPadding))
+	C_NamePlate.SetNamePlateSelfSize(config.width,
+		(config.height / 2 + config.targetingTopPadding + config.targetingBottomPadding))
 	C_NamePlate.SetNamePlateFriendlyClickThrough(true)
 	C_NamePlate.SetNamePlateSelfClickThrough(true)
 end
@@ -269,7 +273,7 @@ local function find_target(self, event, unit)
 			self.target_arrows:Show()
 		end
 		if (not UnitIsUnit(unit, "player")) then
-		-- self.Health._shadow:Show()
+			-- self.Health._shadow:Show()
 		end
 	else
 		self.isTarget = false
@@ -451,7 +455,7 @@ local function nameplate_create(self, unit)
 		total = total + elapsed
 		if (total < 0.1) then return end
 		if (self.currentStyle ~= "enemy") then return end
-		
+
 		total = 0
 		update_threat(self, "", self.unit)
 	end)
@@ -477,7 +481,8 @@ local function nameplate_create(self, unit)
 		maxOverflow = 1
 	}
 
-	function self.HealthPrediction.PostUpdate(self, unit, myIncomingHeal, otherIncomingHeal, absorba, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
+	function self.HealthPrediction.PostUpdate(self, unit, myIncomingHeal, otherIncomingHeal, absorba, healAbsorb,
+		hasOverAbsorb, hasOverHealAbsorb)
 		-- if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
 
 		local absorb = UnitGetTotalAbsorbs and UnitGetTotalAbsorbs(unit) or 0
@@ -615,7 +620,7 @@ local function nameplate_create(self, unit)
 		hp = bdUI:numberize(hp)
 
 		if (config.hptext == "HP - %") then
-			return table.concat({hp, hpPercent}, " - ")
+			return table.concat({ hp, hpPercent }, " - ")
 		elseif (config.hptext == "HP") then
 			return hp
 		elseif (config.hptext == "%") then
@@ -648,14 +653,14 @@ local function nameplate_create(self, unit)
 	-- RAID MARKER
 	--==========================================
 	local marker_colors = {
-		[1] = {1, 1, .44, .8},
-		[2] = {1, .73, .19, .8},
-		[3] = {.79, .2, 1, .8},
-		[4] = {.47, 1, .4, .8},
-		[5] = {.94, .94, .94, .8},
-		[6] = {.36, .78, 1, .8},
-		[7] = {1, .43, .43, .8},
-		[8] = {1, 1, 1, .8}
+		[1] = { 1, 1, .44, .8 },
+		[2] = { 1, .73, .19, .8 },
+		[3] = { .79, .2, 1, .8 },
+		[4] = { .47, 1, .4, .8 },
+		[5] = { .94, .94, .94, .8 },
+		[6] = { .36, .78, 1, .8 },
+		[7] = { 1, .43, .43, .8 },
+		[8] = { 1, 1, 1, .8 }
 	}
 	self.RaidTargetIndicator = self.OverlayHolder:CreateTexture(nil, "OVERLAY", nil, 7)
 	-- self.RaidTargetIndicator.parent = self
@@ -675,7 +680,6 @@ local function nameplate_create(self, unit)
 	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
 	self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
 	self.FixateAlert.PostUpdate = function(self, unit, targetUnit, isTargeting, isTargetingPlayer)
-
 		self:Hide()
 
 		if (not isTargeting) then
@@ -719,7 +723,8 @@ local function nameplate_create(self, unit)
 	self.Buffs["growth-x"] = "LEFT"
 	self.Buffs.PostCreateButton = PostCreateButton
 	self.Buffs.PostUpdateButton = PostUpdateButton
-	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
+		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
@@ -729,7 +734,8 @@ local function nameplate_create(self, unit)
 		end
 
 		-- call to memoized function
-		return mod:buffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
+		return mod:buffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff,
+			nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
 	end
 
 	-- debuffs
@@ -748,7 +754,8 @@ local function nameplate_create(self, unit)
 	self.Debuffs["growth-x"] = "RIGHT"
 	self.Debuffs.PostCreateButton = PostCreateButton
 	self.Debuffs.PostUpdateButton = PostUpdateButton
-	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
+		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
@@ -758,7 +765,8 @@ local function nameplate_create(self, unit)
 		end
 
 		-- call to memoized function
-		return mod:debuffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
+		return mod:debuffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff,
+			nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
 	end
 
 	--==========================================

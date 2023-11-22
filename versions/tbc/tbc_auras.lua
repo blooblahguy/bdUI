@@ -4,7 +4,7 @@ local raidauras = {}
 local special = {}
 
 if (not UnitGroupRolesAssigned) then
-	function UnitGroupRolesAssigned(unit) 
+	function UnitGroupRolesAssigned(unit)
 		if (GetPartyAssignment("MAINTANK", unit)) then
 			return "TANK"
 		else
@@ -221,5 +221,5 @@ raidauras = bdUI:lowercase_table(raidauras)
 special = bdUI:lowercase_table(special)
 
 -- merge tables
-for k,v in pairs(raidauras) do bdUI.aura_lists.raid[k] = v end
-for k,v in pairs(special) do bdUI.aura_lists.special[k] = v end
+for k, v in pairs(raidauras) do bdUI.aura_lists.raid[k] = v end
+for k, v in pairs(special) do bdUI.aura_lists.special[k] = v end

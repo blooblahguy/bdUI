@@ -16,12 +16,12 @@ mod.additional_elements.runes = function(self, unit)
 	local width = (config.playertargetwidth - (gap * 5)) / 6
 	for index = 1, 6 do
 		-- Position and size of the rune bar indicators
-		local rune = CreateFrame('StatusBar', "bdUnitframesRune"..index, self.ResourceHolder)
+		local rune = CreateFrame('StatusBar', "bdUnitframesRune" .. index, self.ResourceHolder)
 		rune:SetStatusBarTexture(bdUI.media.flat)
 		rune:SetSize(width, border * 3)
 		rune:ClearAllPoints()
 		bdUI:set_backdrop(rune)
-		
+
 		if (not last) then
 			rune:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, border)
 		else
@@ -32,6 +32,6 @@ mod.additional_elements.runes = function(self, unit)
 		runes[index] = rune
 	end
 
-    -- Register with oUF
+	-- Register with oUF
 	self.WOTLKRunes = runes
 end

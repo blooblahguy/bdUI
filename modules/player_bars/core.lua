@@ -34,7 +34,7 @@ local function create_secondary(self, unit)
 	if (class == "DEATHKNIGHT") then
 
 	elseif (class == "MONK") then
-	
+
 	end
 end
 
@@ -98,7 +98,7 @@ function mod:config_callback()
 	if (config.runes_height) then
 		mod.ouf.RuneHolder:SetSize(config.resources_width, config.runes_height - bdUI.border * 2)
 		local width = (config.resources_width - (bdUI.border * 5)) / 6
-		for i, rune in pairs({mod.ouf.RuneHolder:GetChildren()}) do
+		for i, rune in pairs({ mod.ouf.RuneHolder:GetChildren() }) do
 			rune:SetSize(width, config.runes_height)
 		end
 	end
@@ -111,7 +111,6 @@ function mod:config_callback()
 	mod:position_bars()
 	bdUI:do_frame_fade()
 end
-
 
 function mod:position_bars()
 	if (InCombatLockdown()) then return end
@@ -127,4 +126,3 @@ function mod:position_bars()
 	-- position them in a stack
 	bdUI:frame_group(mod.Resources, "downwards", unpack(mod.bars))
 end
-

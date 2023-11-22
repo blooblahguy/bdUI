@@ -8,15 +8,15 @@ local function unit_name(self, unit)
 		name = UnitPVPName(unit)
 	end
 
-	name = name and name or UnitName(unit) -- for classic 
+	name = name and name or UnitName(unit) -- for classic
 
 	-- color by class
-	self.namecolor = {mod:getUnitColor(unit)}
+	self.namecolor = { mod:getUnitColor(unit) }
 	local namehex = RGBPercToHex(unpack(self.namecolor))
 
 	-- color the strings
-	name = "|CFF"..namehex..name.."|r"
-	
+	name = "|CFF" .. namehex .. name .. "|r"
+
 	return name
 end
 
@@ -42,11 +42,11 @@ function mod:player_tooltip(self, unit)
 	self.levelColor = GetQuestDifficultyColor(level)
 	if level == -1 then
 		level = '??'
-		self.levelColor = {r = 1, g = 0, b = 0}
+		self.levelColor = { r = 1, g = 0, b = 0 }
 	end
 
 	-- Friend / Enemy coloring
-	local friendColor = factionGroup == "Horde" and {r = 1, g = 0.15, b = 0} or {r = 0, g = 0.55, b = 1}
+	local friendColor = factionGroup == "Horde" and { r = 1, g = 0.15, b = 0 } or { r = 0, g = 0.55, b = 1 }
 
 	-- add guild rank
 	if (guild) then
@@ -70,6 +70,7 @@ function mod:player_tooltip(self, unit)
 		level_line, level_line_index = GameTooltip:FindLine("Level ??")
 	end
 	if (level_line ~= nil) then
-		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(self.levelColor), level, RGBPercToHex(friendColor), race, realm)
+		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffBBBBBB%s|r', RGBPercToHex(self.levelColor), level,
+			RGBPercToHex(friendColor), race, realm)
 	end
 end

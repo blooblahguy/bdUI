@@ -68,7 +68,6 @@ local function store_spell_info()
 		-- check if we have their id
 		local id = select(7, GetSpellInfo(name))
 		if (id) then
-
 			-- if so, store the id, let it know to track them
 			spells[name] = id
 			resetSpells[id] = true
@@ -88,7 +87,8 @@ local function combat_log(...)
 
 	-- swing times
 	if (subevent == "SWING_DAMAGE" or subevent == "SWING_MISSED") then
-		local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand = select(12, ...)
+		local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand = select(12,
+			...)
 		-- if (isOffHand == nil) then return end -- this was some other swing event that wasn't actually a weapon
 
 		-- now update bar last-hits
@@ -100,7 +100,7 @@ local function combat_log(...)
 			offLastHit = GetTime()
 			-- offNextHit = offLastHit + offSpeed
 		end
-	-- specific spell cast
+		-- specific spell cast
 	elseif (subevent == "SPELL_CAST_SUCCESS" or subevent == "SPELL_MISSED") then
 		spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical = select(12, ...)
 		if (not resetSpells[spellId]) then return end
@@ -118,7 +118,7 @@ local function mainhand_update(self, elapsed)
 	if (total > 1) then
 		local speed = UnitAttackSpeed("player")
 		local down, up, lagHome, lagWorld = GetNetStats()
-		
+
 		local lagpct = lagHome / (speed * 1000)
 		self.latency:SetWidth(self:GetWidth() * lagpct)
 	end

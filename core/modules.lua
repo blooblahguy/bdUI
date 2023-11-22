@@ -8,7 +8,7 @@ local bdUI, c, l = unpack(select(2, ...))
 --================================================
 
 --================================================
--- Allows for modules to be registered and 
+-- Allows for modules to be registered and
 -- automatically loaded / disabled as needed
 bdUI.modules = {}
 --================================================
@@ -57,8 +57,6 @@ function bdUI:load_module(module)
 
 		return module
 	end
-
-	
 end
 
 -- Load all modules
