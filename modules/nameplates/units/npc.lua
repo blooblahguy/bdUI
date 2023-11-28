@@ -20,7 +20,6 @@ mod.npc_style = function(self, event, unit)
 
 	-- healthbar
 	self.Health:Hide()
-	self.disableFixate = true
 
 	-- powerbar
 	-- self.Power:Hide()

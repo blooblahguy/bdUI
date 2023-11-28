@@ -10,7 +10,7 @@ mod.additional_elements.power = function(self, unit)
 	self.Power:SetStatusBarTexture(bdUI.media.flat)
 	self.Power:ClearAllPoints()
 
-	self.Power:SetHeight(config.playertargetpowerheight)
+	self.Power:SetHeight(config.playerpowerheight)
 	self.Power.frequentUpdates = true
 	self.Power.colorPower = true
 	self.Power.Smooth = true

@@ -36,7 +36,6 @@ mod.friendly_style = function(self, event, unit)
 	else
 		self.Health:Hide()
 	end
-	self.disableFixate = true
 
 	-- power
 	-- self.Power:Hide()

@@ -4,6 +4,24 @@ local oUF = ns.oUF
 local fixateSpells = {}
 fixateSpells[268074] = true
 
+local colors = {}
+colors.tapped = { .6, .6, .6 }
+colors.offline = { .6, .6, .6 }
+colors.reaction = {}
+colors.class = {}
+-- class colors
+for eclass, color in next, RAID_CLASS_COLORS do
+	if not colors.class[eclass] then
+		colors.class[eclass] = { color.r, color.g, color.b }
+	end
+end
+-- faction colors
+for eclass, color in next, FACTION_BAR_COLORS do
+	if not colors.reaction[eclass] then
+		colors.reaction[eclass] = { color.r, color.g, color.b }
+	end
+end
+
 local function RGBPercToHex(r, g, b)
 	r = r <= 1 and r >= 0 and r or 0
 	g = g <= 1 and g >= 0 and g or 0
@@ -11,11 +29,24 @@ local function RGBPercToHex(r, g, b)
 	return string.format("%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 
-local function Update(self, event, unit)
-	unit = self.unit
+-- basic class coloring
+local function unitColor(unit)
+	if (not UnitExists(unit)) then
+		return unpack(colors.tapped)
+	end
+	if UnitIsPlayer(unit) then
+		return unpack(colors.class[select(2, UnitClass(unit))])
+	elseif UnitIsTapDenied(unit) then
+		return unpack(colors.tapped)
+	elseif UnitIsDead(unit) then
+		return unpack(colors.tapped)
+	else
+		return unpack(colors.reaction[UnitReaction(unit, 'player')])
+	end
+end
 
-
-	if (not unit) then
+local function Update(self, event, unit, ...)
+	if (not self.unit) then
 		self.FixateAlert:Hide()
 		return
 	end
@@ -33,13 +64,15 @@ local function Update(self, event, unit)
 		element:PreUpdate()
 	end
 
-	local targetUnit = unit .. "target"
+	local targetUnit = self.unit .. "target"
 	local isTargeting = UnitExists(targetUnit) --and UnitIsPlayer(target)
 	local isTargetingPlayer = UnitIsUnit(targetUnit, "player")
 
+	targetUnit = GetUnitName(targetUnit)
+
 	if (isTargeting and isTargetingPlayer) then
 		element:Show()
-		element:SetText(UnitName(targetUnit))
+		element:SetText(targetUnit)
 	else
 		element:Hide()
 	end
@@ -50,7 +83,7 @@ local function Update(self, event, unit)
 	* self     - the FixateAlert element
 	--]]
 	if (element.PostUpdate) then
-		return element:PostUpdate(unit, targetUnit, isTargeting, isTargetingPlayer)
+		return element:PostUpdate(self.unit, targetUnit, isTargeting, isTargetingPlayer)
 	end
 end
 
@@ -80,24 +113,23 @@ local function Enable(self, unit)
 		end
 		element:SetJustifyH("LEFT")
 		element:SetTextColor(1, 1, 1)
-		element.SetText_Old = element.SetText
+		element.SetText_Old = element.SetText_Old or element.SetText
 
 		-- automatically color class
 		-- local playerColor = RGBPercToHex(classColor.r, classColor.g, classColor.b)
 		-- print(playerColor)
 		element.SetText = function(self, unitName)
-			if (not UnitIsPlayer(unitName)) then
-				return
-			end
+			-- local classColor = "|cffFFFFFF" --autoUnitColorHex(unitName);
+			-- local classColor = "FFFFFF"
+			local classColor = RGBPercToHex(unitColor(unitName))
+			-- print(classColor)
 
-			local classColor = RAID_CLASS_COLORS[select(2, UnitClass(unitName))].colorStr
-
-			if (unitName and UnitIsUnit(unitName, "player")) then
+			if (UnitIsUnit(unitName, "player")) then
 				self:SetAlpha(1)
-				self:SetText_Old("|cffFF0000>|r|c" .. classColor .. unitName .. "|r|cffFF0000<|r")
+				self:SetText_Old("|cffFF0000>|r|cff" .. classColor .. unitName .. "|r|cffFF0000<|r")
 			else
 				self:SetAlpha(0.8)
-				self:SetText_Old("|c" .. classColor .. unitName .. "|r")
+				self:SetText_Old("|cff" .. classColor .. unitName .. "|r")
 			end
 		end
 
@@ -118,16 +150,20 @@ local function Enable(self, unit)
 		-- self:RegisterEvent('UNIT_SPELLCAST_FAILED', Path)
 		-- self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
 		-- moving to just an on update
-		element.total = 0
-		element.updater = element.updater or CreateFrame("frame", nil, UIParent)
-		element.updater:SetScript("OnUpdate", function(updater, elapsed)
-			element.total = element.total + elapsed
-			if (element.total > element.throttle) then
-				if (not element.__owner:IsVisible()) then
-					return
-				end
-				element.total = 0
-				Path(self)
+
+
+		local updater = element.__owner["oUF_Fixate_Updater"];
+		if (not updater) then
+			element.__owner["oUF_Fixate_Updater"] = CreateFrame("frame", nil, element.__owner)
+			updater = element.__owner["oUF_Fixate_Updater"]
+		end
+
+		updater.total = 0
+		updater:SetScript("OnUpdate", function(self, elapsed)
+			self.total = self.total + elapsed
+			if (self.total > element.throttle) then
+				self.total = 0
+				Path(self:GetParent())
 			end
 		end)
 
@@ -138,15 +174,16 @@ end
 local function Disable(self)
 	local element = self.FixateAlert
 	if (element) then
+		local updater = element.__owner["oUF_Fixate_Updater"];
 		element:Hide()
-		element.updater:SetScript("OnUpdate", function()
+		updater:SetScript("OnUpdate", function()
 			return
 		end)
 
 		-- self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Path) -- todo, account for combat log fixates
 		self:UnregisterEvent("UNIT_THREAT_SITUATION_UPDATE", Path, true)
-		self:UnregisterEvent("NAME_PLATE_UNIT_REMOVED", Path, true)
-		self:UnregisterEvent("NAME_PLATE_UNIT_ADDED", Path, true)
+		self:UnregisterEvent("NAME_PLATE_UNIT_REMOVED", Path)
+		self:UnregisterEvent("NAME_PLATE_UNIT_ADDED", Path)
 		-- self:UnregisterEvent("UNIT_TARGET", Path)
 		-- self:UnregisterEvent("PLAYER_TARGET_CHANGED", Path)
 		-- self:UnregisterEvent('UNIT_SPELLCAST_START', Path)

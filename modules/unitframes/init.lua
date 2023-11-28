@@ -230,13 +230,22 @@ local config = {
 				label = "Height"
 			},
 			{
-				key = "playertargetpowerheight",
+				key = "playerpowerheight",
 				value = 2,
 				min = 0,
 				max = 10,
 				step = 1,
 				type = "range",
-				label = "Power Height"
+				label = "Player Power Height"
+			},
+			{
+				key = "targetpowerheight",
+				value = 2,
+				min = 0,
+				max = 10,
+				step = 1,
+				type = "range",
+				label = "Target Power Height"
 			},
 			{
 				key = "castbarheight",
@@ -278,6 +287,14 @@ local config = {
 						max = 50,
 						type = "range",
 						label = "Player Buff size"
+					},
+
+					{
+						key = "target_buff_location",
+						value = "Top Right",
+						type = "select",
+						options = { "Top Right", "Right", "Bottom Right", "Bottom Left" },
+						label = "Target Buff Start Point",
 					},
 
 					{

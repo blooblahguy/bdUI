@@ -55,7 +55,16 @@ mod.custom_layout["player"] = function(self, unit)
 
 	-- config callback
 	self.callback = function(self, unit, config)
-		self:SetSize(config.playertargetwidth, config.playertargetheight)
+		local makeupHeight = 0
+		-- power
+		self.Power:SetHeight(config.playerpowerheight)
+		self.Power:Show()
+		if (config.playerpowerheight == 0) then
+			self.Power:Hide()
+			makeupHeight = 2
+		end
+
+		self:SetSize(config.playertargetwidth, config.playertargetheight + makeupHeight)
 
 		-- auras
 		if (config.aurastyle == "Bars") then
@@ -83,14 +92,6 @@ mod.custom_layout["player"] = function(self, unit)
 		end
 
 		-- health
-		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
-
-		-- power
-		if (config.playertargetpowerheight > 0) then
-			self:EnableElement("Power")
-			self.Power:SetHeight(config.playertargetpowerheight)
-		else
-			self:DisableElement("Power")
-		end
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playerpowerheight + bdUI.border)
 	end
 end

@@ -74,7 +74,8 @@ end
 function mod:nameplate_size()
 	if (InCombatLockdown()) then return end
 
-	C_NamePlate.SetNamePlateFriendlySize(config.width, 0.1)
+	-- C_NamePlate.SetNamePlateFriendlySize(config.width, 0.1)
+	-- C_NamePlate.SetNamePlateFriendlySize(10, 0.1)
 	C_NamePlate.SetNamePlateEnemySize(config.width,
 		(config.height + config.targetingTopPadding + config.targetingBottomPadding))
 	C_NamePlate.SetNamePlateSelfSize(config.width,
@@ -153,6 +154,12 @@ function mod:config_nameplate(self)
 		self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
 	else
 		self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.name_offset)
+	end
+
+	if (name_position == "Inside") then
+		self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "BOTTOM", 0, -1)
+	else
+		self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
 	end
 
 	-- Text Sizes
@@ -678,7 +685,12 @@ local function nameplate_create(self, unit)
 	-- FIXATES / TARGETS
 	--==========================================
 	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
-	self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
+	-- if (name_position == "Inside") then
+	-- 	self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
+	-- else
+	-- 	self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
+	-- end
+
 	self.FixateAlert.PostUpdate = function(self, unit, targetUnit, isTargeting, isTargetingPlayer)
 		self:Hide()
 
@@ -689,13 +701,16 @@ local function nameplate_create(self, unit)
 		-- show no matter what
 		if (mod.lists.fixateMobs[UnitName(unit):lower()]) then
 			self:Show()
-			self:SetText(UnitName(targetUnit))
+			self:SetText(targetUnit)
 			return
 		end
 
+		-- print(config.target_alert)
 		if (config.target_alert == "Always" or (config.target_alert == "Personal" and isTargetingPlayer)) then
 			self:Show()
-			self:SetText(UnitName(targetUnit))
+			self:SetText(targetUnit)
+
+			return
 		end
 	end
 

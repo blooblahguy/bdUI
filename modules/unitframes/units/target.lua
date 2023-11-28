@@ -1,6 +1,45 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
+
+local function position_buffs(self, unit, config, side)
+	self.Buffs:ClearAllPoints()
+	if (side == "Top Right") then
+		self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 2, 2)
+		self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+		self.Buffs.size = config.target_uf_buff_size
+		self.Buffs.initialAnchor = "BOTTOMLEFT"
+	elseif (side == "Top") then
+		self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
+		self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+		self.Buffs.size = config.target_uf_buff_size
+		self.Buffs.initialAnchor = "BOTTOMRIGHT"
+		self.Buffs["growth-x"] = "LEFT"
+	elseif (side == "Right") then
+		self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", 4, 0)
+		self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+		self.Buffs.size = config.target_uf_buff_size
+		self.Buffs.initialAnchor = "TOPLEFT"
+		self.Buffs["growth-x"] = "RIGHT"
+		self.Buffs["growth-y"] = "DOWN"
+	elseif (side == "Bottom Right") then
+		self.Buffs:SetPoint("TOPRIGHT", self.Power, "BOTTOMRIGHT", 0, -4)
+		self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+		self.Buffs.size = config.target_uf_buff_size
+		self.Buffs.initialAnchor = "TOPRIGHT"
+		self.Buffs["growth-x"] = "LEFT"
+		self.Buffs["growth-y"] = "DOWN"
+	elseif (side == "Bottom Left") then
+		self.Buffs:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -4)
+		self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+		self.Buffs.size = config.target_uf_buff_size
+		self.Buffs.initialAnchor = "TOPLEFT"
+		self.Buffs["growth-x"] = "RIGHT"
+		self.Buffs["growth-y"] = "DOWN"
+	end
+end
+
+
 local buff_filter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source,
 	isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 	isBossDebuff = isBossDebuff or false
@@ -86,13 +125,22 @@ mod.custom_layout["target"] = function(self, unit)
 	mod.additional_elements.aurabars(self, unit)
 
 	-- icon buffs
-	self.Buffs:ClearAllPoints()
-	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-	self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
-	self.Buffs.size = config.target_uf_buff_size
-	self.Buffs['growth-x'] = "LEFT"
-	self.Buffs.initialAnchor = "BOTTOMRIGHT"
-	self.Buffs.CustomFilter = buff_filter
+	-- self.Buffs:ClearAllPoints()
+
+	-- self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
+	-- self.Buffs.size = config.target_uf_buff_size
+	-- self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
+	-- self.Buffs['growth-x'] = "LEFT"
+	-- self.Buffs.initialAnchor = "BOTTOMRIGHT"
+	-- self.Buffs.CustomFilter = buff_filter
+
+	-- if (config.target_buff_location == "Top Right") then
+
+	-- elseif (config.target_buff_location == "Right") then
+	-- 	self.Buffs:SetPoint("LEFT", self.Health, "RIGHT", 0, 4)
+	-- 	self.Buffs['growth-x'] = "LEFT"
+	-- 	self.Buffs.initialAnchor = "BOTTOMRIGHT"
+	-- end
 
 	-- icon debuffs
 	self.Debuffs:ClearAllPoints()
@@ -109,16 +157,20 @@ mod.custom_layout["target"] = function(self, unit)
 
 	-- config callback
 	self.callback = function()
-		-- sizing
-		self:SetSize(config.playertargetwidth, config.playertargetheight)
-		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playertargetpowerheight + bdUI.border)
-
+		local makeupHeight = 0
 		-- power
-		self.Power:SetHeight(config.playertargetpowerheight)
+		self.Power:SetHeight(config.targetpowerheight)
 		self.Power:Show()
-		if (config.playertargetpowerheight == 0) then
+		if (config.targetpowerheight == 0) then
 			self.Power:Hide()
+			makeupHeight = 2
 		end
+
+		-- sizing
+		self:SetSize(config.playertargetwidth, config.playertargetheight + makeupHeight)
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.targetpowerheight + bdUI.border)
+
+
 
 		-- auras
 		if (config.aurastyle == "Bars") then
@@ -134,12 +186,7 @@ mod.custom_layout["target"] = function(self, unit)
 			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
 			self.Buffs = self.DisabledBuffs or self.Buffs
 			self.Buffs:Show()
-			self.Buffs:ClearAllPoints()
-			self.Buffs:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 2, 2)
-			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
-			self.Buffs.size = config.target_uf_buff_size
-			self.Buffs.initialAnchor = "BOTTOMLEFT"
-			self.Buffs["growth-x"] = "RIGHT"
+			position_buffs(self, unit, config, config.target_buff_location)
 		elseif (config.aurastyle == "Icons") then
 			self.Debuffs = self.DisabledDebuffs or self.Debuffs
 			self.Debuffs.size = config.target_uf_debuff_size
@@ -151,12 +198,7 @@ mod.custom_layout["target"] = function(self, unit)
 			self.DisabledBuffs = self.Buffs or self.DisabledBuffs
 			self.Buffs = self.DisabledBuffs or self.Buffs
 			self.Buffs:Show()
-			self.Buffs:ClearAllPoints()
-			self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 4)
-			self.Buffs:SetSize(config.playertargetwidth / 2.5, 60)
-			self.Buffs.size = config.target_uf_buff_size
-			self.Buffs.initialAnchor = "BOTTOMRIGHT"
-			self.Buffs["growth-x"] = "LEFT"
+			position_buffs(self, unit, config, "Top")
 		else
 			self.DisabledDebuffs = self.Buffs or self.DisabledDebuffs
 			if (self.Debuffs) then

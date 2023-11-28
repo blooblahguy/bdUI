@@ -7,7 +7,7 @@ local function castbar_kickable(self, unit)
 
 	-- find out if its kickable
 	local name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo(
-	unit)
+		unit)
 	if (not name) then
 		name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId = UnitChannelInfo(unit)
 	end
@@ -38,7 +38,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 
 
 	self.Castbar = CreateFrame("StatusBar", nil, self)
-	self.Castbar:SetFrameLevel(3)
+	self.Castbar:SetFrameStrata("MEDIUM")
 	self.Castbar:SetStatusBarTexture(bdUI.media.smooth)
 	self.Castbar:SetStatusBarColor(.1, .4, .7, 1)
 	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
@@ -92,7 +92,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	-- attribute who interrupted this cast
 	function self.Castbar:CastbarAttribute()
 		local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, extraSpellID, extraSpellName, extraSchool =
-		CombatLogGetCurrentEventInfo()
+			CombatLogGetCurrentEventInfo()
 
 		if (event == "SPELL_INTERRUPT" and UnitExists(sourceName)) then
 			local unit_kicked = destGUID
@@ -102,7 +102,7 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 				self.Castbar:SetAlpha(0.8)
 				self.Castbar:SetStatusBarColor(unpack(bdUI.media.red))
 				self.Castbar.Text:SetText("|cff" ..
-				mod:autoUnitColorHex(sourceName) .. UnitName(sourceName) .. "|r Interrupted")
+					mod:autoUnitColorHex(sourceName) .. UnitName(sourceName) .. "|r Interrupted")
 			end
 		end
 	end

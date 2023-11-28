@@ -30,8 +30,6 @@ mod.personal_style = function(self, event, unit)
 
 	-- self:SetHeight()
 
-	self.disableFixate = true
-
 	-- on target callback
 	self.OnTarget = function()
 		self.Curhp:Hide()

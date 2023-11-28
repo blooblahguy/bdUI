@@ -126,7 +126,7 @@ local config = {
 				value = 10,
 				min = 6,
 				max = 50,
-				step = 2,
+				step = 1,
 				type = "range",
 				label = "Power Height"
 			},
@@ -177,7 +177,7 @@ local config = {
 				value = 16,
 				min = 6,
 				max = 30,
-				step = 2,
+				step = 1,
 				type = "range",
 				label = "Mainhand Height"
 			},
