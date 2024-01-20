@@ -1,0 +1,276 @@
+## Interface: 11500
+
+## Title: |cffA02C2Fbd|rUI |cff3FC7EB[WOTLK]|r
+## Author: Blooblahguy
+## Version: @project-version@
+## SavedVariables: BDUI_SAVE, BDUI_CHAT_HISTORY
+## DefaultState: Enabled
+## LoadOnDemand: 0
+
+## X-oUF: bdUF
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Website: https://github.com/blooblahguy/bdUI
+
+## X-Curse-Project-ID: 336600
+## X-Wago-ID: R4N2m4GL
+## X-WoWI-ID: 21052
+
+# Initialize
+core\init.lua
+lib\ace\LibStub.lua
+lib\fixes\blizzard_bugs.lua
+lib\fixes\TaintLess.xml
+# lib\fixes\InspectFix.lua
+lib\fixes\LibStrataFix.lua
+
+# Locales
+core\locales\AceLocale-3.0.lua
+core\locales\enUS.lua
+core\locales\deDE.lua
+
+# Ace
+lib\ace\utf8data.lua
+lib\ace\utf8.lua
+lib\ace\LibBase64-1.0.lua
+lib\ace\CallbackHandler-1.0.lua
+lib\ace\LibSpellRange-1.0.lua
+lib\ace\AceHook-3.0.lua
+lib\ace\ChatThrottleLib.lua
+lib\ace\AceComm-3.0.lua
+lib\ace\AceSerializer-3.0.lua
+lib\ace\AceTimer-3.0.lua
+lib\ace\LibCustomGlow-1.0.lua
+lib\ace\LibSharedMedia-3.0.lua
+lib\ace\LibSimpleSticky.lua
+lib\ace\LibDataBroker-1.1.lua
+lib\ace\LibDBIcon-1.0.lua
+lib\ace\LibChatAnims.lua
+lib\ace\LibDispel.lua
+
+# Classic
+lib\classic\LibClassicMobHealth\LibClassicMobHealth.lua
+lib\classic\LibHealComm\LibHealComm-4.0.lua
+
+# oUF
+lib\oUF\oUF_Wrath.xml
+lib\oUF_Plugins\oUF_ClassicComboPoints.lua
+lib\oUF_Plugins\oUF_WotlkRunes.lua
+lib\oUF_Plugins\oUF_Fixate.lua
+lib\oUF_Plugins\oUF_ThreatLite.lua
+lib\oUF_Plugins\oUF_Fader.lua
+lib\oUF_Plugins\oUF_AuraBars.lua
+lib\oUF_Plugins\oUF_PVPSpecIcons.lua
+lib\oUF_Plugins\oUF_Trinkets.lua
+lib\oUF_Plugins\oUF_Smooth.lua
+lib\oUF_Plugins\oUF_NecroStrike.lua
+lib\oUF_Plugins\oUF_TotemBar.lua
+lib\oUF_Plugins\oUF_QuestProgress.lua
+lib\oUF_Plugins\oUF_bdHealthPredict.lua
+lib\oUF_Plugins\oUF_bdClassicHealthPredict.lua
+lib\oUF_Plugins\oUF_bdSCT.lua
+
+# Custom
+lib\memoize.lua
+lib\bdCallbacks\bdCallbacks.lua
+lib\bdMove\bdMove.lua
+lib\bdConfig\bdConfig.xml
+
+# Core
+core\libraries.lua
+core\fonts.lua
+core\performance.lua
+core\commands.lua
+core\core.lua
+core\media.lua
+core\modules.lua
+core\setup.lua
+core\load.lua
+
+# classic auras
+versions\wotlk\wotlk_auras.lua
+
+# General
+modules\general\init.lua
+modules\general\functions.lua
+modules\general\core.lua
+modules\general\elements\autovendor.lua
+modules\general\elements\doubleclickbo.lua
+modules\general\elements\developer.lua
+modules\general\elements\errorblock.lua
+modules\general\elements\interrupt.lua
+modules\general\elements\qol.lua
+modules\general\elements\raidmarker.lua
+modules\general\elements\viewports.lua
+modules\general\elements\fighttimer.lua
+# modules\general\elements\vehicles.lua
+
+# Auras
+modules\auras\elements\whitelist.lua
+modules\auras\elements\raid.lua
+modules\auras\elements\personal.lua
+modules\auras\elements\blacklist.lua
+modules\auras\elements\special.lua
+modules\auras\init.lua
+modules\auras\functions.lua
+modules\auras\core.lua
+
+# Actionbars
+modules\actionbars\init.lua
+modules\actionbars\functions.lua
+modules\actionbars\core.lua
+modules\actionbars\elements\bars.lua
+modules\actionbars\elements\cooldown.lua
+modules\actionbars\elements\range.lua
+modules\actionbars\elements\hoverbind.lua
+modules\actionbars\elements\zoneability.lua
+modules\actionbars\elements\hotkeys.lua
+
+# Bags
+modules\bags\init.lua
+modules\bags\functions.lua
+modules\bags\core.lua
+modules\bags\elements\currencies.lua
+modules\bags\elements\money.lua
+modules\bags\elements\categories.lua
+modules\bags\elements\button_lib.lua
+modules\bags\elements\bags.lua
+modules\bags\elements\bank.lua
+modules\bags\elements\reagents.lua
+modules\bags\elements\loot.lua
+modules\bags\elements\positioning.lua
+modules\bags\elements\filters.lua
+modules\bags\elements\containers.lua
+
+# Buffs & Debuffs
+modules\buffs_debuffs\template.xml
+modules\buffs_debuffs\init.lua
+modules\buffs_debuffs\core.lua
+
+# Chat
+modules\chat\init.lua
+modules\chat\functions.lua
+modules\chat\core.lua
+modules\chat\elements\alerts.lua
+modules\chat\elements\altinv.lua
+modules\chat\elements\autolog.lua
+modules\chat\elements\bnet.lua
+modules\chat\elements\bubbles.lua
+modules\chat\elements\channels.lua
+modules\chat\elements\chatcopy.lua
+modules\chat\elements\community.lua
+modules\chat\elements\emojis.lua
+modules\chat\elements\gmotd.lua
+modules\chat\elements\highlight.lua
+modules\chat\elements\history.lua
+modules\chat\elements\names.lua
+modules\chat\elements\skin.lua
+modules\chat\elements\url.lua
+modules\chat\elements\filter.lua
+
+# Databars
+modules\databars\init.lua
+modules\databars\functions.lua
+modules\databars\core.lua
+modules\databars\elements\xp.lua
+modules\databars\elements\reputation.lua
+modules\databars\elements\honor.lua
+modules\databars\elements\altpower.lua
+
+# Grid
+modules\groups\init.lua
+modules\groups\functions.lua
+modules\groups\core.lua
+modules\groups\elements\alias.lua
+modules\groups\elements\tags.lua
+modules\groups\elements\dispel_glow.lua
+modules\groups\units\raid.lua
+modules\groups\units\arena.lua
+modules\groups\units\pets.lua
+modules\groups\units\party.lua
+
+# Maps
+modules\maps\config.lua
+modules\maps\functions.lua
+modules\maps\core.lua
+modules\maps\elements\minimap.lua
+modules\maps\elements\skin.lua
+modules\maps\elements\blizzard.lua
+modules\maps\elements\difficulty.lua
+modules\maps\elements\zone.lua
+modules\maps\elements\objectivetracker.lua
+# modules\maps\elements\buttonframe.lua
+modules\maps\elements\worldmap.lua
+
+# Nameplates
+modules\nameplates\init.lua
+modules\nameplates\functions.lua
+modules\nameplates\core.lua
+modules\nameplates\units\friendly.lua
+modules\nameplates\units\npc.lua
+modules\nameplates\units\personal.lua
+modules\nameplates\units\enemy.lua
+modules\nameplates\elements\auras.lua
+modules\nameplates\elements\power.lua
+modules\nameplates\elements\resources.lua
+modules\nameplates\elements\castbar.lua
+modules\nameplates\elements\combopoints.lua
+
+# Tooltips
+modules\tooltips\init.lua
+modules\tooltips\functions.lua
+modules\tooltips\extend.lua
+modules\tooltips\core.lua
+modules\tooltips\elements\castby.lua
+modules\tooltips\elements\healthbarfix.lua
+modules\tooltips\elements\targettarget.lua
+modules\tooltips\elements\targetinfo.lua
+modules\tooltips\elements\tooltipcolor.lua
+modules\tooltips\elements\namehover.lua
+modules\tooltips\elements\targetinfo.lua
+modules\tooltips\units\player.lua
+modules\tooltips\units\npc.lua
+
+# Unitframes
+modules\unitframes\init.lua
+modules\unitframes\functions.lua
+modules\unitframes\core.lua
+modules\unitframes\elements\aurabars.lua
+modules\unitframes\elements\auras.lua
+modules\unitframes\elements\buffs.lua
+modules\unitframes\elements\debuffs.lua
+modules\unitframes\elements\castbar.lua
+modules\unitframes\elements\power.lua
+modules\unitframes\elements\resting.lua
+modules\unitframes\elements\tags.lua
+modules\unitframes\units\player.lua
+modules\unitframes\units\target.lua
+modules\unitframes\units\targettarget.lua
+modules\unitframes\units\focus.lua
+modules\unitframes\units\pet.lua
+modules\unitframes\units\boss.lua
+modules\unitframes\units\arena.lua
+
+# Player Bars
+modules\player_bars\init.lua
+modules\player_bars\core.lua
+modules\player_bars\elements\power.lua
+modules\player_bars\elements\points.lua
+modules\player_bars\elements\stagger.lua
+modules\player_bars\elements\totems.lua
+modules\player_bars\elements\castbar.lua
+modules\player_bars\elements\runes.lua
+modules\player_bars\elements\swing.lua
+
+# Skins
+modules\skin\init.lua
+modules\skin\functions.lua
+modules\skin\core.lua
+# modules\skin\elements\fonts.lua
+modules\skin\elements\bigwigs.lua
+modules\skin\elements\blizzard.lua
+modules\skin\elements\weakauras.lua
+modules\skin\elements\durability.lua
+modules\skin\elements\pvpcapture.lua
+modules\skin\elements\gm.lua
+# modules\skin\elements\vehicle.lua
+modules\skin\elements\viewports.lua

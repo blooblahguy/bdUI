@@ -9,14 +9,14 @@ mod.add_tags = function(self, unit)
 	oUF.Tags.Events["bdGrid.status"] = "UNIT_HEALTH UNIT_CONNECTION"
 	oUF.Tags.Methods["bdGrid.status"] = function(unit)
 		if not UnitIsConnected(unit) then
-			return "offline"		
+			return "offline"
 		elseif UnitIsDead(unit) then
-			return "dead"		
+			return "dead"
 		elseif UnitIsGhost(unit) then
 			return "ghost"
 		end
 	end
-	
+
 
 	-- NAME
 	oUF.Tags.Events["bdGrid.short"] = "UNIT_NAME_UPDATE"
@@ -28,19 +28,19 @@ mod.add_tags = function(self, unit)
 		-- end
 		return string.utf8sub(name, 1, config.namewidth)
 	end
-	
+
 
 	-- GROUP
 	oUF.Tags.Events["bdGrid.group"] = "UNIT_NAME_UPDATE"
 	oUF.Tags.Methods["bdGrid.group"] = function(unit)
 		local name, server = UnitName(unit)
-		if(server and server ~= '') then
+		if (server and server ~= '') then
 			name = string.format('%s-%s', name, server)
 		end
-		
+
 		for i = 1, GetNumGroupMembers() do
 			local raidName, _, group = GetRaidRosterInfo(i)
-			if( raidName == name ) then
+			if (raidName == name) then
 				return "[" .. group .. "]"
 			end
 		end
@@ -50,19 +50,26 @@ mod.add_tags = function(self, unit)
 	self.Status = self.name_holder:CreateFontString(nil)
 	self.Status:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
 	self.Status:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", 0, 0)
-	
+
 	-- shortname
 	self.Short = self.name_holder:CreateFontString(nil, "OVERLAY")
 	self.Short:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
 	self.Short:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 0, 0)
 	self.Short:SetJustifyH("RIGHT")
 
+	-- shortname test
+	self.ShortTest = self.name_holder:CreateFontString(nil, "OVERLAY")
+	self.ShortTest:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
+	self.ShortTest:SetPoint("BOTTOMRIGHT", self.Power, "TOPRIGHT", 0, 0)
+	self.ShortTest:SetJustifyH("RIGHT")
+	self.ShortTest:Hide()
+
 	-- group number
 	self.Group = self.name_holder:CreateFontString(nil)
 	self.Group:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
 	self.Group:SetPoint('TOPRIGHT', self, "TOPRIGHT", -2, -2)
 	self.Group:Hide()
-	
+
 	-- register tags
 	self:Tag(self.Short, '[bdGrid.short]')
 	self:Tag(self.Status, '[bdGrid.status]')

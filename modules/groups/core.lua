@@ -8,10 +8,10 @@ local oUF = bdUI.oUF
 mod.frames = {}
 
 local dispelColors = {
-	['Magic'] = {.16, .5, .81, 1},
-	['Poison'] = {.12, .76, .36, 1},
-	['Disease'] = {.76, .46, .12, 1},
-	['Curse'] = {.80, .33, .95, 1},
+	['Magic'] = { .16, .5, .81, 1 },
+	['Poison'] = { .12, .76, .36, 1 },
+	['Disease'] = { .76, .46, .12, 1 },
+	['Curse'] = { .80, .33, .95, 1 },
 }
 
 --===============================================
@@ -41,7 +41,7 @@ local function update_frame(self)
 	if (parent == "oUF_bdGridRaid2") then
 		self:SetSize(config.pets_width, config.pets_height)
 		self.Short:SetWidth(config.pets_width)
-	end	
+	end
 
 	local role = UnitGroupRolesAssigned(self.unit)
 
@@ -118,7 +118,6 @@ end
 --===============================================
 local index = 0;
 local function layout(self, unit)
-	
 	self:RegisterForClicks('AnyDown')
 	index = index + 1
 	self.index = index
@@ -128,7 +127,7 @@ local function layout(self, unit)
 
 	-- Unit doesn't always include index
 	if (unit == "raid" or unit == "party") then
-		self.unit = "raid"..index
+		self.unit = "raid" .. index
 	else
 		self.unit = unit
 	end
@@ -167,7 +166,7 @@ local function layout(self, unit)
 	function self.Health.PostUpdateColor(s, unit, r, g, b)
 		local r, g, b = self.Health:GetStatusBarColor()
 		if (r == nil) then return end
-		
+
 		if (config.invert) then
 			self.Health._background:SetVertexColor(r / 2, g / 2, b / 2)
 			self.Short:SetTextColor(r * 1.1, g * 1.1, b * 1.1)
@@ -182,7 +181,7 @@ local function layout(self, unit)
 	-- Heal predections
 	local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
 	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
-	incomingHeals:SetStatusBarColor(0.6,1,0.6,.2)
+	incomingHeals:SetStatusBarColor(0.6, 1, 0.6, .2)
 	incomingHeals:Hide()
 
 	-- Damage Absorbs
@@ -219,10 +218,10 @@ local function layout(self, unit)
 		overHealAbsorb = overHealAbsorbBar,
 	}
 
-	-- Resurrect 
+	-- Resurrect
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
 	self.ResurrectIndicator:SetSize(16, 16)
-    self.ResurrectIndicator:SetPoint('TOPRIGHT', self)
+	self.ResurrectIndicator:SetPoint('TOPRIGHT', self)
 
 	-- Summon
 	self.SummonIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -244,16 +243,16 @@ local function layout(self, unit)
 	self.Power:SetAlpha(0.8)
 	self.Power.colorPower = true
 	bdUI:set_backdrop(self.Power)
-	
+
 	-- Raid Icon
 	self.RaidTargetIndicator = self.Health:CreateTexture(nil, "OVERLAY", nil, 1)
 	self.RaidTargetIndicator:SetSize(12, 12)
 	self.RaidTargetIndicator:SetPoint("TOP", self, "TOP", 0, -2)
-	
+
 	-- roll icon
 	self.GroupRoleIndicator = self.Health:CreateTexture(nil, "OVERLAY")
 	self.GroupRoleIndicator:SetSize(12, 12)
-	self.GroupRoleIndicator:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT",2,2)
+	self.GroupRoleIndicator:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", 2, 2)
 	self.GroupRoleIndicator.Override = function(self, event)
 		self.GroupRoleIndicator:Hide()
 
@@ -270,39 +269,39 @@ local function layout(self, unit)
 
 	self.LeaderIndicator = self.Health:CreateTexture(nil, "OVERLAY")
 	self.LeaderIndicator:SetSize(12, 12)
-	self.LeaderIndicator:SetPoint("TOPLEFT", self.Health, "TOPLEFT",2,2)
+	self.LeaderIndicator:SetPoint("TOPLEFT", self.Health, "TOPLEFT", 2, 2)
 	self.LeaderIndicator.PostUpdate = function(self, isLeader)
 		if (not config.showpartyleadericon) then
 			self:Hide()
 		end
 	end
-	
+
 	self.Range = {
 		insideAlpha = config.inrangealpha,
 		outsideAlpha = config.outofrangealpha,
 	}
-	
+
 	-- Readycheck
 	self.ReadyCheckIndicator = self.Health:CreateTexture(nil, 'OVERLAY', nil, 7)
 	self.ReadyCheckIndicator:SetPoint('CENTER', self, 'CENTER', 0, 2)
 	self.ReadyCheckIndicator:SetSize(12, 12)
-	
+
 	-- ResurrectIcon
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
-	self.ResurrectIndicator:SetPoint('CENTER', self, "CENTER", 0,0)
+	self.ResurrectIndicator:SetPoint('CENTER', self, "CENTER", 0, 0)
 	self.ResurrectIndicator:SetSize(16, 16)
-	
+
 	-- Threat
 	local pixel = bdUI:get_pixel(self)
 	self.ThreatLite = CreateFrame('frame', nil, self.Health, BackdropTemplateMixin and "BackdropTemplate")
 	self.ThreatLite:SetPoint('TOPRIGHT', pixel, pixel)
 	self.ThreatLite:SetPoint('BOTTOMLEFT', -pixel, -pixel)
-	self.ThreatLite:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.pixel})
-	self.ThreatLite:SetBackdropBorderColor(1, 0, 0,1)
-	self.ThreatLite:SetBackdropColor(0,0,0,0)
+	self.ThreatLite:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.pixel })
+	self.ThreatLite:SetBackdropBorderColor(1, 0, 0, 1)
+	self.ThreatLite:SetBackdropColor(0, 0, 0, 0)
 	-- self.ThreatLite:SetSize(60, 50)
 	self.ThreatLite:Hide()
-	
+
 	-- Buffs
 	self.Buffs = CreateFrame("Frame", "bdGrid_buffs", self.Health)
 	self.Buffs:SetPoint("TOPLEFT", self.Health, "TOPLEFT", border * 2, -border * 2)
@@ -310,14 +309,15 @@ local function layout(self, unit)
 	self.Buffs:EnableMouse(false)
 	self.Buffs:SetSize(64, 16)
 	self.Buffs.disableMouse = true
-	self.Buffs.initialAnchor  = "TOPLEFT"
+	self.Buffs.initialAnchor = "TOPLEFT"
 	self.Buffs.size = config.buffSize
 	self.Buffs.spacing = mod.border
 	self.Buffs.num = 6
 	self.Buffs['growth-y'] = "DOWN"
 	self.Buffs['growth-x'] = "RIGHT"
 
-	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
+		source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByMe = false
@@ -328,14 +328,16 @@ local function layout(self, unit)
 		return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 
-	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index, button.filter)
+	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
+		isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
+			button.filter)
 
 		local dispelColors = {
-			['Magic'] = {.16, .5, .81, 1},
-			['Poison'] = {.12, .76, .36, 1},
-			['Disease'] = {.76, .46, .12, 1},
-			['Curse'] = {.80, .33, .95, 1},
+			['Magic'] = { .16, .5, .81, 1 },
+			['Poison'] = { .12, .76, .36, 1 },
+			['Disease'] = { .76, .46, .12, 1 },
+			['Curse'] = { .80, .33, .95, 1 },
 		}
 
 		button:set_border_color(unpack(bdUI.media.border))
@@ -343,7 +345,7 @@ local function layout(self, unit)
 		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 	end
 
-	self.Buffs.PostCreateButton = function(self, button) 
+	self.Buffs.PostCreateButton = function(self, button)
 		local region = button.Cooldown:GetRegions()
 		button:SetAlpha(0.8)
 		region:SetAlpha(1)
@@ -363,7 +365,7 @@ local function layout(self, unit)
 		button.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 		bdUI:set_backdrop(button)
 	end
-	
+
 	-- special spell alerts
 	self.Glow = CreateFrame("frame", "glow", self.Health)
 	self.Glow:SetAllPoints()
@@ -375,12 +377,12 @@ local function layout(self, unit)
 	self.Dispel:SetFrameLevel(100)
 	self.Dispel:SetPoint('TOPRIGHT', self, "TOPRIGHT", -0, -0)
 	self.Dispel:SetPoint('BOTTOMLEFT', self, "BOTTOMLEFT", 0, 0)
-	self.Dispel:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = dispel_size})
+	self.Dispel:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = dispel_size })
 	self.Dispel:SetBackdropBorderColor(1, 1, 1, 1)
 	self.Dispel:SetBackdropColor(0, 0, 0, 0)
 	self.Dispel:Hide()
 	-- self.Dispel:SetSize(60, 50)
-	
+
 	-- look / color / show dispels and glows
 	self:RegisterEvent("UNIT_AURA", mod.dispel_glow)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", mod.dispel_glow)
@@ -420,7 +422,7 @@ local function layout(self, unit)
 	self.Dispel.Curse:SetTexture(bdUI.media.flat)
 	self.Dispel.Curse:SetVertexColor(unpack(dispelColors['Curse']))
 	self.Dispel.Curse:Hide()
-	
+
 	-- Debuffs
 	self.Debuffs = CreateFrame("Frame", "bdGrid_debuffs", self.Health)
 	self.Debuffs:SetFrameLevel(21)
@@ -437,11 +439,12 @@ local function layout(self, unit)
 	self.Debuffs['growth-x'] = "RIGHT"
 
 	self.Debuffs.PostUpdate = function(self, unit)
-		local offset =  (config.debuffSize / 2) * (self.visibleDebuffs - 1)
+		local offset = (config.debuffSize / 2) * (self.visibleDebuffs - 1)
 		self:SetPoint("CENTER", -offset, 0)
 	end
 
-	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
+		source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByMe = false
@@ -457,7 +460,7 @@ local function layout(self, unit)
 	self.Debuffs.PostCreateButton = function(self, button)
 		local region = button.Cooldown:GetRegions()
 		button:SetAlpha(0.8)
-		
+
 		if (config.showDebuffTimers) then
 			region:SetAlpha(1)
 			region:SetTextHeight(config.debuffSize)
@@ -475,7 +478,8 @@ local function layout(self, unit)
 		bdUI:set_backdrop(button)
 	end
 
-	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
+		isStealable)
 		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 
 		-- color borders of debuffs
@@ -492,7 +496,7 @@ local function layout(self, unit)
 	--===============================================
 	self.name_holder = CreateFrame("frame", nil, self.Health)
 	mod.add_tags(self, unit)
-	
+
 	table.insert(mod.frames, self)
 	update_frame(self)
 end
@@ -502,7 +506,7 @@ end
 --============================================================
 function mod:get_attributes()
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
-	
+
 	-- sorting options
 	if (config.group_sort == "Group") then
 		group_by = "GROUP"
@@ -521,7 +525,7 @@ function mod:get_attributes()
 		group_sort = "WARRIOR,DEATHKNIGHT,PALADIN,DRUID,MONK,ROGUE,DEMONHUNTER,HUNTER,PRIEST,WARLOCK,MAGE,SHAMAN"
 		sort_method = "NAME"
 	end
-	
+
 	-- group growth/spacing
 	if (config.group_growth == "Upwards") then
 		new_group_anchor = "BOTTOM"
@@ -536,7 +540,7 @@ function mod:get_attributes()
 		new_group_anchor = "LEFT"
 		xOffset = config.spacing
 	end
-	
+
 	-- player growth/spacing
 	if (not config.new_player_reverse) then
 		if (config.group_growth == "Upwards" or config.group_growth == "Downwards") then
@@ -555,7 +559,7 @@ function mod:get_attributes()
 			yOffset = config.spacing
 		end
 	end
-	
+
 	-- group limit
 	local difficultySize = {
 		[3] = 1,
@@ -617,10 +621,11 @@ function mod:get_attributes()
 		[170] = 5, -- Path of Ascension: Wisdom	scenario
 		[171] = 5, -- Path of Ascension: Humility	scenario
 	}
-	
+
 	num_groups = config.num_groups
 	if (config.intel_groups) then
-		local name, group_type, difficultyID, raidSize, dynamicDifficulty, isDynamic, instanceMapId, lfgID = GetInstanceInfo()
+		local name, group_type, difficultyID, raidSize, dynamicDifficulty, isDynamic, instanceMapId, lfgID =
+		GetInstanceInfo()
 		local inInstance, instanceType = select(1, IsInInstance())
 
 		local diff = select(3, GetInstanceInfo())
@@ -640,7 +645,8 @@ function mod:get_attributes()
 	xOffset = bdUI.pixel * (xOffset or 2)
 	yOffset = bdUI.pixel * (yOffset or 2)
 
-	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
+	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth,
+		num_groups
 end
 
 --======================================================
@@ -662,7 +668,6 @@ function mod:initialize()
 	-- disable blizzard things
 	-- mod:disable_blizzard()
 end
-
 
 -- resizes the given container so that it outlines how many groups/units are in
 function mod:resize_container(header, container, unit_width, unit_height, num_groups)
@@ -688,7 +693,6 @@ function mod:resize_container(header, container, unit_width, unit_height, num_gr
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
-		
 	elseif (config.group_growth == "Left") then
 		container_width = unit_width * num_groups
 		container_height = unit_height * num_units
@@ -696,7 +700,6 @@ function mod:resize_container(header, container, unit_width, unit_height, num_gr
 		hgrowth = "RIGHT"
 		vgrowth = "TOP"
 		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
-		
 	elseif (config.group_growth == "Upwards") then
 		container_width = unit_width * num_units
 		container_height = unit_height * num_groups
@@ -704,7 +707,6 @@ function mod:resize_container(header, container, unit_width, unit_height, num_gr
 		hgrowth = "LEFT"
 		vgrowth = "BOTTOM"
 		if (config.new_player_reverse) then hgrowth = "RIGHT" end
-		
 	elseif (config.group_growth == "Downwards") then
 		container_width = unit_width * num_units
 		container_height = unit_height * num_groups
@@ -714,7 +716,7 @@ function mod:resize_container(header, container, unit_width, unit_height, num_gr
 	end
 
 	container:SetSize(container_width + 8, container_height + 8)
-	header:SetPoint(vgrowth..hgrowth, container, vgrowth..hgrowth, 0, 0)
+	header:SetPoint(vgrowth .. hgrowth, container, vgrowth .. hgrowth, 0, 0)
 end
 
 --==============================================
@@ -732,8 +734,8 @@ end
 -- 	-- 		-- CompactRaidFrameManagerContainerResizeFrame:Hide()
 -- 	-- 	end
 -- 	-- 	if (IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
--- 	-- 		-- CompactRaidFrameManager:UnregisterAllEvents() 
--- 	-- 		-- CompactRaidFrameContainer:UnregisterAllEvents() 
+-- 	-- 		-- CompactRaidFrameManager:UnregisterAllEvents()
+-- 	-- 		-- CompactRaidFrameContainer:UnregisterAllEvents()
 -- 	-- 	end
 -- 	-- 	-- addonDisabler:UnregisterEvent("PLAYER_REGEN_ENABLED")
 -- 	-- end)

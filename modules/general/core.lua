@@ -10,7 +10,7 @@ local mod = bdUI:get_module("General")
 --===============================================
 function mod:config_callback()
 	mod.config = mod:get_save()
-	
+
 	mod:create_viewports()
 
 	mod:SetUIScale()
@@ -39,5 +39,7 @@ function mod:initialize()
 	mod:create_errorblock()
 	mod:create_qol()
 
-	mod:move_vehicles()
+	if (mod.move_vehicles) then
+		mod:move_vehicles()
+	end
 end

@@ -14,7 +14,8 @@ local function update_raid_header()
 
 	mod:resize_container(mod.frameHeader, mod.raid_holder, config.width, config.height)
 
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
+	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups =
+		mod:get_attributes()
 
 	-- growth/spacing
 	header:SetAttribute("columnAnchorPoint", new_group_anchor)
@@ -32,15 +33,15 @@ local function update_raid_header()
 
 	-- what to show
 	header:SetAttribute("showpartyleadericon", config.showpartyleadericon)
-	
+
 	-- when to show
 	header:SetAttribute("showSolo", config.showsolo)
 	header:SetAttribute("maxColumns", num_groups)
-	
+
 	-- width/height
 	header:SetAttribute("initial-width", config.width)
 	header:SetAttribute("initial-height", config.height)
-	
+
 	-- grouping/sorting
 	header:SetAttribute("groupBy", group_by)
 	header:SetAttribute("groupingOrder", group_sort)
@@ -72,7 +73,8 @@ local function initialize()
 	oUF:SetActiveStyle('bdGrid')
 
 	-- Initial header spawning
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
+	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups =
+	mod:get_attributes()
 
 	-- ouf gives us secureheader
 	mod.frameHeader = oUF:SpawnHeader(nil, nil, 'raid,party,solo',
@@ -97,7 +99,38 @@ local function initialize()
 	)
 
 	update_raid_header()
+
+	-- mod:demo_mode()
 	-- end)
+end
+
+function mod:demo_mode()
+	for _, frame in ipairs(oUF.objects) do
+		-- assert(false, frame)
+		-- print(frame.unit)
+		-- print(frame.layout)
+		-- print(frame:GetAttribute('unitsuffix'))
+		local type = frame:GetAttribute('oUF-guessUnit')
+
+		if (type == "raid") then
+			local playerName = "TestPlayer" .. frame:GetID()
+			frame.ShortTest:SetText(playerName)
+			frame.ShortTest:Show()
+			frame.Short:Hide()
+		end
+		-- local frame = _G[unit] -- Get the actual frame associated with the unit
+
+		-- -- Check if the frame exists and is visible
+		-- if frame and frame:IsVisible() then
+		-- 	local playerClass = "PRIEST" -- Choose any class for testing
+		-- 	local playerRole = "HEALER" -- Choose any role for testing
+
+		-- 	-- Set unit attributes
+		--
+		-- 	-- frame.class:SetText(playerClass)
+		-- 	-- frame.role:SetText(playerRole)
+		-- end
+	end
 end
 
 local function callback()
