@@ -133,27 +133,16 @@ function oUF:DisableBlizzard(unit)
 		end
 	elseif(unit:match('party%d?$')) then
 		if(not isPartyHooked) then
-			if (PartyFrame) then
-				isPartyHooked = true
+			isPartyHooked = true
 
-				handleFrame(PartyFrame)
+			handleFrame(PartyFrame)
 
-				for frame in PartyFrame.PartyMemberFramePool:EnumerateActive() do
-					handleFrame(frame, true)
-				end
+			for frame in PartyFrame.PartyMemberFramePool:EnumerateActive() do
+				handleFrame(frame, true)
+			end
 
-				for i = 1, MEMBERS_PER_RAID_GROUP do
-					handleFrame('CompactPartyFrameMember' .. i)
-				end
-			else
-				local id = unit:match('party(%d)')
-				if(id) then
-					handleFrame('PartyMemberFrame' .. id)
-				else
-					for i = 1, MAX_PARTY_MEMBERS do
-						handleFrame(string.format('PartyMemberFrame%d', i))
-					end
-				end
+			for i = 1, MEMBERS_PER_RAID_GROUP do
+				handleFrame('CompactPartyFrameMember' .. i)
 			end
 		end
 	elseif(unit:match('arena%d?$')) then

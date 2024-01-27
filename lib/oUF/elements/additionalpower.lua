@@ -59,6 +59,7 @@ local oUF = ns.oUF
 
 local _, playerClass = UnitClass('player')
 
+-- ElvUI block
 local unpack = unpack
 local CopyTable = CopyTable
 local UnitIsUnit = UnitIsUnit

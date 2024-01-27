@@ -266,7 +266,8 @@ local function Enable(self, unit)
 			end
 		end
 
-				if element.IsObjectType and element:IsObjectType("Frame") then
+		-- ElvUI block
+		if element.IsObjectType and element:IsObjectType("Frame") then
 			element:Show()
 		end
 		-- end block
@@ -290,7 +291,8 @@ local function Disable(self)
 			rune:Hide()
 		end
 
-				if element.IsObjectType and element:IsObjectType("Frame") then
+		-- ElvUI block
+		if element.IsObjectType and element:IsObjectType("Frame") then
 			element:Hide()
 		end
 		-- end block

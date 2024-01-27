@@ -45,6 +45,7 @@ local oUF = ns.oUF
 
 local _, playerClass = UnitClass('player')
 
+-- ElvUI block
 local next = next
 local GetSpellPowerCost = GetSpellPowerCost
 local UnitCastingInfo = UnitCastingInfo

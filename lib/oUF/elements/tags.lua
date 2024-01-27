@@ -72,6 +72,7 @@ local Private = oUF.Private
 local unitExists = Private.unitExists
 local validateEvent = Private.validateEvent
 
+-- ElvUI block
 local _G = _G
 local CreateFrame = CreateFrame
 local hooksecurefunc = hooksecurefunc
@@ -94,7 +95,8 @@ local _ENV = {
 			end
 		end
 
-				if not r or type(r) == 'string' then --wtf?
+		-- ElvUI block
+		if not r or type(r) == 'string' then --wtf?
 			return '|cffFFFFFF'
 		end
 		-- end block
@@ -583,8 +585,10 @@ eventFrame:SetScript('OnEvent', function(_, event, unit)
 	local strings = eventFontStrings[event]
 	if(strings) then
 		for fs in next, strings do
-			if(not stringsToUpdate[fs] and fs:IsVisible() and (unitlessEvents[event] or fs.parent.unit == unit or (fs.extraUnits and fs.extraUnits[unit]))) then
-				stringsToUpdate[fs] = true
+			if not fs.parent.isForced then -- ElvUI needs this to prevent spam
+				if(not stringsToUpdate[fs] and fs:IsVisible() and (unitlessEvents[event] or fs.parent.unit == unit or (fs.extraUnits and fs.extraUnits[unit]))) then
+					stringsToUpdate[fs] = true
+				end
 			end
 		end
 	end
@@ -621,8 +625,10 @@ local function enableTimer(timer)
 		frame:SetScript('OnUpdate', function(_, elapsed)
 			if total >= timer then
 				for fs in next, strings do
-					if fs.parent:IsShown() and unitExists(fs.parent.unit) then
-						fs:UpdateTag()
+					if not fs.parent.isForced then -- ElvUI needs this to prevent spam
+						if fs.parent:IsShown() and unitExists(fs.parent.unit) then
+							fs:UpdateTag()
+						end
 					end
 				end
 
@@ -658,6 +664,7 @@ local function Update(self)
 	end
 end
 
+-- ElvUI block
 local onUpdateDelay = {}
 local function escapeSequence(a) return format('|%s', a) end
 local function makeDeadTagFunc(bracket)
@@ -843,7 +850,7 @@ local function Tag(self, fs, ts, ...)
 		fs.__HookedAlphaFix = true
 	end
 
-	ts = ts:gsub('||([TCRAtcra])', escapeSequence)
+	ts = ts:gsub('||([TCRAtncra])', escapeSequence)
 
 	local customArgs = ts:match('{(.-)}%]')
 	if customArgs then
@@ -872,8 +879,10 @@ local function Tag(self, fs, ts, ...)
 	local containsOnUpdate
 	for tag in ts:gmatch(_PATTERN) do
 		tag = getTagName(tag)
-		if not tagEvents[tag] then
-			containsOnUpdate = onUpdateDelay[tag] or 0.15;
+
+		local delay = not tagEvents[tag] and onUpdateDelay[tag]
+		if delay then
+			containsOnUpdate = delay
 		end
 	end
 	-- end block
@@ -934,6 +943,7 @@ local function strip(tag)
 end
 
 oUF.Tags = {
+	Env = _ENV,
 	Methods = tagFuncs,
 	Events = tagEvents,
 	SharedEvents = unitlessEvents,

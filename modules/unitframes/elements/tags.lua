@@ -126,8 +126,8 @@ function mod.create_all_tags(self)
 			local yoffset = 0
 
 			self.combat = self.combat or
-			CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left,
-				right, top, bottom, xOffset, yOffset)
+				CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left,
+					right, top, bottom, xOffset, yOffset)
 
 			return self.combat
 		end
@@ -152,8 +152,8 @@ function mod.create_all_tags(self)
 			local yoffset = 0
 
 			self.resting = self.resting or
-			CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left,
-				right, top, bottom, xOffset, yOffset)
+				CreateTextureMarkup("Interface\\CharacterFrame\\UI-StateIcon", fileWidth, fileHeight, width, height, left,
+					right, top, bottom, xOffset, yOffset)
 
 			return self.resting
 		end
@@ -196,6 +196,7 @@ function mod.create_all_tags(self)
 	-- power
 	oUF.Tags.Events['bd:curpp'] = 'UNIT_POWER_UPDATE UNIT_MAXPOWER PLAYER_TARGET_CHANGED'
 	oUF.Tags.Methods['bd:curpp'] = function(unit)
+		if (not UnitExists(unit)) then return end
 		local pType, pToken = UnitPowerType(unit)
 		local hex = RGBPercToHex(unpack(oUF.colors.power[pType]))
 		local pp, ppMax = UnitPower(unit), UnitPowerMax(unit)
