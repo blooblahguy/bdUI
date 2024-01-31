@@ -152,14 +152,12 @@ function mod:config_nameplate(self)
 	self.Name:ClearAllPoints()
 	if (config.name_position == "Inside" and self.currentStyle == "enemy") then
 		self.Name:SetPoint("LEFT", self.Health, "LEFT", 4, 0)
+		self.FixateAlert:ClearAllPoints()
+		self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
 	else
 		self.Name:SetPoint("BOTTOM", self, "TOP", 0, config.name_offset)
-	end
-
-	if (name_position == "Inside") then
+		self.FixateAlert:ClearAllPoints()
 		self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "BOTTOM", 0, -1)
-	else
-		self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
 	end
 
 	-- Text Sizes
