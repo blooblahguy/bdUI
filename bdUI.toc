@@ -211,7 +211,6 @@ modules\tooltips\elements\targettarget.lua
 modules\tooltips\elements\targetinfo.lua
 modules\tooltips\elements\tooltipcolor.lua
 modules\tooltips\elements\namehover.lua
-modules\tooltips\elements\targetinfo.lua
 modules\tooltips\units\player.lua
 modules\tooltips\units\npc.lua
 

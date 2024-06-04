@@ -12,8 +12,10 @@ function mod:minimap_zones()
 		if (MinimapCluster.BorderTop) then
 			MinimapCluster.BorderTop:Hide()
 			MinimapCluster.BorderTop:EnableMouse(false)
-			MinimapCluster.Tracking:Hide()
-			MinimapCluster.Tracking:EnableMouse(false)
+			if (MinimapCluster.Tracking) then
+				MinimapCluster.Tracking:Hide()
+				MinimapCluster.Tracking:EnableMouse(false)
+			end
 			MinimapCluster.ZoneTextButton:Hide()
 			MinimapCluster.ZoneTextButton:EnableMouse(false)
 		end

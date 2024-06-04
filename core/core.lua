@@ -258,6 +258,8 @@ end
 
 -- no operation function
 noop = function() end
+noof = CreateFrame("frame")
+noof:Hide();
 
 function dump_functions(tbl, indent)
 	if not indent then indent = 4 end

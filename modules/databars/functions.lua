@@ -28,11 +28,11 @@ function mod:create_databar(name)
 
 	bar.top = CreateFrame('StatusBar', nil, bar)
 	bar.top:SetAllPoints(bar)
-			
+
 	bar.text = bar.top:CreateFontString(nil, "OVERLAY")
 	bar.text:SetAllPoints()
 	bar.text:SetJustifyH("CENTER")
-	bar.text:SetJustifyV("CENTER")
+	bar.text:SetJustifyV("MIDDLE")
 	bar.text:SetFontObject(bdUI:get_font(11))
 	bar.text:Hide()
 
