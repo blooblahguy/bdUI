@@ -64,7 +64,8 @@ mod.custom_layout["boss"] = function(self, unit)
 		end
 
 		return bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or
-		not source or not UnitIsPlayer(source)                                                                                                        -- this may have been casted by no one or by a boss
+			not source or
+			not UnitIsPlayer(source)     -- this may have been casted by no one or by a boss
 	end
 
 	-- self.Auras.initialAnchor = "TOPLEFT"

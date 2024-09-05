@@ -22,6 +22,10 @@ local buff_filter = function(self, unit, button, name, icon, count, debuffType, 
 		return true
 	end
 
+	if (castByMe and duration == 0) then
+		return false
+	end
+
 	return bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll)
 end
 

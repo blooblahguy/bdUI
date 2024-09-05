@@ -24,10 +24,10 @@ local function range_lerp(value, sourceMin, sourceMax, newMin, newMax)
 end
 
 local function increase_brightness(r, percent)
-    r = range_lerp(r, 0, 1, 0, 255)
-    r = r + math.floor( percent / 100 * 255 )
+	r = range_lerp(r, 0, 1, 0, 255)
+	r = r + math.floor(percent / 100 * 255)
 	r = range_lerp(r, 0, 255, 0, 1)
-    return r
+	return r
 end
 
 local function brighten_color(r, g, b, percent)
@@ -40,12 +40,12 @@ end
 
 local methods = {}
 methods["update_quality"] = function(self)
-
 	self.quality_border:Hide()
 	self.quality_border:set_border_color(unpack(bdUI.media.border))
-	
+
 	if (self.itemLink) then
-		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(self.itemLink)
+		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
+			GetItemInfo(self.itemLink)
 		if (itemRarity and itemRarity > 1) then
 			local r, g, b, hex = GetItemQualityColor(itemRarity)
 			self.quality_border:set_border_color(r, g, b, 1)
@@ -82,7 +82,10 @@ methods["update_new"] = function(self)
 end
 
 methods["compare"] = function(self, key, down)
-	if (not MouseIsOver(self)) then self:UnregisterEvent("MODIFIER_STATE_CHANGED") return end
+	if (not MouseIsOver(self)) then
+		self:UnregisterEvent("MODIFIER_STATE_CHANGED")
+		return
+	end
 	if (not self.itemID) then return end
 
 	if IsModifiedClick("COMPAREITEMS") or (GetCVarBool("alwaysCompareItems") and not IsEquippedItem(self.itemID)) then
@@ -122,10 +125,17 @@ function mod:skin(self)
 	self.skinned = true
 	bdUI:set_backdrop(self)
 
-	local normal = _G[self:GetName().."NormalTexture"]
-	local count = _G[self:GetName().."Count"]
-	local icon = _G[self:GetName().."IconTexture"]
-	local quest = _G[self:GetName().."IconQuestTexture"]
+	for k, v in pairs({ self:GetRegions() }) do
+		-- print(k, v:GetName())
+		-- v:Hide()
+	end
+
+	-- self.ilvl:Show()
+
+	local normal = _G[self:GetName() .. "NormalTexture"]
+	local count = _G[self:GetName() .. "Count"]
+	local icon = _G[self:GetName() .. "IconTexture"]
+	local quest = _G[self:GetName() .. "IconQuestTexture"]
 
 	self:SetNormalTexture("")
 	self:SetPushedTexture("")
@@ -139,7 +149,7 @@ function mod:skin(self)
 	bdUI:kill(normal)
 	quest:SetAllPoints()
 
-	self.blank = self:CreateTexture(self:GetName().."Blank", "BACKGROUND")
+	self.blank = self:CreateTexture(self:GetName() .. "Blank", "BACKGROUND")
 	self.blank:SetAllPoints()
 	self.blank:SetTexture([[Interface\BUTTONS\UI-EmptySlot]])
 	self.blank:SetTexCoord(.3, .7, .3, .7)
@@ -157,12 +167,13 @@ function mod:skin(self)
 	count:SetFontObject(bdUI:get_font(13, "OUTLINE"))
 	count:SetJustifyH("RIGHT")
 	count:ClearAllPoints()
+	count:Show()
 	count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
 
 	-- battleplay
 	self.BattlepayItemTexture:SetAllPoints()
 	self.BattlepayItemTexture:SetTexCoord(.25, .75, .25, .75)
-	
+
 	-- New Item
 	self.NewItemTexture:SetAllPoints()
 	self.NewItemTexture:Hide()
@@ -178,7 +189,7 @@ function mod:skin(self)
 	-- self.new_item = new_item
 
 	-- quality
-	local quality = CreateFrame("frame", self:GetName().."QualityBorder", self)
+	local quality = CreateFrame("frame", self:GetName() .. "QualityBorder", self)
 	quality:SetPoint("TOPLEFT", self, "TOPLEFT", mod.border, -mod.border)
 	quality:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -mod.border, mod.border)
 	bdUI:set_backdrop(quality)
@@ -191,14 +202,15 @@ local item_num = 0
 mod.item_pool_create = function(self)
 	item_num = item_num + 1
 	local parent = CreateFrame("frame", nil, mod.current_parent)
-	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_Item_"..item_num, parent, "ContainerFrameItemButtonTemplate")
+	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_Item_" .. item_num, parent,
+		"ContainerFrameItemButtonTemplate")
 	-- local button = CreateFrame("ItemButton", "bdBags_Item_"..item_num, parent, "ContainerFrameItemButtonTemplate")
 	button:SetHeight(36)
 	button:SetWidth(36)
 	button:SetFrameStrata("HIGH")
 	button:EnableMouse(true)
 	button:RegisterForDrag("LeftButton")
-	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
+	button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	button:Hide()
 
 	button.text = button:CreateFontString(nil, "OVERLAY")
@@ -259,7 +271,7 @@ mod.item_pool_create = function(self)
 			end
 		end
 	end)
-	
+
 	mod:register_events(button, events)
 
 	return button

@@ -9,7 +9,7 @@ local v = mod.variables
 local c = {}
 
 function mod:position_selectors()
-	
+
 end
 
 -- ACTION_BUTTON_SHOW_GRID_REASON_CVAR = 2;
@@ -27,7 +27,9 @@ end
 function mod:initialize()
 	c = mod:get_save()
 	mod.config = c
-	if (not c.enabled) then mod.disabled = true; return end
+	if (not c.enabled) then
+		mod.disabled = true; return
+	end
 
 	SetCVar("countdownForCooldowns", 1)
 
@@ -39,7 +41,7 @@ function mod:initialize()
 		MultiActionBar_Update()
 		c.enabled_once = true
 	end
-	
+
 	mod:remove_blizzard()
 
 	-- Main bars
@@ -75,12 +77,14 @@ end
 function mod:config_callback()
 	c = mod:get_save()
 	mod.config = c
-	if (not c.enabled) then mod.disabled = true; return end
+	if (not c.enabled) then
+		mod.disabled = true; return
+	end
 	if (InCombatLockdown()) then
 		mod:RegisterEvent("PLAYER_REGEN_DISABLED")
 		return
 	end
-	
+
 	mod:UnregisterEvent("PLAYER_REGEN_DISABLED")
 
 	-- loop through bar callbacks
@@ -100,8 +104,8 @@ function mod:toggle_keybinds(frame, force)
 	local hide_macros = frame.hidemacros
 
 	for i, button in pairs(frame.buttonList) do
-		local hotkey = _G[button:GetName().."HotKey"]
-		local macro = _G[button:GetName().."Name"]
+		local hotkey = _G[button:GetName() .. "HotKey"]
+		local macro = _G[button:GetName() .. "Name"]
 
 		if (hotkey) then
 			local text = hotkey:GetText()
@@ -138,8 +142,8 @@ function mod:CreateBar(buttonList, cfg)
 	end)
 
 	-- hook into configuration changes
-	table.insert(mod.variables.callbacks, function() 
-		mod:LayoutBar(frame, buttonList, cfg) 
+	table.insert(mod.variables.callbacks, function()
+		mod:LayoutBar(frame, buttonList, cfg)
 	end)
 	if (cfg.callback) then
 		table.insert(mod.variables.callbacks, cfg.callback)
@@ -177,17 +181,17 @@ function mod:LayoutBar(frame, buttonList, cfg)
 	local border = bdUI:get_border(frame)
 
 	-- config
-	frame.limit = c[cfg.cfg.."_buttons"] or #buttonList
-	frame.scale = c[cfg.cfg.."_scale"] or 1
-	frame.spacing = (c[cfg.cfg.."_spacing"] or cfg.spacing or 0) + border
-	frame.width = (c[cfg.cfg.."_size"] * frame.scale) * (cfg.widthScale or 1)
-	frame.height = c[cfg.cfg.."_size"] * frame.scale
-	frame.rows = c[cfg.cfg.."_rows"] or 1
-	frame.alpha = c[cfg.cfg.."_alpha"] or 1
-	frame.enableFader = c[cfg.cfg.."_mouseover"] or false
-	frame.hidehotkeys = c[cfg.cfg.."_hidehotkeys"] or false
-	frame.hidemacros = c[cfg.cfg.."_hidemacros"] or false
-	
+	frame.limit = c[cfg.cfg .. "_buttons"] or #buttonList
+	frame.scale = c[cfg.cfg .. "_scale"] or 1
+	frame.spacing = (c[cfg.cfg .. "_spacing"] or cfg.spacing or 0) + border
+	frame.width = (c[cfg.cfg .. "_size"] * frame.scale) * (cfg.widthScale or 1)
+	frame.height = c[cfg.cfg .. "_size"] * frame.scale
+	frame.rows = c[cfg.cfg .. "_rows"] or 1
+	frame.alpha = c[cfg.cfg .. "_alpha"] or 1
+	frame.enableFader = c[cfg.cfg .. "_mouseover"] or false
+	frame.hidehotkeys = c[cfg.cfg .. "_hidehotkeys"] or false
+	frame.hidemacros = c[cfg.cfg .. "_hidemacros"] or false
+
 	frame.num = frame.limit
 	frame.cols = math.floor(math.min(frame.limit, frame.num) / frame.rows)
 
@@ -197,7 +201,7 @@ function mod:LayoutBar(frame, buttonList, cfg)
 		frame.frameVisibilityFunc = cfg.frameVisibilityFunc
 		RegisterStateDriver(frame, cfg.frameVisibilityFunc or "visibility", cfg.frameVisibility)
 	end
-	
+
 	-- Fader
 	if (frame.enableFader) then
 		bdMove:CreateFader(frame, buttonList, alpha, 0, c.fade_duration)
@@ -219,15 +223,15 @@ function mod:LayoutButtons(frame, buttonList)
 	frame:Show()
 
 	-- size the parent bar
-	local frameWidth = frame.cols * frame.width + (frame.cols-1) * frame.spacing
-	local frameHeight = frame.rows * frame.height + (frame.rows-1) * frame.spacing
+	local frameWidth = frame.cols * frame.width + (frame.cols - 1) * frame.spacing
+	local frameHeight = frame.rows * frame.height + (frame.rows - 1) * frame.spacing
 	frame:SetSize(frameWidth, frameHeight)
 	frame:SetAlpha(frame.alpha)
 
 	-- button positioning
 	local lastRow = nil
 	local index = 1
-	local showgrid = tonumber(GetCVar("alwaysShowActionBars"))	
+	local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
 	for i, button in pairs(buttonList) do
 		if not frame.__blizzardBar then
 			button:SetParent(frame)
@@ -273,7 +277,7 @@ end
 -- 	local cooldown = _G[self:GetName().."Cooldown"]
 
 -- 	-- update cooldown remaining when its set
-	
+
 -- 	-- hooksecurefunc(cooldown, "SetCooldown", function(self, start, duration)
 -- 	-- 	mod:hook_cooldown(self, start, duration)
 -- 	-- -- 	local progress = start + duration - GetTime()
@@ -290,7 +294,7 @@ end
 -- 	-- 	update_cooldown(button, cooldown.end_time - GetTime())
 -- 	-- end)
 
-	
+
 -- end
 
 --=======================================
@@ -302,19 +306,19 @@ function mod:SkinButton(button)
 	bdUI:set_backdrop(button)
 
 	local name = button:GetName()
-	local icon = _G[name.."Icon"]
-	local count = _G[name.."Count"]
-	local macro = _G[name.."Name"]
-	local cooldown = _G[name.."Cooldown"]
-	local flash = _G[name.."Flash"]
-	local checked = _G[name.."Checked"]
-	local shine = _G[name.."Shine"]
-	local hotkey = _G[name.."HotKey"]
-	local border = _G[name.."Border"]
-	local normal = _G[name.."NormalTexture"]
-	local normal2 = _G[name.."NormalTexture2"]
-	local btnBG = _G[name.."FloatingBG"]
-	local autocastable = _G[name.."AutoCastable"]
+	local icon = _G[name .. "Icon"]
+	local count = _G[name .. "Count"]
+	local macro = _G[name .. "Name"]
+	local cooldown = _G[name .. "Cooldown"]
+	local flash = _G[name .. "Flash"]
+	local checked = _G[name .. "Checked"]
+	local shine = _G[name .. "Shine"]
+	local hotkey = _G[name .. "HotKey"]
+	local border = _G[name .. "Border"]
+	local normal = _G[name .. "NormalTexture"]
+	local normal2 = _G[name .. "NormalTexture2"]
+	local btnBG = _G[name .. "FloatingBG"]
+	local autocastable = _G[name .. "AutoCastable"]
 	local r_divider = button.RightDivider
 
 
@@ -341,27 +345,27 @@ function mod:SkinButton(button)
 		hotkey:SetJustifyH("Right")
 		hotkey:SetTextColor(1, 1, 1)
 		hotkey:ClearAllPoints()
-		hotkey:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0,-3)
+		hotkey:SetPoint("TOPRIGHT", button, "TOPRIGHT", 0, -3)
 	end
 
 	-- COUNT
 	if (count) then
 		count:SetFontObject(v.font)
-		count:SetTextColor(0.7,0.7,0.7)
+		count:SetTextColor(0.7, 0.7, 0.7)
 		count:SetJustifyH("Center")
-		count:SetTextColor(1,1,1)
+		count:SetTextColor(1, 1, 1)
 		count:ClearAllPoints()
-		count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,0)
+		count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0, 0)
 	end
-	
+
 	-- MACRO
 	if (macro) then
 		macro:SetFontObject(v.font)
-		macro:SetTextColor(0.7,0.7,0.7)
+		macro:SetTextColor(0.7, 0.7, 0.7)
 		macro:SetJustifyH("RIGHT")
-		macro:SetTextColor(1,1,1)
+		macro:SetTextColor(1, 1, 1)
 		macro:ClearAllPoints()
-		macro:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0,1)
+		macro:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0, 1)
 	end
 
 	-- COOLDOWN
@@ -426,7 +430,6 @@ function mod:SkinButton(button)
 	button.skinned = true
 end
 
-
 -- Flyout skinning
 local function StyleFlyout(self)
 	if (not self.FlyoutArrow or InCombatLockdown()) then return end
@@ -438,7 +441,7 @@ local function StyleFlyout(self)
 	spacing = bdUI.pixel * spacing
 
 	for i = 1, NUM_ACTIONBAR_BUTTONS do
-		local button = _G["SpellFlyoutButton"..i]
+		local button = _G["SpellFlyoutButton" .. i]
 		if not button then break end
 
 		mod:SkinButton(button)
@@ -460,7 +463,7 @@ function mod:hook_flyout()
 	end
 	if (SpellButton_OnClick) then
 		hooksecurefunc("SpellButton_OnClick", StyleFlyout)
-	else
+	elseif (SpellBookFrame_OpenToSpell) then
 		hooksecurefunc("SpellBookFrame_OpenToSpell", StyleFlyout)
 	end
 end
