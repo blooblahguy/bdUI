@@ -44,17 +44,19 @@ methods["update_quality"] = function(self)
 	self.quality_border:set_border_color(unpack(bdUI.media.border))
 
 	if (self.itemLink) then
-		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
-			GetItemInfo(self.itemLink)
+		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(self.itemLink)
 		if (itemRarity and itemRarity > 1) then
 			local r, g, b, hex = GetItemQualityColor(itemRarity)
 			self.quality_border:set_border_color(r, g, b, 1)
 			self.quality_border:Show()
 		end
-	end
-	if (GetContainerItemQuestInfo and select(1, GetContainerItemQuestInfo(self.bag, self.slot))) then
-		self.quality_border:set_border_color(1, 1, 0.2, 1)
-		self.quality_border:Show()
+
+		-- print(itemName, itemType, itemSubType)
+
+		if (itemType == "Quest") then
+			self.quality_border:set_border_color(1, 1, 0.2, 1)
+			self.quality_border:Show()
+		end
 	end
 end
 
@@ -86,7 +88,9 @@ methods["compare"] = function(self, key, down)
 		self:UnregisterEvent("MODIFIER_STATE_CHANGED")
 		return
 	end
-	if (not self.itemID) then return end
+	if (not self.itemID) then
+		return
+	end
 
 	if IsModifiedClick("COMPAREITEMS") or (GetCVarBool("alwaysCompareItems") and not IsEquippedItem(self.itemID)) then
 		GameTooltip_ShowCompareItem()
@@ -110,7 +114,14 @@ methods["update"] = function(self)
 	self:update_new()
 	self:update_quality()
 
-	if (mod.config.show_ilvl and self.itemLevel > 0 and tonumber(self.itemCount) == 1) then
+	local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice
+	if (self.itemLink) then
+		itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(self.itemLink)
+
+		self.itemEquipLoc = itemEquipLoc
+	end
+
+	if (self.itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" and mod.config.show_ilvl and self.itemLevel > 0 and tonumber(self.itemCount) == 1) then
 		local r, g, b, hex = GetItemQualityColor(self.rarity)
 		r, g, b = brighten_color(r, g, b, 50)
 		self.ilvl:SetText(self.itemLevel)
@@ -120,63 +131,68 @@ methods["update"] = function(self)
 	end
 end
 
-function mod:skin(self)
-	if (self.skinned) then return end
-	self.skinned = true
-	bdUI:set_backdrop(self)
+function mod:skin(button)
+	if (button.skinned) then
+		return
+	end
+	button.skinned = true
+	bdUI:set_backdrop(button)
 
-	for k, v in pairs({ self:GetRegions() }) do
-		-- print(k, v:GetName())
-		-- v:Hide()
+	for k, v in pairs({ button:GetRegions() }) do
+		if (v:GetName() == button:GetName() .. "NormalTexture") then
+			bdUI:kill(v)
+		end
 	end
 
-	-- self.ilvl:Show()
+	local normal = _G[button:GetName() .. "NormalTexture"]
+	-- print(self:GetName() .. "NormalTexture")
+	local count = _G[button:GetName() .. "Count"]
+	local icon = button.icon or _G[button:GetName() .. "IconTexture"]
+	local quest = _G[button:GetName() .. "IconQuestTexture"]
 
-	local normal = _G[self:GetName() .. "NormalTexture"]
-	local count = _G[self:GetName() .. "Count"]
-	local icon = _G[self:GetName() .. "IconTexture"]
-	local quest = _G[self:GetName() .. "IconQuestTexture"]
-
-	self:SetNormalTexture("")
-	self:SetPushedTexture("")
-	icon:SetAllPoints(self)
+	button:SetNormalTexture("")
+	button:SetPushedTexture("")
+	icon:SetAllPoints(button)
 	icon:SetTexCoord(.07, .93, .07, .93)
+	icon.SetTexCoord = noop
 
-	self.flash:SetAllPoints()
+	button.flash:SetAllPoints()
 	normal:SetAllPoints()
 	normal:Hide()
 	normal.Show = noop
 	bdUI:kill(normal)
+
 	quest:SetAllPoints()
 
-	self.blank = self:CreateTexture(self:GetName() .. "Blank", "BACKGROUND")
-	self.blank:SetAllPoints()
-	self.blank:SetTexture([[Interface\BUTTONS\UI-EmptySlot]])
-	self.blank:SetTexCoord(.3, .7, .3, .7)
-	self.blank:SetAlpha(0.8)
-	self.blank:Hide()
+	button.blank = button:CreateTexture(button:GetName() .. "Blank", "BACKGROUND")
+	button.blank:SetAllPoints()
+	button.blank:SetTexture([[Interface\BUTTONS\UI-EmptySlot]])
+	button.blank:SetTexCoord(.3, .7, .3, .7)
+	button.blank:SetAlpha(0.8)
+	button.blank:Hide()
 
 	-- hover
-	local hover = self:CreateTexture()
+	local hover = button:CreateTexture()
 	hover:SetTexture(bdUI.media.flat)
 	hover:SetVertexColor(1, 1, 1, 0.1)
-	hover:SetAllPoints(self)
-	self:SetHighlightTexture(hover)
+	hover:SetAllPoints(button)
+	button:SetHighlightTexture(hover)
 
 	-- count
 	count:SetFontObject(bdUI:get_font(13, "OUTLINE"))
 	count:SetJustifyH("RIGHT")
 	count:ClearAllPoints()
 	count:Show()
-	count:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -1, 1)
+	count:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
 
 	-- battleplay
-	self.BattlepayItemTexture:SetAllPoints()
-	self.BattlepayItemTexture:SetTexCoord(.25, .75, .25, .75)
+	button.BattlepayItemTexture:SetAllPoints()
+	button.BattlepayItemTexture:SetTexCoord(.25, .75, .25, .75)
 
 	-- New Item
-	self.NewItemTexture:SetAllPoints()
-	self.NewItemTexture:Hide()
+	button.NewItemTexture:SetAllPoints()
+	button.NewItemTexture:Hide()
+
 	-- 902180
 	-- local new_item = CreateFrame("frame", self:GetName().."NewBorder", self)
 	-- new_item:SetPoint("TOPLEFT", self, "TOPLEFT")
@@ -189,21 +205,20 @@ function mod:skin(self)
 	-- self.new_item = new_item
 
 	-- quality
-	local quality = CreateFrame("frame", self:GetName() .. "QualityBorder", self)
-	quality:SetPoint("TOPLEFT", self, "TOPLEFT", mod.border, -mod.border)
-	quality:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -mod.border, mod.border)
+	local quality = CreateFrame("frame", button:GetName() .. "QualityBorder", button)
+	quality:SetPoint("TOPLEFT", button, "TOPLEFT", mod.border, -mod.border)
+	quality:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -mod.border, mod.border)
 	bdUI:set_backdrop(quality)
 	quality:set_border_color(1, 0, 0, 1)
 	quality._background:Hide()
-	self.quality_border = quality
+	button.quality_border = quality
 end
 
 local item_num = 0
-mod.item_pool_create = function(self)
+function mod:item_pool_create()
 	item_num = item_num + 1
 	local parent = CreateFrame("frame", nil, mod.current_parent)
-	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_Item_" .. item_num, parent,
-		"ContainerFrameItemButtonTemplate")
+	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_Item_" .. item_num, parent, "ContainerFrameItemButtonTemplate")
 	-- local button = CreateFrame("ItemButton", "bdBags_Item_"..item_num, parent, "ContainerFrameItemButtonTemplate")
 	button:SetHeight(36)
 	button:SetWidth(36)
@@ -276,8 +291,8 @@ mod.item_pool_create = function(self)
 
 	return button
 end
-mod.item_pool_reset = function(self, frame)
+
+function mod:item_pool_reset(frame)
 	frame:ClearAllPoints()
 	frame:Hide()
-	-- frame.text:Hide()
 end

@@ -45,41 +45,41 @@ function mod:create_bags()
 			end)
 			-- create container items for bigger and better bags
 			-- for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-				-- local min, max, step = GetContainerNumSlots(bag), 1, -1
+			-- local min, max, step = GetContainerNumSlots(bag), 1, -1
 
-				-- print(min, max, bag, step)
-				-- print(event)
-				
-				-- for slot = min, max, step do
-					-- print(slot)
-					-- print("ContainerFrame"..bag.."Item"..slot)
-					-- local blizzbut = _G["ContainerFrame"..bag.."Item"..slot]
-					-- local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
-					-- if (type(texture) == "table") then
-					-- 	itemLink = texture.hyperlink
-					-- end
-					-- GetItemInfo(itemLink)
-					-- print(itemLink)
-					-- if (blizzbut) then
-						-- print(blizzbut:GetID(), blizzbut:GetParent():GetID())
-					-- end
-				-- end
+			-- print(min, max, bag, step)
+			-- print(event)
 
-				-- query for itemlink
-				-- local bagslots = {"0.0", "0.-1", "2.-2", "3.-3"}
-				-- for k, ids in pairs(bagslots) do
-				-- 	local bagID, slot = strsplit(".", ids)
-				-- 	local itemLink = select(7, GetContainerItemInfo(tonumber(bagID), tonumber(slot)))
-				-- end
+			-- for slot = min, max, step do
+			-- print(slot)
+			-- print("ContainerFrame"..bag.."Item"..slot)
+			-- local blizzbut = _G["ContainerFrame"..bag.."Item"..slot]
+			-- local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
+			-- if (type(texture) == "table") then
+			-- 	itemLink = texture.hyperlink
+			-- end
+			-- GetItemInfo(itemLink)
+			-- print(itemLink)
+			-- if (blizzbut) then
+			-- print(blizzbut:GetID(), blizzbut:GetParent():GetID())
+			-- end
+			-- end
+
+			-- query for itemlink
+			-- local bagslots = {"0.0", "0.-1", "2.-2", "3.-3"}
+			-- for k, ids in pairs(bagslots) do
+			-- 	local bagID, slot = strsplit(".", ids)
+			-- 	local itemLink = select(7, GetContainerItemInfo(tonumber(bagID), tonumber(slot)))
+			-- end
 			-- end
 
 			-- if (run_bag_holder == 0) then
 			-- 	run_bag_holder = 1
 
 			-- 	-- then try to create
-				-- C_Timer.After(1, function()
-					-- mod:create_bagslots(mod.bags, {"0.0", "0.1", "0.2", "0.3"})
-				-- end)
+			-- C_Timer.After(1, function()
+			-- mod:create_bagslots(mod.bags, {"0.0", "0.1", "0.2", "0.3"})
+			-- end)
 			-- end
 		else
 			if (GetTime() - .01 >= last_call or event == "PLAYER_ENTERING_WORLD") then -- throttle just crazy amounts of calls
@@ -98,7 +98,7 @@ function mod:update_bags()
 	-- mod.categoryIDtoNames[13] = GetItemClassInfo(13)
 	-- local keyName = GetItemClassInfo(13)
 	-- mod.categoryNamestoID[keyName] = 13
-	
+
 
 	bdUI:profile_start("bag update loop", 1)
 	-- first gather all items up
@@ -106,13 +106,22 @@ function mod:update_bags()
 		local min, max, step = GetContainerNumSlots(bag), 1, -1
 		local free, bagtype = GetContainerNumFreeSlots(bag)
 		freeslots = freeslots + free
-		
+
 		for slot = min, max, step do
 			local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bag, slot)
 			if (type(texture) == "table") then
 				itemLink = texture.hyperlink
 				quality = texture.quality
 				itemCount = texture.stackCount
+			end
+
+			local isTrash = false
+			if (itemLink) then
+				-- local itemprice = select(11, GetItemInfo(itemLink));n
+				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
+					GetItemInfo(itemLink)
+				-- print(itemName, quality)
+				isTrash = quality == Enum.ItemQuality.Poor and itemSellPrice > 0
 			end
 
 			if (not itemLink) then
@@ -123,25 +132,26 @@ function mod:update_bags()
 				if (not config.showfreespaceasone) then
 					mod.categoryIDtoNames[-2] = "Bag"
 					mod.categoryNamestoID["Bag"] = -2
-					
+
 					-- store it in a category
 					mod.bags.categories[-2] = mod.bags.categories[-2] or {}
-					
+
 					-- then store by categoryID with lots of info
 					table.insert(mod.bags.categories[-2], itemInfo)
 				elseif (not freeslot) then
 					freeslot = itemInfo
 				end
-			elseif (itemLink and quality ~= nil and quality > 0) then
+			elseif (itemLink and not isTrash) then --quality ~= nil and quality > 0) then
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
 
 				-- detailed info
-				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent =
+					GetItemInfo(itemLink)
 
 				-- run through filters to see where i truly belong
-				itemType, itemTypeID = mod:filter_category(itemLink)
-				
+				itemType, itemTypeID = mod:filter_category(itemLink, itemTypeID)
+
 				if (not itemType) then itemType = GetItemClassInfo(13) end;
 				if (not itemTypeID) then itemTypeID = 13 end;
 
@@ -175,7 +185,6 @@ function mod:update_bags()
 	bdUI:profile_start("bag draw", 1)
 	mod:draw_bag()
 	bdUI:profile_stop("bag draw", 1)
-
 end
 
 -- don't mess with categories or releasing frames, just show or hide items that have been used but leave category positions
@@ -188,7 +197,7 @@ function mod:draw_bag()
 	local config = mod.config
 
 	mod.current_parent = mod.bags -- we want new frames to parent to bags
-	
+
 	bdUI:profile_start("bag draw items", 3)
 	mod:position_items(mod.bags.categories, config.buttonsize, config.buttonsperrow)
 	bdUI:profile_stop("bag draw items", 3)

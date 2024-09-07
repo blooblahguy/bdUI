@@ -25,29 +25,17 @@ end
 -- Name:Id
 -- {itemTypes_filter, equipSlot_filter, subType_filter}
 
-custom_categories["Consumable"] = {
-	["order"] = 0,
-	["itemTypeID"] = "7.2",
-}
+custom_categories["Consumable"] = { ["order"] = 0, ["itemTypeID"] = "7.2" }
 
-custom_categories["Jewelry"] = {
-	["itemTypeID"] = "4.0",
-	["itemEquipLoc"] = "INVTYPE_FINGER,INVTYPE_NECK",
-}
+custom_categories["Jewelry"] = { ["itemTypeID"] = "4.0", ["itemEquipLoc"] = "INVTYPE_FINGER,INVTYPE_NECK" }
 
-custom_categories["Trinkets"] = {
-	["itemTypeID"] = "4.0",
-	["itemEquipLoc"] = "FALSE,INVTYPE_TRINKET",
-}
+custom_categories["Trinkets"] = { ["itemTypeID"] = "4.0", ["itemEquipLoc"] = "FALSE,INVTYPE_TRINKET" }
 
 -- custom_categories["Professions"] = {
 -- 	["itemTypeID"] = "7.1,7.2,7.3,7.17,7.7",
 -- }
 
-custom_categories["Miscellaneous"] = {
-	["order"] = 15,
-	["itemTypeID"] = "2.14",
-}
+custom_categories["Miscellaneous"] = { ["order"] = 15, ["itemTypeID"] = "2.14" }
 
 -- custom_categories["Potions:1.6"] = {
 -- 	{"0.1", false, false},
@@ -109,25 +97,25 @@ custom_categories["Miscellaneous"] = {
 -- }
 
 -- tries to match an item to a custom category, rather than default
-local function filter_category(self, itemLink)
-	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+local function filter_category(self, itemLink, itemTypeID)
+	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, _, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 
 	-- default returns
 	-- local returnType, returnID = itemType, itemTypeID -- item name / itemID
 
 	-- we want to loop in here til we find the filter that matches the most conditions, then store it there
-	local bestMatch = {itemType, itemTypeID} -- when we find a best match, return it. this is a table of name / id
+	local bestMatch = { itemType, itemTypeID } -- when we find a best match, return it. this is a table of name / id
 	local bestMatchCount = 0 -- we want to check our best-match so far
 	local currentEntry = 0 -- this is used to add a sub-id to the item categorizations
 	for filter_name, filters in pairs(custom_categories) do
 		currentEntry = currentEntry + 1
-		local order = filters["order"] or itemTypeID.."."..currentEntry
+		local order = filters["order"] or itemTypeID .. "." .. currentEntry
 		local filterMatchCount = 0
 
 		-- match any itemtype ids and subtype ids
 		local typeMatched = false
 		if (filters["itemTypeID"]) then
-			local types = {strsplit(",", filters["itemTypeID"])}
+			local types = { strsplit(",", filters["itemTypeID"]) }
 			for k, v in pairs(types) do
 				local type1, type2 = strsplit(".", v)
 				type1 = type1
@@ -136,7 +124,7 @@ local function filter_category(self, itemLink)
 				-- decide if we're looking for just the type or the type and subtype
 				local find = itemTypeID
 				if (type1 and type2) then
-					find = itemTypeID.."."..itemSubTypeID
+					find = itemTypeID .. "." .. itemSubTypeID
 				end
 
 				-- now match on whats stored in the filter
@@ -150,7 +138,7 @@ local function filter_category(self, itemLink)
 
 		-- check if this equips at this location
 		if (filters["itemEquipLoc"]) then
-			local types = {strsplit(",", filters["itemEquipLoc"])}
+			local types = { strsplit(",", filters["itemEquipLoc"]) }
 			for k, v in pairs(types) do
 				if (itemEquipLoc == v) then
 					filterMatchCount = filterMatchCount + 1
@@ -168,7 +156,7 @@ local function filter_category(self, itemLink)
 		if (filterMatchCount > bestMatchCount) then
 			-- print(itemLink, order)
 			bestMatchCount = filterMatchCount
-			bestMatch = {filter_name, order}
+			bestMatch = { filter_name, order }
 		end
 	end
 
@@ -177,11 +165,9 @@ local function filter_category(self, itemLink)
 	-- 	-- local name, id = strsplit(":", filter_name)
 	-- 	for criteria, value in pairs(filters) do
 
-
 	-- 		-- local itemTypes_filter, equipSlot_filter, subType_filter = unpack(criteria)
 	-- 		-- local itemType_filter, itemSubIDType_filter = strsplit(".", itemTypes_filter)
 
-			
 	-- 		if (itemTypes_filter ~= "" and tonumber(itemTypeID) == tonumber(itemType_filter)) then
 	-- 			-- print(itemLink, "matches", name, "itemids", itemSubTypeID, itemSubIDType_filter)
 	-- 			-- if (equipSlot == "INVTYPE_TABARD") then
@@ -234,6 +220,5 @@ end
 function mod:categorize_items(bag, slot, config)
 	return categories, freeslot
 end
-
 
 mod.filter_category = memoize(filter_category, mod.cache)

@@ -118,7 +118,7 @@ function mod:update_bank()
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
 
 				-- run through filters to see where i truly belong
-				itemType, itemTypeID = mod:filter_category(itemLink)
+				itemType, itemTypeID = mod:filter_category(itemLink, itemTypeID)
 
 				-- store these for later
 				mod.categoryIDtoNames[itemTypeID] = itemType
