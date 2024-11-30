@@ -59,7 +59,7 @@ function mod:initialize()
 	-- initialize ouf backend
 	oUF:RegisterStyle("bdPlayerBars", create_ouf_player_unit)
 	oUF:SetActiveStyle("bdPlayerBars")
-	mod.ouf = oUF:Spawn("player")
+	mod.ouf = oUF:Spawn("player", "bdUI_playerbar")
 	mod.ouf:EnableMouse(false)
 	mod.ouf:SetParent(mod.Resources)
 	mod.ouf:SetAllPoints(mod.Resources)
@@ -113,7 +113,9 @@ function mod:config_callback()
 end
 
 function mod:position_bars()
-	if (InCombatLockdown()) then return end
+	if (InCombatLockdown()) then
+		return
+	end
 	-- add things to the frame stack
 	mod.bars = {}
 	if (mod.ouf.RuneHolder) then

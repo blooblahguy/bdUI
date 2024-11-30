@@ -2,3 +2,4 @@ symlinks.bat
 .release
 fmt-config.txt
 bdUI.code-workspace
+.vscode/settings.json
