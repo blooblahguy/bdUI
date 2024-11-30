@@ -2,7 +2,9 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Tooltips")
 
 function mod:create_mouseover_tooltips()
-	if (not mod.config.enablemott) then return end
+	if (not mod.config.enablemott) then
+		return
+	end
 
 	local motooltip = CreateFrame('frame', nil)
 	motooltip:SetFrameStrata("TOOLTIP")
@@ -16,14 +18,17 @@ function mod:create_mouseover_tooltips()
 			return
 		end
 
-		if GetMouseFocus() and GetMouseFocus():IsForbidden() then
+		local hasFoci = GetMouseFoci() and type(hasFoci) == 'frame'
+
+		if hasFoci and hasFoci:IsForbidden() then
 			self:Hide()
 			return
 		end
-		if GetMouseFocus() and GetMouseFocus():GetName() ~= "WorldFrame" then
+		if hasFoci and hasFoci:GetName() ~= "WorldFrame" then
 			self:Hide()
 			return
 		end
+
 		if not UnitExists("mouseover") then
 			self:Hide()
 			return
@@ -33,16 +38,26 @@ function mod:create_mouseover_tooltips()
 		self.text:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y + 15)
 	end)
 	motooltip:SetScript("OnEvent", function(self)
-		if GetMouseFocus() and GetMouseFocus():GetName() ~= "WorldFrame" then return end
+		local hasFoci = GetMouseFoci() and type(hasFoci) == 'frame'
+
+		if hasFoci and GetMouseFoci():GetName() ~= "WorldFrame" then
+			return
+		end
 		local name = UnitName("mouseover")
-		if not name then return end
+		if not name then
+			return
+		end
 
 		local AFK = UnitIsAFK("mouseover")
 		local DND = UnitIsDND("mouseover")
 		local prefix = ""
 
-		if AFK then prefix = "<AFK> " end
-		if DND then prefix = "<DND> " end
+		if AFK then
+			prefix = "<AFK> "
+		end
+		if DND then
+			prefix = "<DND> "
+		end
 
 		self.text:SetTextColor(mod:getUnitColor())
 		self.text:SetText(prefix .. name)

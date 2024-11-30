@@ -2,7 +2,9 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
 mod.additional_elements.debuffs = function(self, unit)
-	if (self.Debuffs) then return end
+	if (self.Debuffs) then
+		return
+	end
 	local config = mod.config
 
 	-- Auras
@@ -17,10 +19,8 @@ mod.additional_elements.debuffs = function(self, unit)
 	self.Debuffs['growth-y'] = "UP"
 	self.Debuffs['growth-x'] = "LEFT"
 
-	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
-		isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
-			button.filter)
+	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = C_UnitAuras.GetAuraDataByIndex(unit, index, button.filter)
 		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 	end
 

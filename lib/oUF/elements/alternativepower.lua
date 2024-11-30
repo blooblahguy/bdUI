@@ -22,18 +22,18 @@ A default texture will be applied if the widget is a StatusBar and doesn't have 
 The following options are listed by priority. The first check that returns true decides the color of the bar.
 
 .colorThreat       - Use `self.colors.threat[threat]` to color the bar based on the unit's threat status. `threat` is
-                     defined by the first return of [UnitThreatSituation](https://wow.gamepedia.com/API_UnitThreatSituation) (boolean)
+                     defined by the first return of [UnitThreatSituation](https://warcraft.wiki.gg/wiki/API_UnitThreatSituation) (boolean)
 .colorPower        - Use `self.colors.power[token]` to color the bar based on the unit's alternative power type
                      (boolean)
 .colorClass        - Use `self.colors.class[class]` to color the bar based on unit class. `class` is defined by the
-                     second return of [UnitClass](http://wowprogramming.com/docs/api/UnitClass.html) (boolean)
+                     second return of [UnitClass](https://warcraft.wiki.gg/wiki/API_UnitClass) (boolean)
 .colorClassNPC     - Use `self.colors.class[class]` to color the bar if the unit is a NPC (boolean)
 .colorSelection    - Use `self.colors.selection[selection]` to color the bar based on the unit's selection color.
                      `selection` is defined by the return value of Private.unitSelectionType, a wrapper function
-                     for [UnitSelectionType](https://wow.gamepedia.com/API_UnitSelectionType) (boolean)
+                     for [UnitSelectionType](https://warcraft.wiki.gg/wiki/API_UnitSelectionType) (boolean)
 .colorReaction     - Use `self.colors.reaction[reaction]` to color the bar based on the player's reaction towards the
                      unit. `reaction` is defined by the return value of
-                     [UnitReaction](http://wowprogramming.com/docs/api/UnitReaction.html) (boolean)
+                     [UnitReaction](https://warcraft.wiki.gg/wiki/API_UnitReaction) (boolean)
 .colorSmooth       - Use `self.colors.smooth` to color the bar with a smooth gradient based on the unit's current
                      alternative power percentage (boolean)
 
@@ -56,7 +56,7 @@ local Private = oUF.Private
 
 local unitSelectionType = Private.unitSelectionType
 
--- sourced from FrameXML/UnitPowerBarAlt.lua
+-- sourced from Blizzard_UnitFrame/UnitPowerBarAlt.lua
 local ALTERNATE_POWER_INDEX = Enum.PowerType.Alternate or 10
 local ALTERNATE_POWER_NAME = 'ALTERNATE'
 local GameTooltip = GameTooltip
@@ -89,19 +89,22 @@ local function UpdateColor(self, event, unit, powerType)
 	local element = self.AlternativePower
 
 	local r, g, b, color
-	if(element.colorThreat and not UnitPlayerControlled(unit) and UnitThreatSituation('player', unit)) then
-		color =  self.colors.threat[UnitThreatSituation('player', unit)]
-	elseif(element.colorPower) then
+	local isPlayer = UnitIsPlayer(unit) or (oUF.isRetail and UnitInPartyIsAI(unit))
+	local reaction = element.colorReaction and UnitReaction(unit, 'player')
+	local selection = element.colorSelection and unitSelectionType(unit, element.considerSelectionInCombatHostile)
+	local colorThreat = element.colorThreat and not UnitPlayerControlled(unit) and UnitThreatSituation('player', unit)
+	if colorThreat then
+		color =  self.colors.threat[colorThreat]
+	elseif element.colorPower then
 		color = self.colors.power[ALTERNATE_POWER_INDEX]
-	elseif(element.colorClass and UnitIsPlayer(unit))
-		or (element.colorClassNPC and not UnitIsPlayer(unit)) then
+	elseif (element.colorClass and isPlayer) or (element.colorClassNPC and not isPlayer) then
 		local _, class = UnitClass(unit)
 		color = self.colors.class[class]
-	elseif(element.colorSelection and unitSelectionType(unit, element.considerSelectionInCombatHostile)) then
-		color = self.colors.selection[unitSelectionType(unit, element.considerSelectionInCombatHostile)]
-	elseif(element.colorReaction and UnitReaction(unit, 'player')) then
-		color = self.colors.reaction[UnitReaction(unit, 'player')]
-	elseif(element.colorSmooth) then
+	elseif selection then
+		color = self.colors.selection[selection]
+	elseif reaction then
+		color = self.colors.reaction[reaction]
+	elseif element.colorSmooth then
 		local adjust = 0 - (element.min or 0)
 		r, g, b = self:ColorGradient((element.cur or 1) + adjust, (element.max or 1) + adjust, unpack(element.smoothGradient or self.colors.smooth))
 	end

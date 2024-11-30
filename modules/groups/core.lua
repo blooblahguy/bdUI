@@ -1,23 +1,18 @@
---===============================================
+-- ===============================================
 -- FUNCTIONS
---===============================================
+-- ===============================================
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Groups")
 local config
 local oUF = bdUI.oUF
 mod.frames = {}
 
-local dispelColors = {
-	['Magic'] = { .16, .5, .81, 1 },
-	['Poison'] = { .12, .76, .36, 1 },
-	['Disease'] = { .76, .46, .12, 1 },
-	['Curse'] = { .80, .33, .95, 1 },
-}
+local dispelColors = { ['Magic'] = { .16, .5, .81, 1 }, ['Poison'] = { .12, .76, .36, 1 }, ['Disease'] = { .76, .46, .12, 1 }, ['Curse'] = { .80, .33, .95, 1 } }
 
---===============================================
+-- ===============================================
 -- Core functionality
 -- place core functionality here
---===============================================
+-- ===============================================
 -- upcoming features
 -- fully custom sorting, custom player positions
 -- bouqets / positioning
@@ -25,11 +20,13 @@ local dispelColors = {
 -- [buffs] [debuffs] [raid cooldowns] [my casts] [personals]
 -- [name] [status] [raid target] [readycheck]
 
---======================================================
+-- ======================================================
 -- Callback on creation and configuration change
---======================================================
+-- ======================================================
 local function update_frame(self)
-	if (InCombatLockdown()) then return end
+	if (InCombatLockdown()) then
+		return
+	end
 
 	local parent = self:GetParent():GetName()
 	-- print(self:GetParent():GetName(), self:GetParent():GetParent():GetName())
@@ -65,12 +62,8 @@ local function update_frame(self)
 	self.Buffs.size = config.buffSize
 	self.Debuffs.size = config.debuffSize
 
-
 	-- range
-	self.Range = {
-		insideAlpha = config.inrangealpha,
-		outsideAlpha = config.outofrangealpha,
-	}
+	self.Range = { insideAlpha = config.inrangealpha, outsideAlpha = config.outofrangealpha }
 
 	-- role
 	if (not config.roleicon) then
@@ -101,7 +94,6 @@ local function update_frame(self)
 	-- self.Health:ForceUpdate()
 end
 
-
 function mod:config_callback()
 	mod.config = mod:get_save()
 	config = mod.config
@@ -113,9 +105,9 @@ function mod:config_callback()
 	end
 end
 
---===============================================
+-- ===============================================
 -- Layout
---===============================================
+-- ===============================================
 local index = 0;
 local function layout(self, unit)
 	self:RegisterForClicks('AnyDown')
@@ -148,9 +140,9 @@ local function layout(self, unit)
 		end
 	end)
 
-	--===============================================
+	-- ===============================================
 	-- Health
-	--===============================================
+	-- ===============================================
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
 	self.Health:SetPoint("TOPLEFT", self)
@@ -165,7 +157,9 @@ local function layout(self, unit)
 
 	function self.Health.PostUpdateColor(s, unit, r, g, b)
 		local r, g, b = self.Health:GetStatusBarColor()
-		if (r == nil) then return end
+		if (r == nil) then
+			return
+		end
 
 		if (config.invert) then
 			self.Health._background:SetVertexColor(r / 2, g / 2, b / 2)
@@ -175,9 +169,9 @@ local function layout(self, unit)
 		end
 	end
 
-	--===============================================
+	-- ===============================================
 	-- Healing & Damage Absorbs
-	--===============================================
+	-- ===============================================
 	-- Heal predections
 	local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
 	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
@@ -208,15 +202,7 @@ local function layout(self, unit)
 	overHealAbsorbBar:Hide()
 
 	-- Register and callback
-	self.bdHealthPrediction = {
-		incomingHeals = incomingHeals,
-
-		absorbBar = absorbBar,
-		overAbsorb = overAbsorbBar,
-
-		healAbsorbBar = healAbsorbBar,
-		overHealAbsorb = overHealAbsorbBar,
-	}
+	self.bdHealthPrediction = { incomingHeals = incomingHeals, absorbBar = absorbBar, overAbsorb = overAbsorbBar, healAbsorbBar = healAbsorbBar, overHealAbsorb = overHealAbsorbBar }
 
 	-- Resurrect
 	self.ResurrectIndicator = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -276,10 +262,7 @@ local function layout(self, unit)
 		end
 	end
 
-	self.Range = {
-		insideAlpha = config.inrangealpha,
-		outsideAlpha = config.outofrangealpha,
-	}
+	self.Range = { insideAlpha = config.inrangealpha, outsideAlpha = config.outofrangealpha }
 
 	-- Readycheck
 	self.ReadyCheckIndicator = self.Health:CreateTexture(nil, 'OVERLAY', nil, 7)
@@ -316,8 +299,7 @@ local function layout(self, unit)
 	self.Buffs['growth-y'] = "DOWN"
 	self.Buffs['growth-x'] = "RIGHT"
 
-	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
-		source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByMe = false
@@ -328,17 +310,10 @@ local function layout(self, unit)
 		return bdUI:filter_aura(name, spellID, castByMe, isBossDebuff, nameplateShowPersonal, nameplateShowAll)
 	end
 
-	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
-		isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
-			button.filter)
+	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = C_UnitAuras.GetAuraDataByIndex(unit, index, button.filter)
 
-		local dispelColors = {
-			['Magic'] = { .16, .5, .81, 1 },
-			['Poison'] = { .12, .76, .36, 1 },
-			['Disease'] = { .76, .46, .12, 1 },
-			['Curse'] = { .80, .33, .95, 1 },
-		}
+		local dispelColors = { ['Magic'] = { .16, .5, .81, 1 }, ['Poison'] = { .12, .76, .36, 1 }, ['Disease'] = { .76, .46, .12, 1 }, ['Curse'] = { .80, .33, .95, 1 } }
 
 		button:set_border_color(unpack(bdUI.media.border))
 
@@ -443,8 +418,7 @@ local function layout(self, unit)
 		self:SetPoint("CENTER", -offset, 0)
 	end
 
-	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
-		source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		local castByMe = false
@@ -478,8 +452,7 @@ local function layout(self, unit)
 		bdUI:set_backdrop(button)
 	end
 
-	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
-		isStealable)
+	self.Debuffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
 		bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 
 		-- color borders of debuffs
@@ -490,10 +463,9 @@ local function layout(self, unit)
 		end
 	end
 
-
-	--===============================================
+	-- ===============================================
 	-- Tags
-	--===============================================
+	-- ===============================================
 	self.name_holder = CreateFrame("frame", nil, self.Health)
 	mod.add_tags(self, unit)
 
@@ -501,9 +473,9 @@ local function layout(self, unit)
 	update_frame(self)
 end
 
---============================================================
+-- ============================================================
 -- Build positioning and attributes
---============================================================
+-- ============================================================
 function mod:get_attributes()
 	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 
@@ -561,21 +533,7 @@ function mod:get_attributes()
 	end
 
 	-- group limit
-	local difficultySize = {
-		[3] = 1,
-		[4] = 25,
-		[5] = 10,
-		[6] = 25,
-		[7] = 25,
-		[9] = 40,
-		[14] = 30,
-		[15] = 30,
-		[16] = 20,
-		[17] = 30,
-		[18] = 40,
-		[20] = 25,
-		[149] = 30
-	}
+	local difficultySize = { [3] = 1, [4] = 25, [5] = 10, [6] = 25, [7] = 25, [9] = 40, [14] = 30, [15] = 30, [16] = 20, [17] = 30, [18] = 40, [20] = 25, [149] = 30 }
 
 	local difficultySize = {
 		[1] = 5, -- Normal	party
@@ -624,8 +582,7 @@ function mod:get_attributes()
 
 	num_groups = config.num_groups
 	if (config.intel_groups) then
-		local name, group_type, difficultyID, raidSize, dynamicDifficulty, isDynamic, instanceMapId, lfgID =
-		GetInstanceInfo()
+		local name, group_type, difficultyID, raidSize, dynamicDifficulty, isDynamic, instanceMapId, lfgID = GetInstanceInfo()
 		local inInstance, instanceType = select(1, IsInInstance())
 
 		local diff = select(3, GetInstanceInfo())
@@ -645,13 +602,12 @@ function mod:get_attributes()
 	xOffset = bdUI.pixel * (xOffset or 2)
 	yOffset = bdUI.pixel * (yOffset or 2)
 
-	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth,
-		num_groups
+	return group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups
 end
 
---======================================================
+-- ======================================================
 -- Initialize
---======================================================
+-- ======================================================
 function mod:initialize()
 	mod.config = mod:get_save()
 	config = mod.config
@@ -692,36 +648,44 @@ function mod:resize_container(header, container, unit_width, unit_height, num_gr
 
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
-		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
+		if (config.new_player_reverse) then
+			vgrowth = "BOTTOM"
+		end
 	elseif (config.group_growth == "Left") then
 		container_width = unit_width * num_groups
 		container_height = unit_height * num_units
 
 		hgrowth = "RIGHT"
 		vgrowth = "TOP"
-		if (config.new_player_reverse) then vgrowth = "BOTTOM" end
+		if (config.new_player_reverse) then
+			vgrowth = "BOTTOM"
+		end
 	elseif (config.group_growth == "Upwards") then
 		container_width = unit_width * num_units
 		container_height = unit_height * num_groups
 
 		hgrowth = "LEFT"
 		vgrowth = "BOTTOM"
-		if (config.new_player_reverse) then hgrowth = "RIGHT" end
+		if (config.new_player_reverse) then
+			hgrowth = "RIGHT"
+		end
 	elseif (config.group_growth == "Downwards") then
 		container_width = unit_width * num_units
 		container_height = unit_height * num_groups
 		hgrowth = "LEFT"
 		vgrowth = "TOP"
-		if (config.new_player_reverse) then hgrowth = "RIGHT" end
+		if (config.new_player_reverse) then
+			hgrowth = "RIGHT"
+		end
 	end
 
 	container:SetSize(container_width + 8, container_height + 8)
 	header:SetPoint(vgrowth .. hgrowth, container, vgrowth .. hgrowth, 0, 0)
 end
 
---==============================================
+-- ==============================================
 -- Disable blizzard raid frames
---==============================================
+-- ==============================================
 -- function mod:disable_blizzard()
 -- 	-- local addonDisabler = CreateFrame("frame", nil)
 -- 	-- addonDisabler:RegisterEvent("ADDON_LOADED")

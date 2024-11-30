@@ -12,17 +12,7 @@ local standing_ids = {
 	[7] = "11df6a", -- "Revered"
 	[8] = "18cdcd", -- "Exalted"
 }
-local standings = {
-	[0] = "Unknown",
-	[1] = "Hated",
-	[2] = "Hostile",
-	[3] = "Unfriendly",
-	[4] = "Neutral",
-	[5] = "Friendly",
-	[6] = "Honored",
-	[7] = "Revered",
-	[8] = "Exalted",
-}
+local standings = { [0] = "Unknown", [1] = "Hated", [2] = "Hostile", [3] = "Unfriendly", [4] = "Neutral", [5] = "Friendly", [6] = "Honored", [7] = "Revered", [8] = "Exalted" }
 
 function mod:create_reputation()
 	local config = mod.config
@@ -32,7 +22,7 @@ function mod:create_reputation()
 	bar:RegisterEvent("PLAYER_ENTERING_WORLD")
 	bar:RegisterEvent("UPDATE_FACTION")
 	bar.callback = function(self, event)
-		local name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
+		local name, standing, minrep, maxrep, value = C_Reputation.GetWatchedFactionData
 		local disable = false
 
 		-- make sure it's enabled
@@ -44,7 +34,7 @@ function mod:create_reputation()
 
 		-- print("rep bar", disabled, MAX_PLAYER_LEVEL)
 
-		if (disable or not name) then 
+		if (disable or not name) then
 			self:Hide()
 			return
 		end
@@ -54,13 +44,9 @@ function mod:create_reputation()
 		self:SetValue(value)
 		local r, g, b = HexToRGBPerc(standing_ids[standing])
 		self:SetStatusBarColor(r, g, b, 1)
-		local text = table.concat({
-			name,
-			standings[standing],
-			value - minrep.." / "..maxrep - minrep,
-		}, " - ")
+		local text = table.concat({ name, standings[standing], value - minrep .. " / " .. maxrep - minrep }, " - ")
 		self.text:SetText(text)
-		--standings[standing].." "..value - minrep.." / "..maxrep - minrep.." - "..math.floor(((value - minrep) / (maxrep - minrep)) * 1000) / 10 .."% - ".. name
+		-- standings[standing].." "..value - minrep.." / "..maxrep - minrep.." - "..math.floor(((value - minrep) / (maxrep - minrep)) * 1000) / 10 .."% - ".. name
 	end
 	bar:SetScript("OnEvent", bar.callback)
 

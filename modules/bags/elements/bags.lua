@@ -115,15 +115,6 @@ function mod:update_bags()
 				itemCount = texture.stackCount
 			end
 
-			local isTrash = false
-			if (itemLink) then
-				-- local itemprice = select(11, GetItemInfo(itemLink));n
-				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
-					GetItemInfo(itemLink)
-				-- print(itemName, quality)
-				isTrash = quality == Enum.ItemQuality.Poor and itemSellPrice > 0
-			end
-
 			if (not itemLink) then
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
@@ -141,7 +132,7 @@ function mod:update_bags()
 				elseif (not freeslot) then
 					freeslot = itemInfo
 				end
-			elseif (itemLink and not isTrash) then --quality ~= nil and quality > 0) then
+			elseif (itemLink and not mod:is_item_trash(itemLink)) then --quality ~= nil and quality > 0) then
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
 

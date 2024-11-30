@@ -6,28 +6,34 @@ local HIDDEN = 0
 
 local DAY, HOUR, MINUTE = 86400, 3600, 60
 local function FormatTime(s)
-	if s == infinity then return end
+	if s == infinity then
+		return
+	end
 
 	if s < MINUTE then
 		return format("%.1fs", s)
 	elseif s < HOUR then
-		return format("%dm %ds", s/60%60, s%60)
+		return format("%dm %ds", s / 60 % 60, s % 60)
 	elseif s < DAY then
-		return format("%dh %dm", s/(60*60), s/60%60)
+		return format("%dh %dm", s / (60 * 60), s / 60 % 60)
 	else
-		return format("%dd %dh", s/DAY, (s / HOUR) - (floor(s/DAY) * 24))
+		return format("%dd %dh", s / DAY, (s / HOUR) - (floor(s / DAY) * 24))
 	end
 end
 
 local function onEnter(self)
-	if GameTooltip:IsForbidden() or not self:IsVisible() then return end
+	if GameTooltip:IsForbidden() or not self:IsVisible() then
+		return
+	end
 
 	GameTooltip:SetOwner(self, self.tooltipAnchor)
 	GameTooltip:SetUnitAura(self.unit, self.index, self.filter)
 end
 
 local function onLeave()
-	if GameTooltip:IsForbidden() then return end
+	if GameTooltip:IsForbidden() then
+		return
+	end
 
 	GameTooltip:Hide()
 end
@@ -81,25 +87,27 @@ local function createAuraBar(element, index)
 	statusBar.timeText = timeText
 	statusBar.spark = spark
 
-	if(element.PostCreateBar) then element:PostCreateBar(statusBar) end
+	if (element.PostCreateBar) then
+		element:PostCreateBar(statusBar)
+	end
 
 	return statusBar
 end
 
 local function customFilter(element, unit, button, name)
-	if((element.onlyShowPlayer and button.isPlayer) or (not element.onlyShowPlayer and name)) then
+	if ((element.onlyShowPlayer and button.isPlayer) or (not element.onlyShowPlayer and name)) then
 		return true
 	end
 end
 
 local function updateBar(element, unit, index, offset, filter, isDebuff, visible)
-	local name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = UnitAura(unit, index, filter)
+	local name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = AuraUtil.UnpackAuraData(select(2, C_UnitAuras.GetAuraDataByIndex(unit, index, filter)))
 
-	if(name) then
+	if (name) then
 		local position = visible + offset + 1
 		local statusBar = element[position]
-		if(not statusBar) then
-			statusBar = (element.CreateBar or createAuraBar) (element, position)
+		if (not statusBar) then
+			statusBar = (element.CreateBar or createAuraBar)(element, position)
 			tinsert(element, statusBar)
 			element.createdBars = element.createdBars + 1
 		end
@@ -113,11 +121,9 @@ local function updateBar(element, unit, index, offset, filter, isDebuff, visible
 		statusBar.spell = name
 		statusBar.isPlayer = caster == 'player' or caster == 'vehicle'
 
-		local show = (element.CustomFilter or customFilter) (element, unit, statusBar, name, texture,
-			count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID,
-			canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3)
+		local show = (element.CustomFilter or customFilter)(element, unit, statusBar, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3)
 
-		if(show) then
+		if (show) then
 			statusBar.icon:SetTexture(texture)
 			if count > 1 then
 				statusBar.nameText:SetFormattedText('%s [%d]', name, count)
@@ -136,7 +142,9 @@ local function updateBar(element, unit, index, offset, filter, isDebuff, visible
 			end
 
 			local r, g, b, a = unpack(element.baseColor)
-			if element.buffColor then r, g, b = unpack(element.buffColor) end
+			if element.buffColor then
+				r, g, b = unpack(element.buffColor)
+			end
 			if filter == 'HARMFUL' then
 				if not debuffType or debuffType == '' then
 					debuffType = 'none'
@@ -161,7 +169,7 @@ local function updateBar(element, unit, index, offset, filter, isDebuff, visible
 			statusBar:SetID(index)
 			statusBar:Show()
 
-			if(element.PostUpdateBar) then
+			if (element.PostUpdateBar) then
 				element:PostUpdateBar(unit, statusBar, index, position, duration, expiration, debuffType, isStealable)
 			end
 
@@ -180,7 +188,9 @@ local function SetPosition(element, from, to)
 
 	for i = from, to do
 		local button = element[i]
-		if(not button) then break end
+		if (not button) then
+			break
+		end
 		local x = 0
 
 		if (not element.iconDisabled) then
@@ -194,24 +204,26 @@ local function SetPosition(element, from, to)
 end
 
 local function filterBars(element, unit, filter, limit, isDebuff, offset, dontHide)
-	if(not offset) then offset = 0 end
+	if (not offset) then
+		offset = 0
+	end
 	local index = 1
 	local visible = 0
 	local hidden = 0
-	while(visible < limit) do
+	while (visible < limit) do
 		local result = updateBar(element, unit, index, offset, filter, isDebuff, visible)
-		if(not result) then
+		if (not result) then
 			break
-		elseif(result == VISIBLE) then
+		elseif (result == VISIBLE) then
 			visible = visible + 1
-		elseif(result == HIDDEN) then
+		elseif (result == HIDDEN) then
 			hidden = hidden + 1
 		end
 
 		index = index + 1
 	end
 
-	if(not dontHide) then
+	if (not dontHide) then
 		for i = visible + offset + 1, #element do
 			element[i]:Hide()
 		end
@@ -221,11 +233,15 @@ local function filterBars(element, unit, filter, limit, isDebuff, offset, dontHi
 end
 
 local function UpdateAuras(self, event, unit)
-	if(self.unit ~= unit) then return end
+	if (self.unit ~= unit) then
+		return
+	end
 
 	local element = self.AuraBars
-	if(element) then
-		if(element.PreUpdate) then element:PreUpdate(unit) end
+	if (element) then
+		if (element.PreUpdate) then
+			element:PreUpdate(unit)
+		end
 
 		local isEnemy = UnitIsEnemy('player', unit)
 		local reaction = UnitReaction('player', unit)
@@ -233,30 +249,34 @@ local function UpdateAuras(self, event, unit)
 		local visible, hidden = filterBars(element, unit, filter, element.maxBars, filter == 'HARMFUL', 0)
 
 		local fromRange, toRange
-		if(element.PreSetPosition) then
+		if (element.PreSetPosition) then
 			fromRange, toRange = element:PreSetPosition(element.maxBars)
 		end
 
-		if(fromRange or element.createdBars > element.anchoredBars) then
-			(element.SetPosition or SetPosition) (element, fromRange or element.anchoredBars + 1, toRange or element.createdBars)
+		if (fromRange or element.createdBars > element.anchoredBars) then
+			(element.SetPosition or SetPosition)(element, fromRange or element.anchoredBars + 1, toRange or element.createdBars)
 			element.anchoredBars = element.createdBars
 		end
 
-		if(element.PostUpdate) then element:PostUpdate(unit) end
+		if (element.PostUpdate) then
+			element:PostUpdate(unit)
+		end
 	end
 end
 
 local function Update(self, event, unit)
-	if(self.unit ~= unit) then return end
+	if (self.unit ~= unit) then
+		return
+	end
 
 	UpdateAuras(self, event, unit)
 
 	-- Assume no event means someone wants to re-anchor things. This is usually
 	-- done by UpdateAllElements and :ForceUpdate.
-	if(event == 'ForceUpdate' or not event) then
+	if (event == 'ForceUpdate' or not event) then
 		local element = self.AuraBars
-		if(element) then
-			(element.SetPosition or SetPosition) (element, 1, element.createdBars)
+		if (element) then
+			(element.SetPosition or SetPosition)(element, 1, element.createdBars)
 		end
 	end
 end
@@ -268,7 +288,7 @@ end
 local function Enable(self)
 	local element = self.AuraBars
 
-	if(element) then
+	if (element) then
 		self:RegisterEvent('UNIT_AURA', UpdateAuras)
 
 		element.__owner = self
@@ -287,13 +307,13 @@ local function Enable(self)
 		element.texture = element.texture or [[Interface\TargetingFrame\UI-StatusBar]]
 		element.iconDisabled = element.iconDisabled or false
 		element.fontObject = element.fontObject or "NumberFontNormal"
-		element.baseColor = element.baseColor or {.2, .6, 1, 1}
+		element.baseColor = element.baseColor or { .2, .6, 1, 1 }
 
 		-- Avoid parenting GameTooltip to frames with anchoring restrictions,
 		-- otherwise it'll inherit said restrictions which will cause issues
 		-- with its further positioning, clamping, etc
 
-		if(not pcall(self.GetCenter, self)) then
+		if (not pcall(self.GetCenter, self)) then
 			element.tooltipAnchor = 'ANCHOR_CURSOR'
 		else
 			element.tooltipAnchor = element.tooltipAnchor or 'ANCHOR_BOTTOMRIGHT'
@@ -308,7 +328,7 @@ end
 local function Disable(self)
 	local element = self.AuraBars
 
-	if(element) then
+	if (element) then
 		self:UnregisterEvent('UNIT_AURA', UpdateAuras)
 		element:Hide()
 	end

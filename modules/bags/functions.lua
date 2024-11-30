@@ -21,6 +21,17 @@ local bindTypes = {
 	[3] = "Bind on Use",
 }
 
+function mod:is_item_trash(itemLink)
+	local isTrash = false
+	if (itemLink) then
+		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice =
+			GetItemInfo(itemLink)
+		isTrash = quality == Enum.ItemQuality.Poor and itemSellPrice > 0
+	end
+
+	return isTrash
+end
+
 
 -- Tradability
 function mod:is_item_tradeable(bag, slot)

@@ -1,6 +1,6 @@
---===============================================
+-- ===============================================
 -- FUNCTIONS
---===============================================
+-- ===============================================
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 local oUF = bdUI.oUF
@@ -40,17 +40,23 @@ function mod:enable_castbars()
 	end
 end
 
---===============================================
+-- ===============================================
 -- Config callback
---===============================================
+-- ===============================================
 function mod:config_callback()
 	config = mod:get_save()
-	if (not config.enabled) then return false end
+	if (not config.enabled) then
+		return false
+	end
 
 	for unit, self in pairs(mod.units) do
 		local func = unit
-		if (string.find(func, "boss")) then func = "boss" end
-		if (string.find(func, "arena")) then func = "arena" end
+		if (string.find(func, "boss")) then
+			func = "boss"
+		end
+		if (string.find(func, "arena")) then
+			func = "arena"
+		end
 
 		if (self.callback) then
 			self.callback(self, unit, config)
@@ -70,10 +76,10 @@ function mod:config_callback()
 	bdUI:do_frame_fade()
 end
 
---===============================================
+-- ===============================================
 -- Core functionality
 -- place core functionality here
---===============================================
+-- ===============================================
 
 local function layout(self, unit)
 	mod.units[unit] = self
@@ -102,21 +108,13 @@ local function layout(self, unit)
 			local _, class = UnitClass(unit)
 			local cc = oUF.colors.class[class]
 			local r, g, b = unpack(cc)
-			self.smoothGradient = {
-				.7, 0, 0,
-				r, g, b,
-				r, g, b,
-			}
+			self.smoothGradient = { .7, 0, 0, r, g, b, r, g, b }
 		elseif (UnitReaction(unit, 'player')) then
 			self.colorReaction = true
 			local _, class = UnitClass(unit)
 			local cc = oUF.colors.reaction[UnitReaction(unit, 'player')]
 			local r, g, b = unpack(cc)
-			self.smoothGradient = {
-				.7, 0, 0,
-				r, g, b,
-				r, g, b,
-			}
+			self.smoothGradient = { .7, 0, 0, r, g, b, r, g, b }
 		end
 	end
 	bdUI:set_backdrop(self.Health)
@@ -129,10 +127,7 @@ local function layout(self, unit)
 	self.Health.highlight:Hide()
 
 	-- Range
-	self.Range = {
-		insideAlpha = config.inrangealpha,
-		outsideAlpha = config.outofrangealpha,
-	}
+	self.Range = { insideAlpha = config.inrangealpha, outsideAlpha = config.outofrangealpha }
 
 	-- Borders
 	self.Border = CreateFrame("Frame", nil, self.Health)
@@ -147,9 +142,9 @@ local function layout(self, unit)
 	bdUI:set_backdrop(self.ResourceHolder)
 	self.ResourceHolder:Hide()
 
-	--===============================================
+	-- ===============================================
 	-- Healing & Damage Absorbs
-	--===============================================
+	-- ===============================================
 	-- Heal predections
 	local incomingHeals = CreateFrame('StatusBar', nil, self.Health)
 	incomingHeals:SetStatusBarTexture(bdUI.media.flat)
@@ -180,15 +175,7 @@ local function layout(self, unit)
 	overHealAbsorbBar:Hide()
 
 	-- Register and callback
-	self.bdHealthPrediction = {
-		incomingHeals = incomingHeals,
-
-		absorbBar = absorbBar,
-		overAbsorb = overAbsorbBar,
-
-		healAbsorbBar = healAbsorbBar,
-		overHealAbsorb = overHealAbsorbBar,
-	}
+	self.bdHealthPrediction = { incomingHeals = incomingHeals, absorbBar = absorbBar, overAbsorb = overAbsorbBar, healAbsorbBar = healAbsorbBar, overHealAbsorb = overHealAbsorbBar }
 
 	-- Name & Text
 	self.TextHolder = CreateFrame('frame', nil, self.Health)
@@ -201,8 +188,12 @@ local function layout(self, unit)
 
 	-- frame specific layouts
 	local func = unit
-	if (string.find(func, "boss")) then func = "boss" end
-	if (string.find(func, "arena")) then func = "arena" end
+	if (string.find(func, "boss")) then
+		func = "boss"
+	end
+	if (string.find(func, "arena")) then
+		func = "arena"
+	end
 	mod.custom_layout[func](self, unit)
 
 	-- configurable text layouts
@@ -220,25 +211,25 @@ function mod:create_unitframes()
 
 	if (config.enableplayertarget) then
 		-- player
-		local player = oUF:Spawn("player")
+		local player = oUF:Spawn("player", "bdUI_player")
 		player:SetPoint("RIGHT", bdParent, "CENTER", -xoff, -yoff)
 		player:SetParent(uf_holder)
 		bdMove:set_moveable(player, "Player")
 
 		-- target
-		local target = oUF:Spawn("target")
+		local target = oUF:Spawn("target", "bdUI_target")
 		target:SetPoint("LEFT", bdParent, "CENTER", xoff, -yoff)
 		target:SetParent(uf_holder)
 		bdMove:set_moveable(target, "Target")
 
 		-- targetoftarget
-		local targettarget = oUF:Spawn("targettarget")
+		local targettarget = oUF:Spawn("targettarget", "bdUI_targettarget")
 		targettarget:SetPoint("TOPRIGHT", target, "BOTTOMRIGHT", 0, -config.castbarheight - 20)
 		targettarget:SetParent(uf_holder)
 		bdMove:set_moveable(targettarget, "Target of Target")
 
 		-- pet
-		local pet = oUF:Spawn("pet")
+		local pet = oUF:Spawn("pet", "bdUI_pet")
 		pet:SetPoint("TOPLEFT", player, "BOTTOMLEFT", 0, -config.castbarheight - 20)
 		pet:SetParent(uf_holder)
 		bdMove:set_moveable(pet, "Pet")
@@ -246,7 +237,7 @@ function mod:create_unitframes()
 
 	-- focus
 	if (config.enablefocus) then
-		local focus = oUF:Spawn("focus")
+		local focus = oUF:Spawn("focus", "bdUI_focus")
 		focus:SetPoint("LEFT", bdParent, "CENTER", xoff, 100)
 		focus:SetParent(uf_holder)
 		bdMove:set_moveable(focus, "Focus")
@@ -261,7 +252,7 @@ function mod:create_unitframes()
 		-- boss
 		local lastboss = nil
 		for i = 1, 5 do
-			local boss = oUF:Spawn("boss" .. i, nil)
+			local boss = oUF:Spawn("boss" .. i, "bdUI_boss" .. i)
 			if (not lastboss) then
 				boss:SetPoint("TOP", arena_boss, "TOP", 0, 0)
 			else

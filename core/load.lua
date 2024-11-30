@@ -60,9 +60,9 @@ loader:SetScript("OnEvent", function(self, event, addon)
 		-- 	bdUI:do_action("setup")
 		-- end
 
-		--=====================================
+		-- =====================================
 		-- Add minimap icon
-		--=====================================
+		-- =====================================
 		-- icon
 		local LDB = LibStub("LibDataBroker-1.1", true)
 		local LDBIcon = LDB and LibStub("LibDBIcon-1.0", true)
@@ -81,7 +81,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 					elseif (button == "RightButton") then
 						if (IsControlKeyDown()) then
 							bdUI_configButton:Hide("bdUI")
-							BDUI_SAVE.MinimapIcon.hide = true --for non bdUI minimaps
+							BDUI_SAVE.MinimapIcon.hide = true -- for non bdUI minimaps
 							bdUI:get_module("Maps").config.showconfig = false
 						else
 							bdUI.bdConfig.header.lock:Click()
@@ -108,14 +108,14 @@ loader:SetScript("OnEvent", function(self, event, addon)
 	end
 end)
 
-if (IsAddOnLoaded("bdCore")) then
-	DisableAddOn("bdCore")
-	DisableAddOn("bdChat")
-	DisableAddOn("bdNameplates")
-	DisableAddOn("bdMinimap")
-	DisableAddOn("bdBuffs")
-	DisableAddOn("bdGrid")
-	DisableAddOn("bdBags")
-	DisableAddOn("bdTooltips")
-	DisableAddOn("bdUnitframes")
+if (C_AddOns.IsAddOnLoaded("bdCore")) then
+	C_AddOns.DisableAddOn("bdCore")
+	C_AddOns.DisableAddOn("bdChat")
+	C_AddOns.DisableAddOn("bdNameplates")
+	C_AddOns.DisableAddOn("bdMinimap")
+	C_AddOns.DisableAddOn("bdBuffs")
+	C_AddOns.DisableAddOn("bdGrid")
+	C_AddOns.DisableAddOn("bdBags")
+	C_AddOns.DisableAddOn("bdTooltips")
+	C_AddOns.DisableAddOn("bdUnitframes")
 end

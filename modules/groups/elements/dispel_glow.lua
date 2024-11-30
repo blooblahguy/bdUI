@@ -2,41 +2,40 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Groups")
 
 local dispelClass = {
-	["PRIEST"] = { ["Disease"] = true, ["Magic"] = true, }, --Purify
-	["SHAMAN"] = { ["Curse"] = true, ["Magic"] = true, ["Poison"] = true, }, --Purify Spirit
-	["PALADIN"] = { ["Poison"] = true, ["Disease"] = true, ["Magic"] = true, }, --Cleanse
-	["MAGE"] = { ["Curse"] = true, }, --Remove Curse
-	["DRUID"] = { ["Curse"] = true, ["Poison"] = true, ["Magic"] = true, }, --Nature's Cure
-	["MONK"] = { ["Poison"] = true, ["Disease"] = true, ["Magic"] = true, }, --Detox
-	["WARLOCK"] = { ["Magic"] = true, }, -- Devour magic
+	["PRIEST"] = { ["Disease"] = true, ["Magic"] = true }, -- Purify
+	["SHAMAN"] = { ["Curse"] = true, ["Magic"] = true, ["Poison"] = true }, -- Purify Spirit
+	["PALADIN"] = { ["Poison"] = true, ["Disease"] = true, ["Magic"] = true }, -- Cleanse
+	["MAGE"] = { ["Curse"] = true }, -- Remove Curse
+	["DRUID"] = { ["Curse"] = true, ["Poison"] = true, ["Magic"] = true }, -- Nature's Cure
+	["MONK"] = { ["Poison"] = true, ["Disease"] = true, ["Magic"] = true }, -- Detox
+	["WARLOCK"] = { ["Magic"] = true }, -- Devour magic
 }
 
-local dispelColors = {
-	['Magic'] = {.16, .5, .81, 1},
-	['Poison'] = {.12, .76, .36, 1},
-	['Disease'] = {.76, .46, .12, 1},
-	['Curse'] = {.80, .33, .95, 1},
-}
+local dispelColors = { ['Magic'] = { .16, .5, .81, 1 }, ['Poison'] = { .12, .76, .36, 1 }, ['Disease'] = { .76, .46, .12, 1 }, ['Curse'] = { .80, .33, .95, 1 } }
 local lib_glow = LibStub("LibCustomGlow-1.0")
 local class = select(2, UnitClass("player"))
 
---===========================================
+-- ===========================================
 -- DISPEL / GLOWING
---===========================================
+-- ===========================================
 mod.dispel_glow = function(self, event, unit)
 	local config = mod.config
-	if (unit ~= self.unit) then return end
+	if (unit ~= self.unit) then
+		return
+	end
 
 	local found = {}
-	local primaryDispel = {0, 0, 0, 0}
+	local primaryDispel = { 0, 0, 0, 0 }
 	local glow = false
 	local dispel = false
 
 	-- find debuffs
 	for i = 1, 40 do
-		local debuff, icon, count, debuffType = UnitDebuff(unit, i)
+		local debuff, icon, count, debuffType = AuraUtil.UnpackAuraData(select(2, C_UnitAuras.GetDebuffDataByIndex(unit, i)))
 
-		if (not debuff) then break end
+		if (not debuff) then
+			break
+		end
 
 		-- if (not found[debuffType] and dispelClass[class][debuffType]) then
 		if (not found[debuffType]) then
@@ -57,9 +56,11 @@ mod.dispel_glow = function(self, event, unit)
 	-- find buffs
 	if (not glow) then
 		for i = 1, 40 do
-			local buff = UnitBuff(unit, i)
+			local buff = AuraUtil.UnpackAuraData(select(2, C_UnitAuras.GetBuffDataByIndex(unit, i)))
 
-			if (not buff) then break end
+			if (not buff) then
+				break
+			end
 
 			if (mod.highlights[buff:lower()]) then
 				glow = true

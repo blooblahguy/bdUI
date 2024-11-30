@@ -448,7 +448,7 @@ local tagStrings = {
 	end]],
 
 	['threatcolor'] = [[function(u)
-		return Hex(GetThreatStatusColor(UnitThreatSituation(u)))
+		return Hex(GetThreatStatusColor(UnitThreatSituation(u) or 0))
 	end]],
 }
 
@@ -522,7 +522,7 @@ local tagEvents = {
 	['curhp']               = 'UNIT_HEALTH UNIT_MAXHEALTH',
 	['curmana']             = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER',
 	['curpp']               = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER',
-	['dead']                = 'UNIT_HEALTH',
+	['dead']                = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION PLAYER_FLAGS_CHANGED',
 	['deficit:name']        = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE',
 	['difficulty']          = 'UNIT_FACTION',
 	['faction']             = 'NEUTRAL_FACTION_SELECT_RESULT',
@@ -536,7 +536,7 @@ local tagEvents = {
 	['missinghp']           = 'UNIT_HEALTH UNIT_MAXHEALTH',
 	['missingpp']           = 'UNIT_MAXPOWER UNIT_POWER_FREQUENT',
 	['name']                = 'UNIT_NAME_UPDATE',
-	['offline']             = 'UNIT_HEALTH UNIT_CONNECTION',
+	['offline']             = 'UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION PLAYER_FLAGS_CHANGED',
 	['perhp']               = 'UNIT_HEALTH UNIT_MAXHEALTH',
 	['perpp']               = 'UNIT_MAXPOWER UNIT_POWER_FREQUENT',
 	['plus']                = 'UNIT_CLASSIFICATION_CHANGED',
@@ -548,7 +548,7 @@ local tagEvents = {
 	['shortclassification'] = 'UNIT_CLASSIFICATION_CHANGED',
 	['smartlevel']          = 'UNIT_LEVEL PLAYER_LEVEL_UP UNIT_CLASSIFICATION_CHANGED',
 	['soulshards']          = 'UNIT_POWER_UPDATE',
-	['status']              = 'UNIT_HEALTH PLAYER_UPDATE_RESTING UNIT_CONNECTION',
+	['status']              = 'UNIT_HEALTH PLAYER_UPDATE_RESTING UNIT_CONNECTION PLAYER_FLAGS_CHANGED',
 	['threat']              = 'UNIT_THREAT_SITUATION_UPDATE',
 	['threatcolor']         = 'UNIT_THREAT_SITUATION_UPDATE',
 }
@@ -570,7 +570,7 @@ if oUF.isRetail then
 	tagEvents['chi']                 = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE'
 	tagEvents['holypower']           = 'UNIT_POWER_UPDATE PLAYER_TALENT_UPDATE'
 	unitlessEvents.PLAYER_TALENT_UPDATE = true
-elseif oUF.isWrath then
+elseif oUF.isCata then
 	unitlessEvents.PLAYER_TALENT_UPDATE = true
 end
 
@@ -688,7 +688,7 @@ local bracketFuncs = {}
 local buffer = {}
 
 local function getTagName(tag)
-	local tagStart = tag:match('>+()') or 2
+	local tagStart = tag:match('.*>()') or 2
 	local tagEnd = (tag:match('.-()<') or -1) - 1
 
 	return tag:sub(tagStart, tagEnd), tagStart, tagEnd
@@ -952,7 +952,8 @@ oUF.Tags = {
 	RefreshMethods = function(_, tag)
 		if(not tag) then return end
 
-		-- if a tag's name contains magic chars, there's a chance that string.match will fail to find the match.
+		-- if a tag's name contains magic chars, there's a chance that string.match will fail to
+		-- find the match
 		tag = '%[' .. tag:gsub('[%^%$%(%)%%%.%*%+%-%?]', '%%%1') .. '%]'
 
 		for bracket in next, bracketFuncs do
@@ -980,7 +981,8 @@ oUF.Tags = {
 	RefreshEvents = function(_, tag)
 		if(not tag) then return end
 
-		-- If a tag's name contains magic chars, there's a chance that string.match will fail to find the match.
+		-- if a tag's name contains magic chars, there's a chance that string.match will fail to
+		-- find the match
 		tag = '%[' .. tag:gsub('[%^%$%(%)%%%.%*%+%-%?]', '%%%1') .. '%]'
 
 		for tagstr in next, tagStringFuncs do

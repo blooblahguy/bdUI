@@ -6,7 +6,9 @@ local bdMinimap = CreateFrame('Frame', 'bdUI_Minimap', UIParent, BackdropTemplat
 
 -- minimap being held/scaled with us
 local function position_minimap()
-	GetMinimapShape = function() return "SQUARE" end
+	GetMinimapShape = function()
+		return "SQUARE"
+	end
 	Minimap:SetMaskTexture("Interface\\BUTTONS\\WHITE8X8")
 
 	-- size and scale things
@@ -24,11 +26,11 @@ function mod:create_minimap()
 	config = mod:get_save()
 
 	-- load blizzard things
-	if not IsAddOnLoaded("Blizzard_Calendar") then
-		LoadAddOn('Blizzard_Calendar')
+	if not C_AddOns.IsAddOnLoaded("Blizzard_Calendar") then
+		C_AddOns.LoadAddOn('Blizzard_Calendar')
 	end
-	if not IsAddOnLoaded("Blizzard_TimeManager") then
-		LoadAddOn('Blizzard_TimeManager')
+	if not C_AddOns.IsAddOnLoaded("Blizzard_TimeManager") then
+		C_AddOns.LoadAddOn('Blizzard_TimeManager')
 	end
 
 	-- get blizzard out of here PLEASE
@@ -37,8 +39,8 @@ function mod:create_minimap()
 	-- global holder
 	bdMinimap:SetPoint('TOPRIGHT', UIParent, -10, -10)
 	bdMinimap:SetSize(Minimap:GetSize())
-	bdMinimap:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
-	bdMinimap:SetBackdropColor(0,0,0,0)
+	bdMinimap:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border })
+	bdMinimap:SetBackdropColor(0, 0, 0, 0)
 	bdMinimap:SetBackdropBorderColor(unpack(bdUI.media.border))
 	mod.bdMinimap = bdMinimap
 	bdMove:set_moveable(bdMinimap)
@@ -64,11 +66,10 @@ function mod:create_minimap()
 			position_minimap()
 		end
 	end)
-	
 
 	-- skin out textures from minimap
 	mod:minimap_skin()
-	
+
 	-- manage blizzard exclusive displays (time, mail, garrison)
 	mod:minimap_blizzard_elements()
 

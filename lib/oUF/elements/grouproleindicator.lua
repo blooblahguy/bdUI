@@ -25,6 +25,17 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
 local _, ns = ...
 local oUF = ns.oUF
 
+-- originally sourced from Blizzard_Deprecated/Deprecated_10_1_5.lua
+local function GetTexCoordsForRoleSmallCircle(role)
+	if(role == 'TANK') then
+		return 0, 19 / 64, 22 / 64, 41 / 64
+	elseif(role == 'HEALER') then
+		return 20 / 64, 39 / 64, 1 / 64, 20 / 64
+	elseif(role == 'DAMAGER') then
+		return 20 / 64, 39 / 64, 22 / 64, 41 / 64
+	end
+end
+
 local function Update(self, event)
 	local element = self.GroupRoleIndicator
 
@@ -38,7 +49,9 @@ local function Update(self, event)
 	end
 
 	local role = UnitGroupRolesAssigned(self.unit)
-	if(role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') then
+	if element.combatHide and UnitAffectingCombat(self.unit) then
+		element:Hide()
+	elseif(role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') then
 		element:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
 		element:Show()
 	else
@@ -49,7 +62,7 @@ local function Update(self, event)
 	Called after the element has been updated.
 
 	* self - the GroupRoleIndicator element
-	* role - the role as returned by [UnitGroupRolesAssigned](http://wowprogramming.com/docs/api/UnitGroupRolesAssigned.html)
+	* role - the role as returned by [UnitGroupRolesAssigned](https://warcraft.wiki.gg/wiki/API_UnitGroupRolesAssigned)
 	--]]
 	if(element.PostUpdate) then
 		return element:PostUpdate(role)
@@ -77,6 +90,9 @@ local function Enable(self)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
+		self:RegisterEvent('PLAYER_REGEN_DISABLED', Path, true)
+		self:RegisterEvent('PLAYER_REGEN_ENABLED', Path, true)
+
 		if(self.unit == 'player') then
 			self:RegisterEvent('PLAYER_ROLES_ASSIGNED', Path, true)
 		else
@@ -96,6 +112,8 @@ local function Disable(self)
 	if(element) then
 		element:Hide()
 
+		self:UnregisterEvent('PLAYER_REGEN_DISABLED', Path)
+		self:UnregisterEvent('PLAYER_REGEN_ENABLED', Path)
 		self:UnregisterEvent('PLAYER_ROLES_ASSIGNED', Path)
 		self:UnregisterEvent('GROUP_ROSTER_UPDATE', Path, true)
 	end

@@ -65,7 +65,7 @@ local function Update(self, event, unit, ...)
 	end
 
 	local targetUnit = self.unit .. "target"
-	local isTargeting = UnitExists(targetUnit) --and UnitIsPlayer(target)
+	local isTargeting = UnitExists(targetUnit) -- and UnitIsPlayer(target)
 	local isTargetingPlayer = UnitIsUnit(targetUnit, "player")
 
 	targetUnit = GetUnitName(targetUnit)
@@ -107,9 +107,9 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 		element.throttle = element.throttle or 0.1
-		element.icon = select(3, GetSpellInfo(210099))
+		element.icon = select(3, C_Spell.GetSpellInfo(210099))
 		if (not element.icon) then
-			element.icon = select(3, GetSpellInfo(12021))
+			element.icon = select(3, C_Spell.GetSpellInfo(12021))
 		end
 		element:SetJustifyH("LEFT")
 		element:SetTextColor(1, 1, 1)
@@ -150,7 +150,6 @@ local function Enable(self, unit)
 		-- self:RegisterEvent('UNIT_SPELLCAST_FAILED', Path)
 		-- self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTED', Path)
 		-- moving to just an on update
-
 
 		local updater = element.__owner["oUF_Fixate_Updater"];
 		if (not updater) then

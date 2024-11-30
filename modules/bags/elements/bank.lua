@@ -12,7 +12,7 @@ local GetContainerItemID = GetContainerItemID or C_Container.GetContainerItemID
 -- bank
 function mod:create_bank()
 	mod.bank = mod:create_container("Bank")
-	
+
 	mod.bank.item_pool = CreateObjectPool(mod.item_pool_create, mod.item_pool_reset)
 	mod.bank.cat_pool = CreateObjectPool(mod.category_pool_create, mod.category_pool_reset)
 
@@ -63,14 +63,16 @@ function bdUI:update_bank()
 	mod:update_bank()
 end
 function mod:update_bank()
-	if (not mod.bank:IsShown()) then return end
-	
+	if (not mod.bank:IsShown()) then
+		return
+	end
+
 	local config = mod.config
 	local freeslots = 0
 	local freeslot = nil
 	mod.bank.categories = {}
 
-	local bank_bags = {BANK_CONTAINER, 5, 6, 7, 8, 9, 10, 11}
+	local bank_bags = { BANK_CONTAINER, 5, 6, 7, 8, 9, 10, 11 }
 
 	for k, bag in pairs(bank_bags) do
 		local min, max, step = GetContainerNumSlots(bag), 1, -1
@@ -102,16 +104,16 @@ function mod:update_bank()
 				if (not config.showfreespaceasone) then
 					mod.categoryIDtoNames[-2] = "Bag"
 					mod.categoryNamestoID["Bag"] = -2
-					
+
 					-- store it in a category
 					mod.bank.categories[-2] = mod.bank.categories[-2] or {}
-					
+
 					-- then store by categoryID with lots of info
 					table.insert(mod.bank.categories[-2], itemInfo)
 				elseif (not freeslot) then
 					freeslot = itemInfo
 				end
-			elseif (itemLink and quality > 0) then
+			elseif (itemLink and not mod:is_item_trash(itemLink)) then
 				-- make this table consistent from one place
 				local itemInfo = mod:get_item_table(bag, slot, bag, itemCount, itemLink)
 
@@ -149,12 +151,11 @@ function mod:update_bank()
 	mod:draw_bank()
 end
 
-
 function mod:draw_bank()
 	local config = mod.config
 
 	mod.current_parent = mod.bank -- we want new frames to parent to bags
-	
+
 	mod:position_items(mod.bank.categories, config.bankbuttonsize, config.bankbuttonsperrow)
 	mod:position_categories(mod.bank.categories, config.bankbuttonsize, config.bankbuttonsperrow)
 
@@ -164,9 +165,11 @@ function mod:draw_bank()
 end
 
 function mod:hide_blizzard_bank()
-	if (BankFrame.hidden) then return end
+	if (BankFrame.hidden) then
+		return
+	end
 	BankFrame.hidden = true
-	local children = {BankFrame:GetChildren()}
+	local children = { BankFrame:GetChildren() }
 	for k, child in pairs(children) do
 		child:Hide()
 		child.Show = noop

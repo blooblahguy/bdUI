@@ -27,7 +27,7 @@ The following options are listed by priority. The first check that returns true 
 .colorPower  - Use `self.colors.power[token]` to color the bar based on the player's additional power type
                (boolean)
 .colorClass  - Use `self.colors.class[class]` to color the bar based on unit class. `class` is defined by the
-               second return of [UnitClass](http://wowprogramming.com/docs/api/UnitClass.html) (boolean)
+               second return of [UnitClass](https://warcraft.wiki.gg/wiki/API_UnitClass) (boolean)
 .colorSmooth - Use `self.colors.smooth` to color the bar with a smooth gradient based on the player's current
                additional power percentage (boolean)
 
@@ -69,7 +69,7 @@ local UnitHasVehicleUI = UnitHasVehicleUI
 local UnitPowerType = UnitPowerType
 -- end block
 
--- sourced from FrameXML/AlternatePowerBar.lua
+-- sourced from Blizzard_UnitFrame/AlternatePowerBar.lua
 local POWER_NAME = _G.ADDITIONAL_POWER_BAR_NAME or 'MANA'
 local POWER_INDEX = _G.ADDITIONAL_POWER_BAR_INDEX or 0
 local ALT_POWER_INFO = _G.ALT_POWER_BAR_PAIR_DISPLAY_INFO or _G.ALT_MANA_BAR_PAIR_DISPLAY_INFO or {DRUID={[8]=true}, SHAMAN={[11]=true}, PRIEST={[13]=true}}
@@ -250,7 +250,7 @@ local function VisibilityPath(self, ...)
 end
 
 local function ForceUpdate(element)
-	VisibilityPath(element.__owner, 'ForceUpdate', element.__owner.unit)
+	return VisibilityPath(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
 
 --[[ Power:SetFrequentUpdates(state, isForced)
@@ -264,11 +264,11 @@ local function SetFrequentUpdates(element, state, isForced)
 	if(element.frequentUpdates ~= state or isForced) then
 		element.frequentUpdates = state
 		if(state) then
-			element.__owner:UnregisterEvent('UNIT_POWER_UPDATE', Path)
-			element.__owner:RegisterEvent('UNIT_POWER_FREQUENT', Path)
+			oUF:UnregisterEvent(element.__owner, 'UNIT_POWER_UPDATE', Path)
+			oUF:RegisterEvent(element.__owner, 'UNIT_POWER_FREQUENT', Path)
 		else
-			element.__owner:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
-			element.__owner:RegisterEvent('UNIT_POWER_UPDATE', Path)
+			oUF:UnregisterEvent(element.__owner, 'UNIT_POWER_FREQUENT', Path)
+			oUF:RegisterEvent(element.__owner, 'UNIT_POWER_UPDATE', Path)
 		end
 	end
 end
@@ -280,7 +280,7 @@ local function Enable(self, unit)
 		element.ForceUpdate = ForceUpdate
 		element.SetFrequentUpdates = SetFrequentUpdates
 
-		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
+		oUF:RegisterEvent(self, 'UNIT_DISPLAYPOWER', VisibilityPath)
 
 		if(not element.displayPairs) then
 			element.displayPairs = CopyTable(ALT_POWER_INFO)
@@ -299,7 +299,7 @@ local function Disable(self)
 	if(element) then
 		ElementDisable(self)
 
-		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
+		oUF:UnregisterEvent(self, 'UNIT_DISPLAYPOWER', VisibilityPath)
 	end
 end
 

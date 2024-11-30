@@ -4,18 +4,19 @@ local config
 local oUF = bdUI.oUF
 local initialized = false
 
---======================================================
+-- ======================================================
 -- Update the raidframe header with new configuration values
---======================================================
+-- ======================================================
 local function update_raid_header()
-	if (InCombatLockdown()) then return end
+	if (InCombatLockdown()) then
+		return
+	end
 
 	local header = mod.frameHeader
 
 	mod:resize_container(mod.frameHeader, mod.raid_holder, config.width, config.height)
 
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups =
-		mod:get_attributes()
+	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
 
 	-- growth/spacing
 	header:SetAttribute("columnAnchorPoint", new_group_anchor)
@@ -73,30 +74,30 @@ local function initialize()
 	oUF:SetActiveStyle('bdGrid')
 
 	-- Initial header spawning
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups =
-	mod:get_attributes()
+	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
+
+	local attributes = {}
+	attributes.showParty = true
+	attributes.showPlayer = true
+	attributes.showSolo = config.showSolo
+	attributes.showRaid = true
+	attributes['initial-scale'] = 1
+	attributes.unitsPerColumn = 5
+	attributes.columnSpacing = yOffset
+	attributes.xOffset = xOffset
+	attributes.yOffset = yOffset
+	attributes.maxColumns = num_groups
+	attributes.groupingOrder = group_sort
+	attributes.sortMethod = sort_method
+	attributes.columnAnchorPoint = new_group_anchor
+	attributes['initial-width'] = config.width
+	attributes['initial-height'] = config.height
+	attributes.point = new_player_anchor
+	attributes.groupBy = group_by
+	attributes['oUF-initialConfigFunction'] = format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
 
 	-- ouf gives us secureheader
-	mod.frameHeader = oUF:SpawnHeader(nil, nil, 'raid,party,solo',
-		"showParty", true,
-		"showPlayer", true,
-		"showSolo", config.showSolo,
-		"showRaid", true,
-		"initial-scale", 1,
-		"unitsPerColumn", 5,
-		"columnSpacing", yOffset,
-		"xOffset", xOffset,
-		"yOffset", yOffset,
-		"maxColumns", num_groups,
-		"groupingOrder", group_sort,
-		"sortMethod", sort_method,
-		"columnAnchorPoint", new_group_anchor,
-		"initial-width", config.width,
-		"initial-height", config.height,
-		"point", new_player_anchor,
-		"groupBy", group_by,
-		'oUF-initialConfigFunction', format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
-	)
+	mod.frameHeader = oUF:SpawnHeader("bdUI_raid", nil, 'raid,party,solo', attributes)
 
 	update_raid_header()
 
@@ -134,12 +135,16 @@ function mod:demo_mode()
 end
 
 local function callback()
-	if (not mod.frameHeader) then return end
+	if (not mod.frameHeader) then
+		return
+	end
 	update_raid_header()
 end
 
 local function disable(_config)
-	if (not mod.frameHeader) then return end
+	if (not mod.frameHeader) then
+		return
+	end
 
 	config = _config
 	mod.raid_holder:UnregisterEvent("PLAYER_REGEN_ENABLED")
@@ -192,6 +197,6 @@ local function enable(_config)
 	return true
 end
 
-
-local function path() end
+local function path()
+end
 mod:add_element('raid_frames', path, enable, disable)

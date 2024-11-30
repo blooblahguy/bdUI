@@ -13,7 +13,7 @@ local function search_sanitize(str)
 end
 
 function mod:create_container(name, nomove)
-	local frame = CreateFrame("frame", "bdBags_"..name, UIParent, BackdropTemplateMixin and "BackdropTemplate")
+	local frame = CreateFrame("frame", "bdBags_" .. name, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	bdUI:set_backdrop(frame)
 
 	frame:SetSize(500, 400)
@@ -22,10 +22,14 @@ function mod:create_container(name, nomove)
 	if (not nomove) then
 		frame:SetMovable(true)
 		frame:SetUserPlaced(true)
-		frame:RegisterForDrag("LeftButton","RightButton")
-		frame:RegisterForDrag("LeftButton","RightButton")
-		frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-		frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+		frame:RegisterForDrag("LeftButton", "RightButton")
+		frame:RegisterForDrag("LeftButton", "RightButton")
+		frame:SetScript("OnDragStart", function(self)
+			self:StartMoving()
+		end)
+		frame:SetScript("OnDragStop", function(self)
+			self:StopMovingOrSizing()
+		end)
 	end
 	if (name == "Bags") then
 		frame:SetPoint("BOTTOMRIGHT", -50, 50)
@@ -69,9 +73,9 @@ function mod:create_container(name, nomove)
 	-- money
 	local money = mod:create_money(name, frame)
 	money:SetPoint("LEFT", header, "LEFT", mod.spacing - 4, -1)
- 
+
 	-- search box
-	local searchBox = CreateFrame("EditBox", "bd"..name.."SearchBox", frame, "BagSearchBoxTemplate")
+	local searchBox = CreateFrame("EditBox", "bd" .. name .. "SearchBox", frame, "BagSearchBoxTemplate")
 	searchBox:SetHeight(20)
 	searchBox:SetPoint("LEFT", money, "RIGHT", 4, 1)
 	searchBox:SetWidth(250)
@@ -83,7 +87,10 @@ function mod:create_container(name, nomove)
 	searchBox.hide = CreateFrame("button", nil, searchBox)
 	searchBox.hide:SetSize(20, 20)
 	searchBox.hide:EnableMouse(true)
-	searchBox.hide:SetScript("OnClick", function() searchBox:SetText(""); searchBox:ClearFocus(false) end)
+	searchBox.hide:SetScript("OnClick", function()
+		searchBox:SetText("");
+		searchBox:ClearFocus(false)
+	end)
 	searchBox.hide:SetPoint("RIGHT", searchBox, -2, 0)
 	searchBox.hide:SetAlpha(0.5)
 	searchBox.hide.text = searchBox.hide:CreateFontString(nil, "OVERLAY")
@@ -105,9 +112,11 @@ function mod:create_container(name, nomove)
 	-- 	end
 	-- end)
 	searchBox.update = function(self, ...)
-		if (not frame.all_items) then return end
+		if (not frame.all_items) then
+			return
+		end
 		local find = search_sanitize(self:GetText())
-		
+
 		if (strlen(self:GetText()) > 0) then
 			self.Instructions:Hide()
 		else
@@ -116,32 +125,36 @@ function mod:create_container(name, nomove)
 
 		for k, item in pairs(frame.all_items) do
 			if (item.name) then
-				local text = search_sanitize(item.name..item.itemType..item.bindType..item.tradeable)
-				if(not item.itemType) then item.itemType=13 end				
-        
+				local text = search_sanitize(item.name .. item.itemType .. item.bindType .. item.tradeable)
+
+				if (not item.itemType) then
+					item.itemType = 13
+				end
+
 				if (find == "boe") then
 					find = "bind on equip"
 				elseif (find == "bop") then
 					find = "bind on pickup"
 				end
-				
 
 				if (string.find(text, find)) then
 					item:SetAlpha(1)
+					item.ilvl:SetAlpha(1)
 				else
 					item:SetAlpha(.1)
+					item.ilvl:SetAlpha(.1)
 				end
 			end
 		end
 	end
-	
+
 	searchBox:SetScript("OnTextChanged", searchBox.update)
 
 	frame.searchBox = searchBox
 
-	local icon = _G[searchBox:GetName().."SearchIcon"]
+	local icon = _G[searchBox:GetName() .. "SearchIcon"]
 	icon:ClearAllPoints()
-	icon:SetPoint("LEFT", searchBox,"LEFT", 4, -1)
+	icon:SetPoint("LEFT", searchBox, "LEFT", 4, -1)
 	bdUI:set_backdrop(searchBox)
 	searchBox._background:SetVertexColor(.06, .07, .09, 1)
 	tinsert(_G.ITEM_SEARCHBAR_LIST, searchBox:GetName())
@@ -178,21 +191,23 @@ local item_num = 1
 local function create_bagslot_item(parent, template)
 	item_num = item_num + 1
 	local parent = CreateFrame("frame", nil, parent)
-	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_ContainerItem_"..item_num, parent, template)
+	local button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "bdBags_ContainerItem_" .. item_num, parent, template)
 	button:SetHeight(36)
 	button:SetWidth(36)
 	button:SetFrameStrata("HIGH")
 	button:RegisterForDrag("LeftButton")
-	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
+	button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	button:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED")
 	button:SetScript("OnEvent", function(self)
 		self:update()
 	end)
 
 	button:HookScript("OnClick", function(self)
-		if (not _G['BankSlotsFrame'] or not _G['BankSlotsFrame']["Bag"..self.slot]) then return end 
-		
-		local isBought = _G['BankSlotsFrame']["Bag"..self.slot].tooltipText ~= BANK_BAG_PURCHASE
+		if (not _G['BankSlotsFrame'] or not _G['BankSlotsFrame']["Bag" .. self.slot]) then
+			return
+		end
+
+		local isBought = _G['BankSlotsFrame']["Bag" .. self.slot].tooltipText ~= BANK_BAG_PURCHASE
 		if (not self.itemID and self.bag == -4 and not isBought) then
 			StaticPopup_Show("CONFIRM_BUY_BANK_SLOT");
 		end
@@ -201,7 +216,7 @@ local function create_bagslot_item(parent, template)
 	function button:update_quality()
 		self.quality_border:Hide()
 		self.quality_border:set_border_color(unpack(bdUI.media.border))
-		
+
 		if (self.itemLink) then
 			local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(self.itemLink)
 			if (itemRarity and itemRarity > 1) then
@@ -215,7 +230,7 @@ local function create_bagslot_item(parent, template)
 		self.hasItem = not not self.itemID
 		self:GetParent():SetID(self.bag)
 		self:SetID(self.slot)
-	
+
 		SetItemButtonTexture(self, self.texture)
 		SetItemButtonQuality(self, self.quality, self.itemLink)
 		SetItemButtonCount(self, self.itemCount)
@@ -223,7 +238,7 @@ local function create_bagslot_item(parent, template)
 		local numSlots, full = GetNumBankSlots()
 		self.BattlepayItemTexture:Hide()
 		if (not full and not self.itemID and self.bag == -4) then
-			if (_G['BankSlotsFrame']["Bag"..self.slot].tooltipText == BANK_BAG_PURCHASE) then
+			if (_G['BankSlotsFrame']["Bag" .. self.slot].tooltipText == BANK_BAG_PURCHASE) then
 				SetItemButtonTexture(self, 135769)
 				self.BattlepayItemTexture:Show()
 				self.icon:SetVertexColor(0, 1, 0)
@@ -233,9 +248,9 @@ local function create_bagslot_item(parent, template)
 				self.icon:SetAlpha(1)
 			end
 		end
-	
+
 		self.blank:SetShown(not self.hasItem)
-	
+
 		self:update_quality()
 	end
 
@@ -288,10 +303,10 @@ function mod:create_bagslots(frame, bagslots)
 		bag.texture = itemTexture
 		bag.itemID = itemID or false
 		bag:update()
-			
+
 		-- position things
 		if (not last_bag) then
-			bag:SetPoint("RIGHT", frame.bagslot_holder, "RIGHT", -size/4, 0)
+			bag:SetPoint("RIGHT", frame.bagslot_holder, "RIGHT", -size / 4, 0)
 		else
 			bag:SetPoint("RIGHT", last_bag, "LEFT", -mod.border, 0)
 		end

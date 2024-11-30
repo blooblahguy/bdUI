@@ -1,21 +1,13 @@
 local bdUI, c, l = unpack(select(2, ...))
 
---========================================================
+-- ========================================================
 -- Themes
---========================================================
+-- ========================================================
 function bdUI:register_theme(name, callback)
 	-- callback()
 end
 
-bdUI:register_theme("bdUI", {
-	["primaryFont"] = 2,
-	["secondaryFont"] = 2,
-	["primaryColor"] = 2,
-	["secondaryColor"] = 2,
-	["borderSize"] = 2,
-	["backgroundColor"] = 2,
-	["borderColor"] = 2,
-})
+bdUI:register_theme("bdUI", { ["primaryFont"] = 2, ["secondaryFont"] = 2, ["primaryColor"] = 2, ["secondaryColor"] = 2, ["borderSize"] = 2, ["backgroundColor"] = 2, ["borderColor"] = 2 })
 
 local combat_fade_frames = {}
 
@@ -35,7 +27,9 @@ combat_checker:SetScript("OnEvent", function()
 end)
 
 function bdUI:do_frame_fade()
-	if (bdUI.version >= 100000) then return end -- dragnflight breaks this stuff right now
+	if (bdUI.version >= 100000) then
+		return
+	end -- dragnflight breaks this stuff right now
 	for frame, info in pairs(combat_fade_frames) do
 		local ic_alpha, resting_alpha = unpack(info)
 		local target_alpha = 1
@@ -45,23 +39,28 @@ function bdUI:do_frame_fade()
 			target_alpha = resting_alpha
 		end
 
-		if (InCombatLockdown()) then return end
-		if (target_alpha > frame:GetAlpha() or frame:GetAlpha() > 0) then
+		if (InCombatLockdown()) then
+			return
+		end
+		local currentAlpha = frame:GetAlpha() or 0
+		if (target_alpha > currentAlpha or currentAlpha > 0) then
 			frame:Show()
 		else
 			frame:Hide()
 		end
 
-		if (target_alpha > frame:GetAlpha()) then
+		if (target_alpha > currentAlpha) then
 			frame:Show()
-			UIFrameFadeIn(frame, 0.3, frame:GetAlpha(), target_alpha)
+			UIFrameFadeIn(frame, 0.3, currentAlpha, target_alpha)
 		else
-			UIFrameFadeOut(frame, 0.3, frame:GetAlpha(), target_alpha)
+			UIFrameFadeOut(frame, 0.3, currentAlpha, target_alpha)
 		end
 
 		frame.fadeInfo.finishedFunc = function()
-			if (InCombatLockdown()) then return end
-			if (frame:GetAlpha() == 0) then
+			if (InCombatLockdown()) then
+				return
+			end
+			if (currentAlpha == 0) then
 				frame:Hide()
 			else
 				frame:Show()
@@ -75,14 +74,16 @@ function bdUI:set_frame_fade(frame, ic_alpha, resting_alpha)
 	combat_fade_frames[frame] = { ic_alpha, resting_alpha }
 end
 
---========================================================
+-- ========================================================
 -- Frames Groups
 -- automatically positions frames in given direction, and
 -- returns dimensions of the "stack"
---========================================================
+-- ========================================================
 
 function bdUI:frame_group(container, direction, ...)
-	if (not container) then return end
+	if (not container) then
+		return
+	end
 
 	direction = string.lower(direction) or "down"
 	local last = nil
@@ -156,9 +157,9 @@ function bdUI:frame_group(container, direction, ...)
 	return container
 end
 
---================================================
+-- ================================================
 -- Media Functions
---================================================
+-- ================================================
 function bdUI:range_lerp(value, sourceMin, sourceMax, newMin, newMax)
 	return newMin + (newMax - newMin) * ((value - sourceMin) / (sourceMax - sourceMin))
 end
@@ -179,7 +180,9 @@ function bdUI:brighten_color(r, g, b, percent)
 end
 
 function bdUI:strip_textures(object, strip_text)
-	if (not object) then return end
+	if (not object) then
+		return
+	end
 	for i = 1, object:GetNumRegions() do
 		local region = select(i, object:GetRegions())
 
@@ -199,12 +202,14 @@ function bdUI:strip_textures(object, strip_text)
 end
 
 function bdUI:set_backdrop_basic(frame, force)
-	if (frame.background and not force) then return end
+	if (frame.background and not force) then
+		return
+	end
 
 	if (not frame.SetBackdrop) then
 		Mixin(frame, BackdropTemplateMixin)
 	end
-	frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border }) --, insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
+	frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border }) -- , insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
 	frame:SetBackdropColor(unpack(bdUI.media.backdrop))
 	frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 
@@ -250,7 +255,9 @@ local function border_gen(parent)
 end
 
 function bdUI:set_backdrop(frame, force_border)
-	if (frame._background) then return end
+	if (frame._background) then
+		return
+	end
 
 	local border = bdUI.border or bdUI:get_border(frame)
 	if (force_border) then
@@ -348,7 +355,9 @@ function bdUI:set_backdrop(frame, force_border)
 end
 
 function bdUI:create_shadow(frame, offset)
-	if frame._shadow then return end
+	if frame._shadow then
+		return
+	end
 
 	local shadow = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
 	shadow:SetFrameLevel(1)
@@ -370,11 +379,7 @@ function bdUI:create_shadow(frame, offset)
 		shadow:SetPoint("TOPRIGHT", offset, offset)
 		shadow:SetPoint("BOTTOMRIGHT", offset, -offset)
 
-		shadow:SetBackdrop({
-			edgeFile = bdUI.media.shadow,
-			edgeSize = offset,
-			insets = { left = offset, right = offset, top = offset, bottom = offset },
-		})
+		shadow:SetBackdrop({ edgeFile = bdUI.media.shadow, edgeSize = offset, insets = { left = offset, right = offset, top = offset, bottom = offset } })
 	end
 
 	shadow:set_size(offset)
@@ -487,8 +492,12 @@ function math.clamp(_in, low, high)
 end
 
 function math.restrict(_in, low, high)
-	if (_in < low) then _in = low end
-	if (_in > high) then _in = high end
+	if (_in < low) then
+		_in = low
+	end
+	if (_in > high) then
+		_in = high
+	end
 	return _in
 end
 
@@ -540,7 +549,7 @@ function bdUI:skin_button(f, small, color)
 
 	f:SetWidth(f:GetTextWidth() + 22)
 
-	--if (f:GetWidth() < 24) then
+	-- if (f:GetWidth() < 24) then
 	if (small and f:GetWidth() <= 24) then
 		f:SetWidth(20)
 	end
@@ -570,15 +579,25 @@ function bdUI:skin_button(f, small, color)
 	return true
 end
 
---========================================================
+-- ========================================================
 -- Frames / Faders
---========================================================
+-- ========================================================
 function bdUI:IsMouseOverFrame(self)
-	if MouseIsOver(self) then return true end
-	if not SpellFlyout then return false end
-	if not SpellFlyout:IsShown() then return false end
-	if not SpellFlyout.__faderParent then return false end
-	if SpellFlyout.__faderParent == self and MouseIsOver(SpellFlyout) then return true end
+	if MouseIsOver(self) then
+		return true
+	end
+	if not SpellFlyout then
+		return false
+	end
+	if not SpellFlyout:IsShown() then
+		return false
+	end
+	if not SpellFlyout.__faderParent then
+		return false
+	end
+	if SpellFlyout.__faderParent == self and MouseIsOver(SpellFlyout) then
+		return true
+	end
 
 	return false
 end
@@ -605,8 +624,12 @@ end
 
 -- fade in animation
 local function StartFadeIn(frame)
-	if (not frame.enableFader) then return end
-	if (frame.fader.direction == "in") then return end
+	if (not frame.enableFader) then
+		return
+	end
+	if (frame.fader.direction == "in") then
+		return
+	end
 	frame.fader:Pause()
 	frame.fader.anim:SetFromAlpha(frame.outAlpha)
 	frame.fader.anim:SetToAlpha(frame.inAlpha)
@@ -620,8 +643,12 @@ end
 
 -- fade out animation
 local function StartFadeOut(frame)
-	if (not frame.enableFader) then return end
-	if (frame.fader.direction == "out") then return end
+	if (not frame.enableFader) then
+		return
+	end
+	if (frame.fader.direction == "out") then
+		return
+	end
 	frame.fader:Pause()
 	frame.fader.anim:SetFromAlpha(frame.inAlpha)
 	frame.fader.anim:SetToAlpha(frame.outAlpha)
@@ -647,7 +674,9 @@ end
 
 -- Allows us to mouseover show a frame, with animation
 function bdUI:create_fader(frame, children, inAlpha, outAlpha, duration, outDelay)
-	if (frame.fader) then return end
+	if (frame.fader) then
+		return
+	end
 
 	-- set variables
 	frame.inAlpha = inAlpha or 1

@@ -1,6 +1,6 @@
---===============================================
+-- ===============================================
 -- FUNCTIONS
---===============================================
+-- ===============================================
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Nameplates")
 local oUF = bdUI.oUF
@@ -38,8 +38,7 @@ local function PostCreateButton(self, button)
 end
 
 local function PostUpdateButton(self, unit, button, index, position)
-	local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
-		button.filter)
+	local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = C_UnitAuras.GetAuraDataByIndex(unit, index, button.filter)
 	bdUI:update_duration(button.Cooldown, unit, spellID, caster, name, duration, expiration)
 
 	if (self.last_timer_size ~= config.debuff_timer_size) then
@@ -51,17 +50,17 @@ local function PostUpdateButton(self, unit, button, index, position)
 	button:SetHeight(config.raidbefuffs * 0.6 * config.scale)
 	if (config.highlightPurge and (isStealable or debuffType == "Magic")) then -- purge alert
 		button._border:SetVertexColor(unpack(config.purgeColor))
-	elseif (config.highlightEnrage and debuffType == "") then               -- enrage alert
+	elseif (config.highlightEnrage and debuffType == "") then -- enrage alert
 		button._border:SetVertexColor(unpack(config.enrageColor))
-	else                                                                    -- neither
+	else -- neither
 		button._border:SetVertexColor(unpack(bdUI.media.border))
 	end
 end
 
---===============================================
+-- ===============================================
 -- Core functionality
 -- place core functionality here
---===============================================
+-- ===============================================
 local forced = false
 function mod:force_size()
 	if (not forced) then
@@ -72,14 +71,14 @@ function mod:force_size()
 end
 
 function mod:nameplate_size()
-	if (InCombatLockdown()) then return end
+	if (InCombatLockdown()) then
+		return
+	end
 
 	-- C_NamePlate.SetNamePlateFriendlySize(config.width, 0.1)
 	-- C_NamePlate.SetNamePlateFriendlySize(10, 0.1)
-	C_NamePlate.SetNamePlateEnemySize(config.width,
-		(config.height + config.targetingTopPadding + config.targetingBottomPadding))
-	C_NamePlate.SetNamePlateSelfSize(config.width,
-		(config.height / 2 + config.targetingTopPadding + config.targetingBottomPadding))
+	C_NamePlate.SetNamePlateEnemySize(config.width, (config.height + config.targetingTopPadding + config.targetingBottomPadding))
+	C_NamePlate.SetNamePlateSelfSize(config.width, (config.height / 2 + config.targetingTopPadding + config.targetingBottomPadding))
 	C_NamePlate.SetNamePlateFriendlyClickThrough(true)
 	C_NamePlate.SetNamePlateSelfClickThrough(true)
 end
@@ -263,9 +262,9 @@ function mod:config_callback()
 	-- , ['nameplateShowOnlyNames'] = config.friendlynamehack and 1 or 0 -- friendly names and no plates in raid
 end
 
---==============================================
+-- ==============================================
 -- Target Visuals
---==============================================
+-- ==============================================
 local function find_target(self, event, unit)
 	unit = unit or self.unit
 	-- self:SetAlpha(self:GetParent():GetAlpha())
@@ -294,9 +293,9 @@ local function find_target(self, event, unit)
 	end
 end
 
---==============================================
+-- ==============================================
 -- Unit Information Variables
---==============================================
+-- ==============================================
 local function store_unit_information(self, unit)
 	self.tapDenied = UnitIsTapDenied(unit) or false
 
@@ -327,9 +326,9 @@ local function store_unit_information(self, unit)
 	self.smartColors = mod:unitColor(self.tapDenied, self.isPlayer, self.reaction, self.status)
 end
 
---==============================================
+-- ==============================================
 -- THREAT
---==============================================
+-- ==============================================
 local function update_threat(self, event, unit)
 	if (not unit or not self.unit == unit) then
 		return false
@@ -380,9 +379,9 @@ local function get_unit_type(self, unit)
 	end
 end
 
---==============================================
+-- ==============================================
 -- Primary callback
---==============================================
+-- ==============================================
 local function nameplate_callback(self, event, unit)
 	if (not self) then
 		return
@@ -400,9 +399,9 @@ local function nameplate_callback(self, event, unit)
 		frame.UnitFrame.WidgetContainer:SetPoint("TOP", self, "BOTTOM", 0, 0)
 	end
 
-	--==========================================
+	-- ==========================================
 	-- Style by unit type
-	--==========================================
+	-- ==========================================
 	local unit_type = get_unit_type(self, unit)
 	if (unit_type == "enemy") then
 		mod.enemy_style(self, event, unit)
@@ -414,9 +413,9 @@ local function nameplate_callback(self, event, unit)
 		mod.npc_style(self, event, unit)
 	end
 
-	--==========================================
+	-- ==========================================
 	-- Callback
-	--==========================================
+	-- ==========================================
 	mod:config_nameplate(self)
 
 	-- select correct target
@@ -424,9 +423,9 @@ local function nameplate_callback(self, event, unit)
 	update_threat(self, event, unit)
 end
 
---==============================================
+-- ==============================================
 -- Nameplate first time creation
---==============================================
+-- ==============================================
 local function nameplate_create(self, unit)
 	border = bdUI:get_border(self)
 	nameplates[self] = self
@@ -437,9 +436,9 @@ local function nameplate_create(self, unit)
 	self:SetPoint("TOPRIGHT", 0, -math.floor(config.targetingTopPadding))
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", find_target, true)
 
-	--==========================================
+	-- ==========================================
 	-- HEALTHBAR
-	--==========================================
+	-- ==========================================
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetStatusBarTexture(bdUI.media.smooth)
 	self.Health:SetAllPoints()
@@ -458,16 +457,20 @@ local function nameplate_create(self, unit)
 	local total = 0
 	self:HookScript("OnUpdate", function(self, elapsed)
 		total = total + elapsed
-		if (total < 0.1) then return end
-		if (self.currentStyle ~= "enemy") then return end
+		if (total < 0.1) then
+			return
+		end
+		if (self.currentStyle ~= "enemy") then
+			return
+		end
 
 		total = 0
 		update_threat(self, "", self.unit)
 	end)
 
-	--==========================================
+	-- ==========================================
 	-- DAMAGE ABSORBS
-	--==========================================
+	-- ==========================================
 	local absorbBar = CreateFrame("StatusBar", nil, self.Health)
 	absorbBar:SetAllPoints()
 	absorbBar:SetStatusBarTexture(bdUI.media.flat)
@@ -480,14 +483,9 @@ local function nameplate_create(self, unit)
 	overAbsorbBar:Hide()
 
 	-- Register and callback
-	self.HealthPrediction = {
-		absorbBar = absorbBar,
-		overAbsorb = overAbsorbBar,
-		maxOverflow = 1
-	}
+	self.HealthPrediction = { absorbBar = absorbBar, overAbsorb = overAbsorbBar, maxOverflow = 1 }
 
-	function self.HealthPrediction.PostUpdate(self, unit, myIncomingHeal, otherIncomingHeal, absorba, healAbsorb,
-		hasOverAbsorb, hasOverHealAbsorb)
+	function self.HealthPrediction.PostUpdate(self, unit, myIncomingHeal, otherIncomingHeal, absorba, healAbsorb, hasOverAbsorb, hasOverHealAbsorb)
 		-- if (not self.__owner:IsElementEnabled("HealthPrediction")) then return end
 
 		local absorb = UnitGetTotalAbsorbs and UnitGetTotalAbsorbs(unit) or 0
@@ -510,21 +508,21 @@ local function nameplate_create(self, unit)
 		self.absorbBar:SetValue(absorb)
 	end
 
-	--==========================================
+	-- ==========================================
 	-- CASTBARS
-	--==========================================
+	-- ==========================================
 	mod.elements.castbar(self, unit)
 
-	--==========================================
+	-- ==========================================
 	-- Text Holder
-	--==========================================
+	-- ==========================================
 	self.OverlayHolder = CreateFrame("frame", nil, self)
 	self.OverlayHolder:SetFrameLevel(20)
 	self.OverlayHolder:SetAllPoints()
 
-	--==========================================
+	-- ==========================================
 	-- Target Arrows
-	--==========================================
+	-- ==========================================
 	self.target_arrows = CreateFrame("frame", nil, self)
 	self.target_arrows:SetFrameLevel(20)
 	self.target_arrows:SetAlpha(0.8)
@@ -553,9 +551,9 @@ local function nameplate_create(self, unit)
 	self.target_arrow_right:SetJustifyV("MIDDLE")
 	self.target_arrow_right:SetText("<")
 
-	--==========================================
+	-- ==========================================
 	-- UNIT NAME
-	--==========================================
+	-- ==========================================
 	self.text_test = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
 	self.text_test:Hide()
 
@@ -574,9 +572,9 @@ local function nameplate_create(self, unit)
 	end
 	self:Tag(self.Name, "[bd_name]")
 
-	--==========================================
+	-- ==========================================
 	-- QUEST ICON
-	--==========================================
+	-- ==========================================
 	self.QuestProgress = CreateFrame("Frame", "bdUF_QuestProgress", self.Health)
 	self.QuestProgress:SetPoint("LEFT", self.Name, "RIGHT", 4, 0)
 	self.QuestProgress:SetSize(20, 20)
@@ -603,9 +601,9 @@ local function nameplate_create(self, unit)
 		-- self.Health.bg
 	end
 
-	--==========================================
+	-- ==========================================
 	-- UNIT HEALTH
-	--==========================================
+	-- ==========================================
 	self.Curhp = self.Health:CreateFontString(nil, "OVERLAY")
 	self.Curhp:SetJustifyH("RIGHT")
 	self.Curhp:SetAlpha(0.8)
@@ -634,9 +632,9 @@ local function nameplate_create(self, unit)
 	end
 	self:Tag(self.Curhp, "[bdncurhp]")
 
-	--==========================================
+	-- ==========================================
 	-- UNIT POWER
-	--==========================================
+	-- ==========================================
 	self.Curpower = self.Health:CreateFontString(nil, "OVERLAY")
 	self.Curpower:SetJustifyH("LEFT")
 	self.Curpower:SetAlpha(0.8)
@@ -654,19 +652,10 @@ local function nameplate_create(self, unit)
 	end
 	self:Tag(self.Curpower, "[bdncurpower]")
 
-	--==========================================
+	-- ==========================================
 	-- RAID MARKER
-	--==========================================
-	local marker_colors = {
-		[1] = { 1, 1, .44, .8 },
-		[2] = { 1, .73, .19, .8 },
-		[3] = { .79, .2, 1, .8 },
-		[4] = { .47, 1, .4, .8 },
-		[5] = { .94, .94, .94, .8 },
-		[6] = { .36, .78, 1, .8 },
-		[7] = { 1, .43, .43, .8 },
-		[8] = { 1, 1, 1, .8 }
-	}
+	-- ==========================================
+	local marker_colors = { [1] = { 1, 1, .44, .8 }, [2] = { 1, .73, .19, .8 }, [3] = { .79, .2, 1, .8 }, [4] = { .47, 1, .4, .8 }, [5] = { .94, .94, .94, .8 }, [6] = { .36, .78, 1, .8 }, [7] = { 1, .43, .43, .8 }, [8] = { 1, 1, 1, .8 } }
 	self.RaidTargetIndicator = self.OverlayHolder:CreateTexture(nil, "OVERLAY", nil, 7)
 	-- self.RaidTargetIndicator.parent = self
 	-- self.RaidTargetIndicator.PostUpdate = function(self, index)
@@ -679,9 +668,9 @@ local function nameplate_create(self, unit)
 	-- hooksecurefunc(self.RaidTargetIndicator, "Show", function()
 	-- end)
 
-	--==========================================
+	-- ==========================================
 	-- FIXATES / TARGETS
-	--==========================================
+	-- ==========================================
 	self.FixateAlert = self.OverlayHolder:CreateFontString(nil, "OVERLAY")
 	-- if (name_position == "Inside") then
 	-- 	self.FixateAlert:SetPoint("CENTER", self.OverlayHolder, "TOP", 0, 1)
@@ -712,9 +701,9 @@ local function nameplate_create(self, unit)
 		end
 	end
 
-	--==========================================
+	-- ==========================================
 	-- AURAS
-	--==========================================
+	-- ==========================================
 	self.AuraHolder = CreateFrame("frame", nil, self.Health)
 	self.AuraHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, 8)
 	self.AuraHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, 8)
@@ -736,8 +725,7 @@ local function nameplate_create(self, unit)
 	self.Buffs["growth-x"] = "LEFT"
 	self.Buffs.PostCreateButton = PostCreateButton
 	self.Buffs.PostUpdateButton = PostUpdateButton
-	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
-		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
@@ -747,8 +735,7 @@ local function nameplate_create(self, unit)
 		end
 
 		-- call to memoized function
-		return mod:buffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff,
-			nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
+		return mod:buffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
 	end
 
 	-- debuffs
@@ -767,8 +754,7 @@ local function nameplate_create(self, unit)
 	self.Debuffs["growth-x"] = "RIGHT"
 	self.Debuffs.PostCreateButton = PostCreateButton
 	self.Debuffs.PostUpdateButton = PostUpdateButton
-	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
-		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
+	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
 		nameplateShowAll = nameplateShowAll or false
 		nameplateShowPersonal = nameplateShowPersonal or false
@@ -778,13 +764,12 @@ local function nameplate_create(self, unit)
 		end
 
 		-- call to memoized function
-		return mod:debuffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff,
-			nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
+		return mod:debuffFilter(self:GetParent(), unit, name, source, castByMe, debuffType, isStealable, isBossDebuff, nameplateShowPersonal, nameplateShowAll, config.highlightPurge, config.highlightEnrage)
 	end
 
-	--==========================================
+	-- ==========================================
 	-- Combo Points
-	--==========================================
+	-- ==========================================
 	local class = select(2, UnitClass("player"))
 	if (mod.elements.combopoints) then
 		if (class == "ROGUE" or class == "DRUID") then
@@ -792,9 +777,9 @@ local function nameplate_create(self, unit)
 		end
 	end
 
-	--==========================================
+	-- ==========================================
 	-- Pixel Perfect
-	--==========================================
+	-- ==========================================
 	self:HookScript("OnSizeChanged", function(self, elapsed)
 		local border = bdUI:get_border(self)
 
@@ -847,7 +832,9 @@ local function disable_class_power()
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_SPELLCAST_STOP")
 	-- ClassNameplateManaBarFrame:UnregisterEvent("UNIT_SPELLCAST_FAILED")
 	ClassNameplateManaBarFrame:Hide()
-	hooksecurefunc(ClassNameplateManaBarFrame, "Show", function(self) self:Hide() end)
+	hooksecurefunc(ClassNameplateManaBarFrame, "Show", function(self)
+		self:Hide()
+	end)
 end
 
 function mod:initialize()

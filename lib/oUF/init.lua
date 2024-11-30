@@ -1,10 +1,15 @@
 local _, ns = ...
-ns.oUF = {}
-ns.oUF.Private = {}
+local oUF = { Private = {} }
+ns.oUF = oUF
 
-local _, _, _, toc = GetBuildInfo()
+oUF.isTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC -- not used
+oUF.isCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
+oUF.isWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+oUF.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+oUF.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
-ns.oUF.isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-ns.oUF.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-ns.oUF.isTBC = toc >= 20500 and toc < 30000 -- TODO: Wrath
-ns.oUF.isWrath = toc >= 30400 and toc < 40000 -- TODO: Wrath
+local season = C_Seasons and C_Seasons.GetActiveSeason()
+oUF.isClassicHC = season == 3 -- Hardcore
+oUF.isClassicSOD = season == 2 -- Season of Discovery
+oUF.isClassicAnniv = season == 11 -- Anniversary
+oUF.isClassicAnnivHC = season == 12 -- Anniversary Hardcore

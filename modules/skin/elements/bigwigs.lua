@@ -6,7 +6,9 @@ local function DBM_Style()
 end
 
 local function BW_Style()
-	if not BigWigs then return end
+	if not BigWigs then
+		return
+	end
 	-- local bars = BigWigs:GetPlugin("Bars", true)
 	-- if not bars then return end
 
@@ -14,7 +16,9 @@ local function BW_Style()
 		apiVersion = 1,
 		version = 1,
 		-- barHeight = 16,
-		GetSpacing = function(bar) return 8 end,
+		GetSpacing = function(bar)
+			return 8
+		end,
 		ApplyStyle = function(bar)
 			bar.bg = CreateFrame('frame', nil, bar)
 			bar.bg:SetFrameStrata("BACKGROUND")
@@ -38,7 +42,9 @@ local function BW_Style()
 			bar.candyBarBar:SetHeight(6)
 			bar.candyBarBar:SetStatusBarTexture(bdUI.media.flat)
 			bar.candyBarBar.OldSetPoint = bar.candyBarBar.SetPoint
-			bar.candyBarBar.SetPoint = function() return end
+			bar.candyBarBar.SetPoint = function()
+				return
+			end
 
 			bar.candyBarDuration:SetFont(bdUI.media.font, 14, "THINOUTLINE")
 			bar.candyBarDuration:SetShadowOffset(0, 0)
@@ -54,12 +60,16 @@ local function BW_Style()
 
 			bar.candyBarBackground:SetTexture(bdUI.media.flat)
 			bar.candyBarBackground:SetVertexColor(.1, .1, .1, .4)
-			bar.candyBarBackground.SetVertexColor = function() return end
+			bar.candyBarBackground.SetVertexColor = function()
+				return
+			end
 		end,
 		BarStopped = function(bar)
 			bar.candyBarBar.SetPoint = bar.candyBarBar.OldSetPoint
 		end,
-		GetStyleName = function() return "BigDumb" end,
+		GetStyleName = function()
+			return "BigDumb"
+		end,
 	})
 end
 
@@ -70,15 +80,17 @@ bm:RegisterEvent("PLAYER_LOGIN")
 local reason = nil
 bm:SetScript("OnEvent", function(self, event, msg)
 	if event == "ADDON_LOADED" then
-		if not reason then reason = (select(6, GetAddOnInfo("BigWigs_Plugins"))) end
+		if not reason then
+			reason = (select(6, C_AddOns.GetAddOnInfo("BigWigs_Plugins")))
+		end
 		if (reason == "MISSING" and msg == "BigWigs") or msg == "BigWigs_Plugins" then
 			BW_Style()
 			bm:UnregisterEvent("PLAYER_LOGIN")
 		end
 	elseif event == "PLAYER_LOGIN" then
-		if IsAddOnLoaded("BigWigs") then
+		if C_AddOns.IsAddOnLoaded("BigWigs") then
 			BW_Style()
-		elseif IsAddOnLoaded("DBM-Core") then
+		elseif C_AddOns.IsAddOnLoaded("DBM-Core") then
 			DBM_Style()
 		end
 	end

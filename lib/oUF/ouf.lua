@@ -1,13 +1,11 @@
 local parent, ns = ...
-local GetAddOnMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local global = GetAddOnMetadata(parent, 'X-oUF')
-local _VERSION = '@project-version@'
-if(_VERSION:find('project%-version')) then
-	_VERSION = 'devel'
-end
+local _VERSION = 'devel'
 
 local oUF = ns.oUF
-local Private = oUF.Private
+local Profiler = oUF.Profiler.func
+local Private = Profiler(oUF).Private
 
 local argcheck = Private.argcheck
 local error = Private.error
@@ -20,13 +18,14 @@ local callback, objects, headers = {}, {}, {}
 local elements = {}
 local activeElements = {}
 
+oUF.elements = elements -- for the Profiler
+
 -- ElvUI
 local _G = _G
 local assert, setmetatable = assert, setmetatable
-local unpack, tinsert, tremove = unpack, tinsert, tremove
-local next, time, wipe, type = next, time, wipe, type
-local select, pairs, ipairs = select, pairs, ipairs
+local next, type, select = next, type, select
 local strupper, strsplit = strupper, strsplit
+local tinsert, tremove = tinsert, tremove
 local hooksecurefunc = hooksecurefunc
 
 local SecureHandlerSetFrameRef = SecureHandlerSetFrameRef
@@ -36,11 +35,9 @@ local RegisterUnitWatch = RegisterUnitWatch
 local CreateFrame = CreateFrame
 local IsLoggedIn = IsLoggedIn
 local UnitGUID = UnitGUID
-local Mixin = Mixin
 
 local SecureButton_GetUnit = SecureButton_GetUnit
 local SecureButton_GetModifiedUnit = SecureButton_GetModifiedUnit
-local PingableType_UnitFrameMixin = PingableType_UnitFrameMixin
 
 local GetAuraDataByIndex = C_UnitAuras and C_UnitAuras.GetAuraDataByIndex
 local UnpackAuraData = AuraUtil and AuraUtil.UnpackAuraData
@@ -320,11 +317,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 		-- Expose the frame through oUF.objects.
 		tinsert(objects, object)
 
-		-- add the mixin for pings
-		if PingableType_UnitFrameMixin then
-			Mixin(object, PingableType_UnitFrameMixin)
-		end
-
 		-- We have to force update the frames when PEW fires.
 		-- It's also important to evaluate units before running an update
 		-- because sometimes events that are required for unit updates end up
@@ -351,15 +343,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 			object:SetAttribute('*type1', 'target')
 			object:SetAttribute('*type2', 'togglemenu')
 			object:SetAttribute('toggleForVehicle', true)
-
-			--[[ frame.IsPingable
-			This boolean can be set to false to disable the frame from being pingable. Enabled by default.
-			--]]
-			--[[ Override: frame:GetContextualPingType()
-			Used to define which contextual ping is used for the frame.
-			By default this wraps `C_Ping.GetContextualPingTypeForUnit(UnitGUID(frame.unit))`.
-			--]]
-			object:SetAttribute('ping-receiver', true)
 
 			if(isEventlessUnit(objectUnit)) then
 				oUF:HandleEventlessUnit(object)
@@ -538,12 +521,11 @@ do
 	end
 end
 
-local function generateName(unit, ...)
+local function generateName(unit, attributes)
 	local name = 'oUF_' .. style:gsub('^oUF_?', ''):gsub('[^%a%d_]+', '')
 
 	local raid, party, groupFilter, unitsuffix
-	for i = 1, select('#', ...), 2 do
-		local att, val = select(i, ...)
+	for att, val in next, attributes do
 		if(att == 'oUF-initialConfigFunction') then
 			unitsuffix = val:match('unitsuffix[%p%s]+(%a+)')
 		elseif(att == 'showRaid') then
@@ -651,8 +633,6 @@ do
 				frame:SetAttribute('*type1', 'target')
 				frame:SetAttribute('*type2', 'togglemenu')
 				frame:SetAttribute('oUF-guessUnit', unit)
-
-				frame:SetAttribute('ping-receiver', true)
 			end
 
 			local body = header:GetAttribute('oUF-initialConfigFunction')
@@ -679,29 +659,28 @@ do
 	* template     - name of a template to be used for creating the header. Defaults to `'SecureGroupHeaderTemplate'`
 	                 (string?)
 	* visibility   - macro conditional(s) which define when to display the header (string).
-	* ...          - further argument pairs. Consult [Group Headers](http://wowprogramming.com/docs/secure_template/Group_Headers.html)
-	                 for possible values.
+	* ...          - further argument pairs. Consult [Group Headers](https://warcraft.wiki.gg/wiki/SecureGroupHeaderTemplate)
+	                 for possible values. If preferred, the attributes can be an associative table.
 
 	In addition to the standard group headers, oUF implements some of its own attributes. These can be supplied by the
-	layout, but are optional.
+	layout, but are optional. PingableUnitFrameTemplate is inherited for Ping support.
 
 	* oUF-initialConfigFunction - can contain code that will be securely run at the end of the initial secure
 	                              configuration (string?)
 	* oUF-onlyProcessChildren   - can be used to force headers to only process children (boolean?)
 	--]]
-	function oUF:SpawnHeader(overrideName, template, visibility, ...)
+	function oUF:SpawnHeader(overrideName, template, visibility, attributes)
 		if(not style) then return error('Unable to create frame. No styles have been registered.') end
 
 		template = (template or 'SecureGroupHeaderTemplate')
 
 		local isPetHeader = template:match('PetHeader')
-		local name = overrideName or generateName(nil, ...)
+		local name = overrideName or generateName(nil, attributes)
 		local header = CreateFrame('Frame', name, UFParent, template)
 
-		header:SetAttribute('template', 'SecureUnitButtonTemplate, SecureHandlerStateTemplate, SecureHandlerEnterLeaveTemplate')
-		for i = 1, select('#', ...), 2 do
-			local att, val = select(i, ...)
-			if(not att) then break end
+		header:SetAttribute('template', 'SecureUnitButtonTemplate, SecureHandlerStateTemplate, SecureHandlerEnterLeaveTemplate' .. (oUF.isRetail and ', PingableUnitFrameTemplate' or ''))
+
+		for att, val in next, attributes do
 			header:SetAttribute(att, val)
 		end
 
@@ -778,6 +757,7 @@ Used to create a single unit frame and apply the currently active style to it.
                  (string?)
 
 oUF implements some of its own attributes. These can be supplied by the layout, but are optional.
+PingableUnitFrameTemplate is inherited for Ping support.
 
 * oUF-enableArenaPrep - can be used to toggle arena prep support. Defaults to true (boolean)
 --]]
@@ -788,7 +768,7 @@ function oUF:Spawn(unit, overrideName, overrideTemplate) -- ElvUI adds overrideT
 	unit = unit:lower()
 
 	local name = overrideName or generateName(unit)
-	local object = CreateFrame('Button', name, UFParent, overrideTemplate or 'SecureUnitButtonTemplate')
+	local object = CreateFrame('Button', name, UFParent, overrideTemplate or (oUF.isRetail and 'SecureUnitButtonTemplate, PingableUnitFrameTemplate') or 'SecureUnitButtonTemplate')
 	Private.UpdateUnits(object, unit)
 
 	self:DisableBlizzard(unit)
@@ -809,6 +789,8 @@ Used to create nameplates and apply the currently active style to them.
               the callback are the updated nameplate, if any, the event that triggered the update, and the new unit
               (function?)
 * variables - list of console variable-value pairs to be set when the player logs in (table?)
+
+PingableUnitFrameTemplate is inherited for Ping support.
 --]]
 function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 	argcheck(nameplateCallback, 3, 'function', 'nil')
@@ -877,7 +859,7 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 			if(not nameplate.unitFrame) then
 				nameplate.style = style
 
-				nameplate.unitFrame = CreateFrame('Button', prefix..nameplate:GetName(), nameplate)
+				nameplate.unitFrame = CreateFrame('Button', prefix..nameplate:GetName(), nameplate, oUF.isRetail and 'PingableUnitFrameTemplate' or '')
 				nameplate.unitFrame:EnableMouse(false)
 				nameplate.unitFrame.isNamePlate = true
 
@@ -927,12 +909,15 @@ function oUF:AddElement(name, update, enable, disable)
 	argcheck(enable, 4, 'function')
 	argcheck(disable, 5, 'function')
 
-	if(elements[name]) then return error('Element [%s] is already registered.', name) end
-	elements[name] = {
-		update = update;
-		enable = enable;
-		disable = disable;
-	}
+	if(elements[name]) then
+		return error('Element [%s] is already registered.', name)
+	end
+
+	local module = Profiler({})
+	module.update = update
+	module.enable = enable
+	module.disable = disable
+	elements[name] = module
 end
 
 function oUF:GetAuraData(unitToken, index, filter)
@@ -940,6 +925,23 @@ function oUF:GetAuraData(unitToken, index, filter)
 		return UnpackAuraData(GetAuraDataByIndex(unitToken, index, filter))
 	else
 		return UnitAura(unitToken, index, filter)
+	end
+end
+
+do	-- backwards compatibility for GetSpellInfo
+	local GetSpellInfo = GetSpellInfo
+	local C_Spell_GetSpellInfo = not GetSpellInfo and C_Spell.GetSpellInfo
+	function oUF:GetSpellInfo(spellID)
+		if not spellID then return end
+
+		if C_Spell_GetSpellInfo then
+			local info = C_Spell_GetSpellInfo(spellID)
+			if info then
+				return info.name, nil, info.iconID, info.castTime, info.minRange, info.maxRange, info.spellID, info.originalIconID
+			end
+		else
+			return GetSpellInfo(spellID)
+		end
 	end
 end
 
@@ -960,251 +962,5 @@ if(global) then
 		error('%s is setting its global to an existing name "%s".', parent, global)
 	else
 		_G[global] = oUF
-	end
-end
-
-do -- ShouldSkipAuraUpdate by Blizzard (implemented and heavily modified by Simpy)
-	local SpellGetVisibilityInfo = SpellGetVisibilityInfo
-	local SpellIsPriorityAura = SpellIsPriorityAura
-	local UnitAffectingCombat = UnitAffectingCombat
-
-	local hasValidPlayer = false
-	local cachedVisibility = {}
-	local cachedPriority = {}
-
-	local eventFrame = CreateFrame('Frame')
-	eventFrame:RegisterEvent('PLAYER_REGEN_ENABLED')
-	eventFrame:RegisterEvent('PLAYER_REGEN_DISABLED')
-	eventFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
-	eventFrame:RegisterEvent('PLAYER_LEAVING_WORLD')
-
-	if oUF.isRetail then
-		eventFrame:RegisterUnitEvent('PLAYER_SPECIALIZATION_CHANGED', 'player')
-	end
-
-	eventFrame:SetScript('OnEvent', function(_, event)
-		if event == 'PLAYER_ENTERING_WORLD' then
-			hasValidPlayer = true
-		elseif event == 'PLAYER_LEAVING_WORLD' then
-			hasValidPlayer = false
-		elseif event == 'PLAYER_SPECIALIZATION_CHANGED' then
-			wipe(cachedVisibility)
-		elseif event == 'PLAYER_REGEN_ENABLED' or event == 'PLAYER_REGEN_DISABLED' then
-			wipe(cachedVisibility)
-			wipe(cachedPriority)
-		end
-	end)
-
-	local function VisibilityInfo(spellId)
-		return SpellGetVisibilityInfo(spellId, UnitAffectingCombat('player') and 'RAID_INCOMBAT' or 'RAID_OUTOFCOMBAT')
-	end
-
-	local function CachedVisibility(spellId)
-		if cachedVisibility[spellId] == nil then
-			if not hasValidPlayer then -- Don't cache the info if the player is not valid since we didn't get a valid result
-				return VisibilityInfo(spellId)
-			else
-				cachedVisibility[spellId] = {VisibilityInfo(spellId)}
-			end
-		end
-
-		return unpack(cachedVisibility[spellId])
-	end
-
-	local function AllowAura(spellId)
-		local hasCustom, alwaysShowMine, showForMySpec = CachedVisibility(spellId)
-		return (not hasCustom) or alwaysShowMine or showForMySpec
-	end
-
-	local AlwaysAllow = { -- spells could get stuck but it's very rare, this table is for that
-		[335904] = true -- Doom Winds: Unable to gain effects of Doom Winds
-	}
-
-	local function AuraIsPriority(spellId)
-		if AlwaysAllow[spellId] then
-			return true
-		end
-
-		if cachedPriority[spellId] == nil then
-			cachedPriority[spellId] = SpellIsPriorityAura(spellId)
-		end
-
-		return cachedPriority[spellId]
-	end
-
-	local function CouldDisplayAura(frame, event, unit, auraInfo)
-		if auraInfo.isNameplateOnly then
-			return frame.isNamePlate
-		elseif auraInfo.isBossAura or AuraIsPriority(auraInfo.spellId) then
-			return true
-		elseif auraInfo.isHarmful or auraInfo.isHelpful then
-			return AllowAura(auraInfo.spellId)
-		end
-
-		return false
-	end
-
-	local function ShouldSkipAura(frame, event, unit, fullUpdate, updatedAuras, relevantFunc, ...)
-		if fullUpdate or fullUpdate == nil then
-			return false
-		elseif updatedAuras and relevantFunc then
-			for _, auraInfo in ipairs(updatedAuras) do
-				if relevantFunc(frame, event, unit, auraInfo, ...) then
-					return false
-				end
-			end
-
-			return true
-		end
-	end
-
-	function oUF:ShouldSkipAuraUpdate(frame, event, unit, fullUpdate, updatedAuras, relevantFunc)
-		return (not unit or frame.unit ~= unit) or ShouldSkipAura(frame, event, unit, fullUpdate, updatedAuras, relevantFunc or CouldDisplayAura)
-	end
-end
-
-do -- Event Pooler by Simpy
-	local pooler = CreateFrame('Frame')
-	pooler.events = {}
-	pooler.times = {}
-
-	pooler.delay = 0.1 -- update check rate
-	pooler.instant = 1 -- seconds since last event
-
-	pooler.run = function(funcs, frame, event, ...)
-		for _, func in pairs(funcs) do
-			func(frame, event, ...)
-		end
-	end
-
-	pooler.execute = function(event, pool, instant, arg1, ...)
-		for frame, info in pairs(pool) do
-			local funcs = info.functions
-			if instant and funcs then
-				if event == 'UNIT_AURA' and oUF.isRetail then
-					local fullUpdate, updatedAuras = ...
-					if not oUF:ShouldSkipAuraUpdate(frame, event, arg1, fullUpdate, updatedAuras) then
-						pooler.run(funcs, frame, event, arg1, fullUpdate, updatedAuras)
-					end
-				else
-					pooler.run(funcs, frame, event, arg1, ...)
-				end
-			else
-				local data = funcs and info.data[event]
-				if data then
-					if event == 'UNIT_AURA' and oUF.isRetail then
-						local allowUnit = false
-						for _, args in ipairs(data) do
-							local unit, fullUpdate, updatedAuras = unpack(args)
-							if not oUF:ShouldSkipAuraUpdate(frame, event, unit, fullUpdate, updatedAuras) then
-								allowUnit = unit
-								break
-							end
-						end
-
-						if allowUnit then
-							pooler.run(funcs, frame, event, allowUnit)
-						end
-					else
-						local count = #data
-						local args = count and data[count]
-						if args then
-							-- if count > 1 then print(frame:GetDebugName(), event, count, unpack(args)) end
-							pooler.run(funcs, frame, event, unpack(args))
-						end
-
-					end
-
-					wipe(data)
-				end
-			end
-		end
-	end
-
-	pooler.update = function()
-		for event, pool in pairs(pooler.events) do
-			pooler.execute(event, pool)
-		end
-	end
-
-	pooler.tracker = function(frame, event, arg1, ...)
-		-- print('tracker', frame, event, arg1, ...)
-
-		local pool = pooler.events[event]
-		if pool then
-			local now = time()
-			local last = pooler.times[event]
-			if last and (last + pooler.instant) < now then
-				pooler.execute(event, pool, true, arg1, ...)
-				-- print('instant', frame:GetDebugName(), event, arg1)
-			elseif arg1 ~= nil then -- require arg1, no unitless
-				local pooled = pool[frame]
-				if pooled then
-					if not pooled.data[event] then
-						pooled.data[event] = {}
-					end
-
-					tinsert(pooled.data[event], {arg1, ...})
-				end
-			end
-
-			pooler.times[event] = now
-		end
-	end
-
-	pooler.onUpdate = function(self, elapsed)
-		if self.elapsed and self.elapsed > pooler.delay then
-			pooler.update()
-
-			self.elapsed = 0
-		else
-			self.elapsed = (self.elapsed or 0) + elapsed
-		end
-	end
-
-	pooler:SetScript('OnUpdate', pooler.onUpdate)
-
-	function oUF:RegisterEvent(frame, event, func)
-		-- print('RegisterEvent', frame, event, func)
-
-		if not pooler.events[event] then
-			pooler.events[event] = {}
-			pooler.events[event][frame] = {functions={},data={}}
-		elseif not pooler.events[event][frame] then
-			pooler.events[event][frame] = {functions={},data={}}
-		end
-
-		frame:RegisterEvent(event, pooler.tracker)
-		tinsert(pooler.events[event][frame].functions, func)
-	end
-
-	function oUF:UnregisterEvent(frame, event, func)
-		-- print('UnregisterEvent', frame, event, func)
-
-		local pool = pooler.events[event]
-		if pool then
-			local pooled = pool[frame]
-			if pooled then
-				for i, funct in ipairs(pooled.functions) do
-					if funct == func then
-						tremove(pooled.functions, i)
-					end
-				end
-
-				if not next(pooled.functions) then
-					pooled.functions = nil
-					pooled.data = nil -- clear data
-				end
-
-				if not next(pooled) then
-					pool[frame] = nil
-				end
-			end
-
-			if not next(pool) then
-				pooler.events[event] = nil
-				frame:UnregisterEvent(event, pooler.tracker)
-			end
-		end
 	end
 end

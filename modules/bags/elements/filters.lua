@@ -98,8 +98,9 @@ custom_categories["Miscellaneous"] = { ["order"] = 15, ["itemTypeID"] = "2.14" }
 
 -- tries to match an item to a custom category, rather than default
 local function filter_category(self, itemLink, itemTypeID)
-	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, _, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, _, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = C_Item.GetItemInfo(itemLink)
 
+	itemTypeID = itemTypeID or -2
 	-- default returns
 	-- local returnType, returnID = itemType, itemTypeID -- item name / itemID
 

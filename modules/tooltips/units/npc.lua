@@ -6,36 +6,17 @@ function mod:npc_tooltip(self, unit)
 	local factionGroup = select(1, UnitFactionGroup(unit))
 	local creatureType = UnitCreatureType(unit) or ""
 	local classification = UnitClassification(unit)
-	local classification_names = {
-		["worldboss"] = "Boss",
-		["rareelite"] = "Rare Elite",
-		["elite"] = "Elite",
-		["rare"] = "Rare",
-		["normal"] = "",
-		["trivial"] = "",
-		["minus"] = ""
-	}
+	local classification_names = { ["worldboss"] = "Boss", ["rareelite"] = "Rare Elite", ["elite"] = "Elite", ["rare"] = "Rare", ["normal"] = "", ["trivial"] = "", ["minus"] = "" }
 	classification = classification_names[classification]
 
 	-- do they have a faction?
 	-- local faction = GameTooltip:NumLines() >= 2 and _G["GameTooltipTextLeft"..GameTooltip:NumLines()]
 	local faction, faction_index = GameTooltip:LastLine()
-	local standings = {
-		{ "Unknown",    "" },
-		{ "Hated",      "cc0000" },
-		{ "Hostile",    "ff0000" },
-		{ "Unfriendly", "f26000" },
-		{ "Neutral",    "e4e400" },
-		{ "Friendly",   "33ff33" },
-		{ "Honored",    "5fe65d" },
-		{ "Revered",    "53e9bc" },
-		{ "Exalted",    "2ee6e6" },
-	}
+	local standings = { { "Unknown", "" }, { "Hated", "cc0000" }, { "Hostile", "ff0000" }, { "Unfriendly", "f26000" }, { "Neutral", "e4e400" }, { "Friendly", "33ff33" }, { "Honored", "5fe65d" }, { "Revered", "53e9bc" }, { "Exalted", "2ee6e6" } }
 
 	if (faction) then
-		for factionIndex = 1, GetNumFactions() do
-			local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild =
-			GetFactionInfo(factionIndex)
+		for factionIndex = 1, C_Reputation.GetNumFactions() do
+			local name, description, standingId, bottomValue, topValue, earnedValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = C_Reputation.GetFactionDataByIndex(factionIndex)
 			if (not isHeader and name == faction:GetText() and standingId > 0) then
 				local info, color = unpack(standings[standingId + 1])
 				faction:SetText(name .. " (|cff" .. color .. info .. "|r)")
@@ -62,8 +43,7 @@ function mod:npc_tooltip(self, unit)
 		-- Friend / Enemy coloring
 		local r, g, b = _G['GameTooltipTextLeft1']:GetTextColor()
 		local friendColor = { r = r, g = g, b = b }
-		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffFFFF00%s|r', RGBPercToHex(levelColor), level,
-			RGBPercToHex(friendColor), creatureType, classification)
+		level_line:SetFormattedText('|cff%s%s|r |cff%s%s|r |cffFFFF00%s|r', RGBPercToHex(levelColor), level, RGBPercToHex(friendColor), creatureType, classification)
 	end
 
 	-- hide quest things in raid

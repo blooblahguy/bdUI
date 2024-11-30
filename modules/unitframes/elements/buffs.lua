@@ -2,7 +2,9 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 
 mod.additional_elements.buffs = function(self, unit)
-	if (self.Buffs) then return end
+	if (self.Buffs) then
+		return
+	end
 	local config = mod.config
 
 	-- Auras
@@ -22,10 +24,8 @@ mod.additional_elements.buffs = function(self, unit)
 	self.Buffs['growth-y'] = "UP"
 	self.Buffs['growth-x'] = "RIGHT"
 
-	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType,
-		isStealable)
-		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = UnitAura(unit, index,
-			button.filter)
+	self.Buffs.PostUpdateButton = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+		local name, _, _, debuffType, duration, expiration, caster, IsStealable, _, spellID = C_UnitAuras.GetAuraDataByIndex(unit, index, button.filter)
 
 		-- for blacklisting
 		button.spell = name
@@ -39,7 +39,9 @@ mod.additional_elements.buffs = function(self, unit)
 
 		-- blacklist
 		button:SetScript("OnMouseDown", function(self, button)
-			if (not IsShiftKeyDown() or not IsAltKeyDown() or not IsAltKeyDown() or not button == "MiddleButton") then return end
+			if (not IsShiftKeyDown() or not IsAltKeyDown() or not IsAltKeyDown() or not button == "MiddleButton") then
+				return
+			end
 			local name = self.spell:lower()
 			local auras = bdUI:get_module("Auras")
 
