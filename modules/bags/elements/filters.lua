@@ -4,7 +4,23 @@ local mod = bdUI:get_module("Bags")
 local custom_categories = {}
 
 function bdUI:get_filter_info(itemLink)
-	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, sellPrice, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = GetItemInfo(itemLink)
+	local name,
+	link,
+	quality,
+	ilvl,
+	minlevel,
+	itemType,
+	itemSubType,
+	count,
+	itemEquipLoc,
+	icon,
+	sellPrice,
+	itemTypeID,
+	itemSubTypeID,
+	bindType,
+	expacID,
+	itemSetID,
+	isCraftingReagent = GetItemInfo(itemLink)
 
 	local itemString = string.match(itemLink, "item[%-?%d:]+")
 	local itemID = select(2, strsplit(":", itemString))
@@ -27,9 +43,15 @@ end
 
 custom_categories["Consumable"] = { ["order"] = 0, ["itemTypeID"] = "7.2" }
 
-custom_categories["Jewelry"] = { ["itemTypeID"] = "4.0", ["itemEquipLoc"] = "INVTYPE_FINGER,INVTYPE_NECK" }
+custom_categories["Jewelry"] = {
+	["itemTypeID"] = "4.0",
+	["itemEquipLoc"] = "INVTYPE_FINGER,INVTYPE_NECK"
+}
 
-custom_categories["Trinkets"] = { ["itemTypeID"] = "4.0", ["itemEquipLoc"] = "FALSE,INVTYPE_TRINKET" }
+custom_categories["Trinkets"] = {
+	["itemTypeID"] = "4.0",
+	["itemEquipLoc"] = "FALSE,INVTYPE_TRINKET"
+}
 
 -- custom_categories["Professions"] = {
 -- 	["itemTypeID"] = "7.1,7.2,7.3,7.17,7.7",
@@ -98,16 +120,40 @@ custom_categories["Miscellaneous"] = { ["order"] = 15, ["itemTypeID"] = "2.14" }
 
 -- tries to match an item to a custom category, rather than default
 local function filter_category(self, itemLink, itemTypeID)
-	local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, _, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent = C_Item.GetItemInfo(itemLink)
+	local name,
+	link,
+	quality,
+	ilvl,
+	minlevel,
+	itemType,
+	itemSubType,
+	count,
+	itemEquipLoc,
+	icon,
+	price,
+	_,
+	itemSubTypeID,
+	bindType,
+	expacID,
+	itemSetID,
+	isCraftingReagent = C_Item.GetItemInfo(itemLink)
 
+	if (itemSubTypeID == nil) then
+		print("itemSubTypeID is nil for:", itemLink)
+	end
+	if (itemTypeID == nil) then
+		print("itemTypeID is nil for:", itemLink)
+	end
+
+	itemSubTypeID = itemSubTypeID or -2
 	itemTypeID = itemTypeID or -2
 	-- default returns
 	-- local returnType, returnID = itemType, itemTypeID -- item name / itemID
 
 	-- we want to loop in here til we find the filter that matches the most conditions, then store it there
 	local bestMatch = { itemType, itemTypeID } -- when we find a best match, return it. this is a table of name / id
-	local bestMatchCount = 0 -- we want to check our best-match so far
-	local currentEntry = 0 -- this is used to add a sub-id to the item categorizations
+	local bestMatchCount = 0                -- we want to check our best-match so far
+	local currentEntry = 0                  -- this is used to add a sub-id to the item categorizations
 	for filter_name, filters in pairs(custom_categories) do
 		currentEntry = currentEntry + 1
 		local order = filters["order"] or itemTypeID .. "." .. currentEntry
@@ -123,9 +169,9 @@ local function filter_category(self, itemLink, itemTypeID)
 				type2 = type2
 
 				-- decide if we're looking for just the type or the type and subtype
-				local find = itemTypeID
-				if (type1 and type2) then
-					find = itemTypeID .. "." .. itemSubTypeID
+				local find = tostring(itemTypeID or -1)
+				if (type1 and type2 and itemSubTypeID ~= nil) then
+					find = tostring(itemTypeID or -1) .. "." .. tostring(itemSubTypeID)
 				end
 
 				-- now match on whats stored in the filter

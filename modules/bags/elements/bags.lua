@@ -37,10 +37,13 @@ function mod:create_bags()
 	mod.bags:RegisterEvent('PLAYER_ENTERING_WORLD')
 
 	local run_bag_holder = 0
+	local pause_update = false;
 	mod.bags:SetScript("OnEvent", function(self, event, arg1)
 		-- cache items
 		if (event == "PLAYER_LOGIN") then
-			C_Timer.After(1, function()
+			pause_update = true
+			C_Timer.After(2, function()
+				pause_update = false
 				mod:update_bags()
 			end)
 			-- create container items for bigger and better bags
@@ -82,7 +85,7 @@ function mod:create_bags()
 			-- end)
 			-- end
 		else
-			if (GetTime() - .01 >= last_call or event == "PLAYER_ENTERING_WORLD") then -- throttle just crazy amounts of calls
+			if (pause_update == false and (GetTime() - .01 >= last_call or event == "PLAYER_ENTERING_WORLD")) then -- throttle just crazy amounts of calls
 				last_call = GetTime()
 				mod:update_bags()
 			end

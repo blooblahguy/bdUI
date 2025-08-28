@@ -16,7 +16,16 @@ local function update_raid_header()
 
 	mod:resize_container(mod.frameHeader, mod.raid_holder, config.width, config.height)
 
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
+	local group_by,
+		group_sort,
+		sort_method,
+		yOffset,
+		xOffset,
+		new_group_anchor,
+		new_player_anchor,
+		hgrowth,
+		vgrowth,
+		num_groups = mod:get_attributes()
 
 	-- growth/spacing
 	header:SetAttribute("columnAnchorPoint", new_group_anchor)
@@ -51,37 +60,52 @@ end
 
 local function initialize()
 	-- raid and party
-	local raid_party = CreateFrame('frame', "bdGrid", UIParent)
-	raid_party:SetSize(config['width'], config['height'] * 5)
+	local raid_party = CreateFrame("frame", "bdGrid", UIParent)
+	raid_party:SetSize(config["width"], config["height"] * 5)
 	raid_party:SetPoint("LEFT", UIParent, "LEFT", 10, -90)
 	bdMove:set_moveable(raid_party, "Raid Frames")
 
 	-- register events for resizing the box/group size
-	raid_party:SetScript("OnEvent", function(self, event, arg1)
-		if (event == "PLAYER_ENTERING_WORLD") then
-			C_Timer.After(2, function()
+	raid_party:SetScript(
+		"OnEvent",
+		function(self, event, arg1)
+			if (event == "PLAYER_ENTERING_WORLD") then
+				C_Timer.After(
+					2,
+					function()
+						update_raid_header()
+					end
+				)
+			else
 				update_raid_header()
-			end)
-		else
-			update_raid_header()
+			end
 		end
-	end)
+	)
 
 	mod.raid_holder = raid_party
 
 	-- send to factory
 	-- oUF:Factory(function(self)
-	oUF:SetActiveStyle('bdGrid')
+	oUF:SetActiveStyle("bdGrid")
 
 	-- Initial header spawning
-	local group_by, group_sort, sort_method, yOffset, xOffset, new_group_anchor, new_player_anchor, hgrowth, vgrowth, num_groups = mod:get_attributes()
+	local group_by,
+		group_sort,
+		sort_method,
+		yOffset,
+		xOffset,
+		new_group_anchor,
+		new_player_anchor,
+		hgrowth,
+		vgrowth,
+		num_groups = mod:get_attributes()
 
 	local attributes = {}
 	attributes.showParty = true
 	attributes.showPlayer = true
 	attributes.showSolo = config.showSolo
 	attributes.showRaid = true
-	attributes['initial-scale'] = 1
+	attributes["initial-scale"] = 1
 	attributes.unitsPerColumn = 5
 	attributes.columnSpacing = yOffset
 	attributes.xOffset = xOffset
@@ -90,14 +114,14 @@ local function initialize()
 	attributes.groupingOrder = group_sort
 	attributes.sortMethod = sort_method
 	attributes.columnAnchorPoint = new_group_anchor
-	attributes['initial-width'] = config.width
-	attributes['initial-height'] = config.height
+	attributes["initial-width"] = config.width
+	attributes["initial-height"] = config.height
 	attributes.point = new_player_anchor
 	attributes.groupBy = group_by
-	attributes['oUF-initialConfigFunction'] = format('self:SetWidth(%d); self:SetHeight(%d);', config.width, config.height)
+	attributes["oUF-initialConfigFunction"] = format("self:SetWidth(%d); self:SetHeight(%d);", config.width, config.height)
 
 	-- ouf gives us secureheader
-	mod.frameHeader = oUF:SpawnHeader("bdUI_raid", nil, 'raid,party,solo', attributes)
+	mod.frameHeader = oUF:SpawnHeader("bdUI_raid", nil, "raid,party,solo", attributes)
 
 	update_raid_header()
 
@@ -111,7 +135,7 @@ function mod:demo_mode()
 		-- print(frame.unit)
 		-- print(frame.layout)
 		-- print(frame:GetAttribute('unitsuffix'))
-		local type = frame:GetAttribute('oUF-guessUnit')
+		local type = frame:GetAttribute("oUF-guessUnit")
 
 		if (type == "raid") then
 			local playerName = "TestPlayer" .. frame:GetID()
@@ -178,7 +202,7 @@ local function enable(_config)
 
 	-- show the frame
 	mod.raid_holder:Show()
-	mod.frameHeader:SetAttribute("showParty", true)
+	-- mod.frameHeader:SetAttribute("showParty", true)
 	mod.frameHeader:SetAttribute("showSolo", config.showSolo)
 	mod.frameHeader:SetAttribute("showRaid", true)
 
@@ -199,4 +223,4 @@ end
 
 local function path()
 end
-mod:add_element('raid_frames', path, enable, disable)
+mod:add_element("raid_frames", path, enable, disable)

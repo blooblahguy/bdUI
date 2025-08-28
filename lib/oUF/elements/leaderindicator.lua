@@ -106,6 +106,7 @@ local function Enable(self)
 		element.ForceUpdate = ForceUpdate
 
 		self:RegisterEvent('UNIT_FLAGS', Path)
+		self:RegisterEvent('PLAYER_FLAGS_CHANGED', Path)
 		self:RegisterEvent('GROUP_ROSTER_UPDATE', Path, true)
 		self:RegisterEvent('PARTY_LEADER_CHANGED', Path, true)
 		self:RegisterEvent('PLAYER_REGEN_DISABLED', Path, true)
@@ -121,6 +122,7 @@ local function Disable(self)
 		element:Hide()
 
 		self:UnregisterEvent('UNIT_FLAGS', Path)
+		self:UnregisterEvent('PLAYER_FLAGS_CHANGED', Path)
 		self:UnregisterEvent('GROUP_ROSTER_UPDATE', Path)
 		self:UnregisterEvent('PARTY_LEADER_CHANGED', Path)
 		self:UnregisterEvent('PLAYER_REGEN_DISABLED', Path)

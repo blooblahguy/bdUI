@@ -46,6 +46,8 @@ local UnitIsVisible = UnitIsVisible
 local UnitClass = UnitClass
 -- end block
 
+local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
+
 local function Update(self, event)
 	local element = self.Portrait
 	if not element then return end
@@ -71,7 +73,8 @@ local function Update(self, event)
 	--]]
 	if(element.PreUpdate) then element:PreUpdate(unit) end
 
-	local isAvailable = UnitIsConnected(unit) and UnitIsVisible(unit)
+	local texCoords
+	local isAvailable = element:IsVisible() and UnitIsConnected(unit) and UnitIsVisible(unit)
 	local hasStateChanged = newGUID or (not nameplate or element.state ~= isAvailable)
 	if hasStateChanged then
 		element.playerModel = element:IsObjectType('PlayerModel')
@@ -95,7 +98,15 @@ local function Update(self, event)
 
 			local _, className = UnitClass(unit)
 			if className then
-				element:SetAtlas('classicon-' .. className)
+				if oUF.isMists and className == 'MONK' then -- currently doesnt work on Mists Classic
+					local coords = CLASS_ICON_TCOORDS[className]
+					if coords then
+						element:SetTexture([[Interface\WorldStateFrame\ICONS-CLASSES]])
+						texCoords = coords
+					end
+				else
+					element:SetAtlas('classicon-' .. className)
+				end
 			end
 		end
 	end
@@ -108,7 +119,7 @@ local function Update(self, event)
 	* hasStateChanged - indicates whether the state has changed since the last update (boolean)
 	--]]
 	if(element.PostUpdate) then
-		return element:PostUpdate(unit, hasStateChanged)
+		return element:PostUpdate(unit, hasStateChanged, texCoords)
 	end
 end
 
@@ -141,11 +152,9 @@ local function Enable(self, unit)
 		-- The quest log uses PARTY_MEMBER_{ENABLE,DISABLE} to handle updating of
 		-- party members overlapping quests. This will probably be enough to handle
 		-- model updating.
-		--
-		-- DISABLE isn't used as it fires when we most likely don't have the
-		-- information we want.
-		if(unit == 'party') then
+		if unit == 'party' or unit == 'target' then
 			self:RegisterEvent('PARTY_MEMBER_ENABLE', Path)
+			self:RegisterEvent('PARTY_MEMBER_DISABLE', Path)
 		end
 
 		element:Show()
@@ -163,6 +172,7 @@ local function Disable(self)
 		self:UnregisterEvent('UNIT_PORTRAIT_UPDATE', Path)
 		self:UnregisterEvent('PORTRAITS_UPDATED', Path)
 		self:UnregisterEvent('PARTY_MEMBER_ENABLE', Path)
+		self:UnregisterEvent('PARTY_MEMBER_DISABLE', Path)
 		self:UnregisterEvent('UNIT_CONNECTION', Path)
 	end
 end

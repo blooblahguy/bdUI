@@ -6,15 +6,19 @@ local oUF = ns.oUF
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local UnitHasVehicleUI = UnitHasVehicleUI
-local GetShapeshiftFormID = GetShapeshiftFormID
-local GetPrimaryTalentTree = GetPrimaryTalentTree
+local GetShapeshiftForm = GetShapeshiftForm
 local GetEclipseDirection = GetEclipseDirection
 
+local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook or IsSpellKnownOrOverridesKnown
+local GetSpecialization = C_SpecializationInfo.GetSpecialization or GetSpecialization
+
+local SPEC_DRUID_BALANCE = _G.SPEC_DRUID_BALANCE or 1
 local POWERTYPE_BALANCE = Enum.PowerType.Balance
-local MOONKIN_FORM = MOONKIN_FORM
+local TREANT_GLYPH = 114282
+local AQUATIC_FORM = 1066
 
 local function Update(self, event, unit, powerType)
-	if(self.unit ~= unit or (event == 'UNIT_POWER' and powerType ~= 'ECLIPSE')) then return end
+	if(self.unit ~= unit or (event == 'UNIT_POWER_FREQUENT' and powerType ~= 'BALANCE')) then return end
 
 	local element = self.EclipseBar
 	if(element.PreUpdate) then element:PreUpdate(unit) end
@@ -62,10 +66,8 @@ local function ElementEnable(self)
 	EclipseDirectionPath(self, 'ElementEnable', GetEclipseDirection())
 
 	if self.EclipseBar.PostUpdateVisibility then
-		self.EclipseBar:PostUpdateVisibility(true, not self.EclipseBar.isEnabled)
+		self.EclipseBar:PostUpdateVisibility(true)
 	end
-
-	self.EclipseBar.isEnabled = true
 
 	Path(self, 'ElementEnable', 'player', POWERTYPE_BALANCE)
 end
@@ -76,30 +78,24 @@ local function ElementDisable(self)
 	self.EclipseBar:Hide()
 
 	if self.EclipseBar.PostUpdateVisibility then
-		self.EclipseBar:PostUpdateVisibility(false, self.EclipseBar.isEnabled)
+		self.EclipseBar:PostUpdateVisibility(false)
 	end
-
-	self.EclipseBar.isEnabled = nil
 
 	Path(self, 'ElementDisable', 'player', POWERTYPE_BALANCE)
 end
 
 local function Visibility(self)
-	local shouldEnable
-
-	if not UnitHasVehicleUI('player') then
-		local form = GetShapeshiftFormID()
-		local ptt = GetPrimaryTalentTree()
-
-		if ptt and ptt == 1 and (form == MOONKIN_FORM or not form) then
-			shouldEnable = true
-		end
-	end
-
-	if(shouldEnable) then
-		ElementEnable(self)
-	else
+	if UnitHasVehicleUI('player') or GetSpecialization() ~= SPEC_DRUID_BALANCE then
 		ElementDisable(self)
+	else
+		local aquatic = IsSpellInSpellBook(AQUATIC_FORM, nil, true) -- lower levels wont have this yet
+		local treant = IsSpellInSpellBook(TREANT_GLYPH, nil, true) -- check for tree form glyph
+		local primary, secondary, form = aquatic and 5 or 4, aquatic and 6 or 5, GetShapeshiftForm()
+		if (form == 0) or (not treant and form == primary) or (treant and (form == primary or form == secondary)) then
+			ElementEnable(self)
+		else
+			ElementDisable(self)
+		end
 	end
 end
 
@@ -119,8 +115,9 @@ local function Enable(self, unit)
 		element.ForceUpdate = ForceUpdate
 
 		self:RegisterEvent('ECLIPSE_DIRECTION_CHANGE', EclipseDirectionPath, true)
-		self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
 		self:RegisterEvent('UPDATE_SHAPESHIFT_FORM', VisibilityPath, true)
+
+		self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
 
 		if(element.LunarBar and element.LunarBar:IsObjectType('StatusBar') and not element.LunarBar:GetStatusBarTexture()) then
 			element.LunarBar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
@@ -139,8 +136,9 @@ local function Disable(self)
 		ElementDisable(self)
 
 		self:UnregisterEvent('ECLIPSE_DIRECTION_CHANGE', EclipseDirectionPath)
-		self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
 		self:UnregisterEvent('UPDATE_SHAPESHIFT_FORM', VisibilityPath)
+
+		self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
 	end
 end
 

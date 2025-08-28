@@ -1,0 +1,57 @@
+# Stylua configuration for bdUI
+# Uses tabs, keeps function parameters on one line, prevents line breaks on long definitions
+
+# Indentation
+indent_type = "Tab"
+indent_width = 4
+
+# Line width - set to a very high value to prevent line breaks
+column_width = 999
+
+# Line endings
+line_endings = "Auto"
+
+# Call parentheses - keep them as they are
+call_parentheses = "Keep"
+
+# Collapse simple statements - don't collapse
+collapse_simple_statement = "Never"
+
+# Column alignment - don't align
+column_alignment = false
+
+# Detect number of spaces - disabled since we use tabs
+detect_end_of_line = false
+
+# Format comments - don't format them
+format_comments = false
+
+# Indent tables - keep them as they are
+indent_tables = false
+
+# Quote style - keep as is
+quote_style = "AutoPreferDouble"
+
+# Semicolons - keep as they are
+semicolons = "Keep"
+
+# Sort requires - don't sort
+sort_requires = false
+
+# Space around operators
+space_around_operators = true
+
+# Space before function call parentheses - don't add
+space_before_function_call_paren = false
+
+# Space before function declaration parentheses - don't add
+space_before_function_declaration_paren = false
+
+# Space in function parentheses - don't add
+space_in_function = false
+
+# Space in table braces - don't add
+space_in_table = false
+
+# Trailing comma - keep as is
+trailing_comma = "Keep"

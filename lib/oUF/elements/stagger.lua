@@ -35,7 +35,7 @@ local _, ns = ...
 local oUF = ns.oUF
 
 -- ElvUI block
-local GetSpecialization = GetSpecialization
+local GetSpecialization = C_SpecializationInfo.GetSpecialization or GetSpecialization
 local UnitHasVehiclePlayerFrameUI = UnitHasVehiclePlayerFrameUI
 local UnitHealthMax = UnitHealthMax
 local UnitIsUnit = UnitIsUnit
@@ -100,12 +100,12 @@ local staggerID = {
 	[124273] = true, -- [RED]    Heavy Stagger
 }
 
-local function verifyStagger(frame, event, unit, auraInfo)
-	return staggerID[auraInfo.spellId]
+local function verifyStagger(frame, event, unit, aura)
+	return staggerID[aura.spellId]
 end
 
-local function Update(self, event, unit, isFullUpdate, updatedAuras)
-	if oUF:ShouldSkipAuraUpdate(self, event, unit, isFullUpdate, updatedAuras, verifyStagger) then return end
+local function Update(self, event, unit, updateInfo)
+	if oUF:ShouldSkipAuraUpdate(self, event, unit, updateInfo, verifyStagger) then return end
 
 	local element = self.Stagger
 
@@ -208,8 +208,9 @@ local function Enable(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
+
+		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 
 		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
@@ -228,8 +229,9 @@ local function Disable(self)
 		element:Hide()
 
 		self:UnregisterEvent('UNIT_AURA', Path)
-		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 		self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
+
+		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
 	end
 end
 

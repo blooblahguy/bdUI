@@ -1,7 +1,6 @@
 local _, ns = ...
 local oUF = ns.oUF
-local Profiler = oUF.Profiler.func
-local Private = Profiler(oUF.Private)
+local Private = oUF.Private
 
 function Private.argcheck(value, num, ...)
 	assert(type(num) == 'number', "Bad argument #2 to 'argcheck' (number expected, got " .. type(num) .. ')')
@@ -28,7 +27,7 @@ function Private.nierror(...)
 end
 
 function Private.unitExists(unit)
-	return unit and (UnitExists(unit) or ShowBossFrameWhenUninteractable(unit))
+	return unit and (UnitExists(unit) or UnitIsVisible(unit))
 end
 
 local validator = CreateFrame('Frame')
