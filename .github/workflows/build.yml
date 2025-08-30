@@ -37,13 +37,23 @@ jobs:
       - name: Package Retail
         uses: BigWigsMods/packager@master
 
-      # Package for WOTLKC
-      - name: Rename WOTLKC toc
+      # # Package for WOTLKC (disabled)
+      # - name: Rename WOTLKC toc
+      #   run: |
+      #     rm bdUI.toc
+      #     mv bdUI-wotlkc.toc bdUI.toc
+      # - name: Package WOTLKC
+      #   uses: BigWigsMods/packager@master
+      #   with:
+      #     args: -g wrath
+
+      # Package for Mists
+      - name: Rename Mists toc
         run: |
           rm bdUI.toc
-          mv bdUI-wotlkc.toc bdUI.toc
-      - name: Package WOTLKC
+          mv bdUI-mists.toc bdUI.toc
+      - name: Package Mists
         uses: BigWigsMods/packager@master
         with:
-          args: -g wrath
+          args: -g mists
 
