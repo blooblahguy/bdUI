@@ -131,6 +131,7 @@ local RequirePower, RequireSpell
 local CurrentSpec, ClassPowerID
 
 local function UpdateColor(element, powerType)
+	-- print(element, element.__owner, element.__owner.colors, element.__owner.colors.power, powerType, element.__owner.colors.power[powerType])
 	local color = element.__owner.colors.power[powerType]
 	local r, g, b = color.r, color.g, color.b
 
@@ -155,7 +156,7 @@ local function UpdateColor(element, powerType)
 	* g    - the green component of the used color (number)[0-1]
 	* b    - the blue component of the used color (number)[0-1]
 	--]]
-	if(element.PostUpdateColor) then
+	if (element.PostUpdateColor) then
 		element:PostUpdateColor(r, g, b)
 	end
 end
@@ -184,7 +185,7 @@ local function Update(self, event, unit, powerType)
 
 	* self  - the ClassPower element
 	]]
-	if(element.PreUpdate) then
+	if (element.PreUpdate) then
 		element:PreUpdate()
 	end
 
@@ -195,7 +196,7 @@ local function Update(self, event, unit, powerType)
 		local warlockDest = ClassPowerID == POWERTYPE_BURNING_EMBERS or nil
 		local warlockDemo = ClassPowerID == POWERTYPE_DEMONIC_FURY or nil
 
-		if displayMod == 0 then -- mod should never be 0, but according to Blizz code it can actually happen
+		if displayMod == 0 then                                                                       -- mod should never be 0, but according to Blizz code it can actually happen
 			current = 0
 		elseif oUF.isRetail and (PlayerClass == 'WARLOCK' and CurrentSpec == SPEC_WARLOCK_DESTRUCTION) then -- destro locks are special
 			current = UnitPower(unit, powerID, true) / displayMod
@@ -231,8 +232,8 @@ local function Update(self, event, unit, powerType)
 
 		previousMax = element.__max
 
-		if(maximum ~= previousMax) then
-			if(maximum < previousMax) then
+		if (maximum ~= previousMax) then
+			if (maximum < previousMax) then
 				for i = maximum + 1, previousMax do
 					local bar = element[i]
 					if not bar then break end
@@ -256,7 +257,7 @@ local function Update(self, event, unit, powerType)
 	* powerType     - the active power type (string)
 	* ...           - the indices of currently charged power points, if any
 	--]]
-	if(element.PostUpdate) then
+	if (element.PostUpdate) then
 		return element:PostUpdate(current, maximum, previousMax ~= maximum, powerType or currentType, chargedPoints)
 	end
 end
@@ -270,7 +271,7 @@ local function Path(self, ...)
 	* unit  - the unit accompanying the event (string)
 	* ...   - the arguments accompanying the event
 	--]]
-	return (self.ClassPower.Override or Update) (self, ...)
+	return (self.ClassPower.Override or Update)(self, ...)
 end
 
 local function Visibility(self, event, unit)
@@ -321,17 +322,17 @@ local function Visibility(self, event, unit)
 	local isEnabled = element.__isEnabled
 	local powerType = (unit == 'vehicle' and 'COMBO_POINTS') or ClassPowerType[ClassPowerID]
 
-	if(shouldEnable) then
+	if (shouldEnable) then
 		--[[ Override: ClassPower:UpdateColor(powerType)
 		Used to completely override the internal function for updating the widgets' colors.
 
 		* self      - the ClassPower element
 		* powerType - the active power type (string)
 		--]]
-		(element.UpdateColor or UpdateColor) (element, powerType)
+		(element.UpdateColor or UpdateColor)(element, powerType)
 	end
 
-	if(shouldEnable and not isEnabled) then
+	if (shouldEnable and not isEnabled) then
 		ClassPowerEnable(self)
 
 		--[[ Callback: ClassPower:PostVisibility(isVisible)
@@ -340,16 +341,16 @@ local function Visibility(self, event, unit)
 		* self      - the ClassPower element
 		* isVisible - the current visibility state of the element (boolean)
 		--]]
-		if(element.PostVisibility) then
+		if (element.PostVisibility) then
 			element:PostVisibility(true)
 		end
-	elseif(not shouldEnable and (isEnabled or isEnabled == nil)) then
+	elseif (not shouldEnable and (isEnabled or isEnabled == nil)) then
 		ClassPowerDisable(self)
 
-		if(element.PostVisibility) then
+		if (element.PostVisibility) then
 			element:PostVisibility(false)
 		end
-	elseif(shouldEnable and isEnabled) then
+	elseif (shouldEnable and isEnabled) then
 		Path(self, event, unit, powerType)
 	end
 end
@@ -362,7 +363,7 @@ local function VisibilityPath(self, ...)
 	* event - the event triggering the update (string)
 	* unit  - the unit accompanying the event (string)
 	--]]
-	return (self.ClassPower.OverrideVisibility or Visibility) (self, ...)
+	return (self.ClassPower.OverrideVisibility or Visibility)(self, ...)
 end
 
 local function ForceUpdate(element)
@@ -418,7 +419,7 @@ end
 
 local function Enable(self, unit)
 	local element = self.ClassPower
-	if(element and UnitIsUnit(unit, 'player')) then
+	if (element and UnitIsUnit(unit, 'player')) then
 		element.__owner = self
 		element.__max = #element
 		element.ForceUpdate = ForceUpdate
@@ -447,7 +448,7 @@ local function Enable(self, unit)
 end
 
 local function Disable(self)
-	if(self.ClassPower) then
+	if (self.ClassPower) then
 		ClassPowerDisable(self)
 
 		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)

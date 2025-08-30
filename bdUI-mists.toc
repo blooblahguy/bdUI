@@ -50,7 +50,7 @@ lib\ace\LibDispel.lua
 # Mists
 
 # oUF
-lib\oUF\oUF_Wrath.xml
+lib\oUF\oUF_Mists.xml
 lib\oUF_Plugins\oUF_ClassicComboPoints.lua
 lib\oUF_Plugins\oUF_WotlkRunes.lua
 lib\oUF_Plugins\oUF_Fixate.lua
@@ -85,7 +85,7 @@ core\setup.lua
 core\load.lua
 
 # classic auras
-versions\wotlk\wotlk_auras.lua
+# versions\wotlk\wotlk_auras.lua
 
 # General
 modules\general\init.lua
@@ -257,6 +257,7 @@ modules\player_bars\elements\totems.lua
 modules\player_bars\elements\castbar.lua
 modules\player_bars\elements\runes.lua
 modules\player_bars\elements\swing.lua
+modules\player_bars\elements\class_power.lua
 
 # Skins
 modules\skin\init.lua

@@ -22,6 +22,8 @@ function bdUI:get_filter_info(itemLink)
 	itemSetID,
 	isCraftingReagent = GetItemInfo(itemLink)
 
+	itemSubTypeID = itemSubTypeID or -2
+
 	local itemString = string.match(itemLink, "item[%-?%d:]+")
 	local itemID = select(2, strsplit(":", itemString))
 
@@ -119,7 +121,7 @@ custom_categories["Miscellaneous"] = { ["order"] = 15, ["itemTypeID"] = "2.14" }
 -- }
 
 -- tries to match an item to a custom category, rather than default
-local function filter_category(self, itemLink, itemTypeID)
+function mod:filter_category(itemLink, itemTypeID)
 	local name,
 	link,
 	quality,
@@ -137,13 +139,6 @@ local function filter_category(self, itemLink, itemTypeID)
 	expacID,
 	itemSetID,
 	isCraftingReagent = C_Item.GetItemInfo(itemLink)
-
-	if (itemSubTypeID == nil) then
-		print("itemSubTypeID is nil for:", itemLink)
-	end
-	if (itemTypeID == nil) then
-		print("itemTypeID is nil for:", itemLink)
-	end
 
 	itemSubTypeID = itemSubTypeID or -2
 	itemTypeID = itemTypeID or -2
@@ -268,4 +263,4 @@ function mod:categorize_items(bag, slot, config)
 	return categories, freeslot
 end
 
-mod.filter_category = memoize(filter_category, mod.cache)
+-- mod.filter_category = memoize(filter_category, mod.cache)

@@ -229,19 +229,23 @@ function bdUI:get_border_size()
 end
 
 function bdUI:get_pixel(frame)
+	-- Use consistent calculation method
 	local screenheight = select(2, GetPhysicalScreenSize())
 	local scale = 768 / screenheight
-	local frame_scale = frame:GetEffectiveScale()
-	local pixel = scale / frame_scale
+	local ui_scale = GetCVar("useUiScale") and GetCVar("uiScale") or 1
+	local pixel = scale / ui_scale
+
+	-- If frame is provided, account for its effective scale
+	if frame then
+		local frame_scale = frame:GetEffectiveScale()
+		pixel = pixel / frame_scale
+	end
 
 	return pixel
 end
 
 function bdUI:get_border(frame)
-	local scale = 768 / select(2, GetPhysicalScreenSize())
-	local frame_scale = frame:GetEffectiveScale()
-	local pixel = scale / frame_scale
-
+	local pixel = bdUI:get_pixel(frame)
 	return pixel * (bdUI:get_border_size() or 2)
 end
 

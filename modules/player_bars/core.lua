@@ -43,6 +43,7 @@ local function create_ouf_player_unit(self, unit)
 	mod:create_castbar(self)
 	mod:create_power(self)
 	mod:create_runes(self)
+	mod:create_class_power(self)
 end
 
 -- Start the addon
@@ -107,6 +108,10 @@ function mod:config_callback()
 		mod.swing_timer.mainhand:SetWidth(config.resources_width)
 		mod.swing_timer.offhand:SetWidth(config.resources_width)
 	end
+	-- class power
+	if (mod.ouf.ClassPowerHolder) then
+		mod.ouf.ClassPowerHolder:SetSize(config.resources_width, config.power_height)
+	end
 
 	mod:position_bars()
 	bdUI:do_frame_fade()
@@ -123,6 +128,9 @@ function mod:position_bars()
 	end
 	table.insert(mod.bars, mod.ouf.Power)
 	table.insert(mod.bars, mod.swing_timer)
+	if (mod.ouf.ClassPowerHolder) then
+		table.insert(mod.bars, mod.ouf.ClassPowerHolder)
+	end
 	table.insert(mod.bars, mod.ouf.CastbarHolder)
 
 	-- position them in a stack

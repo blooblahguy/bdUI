@@ -43,7 +43,7 @@ function bubbles:scan(elapsed)
 	update = update + elapsed
 	if (update > 0.2 or forced) then
 		update = 0;
-		
+
 		for k, frame in pairs(C_ChatBubbles.GetAllChatBubbles()) do
 			local backdrop = frame:GetChildren(1)
 			if backdrop and not backdrop:IsForbidden() and not frame._skinned then
@@ -55,16 +55,16 @@ end
 
 function bubbles:format_text(frame)
 	local text = frame.text:GetText()
-	local test = text:gsub("[^a-zA-Z%s]",'')
-	local words = {strsplit(" ",test)}
+	local test = text:gsub("[^a-zA-Z%s]", '')
+	local words = { strsplit(" ", test) }
 	for i = 1, #words do
 		local w = words[i]
-		
+
 		if (UnitName(w)) then
 			local class = select(2, UnitClass(w))
 			local colors = RAID_CLASS_COLORS[class]
 			if (colors) then
-				text = string.gsub(text, w, "|c"..colors:GenerateHexColor().."%1|r")
+				text = string.gsub(text, w, "|c" .. colors:GenerateHexColor() .. "%1|r")
 			end
 		end
 	end
@@ -108,11 +108,12 @@ function bubbles:skin(frame, backdrop)
 	frame.backdrop = frame.backdrop or backdrop
 	frame.text = frame.backdrop.String
 	frame.text:SetJustifyH('LEFT')
+	frame.text:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
 
 	frame.name = frame:CreateFontString(nil, "OVERLAY")
 	frame.name:SetPoint('BOTTOMLEFT', frame.text, 'TOPLEFT', 0, bdUI.border * 3)
 	frame.name:SetJustifyH('LEFT')
-	frame.name:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
+	frame.name:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
 
 	backdrop.BottomEdge:Hide()
 	backdrop.BottomLeftCorner:Hide()

@@ -68,6 +68,7 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 		table.sort(
 			items,
 			function(a, b)
+				if (a == nil or b == nil) then return a or b end
 				if (a.itemLink == nil and b.itemLink == nil) then
 					return
 				end
@@ -147,8 +148,8 @@ function mod:position_items(categories, buttonsize, buttonsperrow)
 				end
 
 				new_cat = false
-				row.num_items = 0 -- reset row count
-				row.first_item = item -- this is the first item of this row
+				row.num_items = 0              -- reset row count
+				row.first_item = item          -- this is the first item of this row
 			elseif (row.num_items > buttonsperrow) then -- new row
 				item:SetPoint("TOPLEFT", row.first_item, "BOTTOMLEFT", 0, -row_spacing)
 				if (not cat.positioned) then

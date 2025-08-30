@@ -17,15 +17,15 @@ local function update_raid_header()
 	mod:resize_container(mod.frameHeader, mod.raid_holder, config.width, config.height)
 
 	local group_by,
-		group_sort,
-		sort_method,
-		yOffset,
-		xOffset,
-		new_group_anchor,
-		new_player_anchor,
-		hgrowth,
-		vgrowth,
-		num_groups = mod:get_attributes()
+	group_sort,
+	sort_method,
+	yOffset,
+	xOffset,
+	new_group_anchor,
+	new_player_anchor,
+	hgrowth,
+	vgrowth,
+	num_groups = mod:get_attributes()
 
 	-- growth/spacing
 	header:SetAttribute("columnAnchorPoint", new_group_anchor)
@@ -66,17 +66,18 @@ local function initialize()
 	bdMove:set_moveable(raid_party, "Raid Frames")
 
 	-- register events for resizing the box/group size
+	local pause_update = false
 	raid_party:SetScript(
 		"OnEvent",
 		function(self, event, arg1)
 			if (event == "PLAYER_ENTERING_WORLD") then
-				C_Timer.After(
-					2,
-					function()
-						update_raid_header()
-					end
+				pause_update = true
+				C_Timer.After(2, function()
+					pause_update = false
+					update_raid_header()
+				end
 				)
-			else
+			elseif (pause_update == false) then
 				update_raid_header()
 			end
 		end
@@ -90,15 +91,15 @@ local function initialize()
 
 	-- Initial header spawning
 	local group_by,
-		group_sort,
-		sort_method,
-		yOffset,
-		xOffset,
-		new_group_anchor,
-		new_player_anchor,
-		hgrowth,
-		vgrowth,
-		num_groups = mod:get_attributes()
+	group_sort,
+	sort_method,
+	yOffset,
+	xOffset,
+	new_group_anchor,
+	new_player_anchor,
+	hgrowth,
+	vgrowth,
+	num_groups = mod:get_attributes()
 
 	local attributes = {}
 	attributes.showParty = true

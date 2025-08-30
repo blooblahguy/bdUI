@@ -57,6 +57,11 @@ function bdUI:calculate_scale()
 
 	bdUI.border = bdUI.pixel * 2
 	bdParent:SetScale(bdUI.pixel)
+
+	-- Update bdMove border calculation as well
+	if bdMove and bdMove.SetBorder then
+		bdMove:SetBorder()
+	end
 end
 
 bdUI:calculate_scale()

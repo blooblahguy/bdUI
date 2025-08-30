@@ -1,0 +1,80 @@
+---
+description: When requesting a new feature or large change
+alwaysApply: false
+---
+# Task-Driven Development
+
+**Breaking Down Large Features into Manageable Tasks**
+
+## **PRD Development First**
+- **Ask clarifying questions** to understand requirements
+- **Research similar implementations** and best practices
+- **Create comprehensive Product Requirements Document**
+- **Define success criteria** and acceptance tests
+
+## **Task Breakdown**
+- **Create TASKS.md** in the feature folder
+- **Break down into logical, manageable tasks**
+- **Assign priorities** (P0, P1, P2, P3)
+- **Identify dependencies** between tasks
+- **Estimate complexity and effort**
+
+## **Research & Planning**
+- **Use research tools** to understand complexity
+- **Investigate existing patterns** in codebase
+- **Research external libraries** and approaches
+- **Document findings and decisions**
+
+## **Task Management**
+- **Track status**: TODO, IN_PROGRESS, BLOCKED, DONE
+- **Update task status** as work progresses
+- **Add notes and blockers** to tasks
+- **Re-prioritize** based on discoveries
+
+## **Implementation Strategy**
+- **Start with highest priority, lowest dependency tasks**
+- **Create minimal viable implementations** first
+- **Build incrementally** with working code
+- **Test each task completion**
+
+## Examples
+
+```markdown
+# DON'T: Jumping straight into code
+"I need a new payment system"
+# *starts coding immediately*
+
+# DO: Task-driven approach
+"I need a new payment system"
+# 1. Create PRD with requirements
+# 2. Research payment providers
+# 3. Break down into tasks
+# 4. Start with highest priority
+```
+
+```markdown
+# DON'T: No task organization
+# Just start coding without plan
+
+# DO: Structured task breakdown
+# TASKS.md
+## P0 - Core Payment Integration
+- [ ] Research Stripe vs Square APIs
+- [ ] Design payment flow architecture
+- [ ] Implement basic payment service
+
+## P1 - Security & Validation
+- [ ] Add input validation
+- [ ] Implement security measures
+- [ ] Add error handling
+```
+
+```markdown
+# DON'T: No research or planning
+# Assume approach without investigation
+
+# DO: Research-driven decisions
+# Research: Stripe vs Square comparison
+# Decision: Use Stripe for better Django integration
+# Documentation: Decision recorded in PRD
+```

@@ -1,0 +1,135 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Development Guidelines
+
+## Core Development Rules
+- **MVP First** - CRITICAL - don't implement detailed code until I say so. Make code easily extendible
+- **Be incredibly concise** - CRITICAL - only add thorough implementation if specifically requested
+- **Minimize file creation** - don't create tons of files unless required for the specific request
+- **Keep responses short** - CRITICAL - easy to read quickly
+- **Use absolutely no emojis** CRITICAL - in codebase or responses
+- **Lean on concrete implementations** over unnecessarily abstract patterns
+
+1. **MVP-First Rule**
+   - Always prioritize tasks from the Minimum Viable Product section
+   - Core MVP features must be completed before moving to additional features:
+     - Building design system
+     - Blueprint building task system
+     - Farming
+     - Basic survival and gathering AI
+     - Professions
+     - Crafting
+   - New features should not be started until MVP features are stable
+
+2. **Dependency Chain Rule**
+   - Follow the development stages in strict order:
+     1. Core Gameplay Mechanics
+     2. AI and Task Management
+     3. Extended Gameplay Features
+     4. UI and Interactions
+     5. World Dynamics and Events
+     6. Polishing and Optimization
+     7. Testing and Community Feedback
+     8. Final Touches and Launch
+   - Each stage must be stable before moving to the next
+   - Document dependencies between systems
+
+3. **Scope Guard Rule**
+   - Strictly adhere to the defined scope:
+     - Endless replayability
+     - Mod-able
+     - No Multiplayer
+     - No Aging
+     - No Automation (conveyer belts)
+     - No Futurism
+     - Platforms: PC, Mac, and Linux
+   - Evaluate all new features against scope before implementation
+   - Document scope decisions and their rationale
+
+4. **Performance Budget Rule**
+   - Set performance targets for each system:
+     - Building operations: < 16ms per frame
+     - AI pathfinding: < 8ms per frame
+     - World generation: < 100ms per chunk
+   - Monitor performance metrics during development
+   - Optimize before adding new features
+   - Document performance bottlenecks and solutions
+
+5. **Cross-Platform Rule**
+   - Test all features on all target platforms:
+     - Windows
+     - macOS
+     - Linux
+   - Maintain platform-specific build configurations
+   - Document platform-specific considerations
+   - Regular cross-platform testing schedule
+
+6. **Story Integration Rule**
+   - Consider narrative elements in all systems:
+     - Villager story generation
+     - Heartstone assaults
+     - World events
+   - Document story hooks in each system
+   - Maintain consistency in narrative elements
+
+7. **Art Style Consistency Rule**
+   - Adhere to Ghibli color palette
+   - Document color schemes and art guidelines
+   - Maintain consistent visual style across all assets
+   - Regular art style reviews
+
+## Implementation Guidelines
+
+1. **Code Organization**
+   - Follow established project structure
+   - Use consistent naming conventions
+   - Document system architecture
+   - Regular code reviews
+
+2. **Testing Requirements**
+   - Unit tests for core systems
+   - Integration tests for system interactions
+   - Performance benchmarks
+   - Cross-platform testing
+
+3. **Documentation**
+   - Keep documentation up to date
+   - Document design decisions
+   - Maintain changelog
+   - Regular documentation reviews
+
+4. **Version Control**
+   - Use feature branches
+   - Regular commits with clear messages
+   - Code review process
+   - Version tagging
+
+## Best Practices
+
+1. **When Starting New Features**
+   - Check against MVP and scope
+   - Document dependencies
+   - Set performance targets
+   - Plan testing strategy
+
+2. **When Modifying Existing Systems**
+   - Review impact on other systems
+   - Update documentation
+   - Run performance tests
+   - Verify cross-platform compatibility
+
+3. **When Optimizing**
+   - Measure before and after
+   - Document optimization techniques
+   - Consider impact on modding
+   - Test on all platforms
+
+4. **When Adding Content**
+   - Follow modding architecture
+   - Maintain art style consistency
+   - Consider story integration
+   - Document content guidelines
+

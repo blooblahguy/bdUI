@@ -143,6 +143,8 @@ function mod:update_bags()
 				local name, link, rarity, ilvl, minlevel, itemType, itemSubType, count, itemEquipLoc, icon, price, itemTypeID, itemSubTypeID, bindType, expacID, itemSetID, isCraftingReagent =
 					GetItemInfo(itemLink)
 
+				if (name == nil) then return end
+
 				-- run through filters to see where i truly belong
 				itemType, itemTypeID = mod:filter_category(itemLink, itemTypeID)
 

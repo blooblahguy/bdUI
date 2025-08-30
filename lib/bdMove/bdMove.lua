@@ -23,9 +23,9 @@ local function GetQuadrant(frame)
 	local x, y = frame:GetCenter()
 	x = x * UIParent:GetScale()
 	y = y * UIParent:GetScale()
-	local hhalf = (x > UIParent:GetWidth()/2) and "RIGHT" or "LEFT"
-	local vhalf = (y > UIParent:GetHeight()/2) and "TOP" or "BOTTOM"
-	return vhalf..hhalf, vhalf, hhalf
+	local hhalf = (x > UIParent:GetWidth() / 2) and "RIGHT" or "LEFT"
+	local vhalf = (y > UIParent:GetHeight() / 2) and "TOP" or "BOTTOM"
+	return vhalf .. hhalf, vhalf, hhalf
 end
 noop = function() end
 
@@ -33,13 +33,12 @@ noop = function() end
 -- Defaults
 --========================================================
 function lib:SetBorder()
-	local pixel = (PixelUtil.GetPixelToUIUnitFactor() / GetCVar("uiScale") or 1)
+	-- Use the same calculation method as the main bdUI core
+	local screenheight = select(2, GetPhysicalScreenSize())
+	local scale = 768 / screenheight
+	local ui_scale = GetCVar("useUiScale") and GetCVar("uiScale") or 1
+	local pixel = scale / ui_scale
 
-	-- lib.screenheight = select(2, GetPhysicalScreenSize())
-	-- lib.scale = 768 / lib.screenheight
-	-- lib.ui_scale = GetCVar("uiScale") or 1
-	-- lib.pixel = lib.scale / lib.ui_scale
-	-- lib.border = lib.pixel * 2
 	lib.border = pixel * 2
 	lib.pixel = pixel
 
@@ -54,10 +53,10 @@ lib.save = nil
 lib.media = {
 	flat = "Interface\\Buttons\\WHITE8x8",
 	font = "fonts\\ARIALN.ttf",
-	border = {.62, .17, .18, 0.6},
-	backdrop = {.1, .1, .1, 0.6},
-	arrow = "Interface\\Addons\\"..addonName.."\\core\\media\\arrow.blp",
-	align = "Interface\\Addons\\"..addonName.."\\core\\media\\align.blp",
+	border = { .62, .17, .18, 0.6 },
+	backdrop = { .1, .1, .1, 0.6 },
+	arrow = "Interface\\Addons\\" .. addonName .. "\\core\\media\\arrow.blp",
+	align = "Interface\\Addons\\" .. addonName .. "\\core\\media\\align.blp",
 }
 
 -- set savedvariable
@@ -86,18 +85,18 @@ bumper:SetSize(114, 20)
 bumper:SetFrameStrata("TOOLTIP")
 bumper:SetFrameLevel(129)
 bumper:SetPoint("CENTER", UIParent, "CENTER")
-bumper:SetBackdrop({bgFile = lib.media.flat})
+bumper:SetBackdrop({ bgFile = lib.media.flat })
 bumper:SetBackdropColor(unpack(lib.media.border))
 bumper:Hide()
 lib.bumper = bumper
 
-local buttons = {"Left", "Right", "Up", "Down", "CenterH", "CenterY"}
+local buttons = { "Left", "Right", "Up", "Down", "CenterH", "CenterY" }
 for i = 1, #buttons do
 	local name = buttons[i]
 
 	local button = CreateFrame("button", nil, bumper, BackdropTemplateMixin and "BackdropTemplate")
 	button:SetSize(18, 18)
-	button:SetBackdrop({bgFile = lib.media.flat})
+	button:SetBackdrop({ bgFile = lib.media.flat })
 	button:SetBackdropColor(0, 0, 0, 1)
 	button.bumper = bumper
 
@@ -114,11 +113,11 @@ for i = 1, #buttons do
 
 		local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
 		if (IsShiftKeyDown()) and IsControlKeyDown() then
-			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(self.moveX*20), yOfs+(self.moveY*20))
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs + (self.moveX * 20), yOfs + (self.moveY * 20))
 		elseif (IsShiftKeyDown()) then
-			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(self.moveX*10), yOfs+(self.moveY*10))
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs + (self.moveX * 10), yOfs + (self.moveY * 10))
 		else
-			frame:SetPoint(point, relativeTo, relativePoint, xOfs+(self.moveX*1), yOfs+(self.moveY*1))
+			frame:SetPoint(point, relativeTo, relativePoint, xOfs + (self.moveX * 1), yOfs + (self.moveY * 1))
 		end
 
 		frame:save()
@@ -206,7 +205,7 @@ bumper.CenterY = function(self)
 	elseif (point == "BOTTOMLEFT" or point == "BOTTOM" or point == "BOTTOMRIGHT") then
 		frame:SetPoint(point, UIParent, point, xOfs, yOfs)
 	end
-	
+
 	frame:save()
 end
 
@@ -215,7 +214,10 @@ end
 -- Mover
 --========================================================
 function lib:set_moveable(frame, rename, left, top, right, bottom)
-	if (not lib.save) then print("lib needs SavedVariable to save positions. Use lib:set_save(sv_string)") return end
+	if (not lib.save) then
+		print("lib needs SavedVariable to save positions. Use lib:set_save(sv_string)")
+		return
+	end
 	-- has it been positioned?
 	local point, relativeTo, relativePoint, xOfs, yOfs = frame:GetPoint()
 	if (not relativeTo) then return end
@@ -233,7 +235,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	-- Create Mover Parent
 	local mover = CreateFrame("Button", rename, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	mover:SetSize(width + (right + left), height + (top + bottom))
-	mover:SetBackdrop({bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel})
+	mover:SetBackdrop({ bgFile = lib.media.flat, edgeFile = lib.media.flat, edgeSize = lib.pixel })
 	mover:SetBackdropColor(0, 0, 0, .3)
 	mover:SetBackdropBorderColor(0, 0, 0, 0)
 	mover:SetFrameStrata("BACKGROUND")
@@ -243,9 +245,9 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	mover:SetMovable(false)
 	mover.locked = true
 	mover.selected = false
-	
+
 	-- Text Label
-	mover.text = mover:CreateFontString(mover:GetName().."_Text")
+	mover.text = mover:CreateFontString(mover:GetName() .. "_Text")
 	mover.text:SetFont(lib.media.font, 14, "OUTLINE")
 	mover.text:SetPoint("CENTER", mover, "CENTER", 0, 0)
 	mover.text:SetText(rename)
@@ -257,7 +259,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	frame.mover = mover
 	mover.frame = frame
 	mover.rename = rename
-	
+
 	-- Sizing
 	local function resize(self)
 		if (InCombatLockdown()) then return end
@@ -317,7 +319,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 	function mover:deselect()
 		self.selected = false
 		self:SetMovable(false)
-		self:SetBackdropColor(0,0,0,.3)
+		self:SetBackdropColor(0, 0, 0, .3)
 		self:SetBackdropBorderColor(0, 0, 0, 0)
 
 		self:SetScript("OnDragStart", noop)
@@ -335,15 +337,15 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 		self.selected = false
 		self:EnableMouse(true)
 		self:SetFrameStrata("TOOLTIP")
-		
+
 		mover:SetScript("OnClick", mover.select)
 
-		self:SetScript("OnEnter", function() 
+		self:SetScript("OnEnter", function()
 			if (self.frame:GetScript("OnEnter")) then
 				self.frame:GetScript("OnEnter")(self.frame)
 			end
 		end)
-		self:SetScript("OnLeave", function() 
+		self:SetScript("OnLeave", function()
 			if (self.frame:GetScript("OnLeave")) then
 				self.frame:GetScript("OnLeave")(self.frame)
 			end
@@ -368,7 +370,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 		self:SetFrameStrata("BACKGROUND")
 		self:SetMovable(false)
 		self:EnableMouse(false)
-		
+
 		self:save()
 	end
 
@@ -378,16 +380,15 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 		if (not relativeTo) then relativeTo = UIParent end
 		relativeTo = relativeTo:GetName()
 
-		lib.save.positions[self.rename] = {point, relativeTo, relativePoint, xOfs, yOfs}
+		lib.save.positions[self.rename] = { point, relativeTo, relativePoint, xOfs, yOfs }
 	end
 
-	
 	-- position save in saved variables (protects against lost positions during UI errors)
 	function mover:position()
 		self:ClearAllPoints()
 		local point, relativeTo, relativePoint, xOfs, yOfs = self.frame:GetPoint()
 		relativeTo = _G[relativeTo] or relativeTo:GetName()
-		
+
 		-- set posiition from save
 		if (lib.save.positions[self.rename]) then
 			point, relativeTo, relativePoint, xOfs, yOfs = unpack(lib.save.positions[self.rename])
@@ -401,7 +402,7 @@ function lib:set_moveable(frame, rename, left, top, right, bottom)
 			end
 		else -- set position from initial frame position
 			self:SetPoint(point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs))
-			lib.save.positions[self.rename] = {point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs)}
+			lib.save.positions[self.rename] = { point, relativeTo, relativePoint, math.floor(xOfs), math.floor(yOfs) }
 		end
 
 		self.frame:ClearAllPoints()
@@ -430,13 +431,13 @@ end
 
 function lib:lock()
 	-- lock
-		lib.bumper:Hide()
-		lib.unlocked = false
-		lib.align:Hide()
-		for k, frame in pairs(lib.movers) do
-			frame:deselect()
-			frame:lock()
-		end
+	lib.bumper:Hide()
+	lib.unlocked = false
+	lib.align:Hide()
+	for k, frame in pairs(lib.movers) do
+		frame:deselect()
+		frame:lock()
+	end
 end
 
 function lib:toggle_lock()
@@ -454,7 +455,7 @@ end
 --========================================================
 -- Align Grid
 --========================================================
-lib.align = CreateFrame('Frame', nil, UIParent) 
+lib.align = CreateFrame('Frame', nil, UIParent)
 lib.align:SetAllPoints(UIParent)
 lib.align:Hide()
 lib.align:SetAlpha(0.5)
@@ -568,7 +569,7 @@ function lib:CreateFader(frame, children, inAlpha, outAlpha, duration)
 	-- Hook Events / Listeners
 	frame:EnableMouse(true)
 	frame:HookScript("OnEnter", EnterLeaveHandle)
-    frame:HookScript("OnLeave", EnterLeaveHandle)
+	frame:HookScript("OnLeave", EnterLeaveHandle)
 
 	-- Hook all animation into these events
 	frame:HookScript("OnShow", StartFadeIn)
@@ -583,7 +584,7 @@ function lib:CreateFader(frame, children, inAlpha, outAlpha, duration)
 			button:HookScript("OnEnter", EnterLeaveHandle)
 			button:HookScript("OnLeave", EnterLeaveHandle)
 		end
-  	end
+	end
 end
 
 -- Allows us to track is mouse is over SpellFlyout child
@@ -595,12 +596,12 @@ local function SpellFlyoutHook(self)
 	if (not self.__faderParent) then
 		self.__faderParent = topParent
 		self:HookScript("OnEnter", EnterLeaveHandle)
-    	self:HookScript("OnLeave", EnterLeaveHandle)
+		self:HookScript("OnLeave", EnterLeaveHandle)
 	end
 
 	-- children
-	for i=1, NUM_ACTIONBAR_BUTTONS do
-		local button = _G["SpellFlyoutButton"..i]
+	for i = 1, NUM_ACTIONBAR_BUTTONS do
+		local button = _G["SpellFlyoutButton" .. i]
 		if not button then break end
 
 		if not button.__faderParent then
