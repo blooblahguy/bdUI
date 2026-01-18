@@ -168,7 +168,7 @@ mod.custom_layout["target"] = function(self, unit)
 
 		-- sizing
 		self:SetSize(config.playertargetwidth, config.playertargetheight + makeupHeight)
-		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.targetpowerheight + bdUI.border)
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.targetpowerheight + bdUI.get_border())
 
 
 

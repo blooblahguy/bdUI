@@ -48,7 +48,7 @@ loader:SetScript("OnEvent", function(self, event, addon)
 			local sv = bdUI.bdConfig:get_save("BDUI_SAVE")
 			bdMove:set_save(sv)
 		end, 5)
-		bdMove.spacing = bdUI.border
+		bdMove.spacing = bdUI.get_border()
 
 		bdUI:debug(l['loaded'])
 		-- bdUI:debug(l['for options'])

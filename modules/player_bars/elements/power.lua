@@ -39,7 +39,7 @@ function mod:create_power(self)
 	self.Power.tick = self.Power:CreateTexture(nil, "OVERLAY")
 	self.Power.tick:SetVertexColor(1, 1, 1, 0.7)
 	self.Power.tick:SetTexture(bdUI.media.flat)
-	self.Power.tick:SetSize(bdUI.border, config.power_height)
+	self.Power.tick:SetSize(bdUI.get_border(), config.power_height)
 	self.Power.tick:SetPoint("LEFT", self.Power, self.Power:GetWidth() * (config.power_tick / 100), 0)
 
 	self.Power.PostUpdate = function(power, unit, cur, min, max)

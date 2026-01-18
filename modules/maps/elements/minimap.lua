@@ -39,7 +39,7 @@ function mod:create_minimap()
 	-- global holder
 	bdMinimap:SetPoint('TOPRIGHT', UIParent, -10, -10)
 	bdMinimap:SetSize(Minimap:GetSize())
-	bdMinimap:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border })
+	bdMinimap:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.get_border() })
 	bdMinimap:SetBackdropColor(0, 0, 0, 0)
 	bdMinimap:SetBackdropBorderColor(unpack(bdUI.media.border))
 	mod.bdMinimap = bdMinimap

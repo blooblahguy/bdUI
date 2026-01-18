@@ -9,7 +9,7 @@ local classColor = RAID_CLASS_COLORS[class]
 local config
 
 local function get_width(maxWidth, number)
-	return (maxWidth - (bdUI.border * (number - 1))) / number
+	return (maxWidth - (bdUI.get_border() * (number - 1))) / number
 end
 
 function mod:create_class_power(self)
@@ -56,7 +56,7 @@ function mod:create_class_power(self)
 		if (last == nil) then
 			bar:SetPoint("LEFT", self.ClassPowerHolder, "LEFT", 0, 0)
 		else
-			bar:SetPoint("LEFT", last, "RIGHT", bdUI.border, 0)
+			bar:SetPoint("LEFT", last, "RIGHT", bdUI.get_border(), 0)
 		end
 
 		last = bar

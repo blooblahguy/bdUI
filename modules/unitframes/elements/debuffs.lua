@@ -14,7 +14,7 @@ mod.additional_elements.debuffs = function(self, unit)
 	self.Debuffs:SetHeight(60)
 	self.Debuffs.size = 18
 	self.Debuffs.initialAnchor = "BOTTOMRIGHT"
-	self.Debuffs.spacing = bdUI.border
+	self.Debuffs.spacing = bdUI.get_border()
 	self.Debuffs.num = 20
 	self.Debuffs['growth-y'] = "UP"
 	self.Debuffs['growth-x'] = "LEFT"

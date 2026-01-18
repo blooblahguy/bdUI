@@ -1,5 +1,12 @@
 {
 	"Lua.diagnostics.globals": [
+		"bdUI",
+		"c",
+		"l",
+		"UIParent",
+		"CreateFrame",
+		"InCombatLockdown",
+		"C_Timer",
 		"ClassNameplateManaBarFrame",
 		"SlashCmdList",
 		"ReloadUI",
@@ -343,8 +350,16 @@
 		"utf8": "disable"
 	},
 	"Lua.workspace.library": [
-		"c:\\Users\\Bloob\\.cursor\\extensions\\ketho.wow-api-0.20.8\\Annotations\\Core"
+		"c:\\Users\\Bloob\\.cursor\\extensions\\ketho.wow-api-0.20.8\\Annotations\\Core",
+		"${workspaceFolder}"
 	],
+	"Lua.workspace.checkThirdParty": false,
+	"Lua.completion.enable": true,
+	"Lua.hint.enable": false,
+	"Lua.hint.paramName": "All",
+	"Lua.hint.paramType": false,
+	"Lua.hint.setType": false,
+	"Lua.hint.arrayIndex": "Auto",
 	"Lua.format.enable": true,
 	"Lua.format.defaultConfig": {
 		"indent_type": "Tab",
@@ -354,4 +369,5 @@
 		"collapse_simple_statement": "Never",
 		"column_alignment": false
 	}
+
 }

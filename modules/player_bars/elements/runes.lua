@@ -2,12 +2,13 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Player Bars")
 
 local function wotlk_runes(self)
+	print("wotlk_runes")
 	if (self.Runes) then return end
 	local config = mod:get_save()
 
 	local runes = {}
 	local last
-	local gap = bdUI.border --border * 4
+	local gap = bdUI.get_border() --border * 4
 	local width = (config.resources_width - (gap * 5)) / 6
 	for index = 1, 6 do
 		-- Position and size of the rune bar indicators
@@ -17,7 +18,7 @@ local function wotlk_runes(self)
 		bdUI:set_backdrop(rune)
 
 		if (not last) then
-			rune:SetPoint("LEFT", self.RuneHolder, 0, bdUI.border)
+			rune:SetPoint("LEFT", self.RuneHolder, 0, bdUI.get_border())
 		else
 			rune:SetPoint('LEFT', last, "RIGHT", gap, 0)
 		end
@@ -27,8 +28,9 @@ local function wotlk_runes(self)
 	end
 
 	-- Register with oUF
-	self.WOTLKRunes = runes
-	self.bdUIRunes = runes
+	-- self.WOTLKRunes = runes
+	-- self.bdUIRunes = runes
+	self.Runes = runes
 end
 
 function mod:create_runes(self)
@@ -38,10 +40,8 @@ function mod:create_runes(self)
 		return
 	end
 
-	if (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC) then
-		self.RuneHolder:Show()
-		wotlk_runes(self)
-	end
+	self.RuneHolder:Show()
+	wotlk_runes(self)
 end
 
 local function path() end
@@ -53,13 +53,13 @@ local function enable()
 	end
 	mod.ouf.RuneHolder:Show()
 
-	mod.ouf:EnableElement("WOTLKRunes")
+	mod.ouf:EnableElement("Runes")
 	bdUI:set_frame_fade(mod.ouf.RuneHolder, mod.config.runes_ic_alpha, mod.config.runes_ooc_alpha)
 
 	return true
 end
 local function disable()
-	mod.ouf:DisableElement("WOTLKRunes")
+	mod.ouf:DisableElement("Runes")
 	mod.ouf.RuneHolder:Hide()
 end
 

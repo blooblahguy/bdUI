@@ -96,6 +96,6 @@ mod.custom_layout["player"] = function(self, unit)
 		end
 
 		-- health
-		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playerpowerheight + bdUI.border)
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.playerpowerheight + bdUI.get_border())
 	end
 end

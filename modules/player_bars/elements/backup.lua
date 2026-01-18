@@ -117,7 +117,7 @@ mod.create_resources = function(self, unit)
 		self.TotemBar = {}
 		for index = 1, 4 do
 			local totem = CreateFrame("StatusBar", nil, self.Resources.primary)
-			local width = (self.Resources.primary:GetWidth() - (bdUI.border * 3)) / 4
+			local width = (self.Resources.primary:GetWidth() - (bdUI.get_border() * 3)) / 4
 			totem:SetStatusBarTexture(bdUI.media.flat)
 			totem:SetSize(width, config.resources_primary_height)
 			totem:SetMinMaxValues(0, 1)
@@ -125,7 +125,7 @@ mod.create_resources = function(self, unit)
 			if (index == 1) then
 				totem:SetPoint('BOTTOMLEFT', self.Resources.primary, 'BOTTOMLEFT', 0, 0)
 			else
-				totem:SetPoint('BOTTOMLEFT', self.TotemBar[index - 1], 'BOTTOMRIGHT', bdUI.border, 0)
+				totem:SetPoint('BOTTOMLEFT', self.TotemBar[index - 1], 'BOTTOMRIGHT', bdUI.get_border(), 0)
 			end
 
 			totem.bg = totem:CreateTexture(nil, "BACKGROUND")
@@ -158,13 +158,13 @@ mod.create_resources = function(self, unit)
 		self.Runes.colorSpec = true
 		for index = 1, 6 do
 			local rune = CreateFrame('StatusBar', nil, self.Resources.primary)
-			local width = (self.Resources.primary:GetWidth() - (bdUI.border * (5))) / 6
+			local width = (self.Resources.primary:GetWidth() - (bdUI.get_border() * (5))) / 6
 			rune:SetStatusBarTexture(bdUI.media.flat)
 			rune:SetSize(width, config.resources_primary_height)
 			if (index == 1) then
 				rune:SetPoint('BOTTOMLEFT', self.Resources.primary, 'BOTTOMLEFT', 0, 0)
 			else
-				rune:SetPoint('BOTTOMLEFT', self.Runes[index - 1], 'BOTTOMRIGHT', bdUI.border, 0)
+				rune:SetPoint('BOTTOMLEFT', self.Runes[index - 1], 'BOTTOMRIGHT', bdUI.get_border(), 0)
 			end
 
 			self.Runes[index] = rune
@@ -185,14 +185,14 @@ mod.create_resources = function(self, unit)
 		self.ClassPower = {}
 		for index = 1, 10 do
 			local bar = CreateFrame('StatusBar', nil, self.Resources.primary)
-			local width = (self.Resources:GetWidth() - (bdUI.border * (10 - 1))) / 10
+			local width = (self.Resources:GetWidth() - (bdUI.get_border() * (10 - 1))) / 10
 			bar:SetStatusBarTexture(bdUI.media.flat)
 			bar:SetSize(width, config.resources_primary_height)
 
 			if (index == 1) then
 				bar:SetPoint('BOTTOMLEFT', self.Resources.primary, 'BOTTOMLEFT', 0, 0)
 			else
-				bar:SetPoint('BOTTOMLEFT', self.ClassPower[index - 1], 'BOTTOMRIGHT', bdUI.border, 0)
+				bar:SetPoint('BOTTOMLEFT', self.ClassPower[index - 1], 'BOTTOMRIGHT', bdUI.get_border(), 0)
 			end
 
 			self.ClassPower[index] = bar
@@ -206,7 +206,7 @@ mod.create_resources = function(self, unit)
 			elseif (changed) then
 				for index = 1, max do
 					local bar = self[index]
-					local width = (self.__owner.Resources.primary:GetWidth() - (bdUI.border * (max - 1))) / max
+					local width = (self.__owner.Resources.primary:GetWidth() - (bdUI.get_border() * (max - 1))) / max
 					bar:SetSize(width, config.resources_primary_height)
 				end
 			end

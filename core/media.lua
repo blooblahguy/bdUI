@@ -31,7 +31,7 @@ function bdUI:do_frame_fade()
 		return
 	end -- dragnflight breaks this stuff right now
 	for frame, info in pairs(combat_fade_frames) do
-		local ic_alpha, resting_alpha = unpack(info)
+		local ic_alpha, resting_alpha = unpack(info) or 1, 1
 		local target_alpha = 1
 		if UnitAffectingCombat("player") then
 			target_alpha = ic_alpha
@@ -97,10 +97,10 @@ function bdUI:frame_group(container, direction, ...)
 		if (frame and type(frame) == "table" and frame:IsShown()) then
 			if (direction == "upwards" or direction == "downwards") then
 				width = frame:GetWidth() > width and frame:GetWidth() or width
-				height = height + frame:GetHeight() + bdUI.border
+				height = height + frame:GetHeight() + bdUI.get_border()
 			elseif (direction == "left" or direction == "right") then
 				height = frame:GetHeight() > height and frame:GetHeight() or height
-				width = width + frame:GetWidth() + bdUI.border
+				width = width + frame:GetWidth() + bdUI.get_border()
 			end
 		end
 
@@ -116,7 +116,7 @@ function bdUI:frame_group(container, direction, ...)
 	end
 
 	if (not InCombatLockdown()) then
-		container:SetSize(width, height - bdUI.border)
+		container:SetSize(width, height - bdUI.get_border())
 	end
 
 	-- loop through frames provided in other parameters	
@@ -139,13 +139,13 @@ function bdUI:frame_group(container, direction, ...)
 				-- everything else is positioned opposite
 				frame:ClearAllPoints()
 				if (direction == "downwards") then
-					frame:SetPoint("TOP", last, "BOTTOM", 0, -bdUI.border)
+					frame:SetPoint("TOP", last, "BOTTOM", 0, -bdUI.get_border())
 				elseif (direction == "upwards") then
-					frame:SetPoint("BOTTOM", last, "TOP", 0, bdUI.border)
+					frame:SetPoint("BOTTOM", last, "TOP", 0, bdUI.get_border())
 				elseif (direction == "right") then
-					frame:SetPoint("LEFT", last, "RIGHT", bdUI.border, 0)
+					frame:SetPoint("LEFT", last, "RIGHT", bdUI.get_border(), 0)
 				elseif (direction == "left") then
-					frame:SetPoint("RIGHT", last, "LEFT", -bdUI.border, 0)
+					frame:SetPoint("RIGHT", last, "LEFT", -bdUI.get_border(), 0)
 				end
 			end
 
@@ -209,7 +209,7 @@ function bdUI:set_backdrop_basic(frame, force)
 	if (not frame.SetBackdrop) then
 		Mixin(frame, BackdropTemplateMixin)
 	end
-	frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border }) -- , insets = {top = -bdUI.border, left = -bdUI.border, right = -bdUI.border, bottom = -bdUI.border}})
+	frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.get_border() }) -- , insets = {top = -bdUI.get_border(), left = -bdUI.get_border(), right = -bdUI.get_border(), bottom = -bdUI.get_border()}})
 	frame:SetBackdropColor(unpack(bdUI.media.backdrop))
 	frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 
@@ -218,14 +218,10 @@ function bdUI:set_backdrop_basic(frame, force)
 	bdUI:add_action("bdUI/border_size, loaded", function()
 		local border = bdUI:get_border(frame)
 
-		frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border })
+		frame:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.get_border() })
 		frame:SetBackdropColor(unpack(bdUI.media.backdrop))
 		frame:SetBackdropBorderColor(unpack(bdUI.media.border))
 	end)
-end
-
-function bdUI:get_border_size()
-	return bdUI:get_module("General") and bdUI:get_module("General"):get_save().border_size or 2
 end
 
 function bdUI:get_pixel(frame)
@@ -244,11 +240,6 @@ function bdUI:get_pixel(frame)
 	return pixel
 end
 
-function bdUI:get_border(frame)
-	local pixel = bdUI:get_pixel(frame)
-	return pixel * (bdUI:get_border_size() or 2)
-end
-
 local function border_gen(parent)
 	local border = parent:CreateTexture(nil, "BORDER", nil, -5)
 	border:SetTexture(bdUI.media.flat)
@@ -263,7 +254,7 @@ function bdUI:set_backdrop(frame, force_border)
 		return
 	end
 
-	local border = bdUI.border or bdUI:get_border(frame)
+	local border = bdUI.get_border() or bdUI:get_border(frame)
 	if (force_border) then
 		border = bdUI:get_border(frame)
 	end

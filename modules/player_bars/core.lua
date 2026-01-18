@@ -84,7 +84,7 @@ function mod:config_callback()
 	-- callbacks
 	mod.Resources:SetSize(config.resources_width, 40)
 	-- castbar
-	mod.ouf.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.border)
+	mod.ouf.Castbar:SetWidth(config.resources_width - config.castbar_height - bdUI.get_border())
 	mod.ouf.CastbarHolder:SetSize(config.resources_width, config.castbar_height)
 	-- power
 	mod.ouf.Power:SetSize(config.resources_width, config.power_height)
@@ -92,17 +92,17 @@ function mod:config_callback()
 		mod.ouf.Power.tick:Hide()
 	else
 		mod.ouf.Power.tick:Show()
-		mod.ouf.Power.tick:SetSize(bdUI.border, config.power_height)
+		mod.ouf.Power.tick:SetSize(bdUI.get_border(), config.power_height)
 		mod.ouf.Power.tick:SetPoint("LEFT", mod.ouf.Power, mod.ouf.Power:GetWidth() * (config.power_tick / 100), 0)
 	end
 	-- runes
-	if (config.runes_height) then
-		mod.ouf.RuneHolder:SetSize(config.resources_width, config.runes_height - bdUI.border * 2)
-		local width = (config.resources_width - (bdUI.border * 5)) / 6
-		for i, rune in pairs({ mod.ouf.RuneHolder:GetChildren() }) do
-			rune:SetSize(width, config.runes_height)
-		end
+	-- if (config.runes_height) then
+	mod.ouf.RuneHolder:SetSize(config.resources_width, config.runes_height - bdUI.get_border() * 2)
+	local width = (config.resources_width - (bdUI.get_border() * 5)) / 6
+	for i, rune in pairs({ mod.ouf.RuneHolder:GetChildren() }) do
+		rune:SetSize(width, config.runes_height)
 	end
+	-- end
 	-- swing
 	if (mod.swing_timer) then
 		mod.swing_timer.mainhand:SetWidth(config.resources_width)

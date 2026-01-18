@@ -5,7 +5,7 @@ local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Unitframes")
 local oUF = bdUI.oUF
 local config
-mod.padding = bdUI.border
+mod.padding = bdUI.get_border()
 mod.units = {}
 mod.custom_layout = {}
 mod.additional_elements = {}
@@ -131,14 +131,14 @@ local function layout(self, unit)
 
 	-- Borders
 	self.Border = CreateFrame("Frame", nil, self.Health)
-	self.Border:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border)
-	self.Border:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
+	self.Border:SetPoint("TOPLEFT", self.Health, "TOPLEFT", -bdUI.get_border(), bdUI.get_border())
+	self.Border:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", bdUI.get_border(), -bdUI.get_border())
 
 	-- holds tracking resources
 	self.ResourceHolder = CreateFrame("frame", nil, self)
-	self.ResourceHolder:SetHeight(bdUI.border * 3)
-	self.ResourceHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, bdUI.border)
-	self.ResourceHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border)
+	self.ResourceHolder:SetHeight(bdUI.get_border() * 3)
+	self.ResourceHolder:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 0, bdUI.get_border())
+	self.ResourceHolder:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.get_border())
 	bdUI:set_backdrop(self.ResourceHolder)
 	self.ResourceHolder:Hide()
 

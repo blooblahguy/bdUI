@@ -9,7 +9,7 @@ local function update_healthbars(self, unit)
 	end
 
 	GameTooltipStatusBar:ClearAllPoints()
-	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, bdUI.border)
+	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, bdUI.get_border())
 	GameTooltipStatusBar:SetPoint("TOPRIGHT", self, "TOPRIGHT", 0, 6)
 	GameTooltipStatusBar:SetStatusBarTexture(bdUI.media.smooth)
 	hooksecurefunc(GameTooltipStatusBar, "SetValue", update_color)

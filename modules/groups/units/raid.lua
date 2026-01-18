@@ -102,9 +102,9 @@ local function initialize()
 	num_groups = mod:get_attributes()
 
 	local attributes = {}
-	attributes.showParty = true
+	-- attributes.showParty = true
 	attributes.showPlayer = true
-	attributes.showSolo = config.showSolo
+	-- attributes.showSolo = config.showSolo
 	attributes.showRaid = true
 	attributes["initial-scale"] = 1
 	attributes.unitsPerColumn = 5
@@ -122,7 +122,7 @@ local function initialize()
 	attributes["oUF-initialConfigFunction"] = format("self:SetWidth(%d); self:SetHeight(%d);", config.width, config.height)
 
 	-- ouf gives us secureheader
-	mod.frameHeader = oUF:SpawnHeader("bdUI_raid", nil, "raid,party,solo", attributes)
+	mod.frameHeader = oUF:SpawnHeader("bdUI_raid", nil, "raid", attributes)
 
 	update_raid_header()
 

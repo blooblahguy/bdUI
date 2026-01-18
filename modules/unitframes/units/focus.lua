@@ -17,7 +17,7 @@ mod.custom_layout["focus"] = function(self, unit)
 	self.Debuffs.size = 20
 	self.Debuffs:SetSize(config.focuswidth / 2, config.focusheight)
 	self.Debuffs:ClearAllPoints()
-	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border * 2)
+	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.get_border(), bdUI.get_border() * 2)
 	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
 		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -49,7 +49,7 @@ mod.custom_layout["focus"] = function(self, unit)
 	self.Buffs.size = 20
 	self.Buffs:SetSize(config.focuswidth / 2, config.focusheight)
 	self.Buffs:ClearAllPoints()
-	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border * 3)
+	self.Buffs:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.get_border() * 3)
 	self.Buffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
 		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -86,7 +86,7 @@ mod.custom_layout["focus"] = function(self, unit)
 		if (config.focuspower == 0) then
 			self.Power:Hide()
 		end
-		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.focuspower + bdUI.border)
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.focuspower + bdUI.get_border())
 
 		self.Debuffs.size = math.restrict(self.Health:GetHeight() * .8, 8, 20)
 		self.Buffs.size = math.restrict(self.Health:GetHeight() * .8, 8, 20)

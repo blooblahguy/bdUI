@@ -36,10 +36,10 @@ ignoreFrames['TimeManagerClockButton'] = true
 -- remove these textures
 hideTextures['Interface\\Minimap\\MiniMap-TrackingBorder'] = true
 hideTextures['Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight'] = true
-hideTextures['Interface\\Minimap\\UI-Minimap-Background'] = true 
-hideTextures[136430] = true 
-hideTextures[136467] = true 
-hideTextures[136477] = true 
+hideTextures['Interface\\Minimap\\UI-Minimap-Background'] = true
+hideTextures[136430] = true
+hideTextures[136467] = true
+hideTextures[136477] = true
 
 --===================================
 -- Position button frames
@@ -51,7 +51,7 @@ function mod:position_button_frame()
 
 	local minimap_width = Minimap:GetWidth()
 	local row_width = 0
-	local spacing = bdUI.border * 3
+	local spacing = bdUI.get_border() * 3
 	local size = config.buttonsize + spacing
 
 	if (config.buttonpos == "Disable") then
@@ -67,33 +67,33 @@ function mod:position_button_frame()
 	-- decide how to position (default is bottom)
 	local x_pos = "LEFT"
 	local x_pos_self = "RIGHT"
-	local holder_position = {"TOPLEFT", "BOTTOMLEFT", "TOPRIGHT", "BOTTOMRIGHT"}
-	local holder_size = {0, 0}
+	local holder_position = { "TOPLEFT", "BOTTOMLEFT", "TOPRIGHT", "BOTTOMRIGHT" }
+	local holder_size = { 0, 0 }
 	local increase_index = 2
-	local row_spacing = {0, -spacing}
-	local button_spacing = {spacing, 0}
-	local holder_space = {bdUI.border, -spacing}
+	local row_spacing = { 0, -spacing }
+	local button_spacing = { spacing, 0 }
+	local holder_space = { bdUI.get_border(), -spacing }
 
 	if (config.buttonpos == "Top") then
-		holder_position = {"BOTTOMLEFT", "TOPLEFT", "BOTTOMRIGHT", "TOPRIGHT"}
-		row_spacing = {0, spacing}
-		button_spacing = {spacing, 0}
-		holder_space = {bdUI.border, spacing}
+		holder_position = { "BOTTOMLEFT", "TOPLEFT", "BOTTOMRIGHT", "TOPRIGHT" }
+		row_spacing = { 0, spacing }
+		button_spacing = { spacing, 0 }
+		holder_space = { bdUI.get_border(), spacing }
 	elseif (config.buttonpos == "Right") then
-		holder_position = {"TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMLEFT"}
+		holder_position = { "TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMLEFT" }
 		x_pos = "TOP"
 		x_pos_self = "BOTTOM"
-		row_spacing = {spacing, 0}
-		button_spacing = {0, -spacing}
-		holder_space = {spacing, -bdUI.border}
+		row_spacing = { spacing, 0 }
+		button_spacing = { 0, -spacing }
+		holder_space = { spacing, -bdUI.get_border() }
 		increase_index = 1
 	elseif (config.buttonpos == "Left") then
-		holder_position = {"TOPRIGHT", "TOPLEFT", "BOTTOMRIGHT", "BOTTOMRIGHT"}
+		holder_position = { "TOPRIGHT", "TOPLEFT", "BOTTOMRIGHT", "BOTTOMRIGHT" }
 		x_pos = "TOP"
 		x_pos_self = "BOTTOM"
-		row_spacing = {-spacing, 0}
-		button_spacing = {0, -spacing}
-		holder_space = {-spacing, -bdUI.border}
+		row_spacing = { -spacing, 0 }
+		button_spacing = { 0, -spacing }
+		holder_space = { -spacing, -bdUI.get_border() }
 		increase_index = 1
 	end
 
@@ -111,7 +111,7 @@ function mod:position_button_frame()
 		f:SetScale(1 / config.scale)
 		f:SetSize(config.buttonsize, config.buttonsize)
 
-		local width = (config.buttonsize * (1 / config.scale)) + ((bdUI.border * 3) * (1 / config.scale))
+		local width = (config.buttonsize * (1 / config.scale)) + ((bdUI.get_border() * 3) * (1 / config.scale))
 		row_width = row_width + width
 
 		if (not last) then
@@ -121,11 +121,11 @@ function mod:position_button_frame()
 			f:SetPoint(holder_position[1], row, holder_position[2], unpack(row_spacing))
 
 			holder_size[increase_index] = holder_size[increase_index] + f:GetSize() + spacing
-			
+
 			row = f
 			row_width = 0
 		else
-			f:SetPoint(x_pos, last, x_pos_self, unpack(button_spacing))	
+			f:SetPoint(x_pos, last, x_pos_self, unpack(button_spacing))
 		end
 
 		last = f
@@ -145,7 +145,7 @@ local function skin(f)
 	f:SetFrameStrata("MEDIUM")
 
 	-- Skin textures
-	local r = {f:GetRegions()}
+	local r = { f:GetRegions() }
 	for o = 1, #r do
 		if (r[o].GetTexture and r[o]:GetTexture()) then
 			local tex = r[o]:GetTexture()
@@ -153,18 +153,18 @@ local function skin(f)
 			r[o]:SetDrawLayer("ARTWORK")
 			if (hideTextures[tex]) then
 				r[o]:Hide()
-			elseif (not strfind(tex,"WHITE8x8")) then
-				local coord = table.concat({r[o]:GetTexCoord()})
+			elseif (not strfind(tex, "WHITE8x8")) then
+				local coord = table.concat({ r[o]:GetTexCoord() })
 				if (coord == "00011011" and not f:GetName() == "MinimMapTracking") then
 					r[o]:SetTexCoord(0.3, 0.7, 0.3, 0.7)
 					if (n == "DugisOnOffButton") then
-						r[o]:SetTexCoord(0.25, 0.75, 0.2, 0.7)								
+						r[o]:SetTexCoord(0.25, 0.75, 0.2, 0.7)
 					end
 				end
 			end
 		end
 	end
-	
+
 	bdUI:set_backdrop(f)
 	f.skinned = true
 end
@@ -199,24 +199,24 @@ local function find_frames()
 		GarrisonLandingPageMinimapButton.overlay:SetAllPoints()
 		GarrisonLandingPageMinimapButton.overlay:SetFrameLevel(0)
 		GarrisonLandingPageMinimapButton.overlay:SetScript("OnClick", function(self)
-			GarrisonLandingPageMinimapButton:Click()			
+			GarrisonLandingPageMinimapButton:Click()
 		end)
 	end
 
 	-- start loop
 	frames = {}
-	local children = {Minimap:GetChildren()}
+	local children = { Minimap:GetChildren() }
 	for k, v in pairs(manualTarget) do table.insert(children, k) end
 
 	for i = 1, #children do
 		local frame = _G[children[i]] or children[i]
 		local name = (frame.GetName and frame:GetName()) or _G[frame];
 
-		if (name and not ignoreFrames[name]) then -- don't touch these
+		if (name and not ignoreFrames[name]) then                                                        -- don't touch these
 			local isLibBtn = name and (strfind(name, "LibDB") or strfind(name, "Button") or strfind(name, "Btn")) -- lib buttons should be handled
-			if (hideButtons[name]) then -- move on from these
+			if (hideButtons[name]) then                                                                  -- move on from these
 				frame:Hide()
-			elseif (frame:IsShown() and (manualTarget[name] or isLibBtn)) then -- needs to be handled
+			elseif (frame:IsShown() and (manualTarget[name] or isLibBtn)) then                           -- needs to be handled
 				skin(frame)
 				if (not tIndexOf(frames, frame)) then
 					table.insert(frames, frame)
@@ -235,9 +235,9 @@ function mod:create_button_frame()
 	-- Button frame
 	Minimap.buttonFrame = CreateFrame("frame", "bdButtonFrame", UIParent)
 	Minimap.buttonFrame:SetSize(1, 1)
-	Minimap.buttonFrame:SetPoint("TOP", Minimap.background, "BOTTOM", bdUI.border, -bdUI.border)
+	Minimap.buttonFrame:SetPoint("TOP", Minimap.background, "BOTTOM", bdUI.get_border(), -bdUI.get_border())
 	-- bdUI:create_fader(Minimap.buttonFrame, {}, 1, 0, .1, 0)
-	
+
 	Minimap.buttonFrame:RegisterEvent("UPDATE_FACTION")
 	Minimap.buttonFrame:RegisterEvent("UPDATE_PENDING_MAIL")
 	Minimap.buttonFrame:RegisterEvent("MAIL_INBOX_UPDATE")

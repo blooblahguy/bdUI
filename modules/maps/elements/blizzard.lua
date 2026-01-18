@@ -34,7 +34,7 @@ function mod:minimap_blizzard_elements()
 	--===========================
 	MiniMapMailIcon:SetTexture(nil)
 	local frame = MiniMapMailFrame or MailFrame
-	frame.mail = frame:CreateFontString(nil,"OVERLAY")
+	frame.mail = frame:CreateFontString(nil, "OVERLAY")
 	frame.mail:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
 	frame.mail:SetText("M")
 	frame.mail:SetJustifyH("CENTER")
@@ -43,7 +43,7 @@ function mod:minimap_blizzard_elements()
 	frame:RegisterEvent("MAIL_INBOX_UPDATE")
 	frame:RegisterEvent("MAIL_CLOSED")
 	if (MiniMapMailBorder) then
-		MiniMapMailBorder:Hide()	
+		MiniMapMailBorder:Hide()
 	end
 
 	--===========================
@@ -51,11 +51,11 @@ function mod:minimap_blizzard_elements()
 	--===========================
 	select(1, TimeManagerClockButton:GetRegions()):Hide()
 	TimeManagerClockButton:ClearAllPoints()
-	TimeManagerClockButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT",5,-2)
+	TimeManagerClockButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 5, -2)
 	TimeManagerClockTicker:SetFontObject(bdUI:get_font(12, "THINOUTLINE"))
 	TimeManagerClockTicker:SetAllPoints(TimeManagerClockButton)
 	TimeManagerClockTicker:SetJustifyH('LEFT')
-	TimeManagerClockTicker:SetShadowColor(0,0,0,0)
+	TimeManagerClockTicker:SetShadowColor(0, 0, 0, 0)
 
 	TicketStatusFrame:ClearAllPoints()
 	TicketStatusFrame:SetPoint("TOP", UIParent, "TOP", 0, -20)
@@ -64,11 +64,15 @@ function mod:minimap_blizzard_elements()
 	-- click tracking and calendar
 	--===========================
 	Minimap.ClickFunc = Minimap:GetScript("OnMouseUp")
-	Minimap:SetScript('OnMouseUp', function (self, button)
+	Minimap:SetScript('OnMouseUp', function(self, button)
 		if button == 'RightButton' then
-			local tracking = MinimapCluster.Tracking and MinimapCluster.Tracking.DropDown or MiniMapTrackingDropDown
-			ToggleDropDownMenu(1, nil, tracking, Minimap, -config.size / 1.5, config.size * 0.93)
-			GameTooltip:Hide()
+			if (MiniMapTrackingButton) then
+				MiniMapTrackingButton.Click(button, true)
+			else
+				local tracking = MinimapCluster.Tracking and MinimapCluster.Tracking.DropDown or MiniMapTrackingDropDown
+				ToggleDropDownMenu(1, nil, tracking, Minimap, -config.size / 1.5, config.size * 0.93)
+				GameTooltip:Hide()
+			end
 		elseif (button == 'MiddleButton') then
 			Calendar_Toggle = Calendar_Toggle or noop
 			Calendar_Toggle()

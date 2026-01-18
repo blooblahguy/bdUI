@@ -20,7 +20,7 @@ mod.additional_elements.auras = function(self, unit)
 	self.Auras:SetSize(config.playertargetwidth, 60)
 	self.Auras.size = 18
 	self.Auras.initialAnchor = "BOTTOMLEFT"
-	self.Auras.spacing = bdUI.border
+	self.Auras.spacing = bdUI.get_border()
 	self.Auras.num = 20
 	self.Auras['growth-y'] = "UP"
 	self.Auras['growth-x'] = "RIGHT"

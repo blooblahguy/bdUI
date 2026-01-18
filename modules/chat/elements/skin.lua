@@ -1,22 +1,22 @@
 local bdUI, c, l = unpack(select(2, ...))
 local mod = bdUI:get_module("Chat")
 
-local texture_slices = {"Left","Middle","Mid","Right","FocusLeft","FocusMid","FocusRight","SelectedLeft","SelectedRight","SelectedMiddle","HighlightLeft","HighlightMiddle","HighlightRight","ActiveLeft","ActiveMiddle","ActiveRight"}
+local texture_slices = { "Left", "Middle", "Mid", "Right", "FocusLeft", "FocusMid", "FocusRight", "SelectedLeft", "SelectedRight", "SelectedMiddle", "HighlightLeft", "HighlightMiddle", "HighlightRight", "ActiveLeft", "ActiveMiddle", "ActiveRight" }
 local dont_fade = {}
 
 
 local function skin_frame_bg(frame)
 	local name = frame:GetName()
-	local background = _G[name..'Background']
+	local background = _G[name .. 'Background']
 
 	-- move background
 	background:ClearAllPoints()
-	background:SetPoint("TOPLEFT", -8,  8)
+	background:SetPoint("TOPLEFT", -8, 8)
 	background:SetPoint("BOTTOMRIGHT", 8, -8)
 	background.border = CreateFrame("frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
-	background.border:SetPoint("TOPLEFT", -8,  8)
+	background.border:SetPoint("TOPLEFT", -8, 8)
 	background.border:SetPoint("BOTTOMRIGHT", 8, -8)
-	background.border:SetBackdrop({bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.border})
+	background.border:SetBackdrop({ bgFile = bdUI.media.flat, edgeFile = bdUI.media.flat, edgeSize = bdUI.get_border() })
 	background.border:SetBackdropColor(0, 0, 0, 0)
 	background.border:SetAlpha(background:GetAlpha())
 	background.border:SetBackdropBorderColor(unpack(bdUI.media.border))
@@ -27,9 +27,9 @@ end
 
 local function skin_tab(frame)
 	local name = frame:GetName()
-	local tab = _G[name..'Tab']
-	local old_text = _G[tab:GetName().."Text"] or _G[tab:GetName()].Text
-	local glow = _G[tab:GetName().."Glow"]
+	local tab = _G[name .. 'Tab']
+	local old_text = _G[tab:GetName() .. "Text"] or _G[tab:GetName()].Text
+	local glow = _G[tab:GetName() .. "Glow"]
 
 	-- replace tab text with new object
 	old_text:Hide()
@@ -56,11 +56,11 @@ local function skin_tab(frame)
 	end)
 	glow:SetTexture(nil)
 	glow.SetTexture = noop
-	
+
 	-- clearing textures
 	bdUI:strip_textures(tab, false)
 	for index, value in pairs(texture_slices) do
-		local texture = _G[name..'Tab'..value] or _G[name..'Tab'][value]
+		local texture = _G[name .. 'Tab' .. value] or _G[name .. 'Tab'][value]
 		if (texture) then
 			texture:SetTexture("")
 		end
@@ -78,7 +78,7 @@ local function skin_tab(frame)
 	if (tab:IsShown()) then
 		dont_fade[tab] = true
 		hooksecurefunc(tab, "Hide", function(self) self:Show() end)
-		hooksecurefunc(tab, "SetAlpha", function(self, alpha) 
+		hooksecurefunc(tab, "SetAlpha", function(self, alpha)
 			if (alpha == 0) then
 				self:SetAlpha(1)
 				if (frame:IsShown()) then
@@ -96,29 +96,29 @@ local function skin_frame(frame)
 
 	local fontSize = 14
 	local name = frame:GetName()
-	local editbox = _G[name..'EditBox']
-	local buttonframe = _G[name..'ButtonFrame']
-	local thumb = _G[name..'ThumbTexture']
-	local resize = _G[name..'ResizeButton']
-	local tex = {editbox:GetRegions()}
-	local index = gsub(name,"ChatFrame","")
+	local editbox = _G[name .. 'EditBox']
+	local buttonframe = _G[name .. 'ButtonFrame']
+	local thumb = _G[name .. 'ThumbTexture']
+	local resize = _G[name .. 'ResizeButton']
+	local tex = { editbox:GetRegions() }
+	local index = gsub(name, "ChatFrame", "")
 	local frameText = select(2, GetChatWindowInfo(index))
 	if (frameText and frameText > 0) then
 		fontSize = frameText
 	end
-	
+
 	--main chat frame
 	frame:SetFrameStrata("LOW")
 	frame:SetClampRectInsets(0, 0, 0, 0)
 	if (frame.SetResizeBounds) then
-		frame:SetResizeBounds(100, 50, UIParent:GetWidth()/2, UIParent:GetHeight()/2)
+		frame:SetResizeBounds(100, 50, UIParent:GetWidth() / 2, UIParent:GetHeight() / 2)
 	else
-		frame:SetMaxResize(UIParent:GetWidth()/2, UIParent:GetHeight()/2)
+		frame:SetMaxResize(UIParent:GetWidth() / 2, UIParent:GetHeight() / 2)
 		frame:SetMinResize(100, 50)
 	end
 	frame:SetFading(false)
 	frame:SetClampedToScreen(false)
-	resize:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 9,-5)
+	resize:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 9, -5)
 	resize:SetScale(.4)
 	resize:SetAlpha(0.7)
 
@@ -129,14 +129,14 @@ local function skin_frame(frame)
 	--hide button frame
 	buttonframe:Hide()
 	buttonframe.Show = noop
-	
+
 	-- tab style
 	skin_tab(frame)
-	
+
 	--editbox
 	editbox:SetAltArrowKeyMode(false)
 	for k, t in pairs(texture_slices) do
-		local tex = _G[editbox:GetName()..t]
+		local tex = _G[editbox:GetName() .. t]
 		if (tex) then
 			tex:Hide()
 			tex.Show = noop
@@ -146,12 +146,12 @@ local function skin_frame(frame)
 	bdUI:set_backdrop(editbox)
 	editbox:ClearAllPoints()
 	if name == "ChatFrame2" then
-		editbox:SetPoint("BOTTOM",frame,"TOP",0,34)
+		editbox:SetPoint("BOTTOM", frame, "TOP", 0, 34)
 	else
-		editbox:SetPoint("BOTTOM",frame,"TOP",0,10)
+		editbox:SetPoint("BOTTOM", frame, "TOP", 0, 10)
 	end
-	editbox:SetPoint("LEFT",frame,-8,0)
-	editbox:SetPoint("RIGHT",frame,8,0)	
+	editbox:SetPoint("LEFT", frame, -8, 0)
+	editbox:SetPoint("RIGHT", frame, 8, 0)
 
 	local name, size = frame:GetFont(size, "THINOUTLINE")
 	frame:SetFontObject(bdUI:get_font(size, "THINOUTLINE"))
@@ -165,17 +165,17 @@ end
 
 function mod:skin_chat()
 	--font size
-	CHAT_FONT_HEIGHTS = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+	CHAT_FONT_HEIGHTS = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }
 
 	-- currency coloring
-	COPPER_AMOUNT = "%d|cFF954F28"..COPPER_AMOUNT_SYMBOL.."|r";
-	SILVER_AMOUNT = "%d|cFFC0C0C0"..SILVER_AMOUNT_SYMBOL.."|r";
-	GOLD_AMOUNT = "%d|cFFF0D440"..GOLD_AMOUNT_SYMBOL.."|r";
+	COPPER_AMOUNT = "%d|cFF954F28" .. COPPER_AMOUNT_SYMBOL .. "|r";
+	SILVER_AMOUNT = "%d|cFFC0C0C0" .. SILVER_AMOUNT_SYMBOL .. "|r";
+	GOLD_AMOUNT = "%d|cFFF0D440" .. GOLD_AMOUNT_SYMBOL .. "|r";
 	YOU_LOOT_MONEY = "+%s";
 	LOOT_MONEY_SPLIT = "+%s";
 	YOU_LOOT_MONEY_GUILD = YOU_LOOT_MONEY
 	LOOT_MONEY_SPLIT_GUILD = LOOT_MONEY_SPLIT
-	
+
 	-- Skin chats
 	-- Hide side buttons
 	ChatFrameMenuButton:Hide()
@@ -196,7 +196,7 @@ function mod:skin_chat()
 
 	-- skin all the default chat channels
 	for i = 1, NUM_CHAT_WINDOWS do
-		local chatframe = _G["ChatFrame"..i]
+		local chatframe = _G["ChatFrame" .. i]
 		chatframe.oldAlpha = 0
 		skin_frame(chatframe)
 		skin_frame_bg(chatframe)
@@ -230,21 +230,21 @@ function mod:skin_chat()
 	end)
 
 	-- scroll wheel functionality
-	FloatingChatFrame_OnMouseScroll = function(self,dir)
-		if(dir > 0) then
-			if(IsShiftKeyDown()) then 
-				self:ScrollToTop() 
-			else 
+	FloatingChatFrame_OnMouseScroll = function(self, dir)
+		if (dir > 0) then
+			if (IsShiftKeyDown()) then
+				self:ScrollToTop()
+			else
 				self:ScrollUp()
 				if (IsControlKeyDown()) then
 					self:ScrollUp()
 				end
 			end
 		else
-			if(IsShiftKeyDown()) then 
-				self:ScrollToBottom() 
-			else 
-				self:ScrollDown() 
+			if (IsShiftKeyDown()) then
+				self:ScrollToBottom()
+			else
+				self:ScrollDown()
 				if (IsControlKeyDown()) then
 					self:ScrollDown()
 				end

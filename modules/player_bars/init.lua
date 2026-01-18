@@ -1,7 +1,7 @@
 local bdUI, c, l = unpack(select(2, ...))
 
 local wotlk_runes = {}
-if (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and select(2, UnitClass("player")) == "DEATHKNIGHT") then
+if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
 	wotlk_runes = {
 		{
 			key = "runes_enable",

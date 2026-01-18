@@ -41,11 +41,11 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 	self.Castbar:SetFrameStrata("MEDIUM")
 	self.Castbar:SetStatusBarTexture(bdUI.media.smooth)
 	self.Castbar:SetStatusBarColor(.1, .4, .7, 1)
-	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.border)
+	self.Castbar:SetPoint("TOPLEFT", self.Health, "BOTTOMLEFT", 0, -bdUI.get_border())
 	self.Castbar:SetPoint("BOTTOMRIGHT", self.Health, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
 	self.Castbar.timeToHold = 1.2
 	if (self.Power) then
-		self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -bdUI.border)
+		self.Castbar:SetPoint("TOPLEFT", self.Power, "BOTTOMLEFT", 0, -bdUI.get_border())
 		self.Castbar:SetPoint("BOTTOMRIGHT", self.Power, "BOTTOMRIGHT", 0, -(4 + config.castbarheight))
 	end
 
@@ -61,8 +61,8 @@ mod.additional_elements.castbar = function(self, unit, align, icon)
 		self.Castbar.Icon.bg = self.Castbar:CreateTexture(nil, "BORDER")
 		self.Castbar.Icon.bg:SetTexture(bdUI.media.flat)
 		self.Castbar.Icon.bg:SetVertexColor(unpack(bdUI.media.border))
-		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -bdUI.border, bdUI.border)
-		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
+		self.Castbar.Icon.bg:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -bdUI.get_border(), bdUI.get_border())
+		self.Castbar.Icon.bg:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", bdUI.get_border(), -bdUI.get_border())
 	end
 
 	self.Castbar.SafeZone = self.Castbar:CreateTexture(nil, "OVERLAY")

@@ -9,19 +9,19 @@ mod.additional_elements.aurabars = function(self, unit)
 
 	self.AuraBars = CreateFrame("Frame", "bdUF_AuraBars", self)
 	if (self.ResourceHolder:IsShown()) then
-		self.AuraBars:SetPoint("BOTTOMLEFT", self.ResourceHolder, "TOPLEFT", bdUI.border * 2, bdUI.border)
+		self.AuraBars:SetPoint("BOTTOMLEFT", self.ResourceHolder, "TOPLEFT", bdUI.get_border() * 2, bdUI.get_border())
 	else
-		self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", bdUI.border, bdUI.border)
+		self.AuraBars:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", bdUI.get_border(), bdUI.get_border())
 	end
 
-	-- self.AuraBars:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border)
+	-- self.AuraBars:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.get_border())
 	self.AuraBars:SetHeight(60)
-	self.AuraBars:SetWidth(config.playertargetwidth - (bdUI.border))
-	self.AuraBars.width = config.playertargetwidth - (bdUI.border)
+	self.AuraBars:SetWidth(config.playertargetwidth - (bdUI.get_border()))
+	self.AuraBars.width = config.playertargetwidth - (bdUI.get_border())
 	self.AuraBars.height = 16
-	self.AuraBars.gap = bdUI.border
+	self.AuraBars.gap = bdUI.get_border()
 	self.AuraBars.sparkDisabled = true
-	self.AuraBars.spacing = bdUI.border
+	self.AuraBars.spacing = bdUI.get_border()
 	self.AuraBars.fontObject = bdUI:get_font(10, "THINOUTLINE")
 	self.AuraBars.texture = bdUI.media.smooth
 	self.AuraBars.baseColor = bdUI.media.blue
@@ -31,8 +31,8 @@ mod.additional_elements.aurabars = function(self, unit)
 		bar.icon.bg = bar:CreateTexture(nil, "BACKGROUND")
 		bar.icon.bg:SetTexture(bdUI.media.flat)
 		bar.icon.bg:SetVertexColor(unpack(bdUI.media.border))
-		bar.icon.bg:SetPoint("TOPLEFT", bar.icon, "TOPLEFT", -bdUI.border, bdUI.border)
-		bar.icon.bg:SetPoint("BOTTOMRIGHT", bar.icon, "BOTTOMRIGHT", bdUI.border, -bdUI.border)
+		bar.icon.bg:SetPoint("TOPLEFT", bar.icon, "TOPLEFT", -bdUI.get_border(), bdUI.get_border())
+		bar.icon.bg:SetPoint("BOTTOMRIGHT", bar.icon, "BOTTOMRIGHT", bdUI.get_border(), -bdUI.get_border())
 
 		bar.icon:SetTexCoord(.07, .93, .07, .93)
 

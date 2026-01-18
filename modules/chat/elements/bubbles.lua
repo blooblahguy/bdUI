@@ -111,7 +111,7 @@ function bubbles:skin(frame, backdrop)
 	frame.text:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
 
 	frame.name = frame:CreateFontString(nil, "OVERLAY")
-	frame.name:SetPoint('BOTTOMLEFT', frame.text, 'TOPLEFT', 0, bdUI.border * 3)
+	frame.name:SetPoint('BOTTOMLEFT', frame.text, 'TOPLEFT', 0, bdUI.get_border() * 3)
 	frame.name:SetJustifyH('LEFT')
 	frame.name:SetFontObject(bdUI:get_font(10, "THINOUTLINE"))
 

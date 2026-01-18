@@ -27,14 +27,14 @@ function mod:auto_greed_loot()
 		local itemLink = GetLootRollItemLink(rollID)
 		local bop = select(5, GetLootRollItemInfo(rollID))
 		local quality = C_Item.GetItemQualityByID(itemLink)
-		
+
 		if bop then return end
 
 		local roll = 2 -- greed
 		if (select(1, bdUI:get_game_version()) == "cataclysm" and is_enchanter()) then
 			roll = 3 -- DE
 		end
-		
+
 		if quality and quality <= 2 then
 			RollOnLoot(rollID, roll)
 		end
@@ -74,21 +74,21 @@ function mod:skin_loot()
 		LootFrame:SetWidth(250)
 
 		for i = 1, num do
-			local button = _G["LootButton"..i]
-			
+			local button = _G["LootButton" .. i]
+
 			if i > LOOTFRAME_NUMBUTTONS then
 				if not button then
-					button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "LootButton"..i, LootFrame, "LootButtonTemplate", i)
+					button = CreateFrame(ItemButtonMixin and "ItemButton" or "Button", "LootButton" .. i, LootFrame, "LootButtonTemplate", i)
 				end
 				LOOTFRAME_NUMBUTTONS = i
 			end
 			if i > 1 then
 				button:ClearAllPoints()
-				button:SetPoint(p, "LootButton"..(i-1), r, spacing_x, spacing_y)
+				button:SetPoint(p, "LootButton" .. (i - 1), r, spacing_x, spacing_y)
 			end
 
 			local lootIcon, lootName, lootQuantity, _, rarity, locked, isQuestItem, questId, isActive = GetLootSlotInfo(i)
-			local text = _G[button:GetName().."Text"]
+			local text = _G[button:GetName() .. "Text"]
 
 			if (not button.quality_border) then
 				bdUI:strip_textures(button, false)
@@ -112,8 +112,8 @@ function mod:skin_loot()
 				button.border = button:CreateTexture(nil, "BACKGROUND")
 				button.border:SetTexture(bdUI.media.flat)
 				button.border:SetVertexColor(unpack(bdUI.media.border))
-				button.border:SetPoint("TOPLEFT", button.icon, -bdUI.border, bdUI.border)
-				button.border:SetPoint("BOTTOMRIGHT", button.icon, bdUI.border, -bdUI.border)
+				button.border:SetPoint("TOPLEFT", button.icon, -bdUI.get_border(), bdUI.get_border())
+				button.border:SetPoint("BOTTOMRIGHT", button.icon, bdUI.get_border(), -bdUI.get_border())
 
 				button.hover = button:CreateTexture(nil, "BACKGROUND")
 				button.hover:SetTexture(bdUI.media.flat)
@@ -123,9 +123,9 @@ function mod:skin_loot()
 				button:HookScript("OnEnter", function(self) self.hover:Show() end)
 				button:HookScript("OnLeave", function(self) self.hover:Hide() end)
 
-				button.quality_border = CreateFrame("frame", button:GetName().."QualityBorder", button)
-				button.quality_border:SetPoint("TOPLEFT", button.icon, "TOPLEFT", bdUI.border, -bdUI.border)
-				button.quality_border:SetPoint("BOTTOMRIGHT", button.icon, "BOTTOMRIGHT", -bdUI.border, bdUI.border)
+				button.quality_border = CreateFrame("frame", button:GetName() .. "QualityBorder", button)
+				button.quality_border:SetPoint("TOPLEFT", button.icon, "TOPLEFT", bdUI.get_border(), -bdUI.get_border())
+				button.quality_border:SetPoint("BOTTOMRIGHT", button.icon, "BOTTOMRIGHT", -bdUI.get_border(), bdUI.get_border())
 				bdUI:set_backdrop(button.quality_border)
 				button.quality_border:set_border_color(1, 0, 0, 1)
 				button.quality_border._background:Hide()
@@ -143,8 +143,8 @@ function mod:skin_loot()
 			button.icon:SetTexture(lootIcon)
 
 			-- quantitiy
-			_G[button:GetName().."Count"]:Hide()
-			_G[button:GetName().."Count"].Show = noop
+			_G[button:GetName() .. "Count"]:Hide()
+			_G[button:GetName() .. "Count"].Show = noop
 			if (lootQuantity and lootQuantity >= 2) then
 				button.qty:Show()
 				button.qty:SetText(lootQuantity)
@@ -160,7 +160,7 @@ function mod:skin_loot()
 				text:SetTextColor(r, g, b, 1)
 			else
 				button.quality_border:Hide()
-			end		
+			end
 
 			-- frame model
 			if (UnitExists("target")) then
@@ -176,11 +176,11 @@ function mod:skin_loot()
 		end
 
 		-- default position
-		if ( GetCVar("lootUnderMouse") ~= "1" ) then
+		if (GetCVar("lootUnderMouse") ~= "1") then
 			LootFrame:ClearAllPoints()
 			LootFrame:SetPoint("LEFT", UIParent, 150, 0)
 		end
-		
+
 		LootFrame_Update()
 	end
 

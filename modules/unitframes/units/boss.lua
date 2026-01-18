@@ -17,7 +17,7 @@ mod.custom_layout["boss"] = function(self, unit)
 	self.Debuffs.size = 20
 	self.Debuffs:SetSize(config.bosswidth / 2, config.bossheight)
 	self.Debuffs:ClearAllPoints()
-	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.border, bdUI.border * 2)
+	self.Debuffs:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", -bdUI.get_border(), bdUI.get_border() * 2)
 	-- debuff filter for both icons and bars
 	self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
 		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
@@ -44,7 +44,7 @@ mod.custom_layout["boss"] = function(self, unit)
 	self.Auras.size = 20
 	self.Auras:SetSize(config.bosswidth / 2, config.bossheight)
 	self.Auras:ClearAllPoints()
-	self.Auras:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.border * 2)
+	self.Auras:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", 0, bdUI.get_border() * 2)
 	self.Auras.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime,
 		source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 		isBossDebuff = isBossDebuff or false
@@ -65,7 +65,7 @@ mod.custom_layout["boss"] = function(self, unit)
 
 		return bdUI:is_whitelist_nameplate(castByMe, nameplateShowPersonal, nameplateShowAll) or not castByPlayer or
 			not source or
-			not UnitIsPlayer(source)     -- this may have been casted by no one or by a boss
+			not UnitIsPlayer(source) -- this may have been casted by no one or by a boss
 	end
 
 	-- self.Auras.initialAnchor = "TOPLEFT"
@@ -73,7 +73,7 @@ mod.custom_layout["boss"] = function(self, unit)
 	-- self.Auras['growth-y'] = "DOWN"
 
 	-- self.Auras:ClearAllPoints()
-	-- self.Auras:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", bdUI.border*3, -bdUI.border)
+	-- self.Auras:SetPoint("TOPLEFT", self.Health, "TOPRIGHT", bdUI.get_border()*3, -bdUI.get_border())
 
 	-- self.Debuffs.CustomFilter = function(self, unit, button, name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll)
 	-- 	isBossDebuff = isBossDebuff or false
@@ -107,7 +107,7 @@ mod.custom_layout["boss"] = function(self, unit)
 			self.Power:Hide()
 		end
 
-		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.border)
+		self.Health:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, config.bosspower + bdUI.get_border())
 
 		-- self.Debuffs.size = self.Health:GetHeight()
 		-- self.Debuffs:SetSize(config.bosswidth, config.bossheight)

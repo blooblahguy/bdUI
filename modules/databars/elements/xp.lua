@@ -23,7 +23,7 @@ function mod:create_xp()
 		tex:SetPoint("TOP", bar, "TOP")
 		tex:SetPoint("BOTTOM", bar, "BOTTOM")
 		tex:SetPoint("LEFT", bar, "LEFT", offset, 0)
-		tex:SetWidth(bdUI.border)
+		tex:SetWidth(bdUI.get_border())
 		tex:SetAlpha(0.06)
 		tex:SetTexture(bdUI.media.flat)
 		tex:SetVertexColor(1, 1, 1)
@@ -49,7 +49,7 @@ function mod:create_xp()
 		-- alert_can_level()
 
 		-- make sure it's enabled
-		if (config.xpbar == "Always Hide" or (config.xpbar == "Show When Leveling" and (UnitLevel("player") == bdUI.level_cap or IsXPUserDisabled() == true))) then 
+		if (config.xpbar == "Always Hide" or (config.xpbar == "Show When Leveling" and (UnitLevel("player") == bdUI.level_cap or IsXPUserDisabled() == true))) then
 			self:Hide()
 			return
 		end
@@ -60,10 +60,10 @@ function mod:create_xp()
 		self:SetStatusBarColor(.4, .1, 0.6, 1)
 
 		if (mxp > 0) then
-			local text = FormatLargeNumber(xp).." / "..FormatLargeNumber(mxp).." - "..floor((xp / mxp) * 1000) / 10 .."%"
+			local text = FormatLargeNumber(xp) .. " / " .. FormatLargeNumber(mxp) .. " - " .. floor((xp / mxp) * 1000) / 10 .. "%"
 
 			if rxp then
-				self.text:SetText(text .. " (+"..FormatLargeNumber(rxp)..")")
+				self.text:SetText(text .. " (+" .. FormatLargeNumber(rxp) .. ")")
 				self:SetMinMaxValues(0, mxp)
 				self.layer:SetMinMaxValues(0, mxp)
 				self:SetStatusBarColor(.2, .4, 0.8, 1)
@@ -71,7 +71,7 @@ function mod:create_xp()
 				if ((rxp + xp) >= mxp) then
 					self.layer:SetValue(mxp)
 				else
-					self.layer:SetValue(xp+rxp)
+					self.layer:SetValue(xp + rxp)
 				end
 				self.layer:Show()
 			elseif (mxp > 0) then
